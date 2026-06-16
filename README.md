@@ -76,11 +76,22 @@ src/
 ## Features
 
 - ✅ Responsive design (mobile-first)
-- ✅ Dark mode ready (via Tailwind)
+- ✅ **Dark mode** - Automatically detects system preference
 - ✅ SEO optimized
 - ✅ Static generation for fast performance
 - ✅ Accessible components
 - ✅ Modern UI with gradients and animations
+
+## Dark Mode
+
+The application automatically adapts to your system's appearance preference (light or dark mode):
+
+- **Automatic detection**: Uses `next-themes` to detect system preference
+- **No flash**: Prevents hydration mismatch with `suppressHydrationWarning`
+- **Full coverage**: All components support both light and dark themes
+- **CSS variables**: Uses Tailwind's dark mode with class strategy
+
+To manually toggle themes, you can add a theme switcher component using the `useTheme` hook from `next-themes`.
 
 ## Customization
 

@@ -81,23 +81,23 @@ export default function PricingPage() {
       <Header />
       
       <main className="flex-1 pt-16">
-        <section className="py-20 bg-gradient-to-br from-blue-50 via-white to-purple-50">
+        <section className="py-20 bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-950 dark:to-gray-900">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
-              <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-6">
+              <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 dark:text-white mb-6">
                 Simple, Transparent Pricing
               </h1>
-              <p className="text-xl text-gray-600 max-w-2xl mx-auto mb-8">
+              <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto mb-8">
                 Choose the perfect plan for your needs. All plans include a 14-day free trial.
               </p>
 
-              <div className="inline-flex items-center bg-gray-100 rounded-lg p-1">
+              <div className="inline-flex items-center bg-gray-100 dark:bg-gray-800 rounded-lg p-1">
                 <button
                   onClick={() => setBillingCycle('monthly')}
                   className={`px-6 py-2 rounded-lg font-medium transition-colors ${
                     billingCycle === 'monthly'
-                      ? 'bg-white text-gray-900 shadow-sm'
-                      : 'text-gray-600'
+                      ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm'
+                      : 'text-gray-600 dark:text-gray-400'
                   }`}
                 >
                   Monthly
@@ -106,12 +106,12 @@ export default function PricingPage() {
                   onClick={() => setBillingCycle('annual')}
                   className={`px-6 py-2 rounded-lg font-medium transition-colors ${
                     billingCycle === 'annual'
-                      ? 'bg-white text-gray-900 shadow-sm'
-                      : 'text-gray-600'
+                      ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm'
+                      : 'text-gray-600 dark:text-gray-400'
                   }`}
                 >
                   Annual
-                  <span className="ml-2 text-xs text-green-600 font-semibold">Save 20%</span>
+                  <span className="ml-2 text-xs text-green-600 dark:text-green-400 font-semibold">Save 20%</span>
                 </button>
               </div>
             </div>
@@ -120,7 +120,7 @@ export default function PricingPage() {
               {plans.map((plan, i) => (
                 <div
                   key={i}
-                  className={`bg-white rounded-xl p-8 ${
+                  className={`bg-white dark:bg-gray-800 rounded-xl p-8 ${
                     plan.popular
                       ? 'ring-2 ring-blue-600 shadow-xl'
                       : 'shadow-sm hover:shadow-lg'
@@ -134,17 +134,17 @@ export default function PricingPage() {
                     </div>
                   )}
 
-                  <h3 className="text-2xl font-bold text-gray-900 mb-2">{plan.name}</h3>
-                  <p className="text-gray-600 mb-6">{plan.description}</p>
+                  <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">{plan.name}</h3>
+                  <p className="text-gray-600 dark:text-gray-300 mb-6">{plan.description}</p>
 
                   <div className="mb-6">
                     {plan.price !== null ? (
                       <>
-                        <span className="text-4xl font-bold text-gray-900">${plan.price}</span>
-                        <span className="text-gray-600">/month</span>
+                        <span className="text-4xl font-bold text-gray-900 dark:text-white">${plan.price}</span>
+                        <span className="text-gray-600 dark:text-gray-400">/month</span>
                       </>
                     ) : (
-                      <span className="text-2xl font-bold text-gray-900">Custom Pricing</span>
+                      <span className="text-2xl font-bold text-gray-900 dark:text-white">Custom Pricing</span>
                     )}
                   </div>
 
@@ -164,7 +164,7 @@ export default function PricingPage() {
                             d="M5 13l4 4L19 7"
                           />
                         </svg>
-                        <span className="text-gray-600 text-sm">{feature}</span>
+                        <span className="text-gray-600 dark:text-gray-300 text-sm">{feature}</span>
                       </li>
                     ))}
                   </ul>
@@ -174,7 +174,7 @@ export default function PricingPage() {
                     className={`block w-full text-center py-3 rounded-lg font-medium transition-colors ${
                       plan.popular
                         ? 'bg-blue-600 text-white hover:bg-blue-700'
-                        : 'bg-gray-100 text-gray-900 hover:bg-gray-200'
+                        : 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-600'
                     }`}
                   >
                     {plan.cta}
@@ -185,10 +185,10 @@ export default function PricingPage() {
           </div>
         </section>
 
-        <section className="py-20 bg-white">
+        <section className="py-20 bg-white dark:bg-gray-950">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold text-gray-900 mb-4">
+              <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
                 Compare Plans
               </h2>
             </div>
@@ -196,12 +196,12 @@ export default function PricingPage() {
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
-                  <tr className="border-b border-gray-200">
-                    <th className="text-left py-4 px-4 font-semibold text-gray-900">Feature</th>
-                    <th className="text-center py-4 px-4 font-semibold text-gray-900">Starter</th>
-                    <th className="text-center py-4 px-4 font-semibold text-gray-900">Professional</th>
-                    <th className="text-center py-4 px-4 font-semibold text-gray-900">Business</th>
-                    <th className="text-center py-4 px-4 font-semibold text-gray-900">Enterprise</th>
+                  <tr className="border-b border-gray-200 dark:border-gray-700">
+                    <th className="text-left py-4 px-4 font-semibold text-gray-900 dark:text-white">Feature</th>
+                    <th className="text-center py-4 px-4 font-semibold text-gray-900 dark:text-white">Starter</th>
+                    <th className="text-center py-4 px-4 font-semibold text-gray-900 dark:text-white">Professional</th>
+                    <th className="text-center py-4 px-4 font-semibold text-gray-900 dark:text-white">Business</th>
+                    <th className="text-center py-4 px-4 font-semibold text-gray-900 dark:text-white">Enterprise</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -215,12 +215,12 @@ export default function PricingPage() {
                     { feature: 'SLA', starter: '—', pro: '—', business: '✓', enterprise: 'Custom' },
                     { feature: 'On-premise', starter: '—', pro: '—', business: '—', enterprise: '✓' },
                   ].map((row, i) => (
-                    <tr key={i} className="border-b border-gray-100">
-                      <td className="py-4 px-4 text-gray-900">{row.feature}</td>
-                      <td className="py-4 px-4 text-center text-gray-600">{row.starter}</td>
-                      <td className="py-4 px-4 text-center text-gray-600">{row.pro}</td>
-                      <td className="py-4 px-4 text-center text-gray-600">{row.business}</td>
-                      <td className="py-4 px-4 text-center text-gray-600">{row.enterprise}</td>
+                    <tr key={i} className="border-b border-gray-100 dark:border-gray-800">
+                      <td className="py-4 px-4 text-gray-900 dark:text-white">{row.feature}</td>
+                      <td className="py-4 px-4 text-center text-gray-600 dark:text-gray-300">{row.starter}</td>
+                      <td className="py-4 px-4 text-center text-gray-600 dark:text-gray-300">{row.pro}</td>
+                      <td className="py-4 px-4 text-center text-gray-600 dark:text-gray-300">{row.business}</td>
+                      <td className="py-4 px-4 text-center text-gray-600 dark:text-gray-300">{row.enterprise}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -229,14 +229,14 @@ export default function PricingPage() {
           </div>
         </section>
 
-        <section className="py-20 bg-gray-50">
+        <section className="py-20 bg-gray-50 dark:bg-gray-900">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid md:grid-cols-2 gap-8">
-              <div className="bg-white rounded-xl p-8 shadow-sm">
-                <h3 className="text-2xl font-bold text-gray-900 mb-4">
+              <div className="bg-white dark:bg-gray-800 rounded-xl p-8 shadow-sm">
+                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
                   Need a custom solution?
                 </h3>
-                <p className="text-gray-600 mb-6">
+                <p className="text-gray-600 dark:text-gray-300 mb-6">
                   Our enterprise team can help you build a custom plan that fits your specific requirements, 
                   including volume discounts, dedicated support, and custom integrations.
                 </p>
@@ -248,17 +248,17 @@ export default function PricingPage() {
                 </Link>
               </div>
 
-              <div className="bg-white rounded-xl p-8 shadow-sm">
-                <h3 className="text-2xl font-bold text-gray-900 mb-4">
+              <div className="bg-white dark:bg-gray-800 rounded-xl p-8 shadow-sm">
+                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
                   Start with a free trial
                 </h3>
-                <p className="text-gray-600 mb-6">
+                <p className="text-gray-600 dark:text-gray-300 mb-6">
                   Try our platform risk-free for 14 days. No credit card required. 
                   Get full access to all features and see the results for yourself.
                 </p>
                 <Link
                   href="/"
-                  className="inline-block bg-gray-900 text-white px-6 py-3 rounded-lg hover:bg-gray-800 transition-colors font-medium"
+                  className="inline-block bg-gray-900 dark:bg-gray-700 text-white px-6 py-3 rounded-lg hover:bg-gray-800 dark:hover:bg-gray-600 transition-colors font-medium"
                 >
                   Start Free Trial
                 </Link>
@@ -267,10 +267,10 @@ export default function PricingPage() {
           </div>
         </section>
 
-        <section className="py-20 bg-white">
+        <section className="py-20 bg-white dark:bg-gray-950">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold text-gray-900 mb-4">
+              <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
                 Frequently Asked Questions
               </h2>
             </div>
@@ -298,14 +298,14 @@ export default function PricingPage() {
                   a: 'We accept all major credit cards (Visa, MasterCard, American Express), PayPal, and bank transfers for annual plans.',
                 },
               ].map((faq, i) => (
-                <details key={i} className="bg-gray-50 rounded-lg p-6 group">
-                  <summary className="cursor-pointer list-none flex justify-between items-center font-semibold text-gray-900">
+                <details key={i} className="bg-gray-50 dark:bg-gray-800 rounded-lg p-6 group">
+                  <summary className="cursor-pointer list-none flex justify-between items-center font-semibold text-gray-900 dark:text-white">
                     {faq.q}
-                    <svg className="w-5 h-5 text-gray-500 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-5 h-5 text-gray-500 dark:text-gray-400 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                     </svg>
                   </summary>
-                  <p className="mt-4 text-gray-600">{faq.a}</p>
+                  <p className="mt-4 text-gray-600 dark:text-gray-300">{faq.a}</p>
                 </details>
               ))}
             </div>
