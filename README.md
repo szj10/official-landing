@@ -89,9 +89,20 @@ The application automatically adapts to your system's appearance preference (lig
 - **Automatic detection**: Uses `next-themes` to detect system preference
 - **No flash**: Prevents hydration mismatch with `suppressHydrationWarning`
 - **Full coverage**: All components support both light and dark themes
+- **Manual toggle**: Theme switcher dropdown in header (Light/Dark/System)
 - **CSS variables**: Uses Tailwind's dark mode with class strategy
 
-To manually toggle themes, you can add a theme switcher component using the `useTheme` hook from `next-themes`.
+## Language Support
+
+The header includes a language switcher with support for:
+- 🇺🇸 English
+- 🇨🇳 中文 (Chinese)
+- 🇪🇸 Español (Spanish)
+- 🇫🇷 Français (French)
+- 🇩🇪 Deutsch (German)
+- 🇯🇵 日本語 (Japanese)
+
+Note: The language switcher UI is ready. To implement full i18n, integrate with `next-intl` or similar library.
 
 ## Customization
 
