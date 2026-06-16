@@ -1,8 +1,13 @@
+'use client';
+
 import Link from 'next/link';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import { useI18n } from '@/i18n';
 
 export default function Home() {
+  const { t } = useI18n();
+
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
@@ -12,27 +17,26 @@ export default function Home() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center">
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-white mb-6">
-                AI-Powered Solutions for{' '}
+                {t('hero.title')}{' '}
                 <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                  Modern Businesses
+                  {t('hero.titleHighlight')}
                 </span>
               </h1>
               <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto mb-8">
-                Transform your workflow with cutting-edge AI technology. Build faster, scale efficiently, 
-                and deliver exceptional results with our comprehensive suite of tools.
+                {t('hero.subtitle')}
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link
                   href="/"
                   className="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition-colors font-medium"
                 >
-                  Get Started Free
+                  {t('common.getStartedFree')}
                 </Link>
                 <Link
                   href="/"
                   className="border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 px-8 py-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors font-medium"
                 >
-                  Watch Demo
+                  {t('common.watchDemo')}
                 </Link>
               </div>
             </div>
@@ -42,7 +46,7 @@ export default function Home() {
         <section className="py-16 bg-white dark:bg-gray-950">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
-              <p className="text-gray-600 dark:text-gray-400 text-lg">Trusted by 300+ leading companies worldwide</p>
+              <p className="text-gray-600 dark:text-gray-400 text-lg">{t('trust.title')}</p>
             </div>
             <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8 items-center opacity-60">
               {[1, 2, 3, 4, 5, 6].map((i) => (
@@ -58,10 +62,10 @@ export default function Home() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
               <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-4">
-                Solutions for Every Need
+                {t('solutions.title')}
               </h2>
               <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-                From APIs to studio tools, we have the perfect solution for your business
+                {t('solutions.subtitle')}
               </p>
             </div>
 
@@ -72,12 +76,12 @@ export default function Home() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
                   </svg>
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">API Platform</h3>
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">{t('solutions.api.title')}</h3>
                 <p className="text-gray-600 dark:text-gray-300 mb-4">
-                  Fast, efficient, and scalable APIs built for production workloads. Integrate seamlessly with your existing stack.
+                  {t('solutions.api.description')}
                 </p>
                 <Link href="/" className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium">
-                  Learn more →
+                  {t('common.learnMore')}
                 </Link>
               </div>
 
@@ -87,12 +91,12 @@ export default function Home() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                   </svg>
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">Studio</h3>
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">{t('solutions.studio.title')}</h3>
                 <p className="text-gray-600 dark:text-gray-300 mb-4">
-                  Create professional content 10x faster with our intuitive studio. Full creative control at your fingertips.
+                  {t('solutions.studio.description')}
                 </p>
                 <Link href="/" className="text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 font-medium">
-                  Learn more →
+                  {t('common.learnMore')}
                 </Link>
               </div>
 
@@ -102,12 +106,12 @@ export default function Home() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 018.658 3M15 21a3 3 0 00-3-3h-3a3 3 0 00-3 3m3-3h6m-6 0h6m-3-3h3m-3 0h3" />
                   </svg>
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">Translation</h3>
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">{t('solutions.translation.title')}</h3>
                 <p className="text-gray-600 dark:text-gray-300 mb-4">
-                  Instant localization in 40+ languages. Reach global audiences without compromising quality or meaning.
+                  {t('solutions.translation.description')}
                 </p>
                 <Link href="/" className="text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 font-medium">
-                  Learn more →
+                  {t('common.learnMore')}
                 </Link>
               </div>
             </div>
@@ -118,25 +122,25 @@ export default function Home() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
               <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-4">
-                Why Businesses Choose Us
+                {t('features.title')}
               </h2>
               <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-                Built for the scalability, performance, and security professionals demand
+                {t('features.subtitle')}
               </p>
             </div>
 
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
               {[
-                { title: '200+ Languages', desc: 'Support for global audiences with industry-specific voices and accents' },
-                { title: '99.9% Uptime', desc: 'Enterprise-grade reliability with guaranteed availability' },
-                { title: 'Enterprise Security', desc: 'SOC 2, ISO 27001, GDPR, and HIPAA compliant' },
-                { title: 'Fast Support', desc: 'Average response time under 3 minutes for all inquiries' },
-                { title: 'Scalable', desc: 'Handle millions of requests with consistent performance' },
-                { title: 'Ethical AI', desc: 'Built with permission from professional voice actors' },
+                { key: 'languages' },
+                { key: 'uptime' },
+                { key: 'security' },
+                { key: 'support' },
+                { key: 'scalable' },
+                { key: 'ethical' },
               ].map((feature, i) => (
                 <div key={i} className="p-6">
-                  <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">{feature.title}</h3>
-                  <p className="text-gray-600 dark:text-gray-300">{feature.desc}</p>
+                  <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">{t(`features.${feature.key}.title`)}</h3>
+                  <p className="text-gray-600 dark:text-gray-300">{t(`features.${feature.key}.description`)}</p>
                 </div>
               ))}
             </div>
@@ -146,23 +150,23 @@ export default function Home() {
         <section className="py-20 bg-gradient-to-r from-blue-600 to-purple-600">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <h2 className="text-3xl sm:text-4xl font-bold text-white mb-6">
-              Ready to Get Started?
+              {t('cta.title')}
             </h2>
             <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
-              Join thousands of businesses already using our platform to transform their workflows
+              {t('cta.subtitle')}
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
                 href="/"
                 className="bg-white text-blue-600 px-8 py-3 rounded-lg hover:bg-gray-100 transition-colors font-medium"
               >
-                Start Free Trial
+                {t('common.startFreeTrial')}
               </Link>
               <Link
                 href="/pricing"
                 className="border-2 border-white text-white px-8 py-3 rounded-lg hover:bg-white/10 transition-colors font-medium"
               >
-                View Pricing
+                {t('common.viewPricing')}
               </Link>
             </div>
           </div>
@@ -172,37 +176,20 @@ export default function Home() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
               <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-4">
-                Frequently Asked Questions
+                {t('faq.title')}
               </h2>
             </div>
 
             <div className="max-w-3xl mx-auto space-y-4">
-              {[
-                {
-                  q: 'What is included in the free trial?',
-                  a: 'Our free trial includes access to all features with a limited number of API calls. No credit card required.',
-                },
-                {
-                  q: 'Can I upgrade or downgrade my plan?',
-                  a: 'Yes, you can change your plan at any time. Changes take effect immediately and billing is prorated.',
-                },
-                {
-                  q: 'What payment methods do you accept?',
-                  a: 'We accept all major credit cards, PayPal, and bank transfers for enterprise plans.',
-                },
-                {
-                  q: 'Do you offer enterprise solutions?',
-                  a: 'Yes, we offer custom enterprise solutions with dedicated support, SLAs, and volume pricing.',
-                },
-              ].map((faq, i) => (
+              {['q1', 'q2', 'q3', 'q4'].map((q, i) => (
                 <details key={i} className="bg-white dark:bg-gray-800 rounded-lg p-6 group">
                   <summary className="cursor-pointer list-none flex justify-between items-center font-semibold text-gray-900 dark:text-white">
-                    {faq.q}
+                    {t(`faq.${q}.question`)}
                     <svg className="w-5 h-5 text-gray-500 dark:text-gray-400 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                     </svg>
                   </summary>
-                  <p className="mt-4 text-gray-600 dark:text-gray-300">{faq.a}</p>
+                  <p className="mt-4 text-gray-600 dark:text-gray-300">{t(`faq.${q}.answer`)}</p>
                 </details>
               ))}
             </div>

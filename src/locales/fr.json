@@ -1,0 +1,93 @@
+{
+  "common": {
+    "getStarted": "[TRANSLATE: Get Started]",
+    "getStartedFree": "[TRANSLATE: Get Started Free]",
+    "watchDemo": "[TRANSLATE: Watch Demo]",
+    "learnMore": "[TRANSLATE: Learn more →]",
+    "startFreeTrial": "[TRANSLATE: Start Free Trial]",
+    "viewPricing": "[TRANSLATE: View Pricing]"
+  },
+  "header": {
+    "products": "[TRANSLATE: Products]",
+    "solutions": "[TRANSLATE: Solutions]",
+    "pricing": "[TRANSLATE: Pricing]",
+    "resources": "[TRANSLATE: Resources]",
+    "language": "[TRANSLATE: Language]",
+    "theme": "[TRANSLATE: Theme]"
+  },
+  "hero": {
+    "title": "[TRANSLATE: AI-Powered Solutions for]",
+    "titleHighlight": "[TRANSLATE: Modern Businesses]",
+    "subtitle": "[TRANSLATE: Transform your workflow with cutting-edge AI technology. Build faster, scale efficiently, and deliver exceptional results with our comprehensive suite of tools.]"
+  },
+  "trust": {
+    "title": "[TRANSLATE: Trusted by 300+ leading companies worldwide]"
+  },
+  "solutions": {
+    "title": "[TRANSLATE: Solutions for Every Need]",
+    "subtitle": "[TRANSLATE: From APIs to studio tools, we have the perfect solution for your business]",
+    "api": {
+      "title": "[TRANSLATE: API Platform]",
+      "description": "[TRANSLATE: Fast, efficient, and scalable APIs built for production workloads. Integrate seamlessly with your existing stack.]"
+    },
+    "studio": {
+      "title": "[TRANSLATE: Studio]",
+      "description": "[TRANSLATE: Create professional content 10x faster with our intuitive studio. Full creative control at your fingertips.]"
+    },
+    "translation": {
+      "title": "[TRANSLATE: Translation]",
+      "description": "[TRANSLATE: Instant localization in 40+ languages. Reach global audiences without compromising quality or meaning.]"
+    }
+  },
+  "features": {
+    "title": "[TRANSLATE: Why Businesses Choose Us]",
+    "subtitle": "[TRANSLATE: Built for the scalability, performance, and security professionals demand]",
+    "languages": {
+      "title": "[TRANSLATE: 200+ Languages]",
+      "description": "[TRANSLATE: Support for global audiences with industry-specific voices and accents]"
+    },
+    "uptime": {
+      "title": "[TRANSLATE: 99.9% Uptime]",
+      "description": "[TRANSLATE: Enterprise-grade reliability with guaranteed availability]"
+    },
+    "security": {
+      "title": "[TRANSLATE: Enterprise Security]",
+      "description": "[TRANSLATE: SOC 2, ISO 27001, GDPR, and HIPAA compliant]"
+    },
+    "support": {
+      "title": "[TRANSLATE: Fast Support]",
+      "description": "[TRANSLATE: Average response time under 3 minutes for all inquiries]"
+    },
+    "scalable": {
+      "title": "[TRANSLATE: Scalable]",
+      "description": "[TRANSLATE: Handle millions of requests with consistent performance]"
+    },
+    "ethical": {
+      "title": "[TRANSLATE: Ethical AI]",
+      "description": "[TRANSLATE: Built with permission from professional voice actors]"
+    }
+  },
+  "cta": {
+    "title": "[TRANSLATE: Ready to Get Started?]",
+    "subtitle": "[TRANSLATE: Join thousands of businesses already using our platform to transform their workflows]"
+  },
+  "faq": {
+    "title": "[TRANSLATE: Frequently Asked Questions]",
+    "q1": {
+      "question": "[TRANSLATE: What is included in the free trial?]",
+      "answer": "[TRANSLATE: Our free trial includes access to all features with a limited number of API calls. No credit card required.]"
+    },
+    "q2": {
+      "question": "[TRANSLATE: Can I upgrade or downgrade my plan?]",
+      "answer": "[TRANSLATE: Yes, you can change your plan at any time. Changes take effect immediately and billing is prorated.]"
+    },
+    "q3": {
+      "question": "[TRANSLATE: What payment methods do you accept?]",
+      "answer": "[TRANSLATE: We accept all major credit cards, PayPal, and bank transfers for enterprise plans.]"
+    },
+    "q4": {
+      "question": "[TRANSLATE: Do you offer enterprise solutions?]",
+      "answer": "[TRANSLATE: Yes, we offer custom enterprise solutions with dedicated support, SLAs, and volume pricing.]"
+    }
+  }
+}

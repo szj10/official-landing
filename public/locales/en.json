@@ -1,0 +1,93 @@
+{
+  "common": {
+    "getStarted": "Get Started",
+    "getStartedFree": "Get Started Free",
+    "watchDemo": "Watch Demo",
+    "learnMore": "Learn more →",
+    "startFreeTrial": "Start Free Trial",
+    "viewPricing": "View Pricing"
+  },
+  "header": {
+    "products": "Products",
+    "solutions": "Solutions",
+    "pricing": "Pricing",
+    "resources": "Resources",
+    "language": "Language",
+    "theme": "Theme"
+  },
+  "hero": {
+    "title": "AI-Powered Solutions for",
+    "titleHighlight": "Modern Businesses",
+    "subtitle": "Transform your workflow with cutting-edge AI technology. Build faster, scale efficiently, and deliver exceptional results with our comprehensive suite of tools."
+  },
+  "trust": {
+    "title": "Trusted by 300+ leading companies worldwide"
+  },
+  "solutions": {
+    "title": "Solutions for Every Need",
+    "subtitle": "From APIs to studio tools, we have the perfect solution for your business",
+    "api": {
+      "title": "API Platform",
+      "description": "Fast, efficient, and scalable APIs built for production workloads. Integrate seamlessly with your existing stack."
+    },
+    "studio": {
+      "title": "Studio",
+      "description": "Create professional content 10x faster with our intuitive studio. Full creative control at your fingertips."
+    },
+    "translation": {
+      "title": "Translation",
+      "description": "Instant localization in 40+ languages. Reach global audiences without compromising quality or meaning."
+    }
+  },
+  "features": {
+    "title": "Why Businesses Choose Us",
+    "subtitle": "Built for the scalability, performance, and security professionals demand",
+    "languages": {
+      "title": "200+ Languages",
+      "description": "Support for global audiences with industry-specific voices and accents"
+    },
+    "uptime": {
+      "title": "99.9% Uptime",
+      "description": "Enterprise-grade reliability with guaranteed availability"
+    },
+    "security": {
+      "title": "Enterprise Security",
+      "description": "SOC 2, ISO 27001, GDPR, and HIPAA compliant"
+    },
+    "support": {
+      "title": "Fast Support",
+      "description": "Average response time under 3 minutes for all inquiries"
+    },
+    "scalable": {
+      "title": "Scalable",
+      "description": "Handle millions of requests with consistent performance"
+    },
+    "ethical": {
+      "title": "Ethical AI",
+      "description": "Built with permission from professional voice actors"
+    }
+  },
+  "cta": {
+    "title": "Ready to Get Started?",
+    "subtitle": "Join thousands of businesses already using our platform to transform their workflows"
+  },
+  "faq": {
+    "title": "Frequently Asked Questions",
+    "q1": {
+      "question": "What is included in the free trial?",
+      "answer": "Our free trial includes access to all features with a limited number of API calls. No credit card required."
+    },
+    "q2": {
+      "question": "Can I upgrade or downgrade my plan?",
+      "answer": "Yes, you can change your plan at any time. Changes take effect immediately and billing is prorated."
+    },
+    "q3": {
+      "question": "What payment methods do you accept?",
+      "answer": "We accept all major credit cards, PayPal, and bank transfers for enterprise plans."
+    },
+    "q4": {
+      "question": "Do you offer enterprise solutions?",
+      "answer": "Yes, we offer custom enterprise solutions with dedicated support, SLAs, and volume pricing."
+    }
+  }
+}
