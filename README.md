@@ -1,36 +1,101 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Huavoi - AI-Powered Solutions Landing Page
+
+A Next.js + TypeScript project for a product landing page and pricing pages, inspired by modern SaaS websites.
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+- Node.js 18.17 or later
+- npm or yarn
+
+### Installation
+
+```bash
+npm install
+```
+
+### Development
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) to view the landing page.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Build
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run build
+```
 
-## Learn More
+### Production
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+npm start
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Project Structure
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```
+src/
+├── app/
+│   ├── layout.tsx          # Root layout with metadata
+│   ├── page.tsx            # Landing page
+│   ├── pricing/
+│   │   └── page.tsx        # Pricing page
+│   └── globals.css         # Global styles
+└── components/
+    ├── Header.tsx          # Navigation header
+    └── Footer.tsx          # Site footer
+```
 
-## Deploy on Vercel
+## Pages
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Landing Page (/)
+- Hero section with CTA
+- Trust badges (company logos)
+- Product/solution cards
+- Feature highlights
+- FAQ section
+- Call-to-action banner
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Pricing Page (/pricing)
+- Pricing tiers (Starter, Professional, Business, Enterprise)
+- Monthly/Annual billing toggle
+- Feature comparison table
+- FAQ section
+- Contact sales CTA
+
+## Technologies
+
+- **Next.js 16** - React framework with App Router
+- **TypeScript** - Type safety
+- **Tailwind CSS** - Utility-first styling
+- **React** - UI library
+
+## Features
+
+- ✅ Responsive design (mobile-first)
+- ✅ Dark mode ready (via Tailwind)
+- ✅ SEO optimized
+- ✅ Static generation for fast performance
+- ✅ Accessible components
+- ✅ Modern UI with gradients and animations
+
+## Customization
+
+### Branding
+Update the logo and brand name in:
+- `src/components/Header.tsx`
+- `src/components/Footer.tsx`
+
+### Colors
+The project uses Tailwind's default color palette. Customize in `tailwind.config.ts` if needed.
+
+### Content
+- Landing page content: `src/app/page.tsx`
+- Pricing tiers: `src/app/pricing/page.tsx`
+
+## License
+
+MIT
