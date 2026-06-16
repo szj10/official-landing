@@ -73,12 +73,12 @@ export default function Home() {
               <div className="bg-white dark:bg-gray-800 rounded-xl p-8 shadow-sm hover:shadow-lg transition-shadow">
                 <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center mb-6">
                   <svg className="w-6 h-6 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                   </svg>
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">{t('solutions.api.title')}</h3>
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">{t('solutions.script.title')}</h3>
                 <p className="text-gray-600 dark:text-gray-300 mb-4">
-                  {t('solutions.api.description')}
+                  {t('solutions.script.description')}
                 </p>
                 <Link href="/" className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium">
                   {t('common.learnMore')}
@@ -88,12 +88,12 @@ export default function Home() {
               <div className="bg-white dark:bg-gray-800 rounded-xl p-8 shadow-sm hover:shadow-lg transition-shadow">
                 <div className="w-12 h-12 bg-purple-100 dark:bg-purple-900/30 rounded-lg flex items-center justify-center mb-6">
                   <svg className="w-6 h-6 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01.469-1.57m0 0a3 3 0 01-1.469-1.57m0 0L9 7m4.469 4.43a3 3 0 01.469 1.57m0 0a3 3 0 01-1.469 1.57m0 0l.469.43m0 0L15 17" />
                   </svg>
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">{t('solutions.studio.title')}</h3>
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">{t('solutions.voice.title')}</h3>
                 <p className="text-gray-600 dark:text-gray-300 mb-4">
-                  {t('solutions.studio.description')}
+                  {t('solutions.voice.description')}
                 </p>
                 <Link href="/" className="text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 font-medium">
                   {t('common.learnMore')}
@@ -103,12 +103,12 @@ export default function Home() {
               <div className="bg-white dark:bg-gray-800 rounded-xl p-8 shadow-sm hover:shadow-lg transition-shadow">
                 <div className="w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center mb-6">
                   <svg className="w-6 h-6 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 018.658 3M15 21a3 3 0 00-3-3h-3a3 3 0 00-3 3m3-3h6m-6 0h6m-3-3h3m-3 0h3" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
                   </svg>
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">{t('solutions.translation.title')}</h3>
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">{t('solutions.video.title')}</h3>
                 <p className="text-gray-600 dark:text-gray-300 mb-4">
-                  {t('solutions.translation.description')}
+                  {t('solutions.video.description')}
                 </p>
                 <Link href="/" className="text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 font-medium">
                   {t('common.learnMore')}
@@ -131,12 +131,12 @@ export default function Home() {
 
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
               {[
-                { key: 'languages' },
-                { key: 'uptime' },
-                { key: 'security' },
-                { key: 'support' },
+                { key: 'endToEnd' },
+                { key: 'speed' },
+                { key: 'quality' },
+                { key: 'affordable' },
+                { key: 'customizable' },
                 { key: 'scalable' },
-                { key: 'ethical' },
               ].map((feature, i) => (
                 <div key={i} className="p-6">
                   <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">{t(`features.${feature.key}.title`)}</h3>

@@ -13,15 +13,16 @@ export default function Footer() {
               <span className="text-xl font-bold text-white">Huavoi</span>
             </div>
             <p className="text-sm text-gray-400">
-              AI-powered solutions for modern businesses. Transform your workflow with cutting-edge technology.
+              AI-powered video creation platform. Transform ideas into professional videos with scriptwriting, voice synthesis, and video generation—all in one place.
             </p>
           </div>
 
           <div>
             <h3 className="text-white font-semibold mb-4">Products</h3>
             <ul className="space-y-2 text-sm">
-              <li><Link href="/" className="hover:text-white transition-colors">API Platform</Link></li>
-              <li><Link href="/" className="hover:text-white transition-colors">Studio</Link></li>
+              <li><Link href="/" className="hover:text-white transition-colors">Script Writer</Link></li>
+              <li><Link href="/" className="hover:text-white transition-colors">Voice Synthesis</Link></li>
+              <li><Link href="/" className="hover:text-white transition-colors">Video Generator</Link></li>
               <li><Link href="/" className="hover:text-white transition-colors">Enterprise</Link></li>
             </ul>
           </div>

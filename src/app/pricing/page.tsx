@@ -14,26 +14,28 @@ export default function PricingPage() {
       description: 'Perfect for individuals and small projects',
       price: billingCycle === 'monthly' ? 0 : 0,
       features: [
-        '1,000 API calls/month',
-        'Basic voices',
+        '10 videos/month',
+        'AI script generation',
+        'Basic voice selection',
+        'Standard video templates',
         'Email support',
-        'Community access',
-        'Standard latency',
+        '720p output quality',
       ],
       cta: 'Get Started',
       popular: false,
     },
     {
       name: 'Professional',
-      description: 'For growing teams and businesses',
+      description: 'For growing teams and content creators',
       price: billingCycle === 'monthly' ? 49 : 39,
       features: [
-        '50,000 API calls/month',
-        'All premium voices',
+        '100 videos/month',
+        'Advanced AI scripts',
+        '200+ premium voices',
+        'Custom video templates',
         'Priority support',
-        'Advanced analytics',
-        'Low latency',
-        'Custom pronunciation',
+        '1080p HD quality',
+        'Brand customization',
         'API access',
       ],
       cta: 'Start Free Trial',
@@ -41,18 +43,18 @@ export default function PricingPage() {
     },
     {
       name: 'Business',
-      description: 'For scaling organizations',
+      description: 'For marketing teams and agencies',
       price: billingCycle === 'monthly' ? 199 : 159,
       features: [
-        '500,000 API calls/month',
+        'Unlimited videos',
+        'Advanced AI scripts',
         'All premium voices',
+        'Custom templates & branding',
         '24/7 dedicated support',
+        '4K Ultra HD quality',
+        'Team collaboration',
         'Advanced analytics',
-        'Ultra-low latency',
-        'Custom pronunciation',
-        'Voice cloning',
         'SSO & SAML',
-        'SLA guarantee',
       ],
       cta: 'Start Free Trial',
       popular: false,
@@ -62,14 +64,15 @@ export default function PricingPage() {
       description: 'Custom solutions for large organizations',
       price: null,
       features: [
-        'Unlimited API calls',
-        'All features included',
+        'Unlimited everything',
+        'Custom AI models',
+        'Voice cloning',
+        'White-label solution',
         'Dedicated account manager',
-        'Custom integrations',
         'On-premise deployment',
+        'Custom integrations',
         'Volume discounts',
         'Custom SLA',
-        'Training & onboarding',
       ],
       cta: 'Contact Sales',
       popular: false,
@@ -88,7 +91,7 @@ export default function PricingPage() {
                 Simple, Transparent Pricing
               </h1>
               <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto mb-8">
-                Choose the perfect plan for your needs. All plans include a 14-day free trial.
+                Choose the perfect plan for your video creation needs. All plans include a 14-day free trial with full access.
               </p>
 
               <div className="inline-flex items-center bg-gray-100 dark:bg-gray-800 rounded-lg p-1">
@@ -206,14 +209,15 @@ export default function PricingPage() {
                 </thead>
                 <tbody>
                   {[
-                    { feature: 'API Calls', starter: '1K', pro: '50K', business: '500K', enterprise: 'Unlimited' },
-                    { feature: 'Voice Selection', starter: 'Basic', pro: 'Premium', business: 'Premium', enterprise: 'Premium' },
-                    { feature: 'Support', starter: 'Email', pro: 'Priority', business: '24/7', enterprise: 'Dedicated' },
-                    { feature: 'Analytics', starter: '—', pro: '✓', business: '✓', enterprise: '✓' },
-                    { feature: 'Voice Cloning', starter: '—', pro: '—', business: '✓', enterprise: '✓' },
-                    { feature: 'SSO/SAML', starter: '—', pro: '—', business: '✓', enterprise: '✓' },
-                    { feature: 'SLA', starter: '—', pro: '—', business: '✓', enterprise: 'Custom' },
-                    { feature: 'On-premise', starter: '—', pro: '—', business: '—', enterprise: '✓' },
+                    { feature: 'Videos per Month', starter: '10', pro: '100', business: 'Unlimited', enterprise: 'Unlimited' },
+                    { feature: 'AI Script Writer', starter: '✓', pro: '✓', business: '✓', enterprise: '✓' },
+                    { feature: 'Voice Selection', starter: 'Basic', pro: '200+', business: '200+', enterprise: 'Custom' },
+                    { feature: 'Video Quality', starter: '720p', pro: '1080p', business: '4K', enterprise: '4K+' },
+                    { feature: 'Custom Branding', starter: '—', pro: '✓', business: '✓', enterprise: '✓' },
+                    { feature: 'Team Collaboration', starter: '—', pro: '—', business: '✓', enterprise: '✓' },
+                    { feature: 'API Access', starter: '—', pro: '✓', business: '✓', enterprise: '✓' },
+                    { feature: 'Voice Cloning', starter: '—', pro: '—', business: '—', enterprise: '✓' },
+                    { feature: 'White Label', starter: '—', pro: '—', business: '—', enterprise: '✓' },
                   ].map((row, i) => (
                     <tr key={i} className="border-b border-gray-100 dark:border-gray-800">
                       <td className="py-4 px-4 text-gray-900 dark:text-white">{row.feature}</td>
@@ -237,8 +241,8 @@ export default function PricingPage() {
                   Need a custom solution?
                 </h3>
                 <p className="text-gray-600 dark:text-gray-300 mb-6">
-                  Our enterprise team can help you build a custom plan that fits your specific requirements, 
-                  including volume discounts, dedicated support, and custom integrations.
+                  Our enterprise team can build a custom video creation solution tailored to your workflow, 
+                  including custom AI models, voice cloning, white-label options, and dedicated support.
                 </p>
                 <Link
                   href="/"
@@ -250,11 +254,11 @@ export default function PricingPage() {
 
               <div className="bg-white dark:bg-gray-800 rounded-xl p-8 shadow-sm">
                 <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-                  Start with a free trial
+                  Try it free for 14 days
                 </h3>
                 <p className="text-gray-600 dark:text-gray-300 mb-6">
-                  Try our platform risk-free for 14 days. No credit card required. 
-                  Get full access to all features and see the results for yourself.
+                  Create your first AI-powered video in minutes. No credit card required. 
+                  Experience the full power of script-to-screen video creation.
                 </p>
                 <Link
                   href="/"
@@ -278,24 +282,24 @@ export default function PricingPage() {
             <div className="max-w-3xl mx-auto space-y-4">
               {[
                 {
+                  q: 'What\'s included in the free trial?',
+                  a: 'Full access to all features for 14 days. Create up to 5 videos with AI scriptwriting, voice synthesis, and video generation. No credit card required.',
+                },
+                {
                   q: 'Can I switch plans at any time?',
                   a: 'Yes, you can upgrade or downgrade your plan at any time. When upgrading, you\'ll be charged the prorated difference. When downgrading, you\'ll receive credit for the unused portion.',
                 },
                 {
-                  q: 'What happens if I exceed my API call limit?',
-                  a: 'We\'ll notify you when you reach 80% of your limit. You can either upgrade your plan or purchase additional calls at our pay-as-you-go rate.',
+                  q: 'What video formats and quality do you support?',
+                  a: 'We support MP4, MOV, and WebM formats. Quality ranges from 720p (Starter) to 1080p HD (Professional) to 4K Ultra HD (Business and Enterprise).',
+                },
+                {
+                  q: 'Can I use my own scripts or voices?',
+                  a: 'Absolutely. While our AI can generate scripts and voices, you can upload your own scripts, record custom audio, or use our voice cloning feature (Enterprise) to replicate specific voices.',
                 },
                 {
                   q: 'Do you offer refunds?',
-                  a: 'Yes, we offer a 30-day money-back guarantee for all paid plans. If you\'re not satisfied, contact our support team for a full refund.',
-                },
-                {
-                  q: 'Is there a free trial?',
-                  a: 'Yes! All plans include a 14-day free trial with full access to features. No credit card required to start.',
-                },
-                {
-                  q: 'What payment methods do you accept?',
-                  a: 'We accept all major credit cards (Visa, MasterCard, American Express), PayPal, and bank transfers for annual plans.',
+                  a: 'Yes, we offer a 30-day money-back guarantee for all paid plans. If you\'re not satisfied with the video quality or features, contact our support team for a full refund.',
                 },
               ].map((faq, i) => (
                 <details key={i} className="bg-gray-50 dark:bg-gray-800 rounded-lg p-6 group">

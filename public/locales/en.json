@@ -16,78 +16,78 @@
     "theme": "Theme"
   },
   "hero": {
-    "title": "AI-Powered Solutions for",
-    "titleHighlight": "Modern Businesses",
-    "subtitle": "Transform your workflow with cutting-edge AI technology. Build faster, scale efficiently, and deliver exceptional results with our comprehensive suite of tools."
+    "title": "AI-Powered Video Creation",
+    "titleHighlight": "From Script to Screen",
+    "subtitle": "Transform your ideas into professional videos in minutes. Our end-to-end AI solution handles scriptwriting, voice synthesis, and video generation—all in one seamless platform."
   },
   "trust": {
     "title": "Trusted by 300+ leading companies worldwide"
   },
   "solutions": {
-    "title": "Solutions for Every Need",
-    "subtitle": "From APIs to studio tools, we have the perfect solution for your business",
-    "api": {
-      "title": "API Platform",
-      "description": "Fast, efficient, and scalable APIs built for production workloads. Integrate seamlessly with your existing stack."
+    "title": "Complete Video Production Suite",
+    "subtitle": "Everything you need to create stunning videos, powered by cutting-edge AI",
+    "script": {
+      "title": "AI Script Writer",
+      "description": "Generate compelling scripts tailored to your brand voice and target audience. Our AI understands context, tone, and storytelling to create engaging narratives."
     },
-    "studio": {
-      "title": "Studio",
-      "description": "Create professional content 10x faster with our intuitive studio. Full creative control at your fingertips."
+    "voice": {
+      "title": "Voice Synthesis",
+      "description": "Choose from 200+ natural-sounding voices in 40+ languages. Professional-grade TTS engine with emotion, pacing, and emphasis control for perfect narration."
     },
-    "translation": {
-      "title": "Translation",
-      "description": "Instant localization in 40+ languages. Reach global audiences without compromising quality or meaning."
+    "video": {
+      "title": "Video Generation",
+      "description": "Transform scripts and audio into polished videos automatically. AI-powered visuals, transitions, and effects that match your content perfectly."
     }
   },
   "features": {
-    "title": "Why Businesses Choose Us",
-    "subtitle": "Built for the scalability, performance, and security professionals demand",
-    "languages": {
-      "title": "200+ Languages",
-      "description": "Support for global audiences with industry-specific voices and accents"
+    "title": "Why Choose Huavoi",
+    "subtitle": "Professional video creation made simple, fast, and affordable",
+    "endToEnd": {
+      "title": "End-to-End Solution",
+      "description": "From concept to final video—no need for multiple tools or vendors. One platform handles everything seamlessly."
     },
-    "uptime": {
-      "title": "99.9% Uptime",
-      "description": "Enterprise-grade reliability with guaranteed availability"
+    "speed": {
+      "title": "10x Faster",
+      "description": "Create professional videos in minutes instead of days. What once required a full production team now takes just a few clicks."
     },
-    "security": {
-      "title": "Enterprise Security",
-      "description": "SOC 2, ISO 27001, GDPR, and HIPAA compliant"
+    "quality": {
+      "title": "Studio Quality",
+      "description": "Broadcast-quality output with professional voices, smooth transitions, and polished visuals that rival traditional production."
     },
-    "support": {
-      "title": "Fast Support",
-      "description": "Average response time under 3 minutes for all inquiries"
+    "affordable": {
+      "title": "Cost Effective",
+      "description": "Fraction of the cost of traditional video production. No expensive equipment, studios, or production teams required."
+    },
+    "customizable": {
+      "title": "Fully Customizable",
+      "description": "Fine-tune every aspect—voice, pacing, visuals, branding. Maintain complete creative control while AI handles the heavy lifting."
     },
     "scalable": {
-      "title": "Scalable",
-      "description": "Handle millions of requests with consistent performance"
-    },
-    "ethical": {
-      "title": "Ethical AI",
-      "description": "Built with permission from professional voice actors"
+      "title": "Scale Instantly",
+      "description": "Produce one video or thousands with consistent quality. Perfect for content teams, marketing agencies, and enterprises."
     }
   },
   "cta": {
-    "title": "Ready to Get Started?",
-    "subtitle": "Join thousands of businesses already using our platform to transform their workflows"
+    "title": "Ready to Create Amazing Videos?",
+    "subtitle": "Join thousands of creators and businesses producing professional videos faster than ever before"
   },
   "faq": {
     "title": "Frequently Asked Questions",
     "q1": {
-      "question": "What is included in the free trial?",
-      "answer": "Our free trial includes access to all features with a limited number of API calls. No credit card required."
+      "question": "What does the video creation process include?",
+      "answer": "Our platform provides a complete end-to-end solution: AI-powered script generation, professional voice synthesis with 200+ voices, and automated video production with matching visuals. You can use all three together or each component independently."
     },
     "q2": {
-      "question": "Can I upgrade or downgrade my plan?",
-      "answer": "Yes, you can change your plan at any time. Changes take effect immediately and billing is prorated."
+      "question": "How long does it take to create a video?",
+      "answer": "A typical 2-3 minute video can be created in under 10 minutes. The AI handles scriptwriting, voice generation, and video assembly automatically, dramatically reducing production time compared to traditional methods."
     },
     "q3": {
-      "question": "What payment methods do you accept?",
-      "answer": "We accept all major credit cards, PayPal, and bank transfers for enterprise plans."
+      "question": "Can I customize the AI-generated content?",
+      "answer": "Absolutely. You have full control at every step—edit scripts, choose voices, adjust pacing and tone, customize visuals, and add your branding. The AI accelerates the process while you maintain creative control."
     },
     "q4": {
-      "question": "Do you offer enterprise solutions?",
-      "answer": "Yes, we offer custom enterprise solutions with dedicated support, SLAs, and volume pricing."
+      "question": "What types of videos can I create?",
+      "answer": "Marketing videos, product demos, training content, social media posts, explainer videos, corporate communications, and more. Our AI adapts to your needs and style requirements."
     }
   }
 }

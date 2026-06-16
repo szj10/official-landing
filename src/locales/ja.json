@@ -16,78 +16,78 @@
     "theme": "[TRANSLATE: Theme]"
   },
   "hero": {
-    "title": "[TRANSLATE: AI-Powered Solutions for]",
-    "titleHighlight": "[TRANSLATE: Modern Businesses]",
-    "subtitle": "[TRANSLATE: Transform your workflow with cutting-edge AI technology. Build faster, scale efficiently, and deliver exceptional results with our comprehensive suite of tools.]"
+    "title": "[TRANSLATE: AI-Powered Video Creation]",
+    "titleHighlight": "[TRANSLATE: From Script to Screen]",
+    "subtitle": "[TRANSLATE: Transform your ideas into professional videos in minutes. Our end-to-end AI solution handles scriptwriting, voice synthesis, and video generation—all in one seamless platform.]"
   },
   "trust": {
     "title": "[TRANSLATE: Trusted by 300+ leading companies worldwide]"
   },
   "solutions": {
-    "title": "[TRANSLATE: Solutions for Every Need]",
-    "subtitle": "[TRANSLATE: From APIs to studio tools, we have the perfect solution for your business]",
-    "api": {
-      "title": "[TRANSLATE: API Platform]",
-      "description": "[TRANSLATE: Fast, efficient, and scalable APIs built for production workloads. Integrate seamlessly with your existing stack.]"
+    "title": "[TRANSLATE: Complete Video Production Suite]",
+    "subtitle": "[TRANSLATE: Everything you need to create stunning videos, powered by cutting-edge AI]",
+    "script": {
+      "title": "[TRANSLATE: AI Script Writer]",
+      "description": "[TRANSLATE: Generate compelling scripts tailored to your brand voice and target audience. Our AI understands context, tone, and storytelling to create engaging narratives.]"
     },
-    "studio": {
-      "title": "[TRANSLATE: Studio]",
-      "description": "[TRANSLATE: Create professional content 10x faster with our intuitive studio. Full creative control at your fingertips.]"
+    "voice": {
+      "title": "[TRANSLATE: Voice Synthesis]",
+      "description": "[TRANSLATE: Choose from 200+ natural-sounding voices in 40+ languages. Professional-grade TTS engine with emotion, pacing, and emphasis control for perfect narration.]"
     },
-    "translation": {
-      "title": "[TRANSLATE: Translation]",
-      "description": "[TRANSLATE: Instant localization in 40+ languages. Reach global audiences without compromising quality or meaning.]"
+    "video": {
+      "title": "[TRANSLATE: Video Generation]",
+      "description": "[TRANSLATE: Transform scripts and audio into polished videos automatically. AI-powered visuals, transitions, and effects that match your content perfectly.]"
     }
   },
   "features": {
-    "title": "[TRANSLATE: Why Businesses Choose Us]",
-    "subtitle": "[TRANSLATE: Built for the scalability, performance, and security professionals demand]",
-    "languages": {
-      "title": "[TRANSLATE: 200+ Languages]",
-      "description": "[TRANSLATE: Support for global audiences with industry-specific voices and accents]"
+    "title": "[TRANSLATE: Why Choose Huavoi]",
+    "subtitle": "[TRANSLATE: Professional video creation made simple, fast, and affordable]",
+    "endToEnd": {
+      "title": "[TRANSLATE: End-to-End Solution]",
+      "description": "[TRANSLATE: From concept to final video—no need for multiple tools or vendors. One platform handles everything seamlessly.]"
     },
-    "uptime": {
-      "title": "[TRANSLATE: 99.9% Uptime]",
-      "description": "[TRANSLATE: Enterprise-grade reliability with guaranteed availability]"
+    "speed": {
+      "title": "[TRANSLATE: 10x Faster]",
+      "description": "[TRANSLATE: Create professional videos in minutes instead of days. What once required a full production team now takes just a few clicks.]"
     },
-    "security": {
-      "title": "[TRANSLATE: Enterprise Security]",
-      "description": "[TRANSLATE: SOC 2, ISO 27001, GDPR, and HIPAA compliant]"
+    "quality": {
+      "title": "[TRANSLATE: Studio Quality]",
+      "description": "[TRANSLATE: Broadcast-quality output with professional voices, smooth transitions, and polished visuals that rival traditional production.]"
     },
-    "support": {
-      "title": "[TRANSLATE: Fast Support]",
-      "description": "[TRANSLATE: Average response time under 3 minutes for all inquiries]"
+    "affordable": {
+      "title": "[TRANSLATE: Cost Effective]",
+      "description": "[TRANSLATE: Fraction of the cost of traditional video production. No expensive equipment, studios, or production teams required.]"
+    },
+    "customizable": {
+      "title": "[TRANSLATE: Fully Customizable]",
+      "description": "[TRANSLATE: Fine-tune every aspect—voice, pacing, visuals, branding. Maintain complete creative control while AI handles the heavy lifting.]"
     },
     "scalable": {
-      "title": "[TRANSLATE: Scalable]",
-      "description": "[TRANSLATE: Handle millions of requests with consistent performance]"
-    },
-    "ethical": {
-      "title": "[TRANSLATE: Ethical AI]",
-      "description": "[TRANSLATE: Built with permission from professional voice actors]"
+      "title": "[TRANSLATE: Scale Instantly]",
+      "description": "[TRANSLATE: Produce one video or thousands with consistent quality. Perfect for content teams, marketing agencies, and enterprises.]"
     }
   },
   "cta": {
-    "title": "[TRANSLATE: Ready to Get Started?]",
-    "subtitle": "[TRANSLATE: Join thousands of businesses already using our platform to transform their workflows]"
+    "title": "[TRANSLATE: Ready to Create Amazing Videos?]",
+    "subtitle": "[TRANSLATE: Join thousands of creators and businesses producing professional videos faster than ever before]"
   },
   "faq": {
     "title": "[TRANSLATE: Frequently Asked Questions]",
     "q1": {
-      "question": "[TRANSLATE: What is included in the free trial?]",
-      "answer": "[TRANSLATE: Our free trial includes access to all features with a limited number of API calls. No credit card required.]"
+      "question": "[TRANSLATE: What does the video creation process include?]",
+      "answer": "[TRANSLATE: Our platform provides a complete end-to-end solution: AI-powered script generation, professional voice synthesis with 200+ voices, and automated video production with matching visuals. You can use all three together or each component independently.]"
     },
     "q2": {
-      "question": "[TRANSLATE: Can I upgrade or downgrade my plan?]",
-      "answer": "[TRANSLATE: Yes, you can change your plan at any time. Changes take effect immediately and billing is prorated.]"
+      "question": "[TRANSLATE: How long does it take to create a video?]",
+      "answer": "[TRANSLATE: A typical 2-3 minute video can be created in under 10 minutes. The AI handles scriptwriting, voice generation, and video assembly automatically, dramatically reducing production time compared to traditional methods.]"
     },
     "q3": {
-      "question": "[TRANSLATE: What payment methods do you accept?]",
-      "answer": "[TRANSLATE: We accept all major credit cards, PayPal, and bank transfers for enterprise plans.]"
+      "question": "[TRANSLATE: Can I customize the AI-generated content?]",
+      "answer": "[TRANSLATE: Absolutely. You have full control at every step—edit scripts, choose voices, adjust pacing and tone, customize visuals, and add your branding. The AI accelerates the process while you maintain creative control.]"
     },
     "q4": {
-      "question": "[TRANSLATE: Do you offer enterprise solutions?]",
-      "answer": "[TRANSLATE: Yes, we offer custom enterprise solutions with dedicated support, SLAs, and volume pricing.]"
+      "question": "[TRANSLATE: What types of videos can I create?]",
+      "answer": "[TRANSLATE: Marketing videos, product demos, training content, social media posts, explainer videos, corporate communications, and more. Our AI adapts to your needs and style requirements.]"
     }
   }
 }
