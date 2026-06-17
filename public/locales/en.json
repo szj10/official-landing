@@ -90,5 +90,48 @@
       "question": "What types of videos can I create?",
       "answer": "Marketing videos, product demos, training content, social media posts, explainer videos, corporate communications, and more. Our AI adapts to your needs and style requirements."
     }
+  },
+  "playground": {
+    "badge": "Try It Now",
+    "title": "TTS Playground",
+    "subtitle": "Experience our AI-powered text-to-speech technology. Enter your text, choose a voice, and hear the magic happen.",
+    "textSection": {
+      "title": "Text Input",
+      "sampleTexts": "Sample Texts",
+      "customText": "Or enter your own text",
+      "placeholder": "Enter the text you want to convert to speech...",
+      "characters": "characters"
+    },
+    "voiceSection": {
+      "title": "Voice Selection",
+      "sampleVoices": "Sample Voices",
+      "uploadCustom": "Upload Your Voice Sample",
+      "clickUpload": "Click to upload or drag and drop",
+      "supportedFormats": "MP3, WAV, M4A up to 10MB",
+      "fileUploaded": "File uploaded successfully"
+    },
+    "preview": {
+      "title": "Preview",
+      "generate": "Generate Audio",
+      "generating": "Generating...",
+      "playing": "Playing audio...",
+      "ready": "Ready to play",
+      "noAudio": "Select text and voice, then click Generate to create audio"
+    },
+    "tips": {
+      "title": "Tips for Best Results",
+      "tip1": {
+        "title": "Clear Text",
+        "description": "Use proper punctuation and spacing for natural-sounding speech"
+      },
+      "tip2": {
+        "title": "Match Voice to Content",
+        "description": "Choose a voice that fits your content's tone and audience"
+      },
+      "tip3": {
+        "title": "Test Different Options",
+        "description": "Try multiple voices and texts to find the perfect combination"
+      }
+    }
   }
 }

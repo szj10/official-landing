@@ -1,11 +1,11 @@
 {
   "common": {
-    "getStarted": "[TRANSLATE: Get Started]",
-    "getStartedFree": "[TRANSLATE: Get Started Free]",
-    "watchDemo": "[TRANSLATE: Watch Demo]",
-    "learnMore": "[TRANSLATE: Learn more →]",
-    "startFreeTrial": "[TRANSLATE: Start Free Trial]",
-    "viewPricing": "[TRANSLATE: View Pricing]"
+    "getStarted": "始める",
+    "getStartedFree": "無料で始める",
+    "watchDemo": "デモを見る",
+    "learnMore": "詳細を見る →",
+    "startFreeTrial": "無料トライアルを開始",
+    "viewPricing": "料金を見る"
   },
   "header": {
     "home": "ホーム",
@@ -89,6 +89,49 @@
     "q4": {
       "question": "[TRANSLATE: What types of videos can I create?]",
       "answer": "[TRANSLATE: Marketing videos, product demos, training content, social media posts, explainer videos, corporate communications, and more. Our AI adapts to your needs and style requirements.]"
+    }
+  },
+  "playground": {
+    "badge": "今すぐ試す",
+    "title": "TTS プレイグラウンド",
+    "subtitle": "AI搭載のテキスト読み上げ技術を体験。テキストを入力し、音声を選択して、魔法を聞いてみましょう。",
+    "textSection": {
+      "title": "テキスト入力",
+      "sampleTexts": "サンプルテキスト",
+      "customText": "または独自のテキストを入力",
+      "placeholder": "音声に変換したいテキストを入力...",
+      "characters": "文字"
+    },
+    "voiceSection": {
+      "title": "音声選択",
+      "sampleVoices": "サンプル音声",
+      "uploadCustom": "音声サンプルをアップロード",
+      "clickUpload": "クリックしてアップロードまたはドラッグ＆ドロップ",
+      "supportedFormats": "MP3、WAV、M4A（最大10MB）",
+      "fileUploaded": "ファイルが正常にアップロードされました"
+    },
+    "preview": {
+      "title": "プレビュー",
+      "generate": "音声を生成",
+      "generating": "生成中...",
+      "playing": "音声を再生中...",
+      "ready": "再生準備完了",
+      "noAudio": "テキストと音声を選択し、生成をクリックして音声を作成"
+    },
+    "tips": {
+      "title": "最良の結果を得るためのヒント",
+      "tip1": {
+        "title": "明確なテキスト",
+        "description": "自然な音声のために適切な句読点とスペースを使用"
+      },
+      "tip2": {
+        "title": "コンテンツに合った音声",
+        "description": "コンテンツのトーンと聴衆に合った音声を選択"
+      },
+      "tip3": {
+        "title": "異なるオプションを試す",
+        "description": "完璧な組み合わせを見つけるために複数の音声とテキストを試す"
+      }
     }
   }
 }

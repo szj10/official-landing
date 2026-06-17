@@ -1,11 +1,11 @@
 {
   "common": {
-    "getStarted": "[TRANSLATE: Get Started]",
-    "getStartedFree": "[TRANSLATE: Get Started Free]",
-    "watchDemo": "[TRANSLATE: Watch Demo]",
-    "learnMore": "[TRANSLATE: Learn more →]",
-    "startFreeTrial": "[TRANSLATE: Start Free Trial]",
-    "viewPricing": "[TRANSLATE: View Pricing]"
+    "getStarted": "Comenzar",
+    "getStartedFree": "Comenzar gratis",
+    "watchDemo": "Ver demo",
+    "learnMore": "Más información →",
+    "startFreeTrial": "Comenzar prueba gratuita",
+    "viewPricing": "Ver precios"
   },
   "header": {
     "home": "Inicio",
@@ -89,6 +89,49 @@
     "q4": {
       "question": "[TRANSLATE: What types of videos can I create?]",
       "answer": "[TRANSLATE: Marketing videos, product demos, training content, social media posts, explainer videos, corporate communications, and more. Our AI adapts to your needs and style requirements.]"
+    }
+  },
+  "playground": {
+    "badge": "Pruébalo Ahora",
+    "title": "Zona de Pruebas TTS",
+    "subtitle": "Experimenta nuestra tecnología de texto a voz impulsada por IA. Ingresa tu texto, elige una voz y escucha la magia.",
+    "textSection": {
+      "title": "Entrada de Texto",
+      "sampleTexts": "Textos de Ejemplo",
+      "customText": "O ingresa tu propio texto",
+      "placeholder": "Ingresa el texto que deseas convertir a voz...",
+      "characters": "caracteres"
+    },
+    "voiceSection": {
+      "title": "Selección de Voz",
+      "sampleVoices": "Voces de Ejemplo",
+      "uploadCustom": "Sube Tu Muestra de Voz",
+      "clickUpload": "Clic para subir o arrastrar y soltar",
+      "supportedFormats": "MP3, WAV, M4A hasta 10MB",
+      "fileUploaded": "Archivo subido exitosamente"
+    },
+    "preview": {
+      "title": "Vista Previa",
+      "generate": "Generar Audio",
+      "generating": "Generando...",
+      "playing": "Reproduciendo audio...",
+      "ready": "Listo para reproducir",
+      "noAudio": "Selecciona texto y voz, luego clic en Generar para crear audio"
+    },
+    "tips": {
+      "title": "Consejos para Mejores Resultados",
+      "tip1": {
+        "title": "Texto Claro",
+        "description": "Usa puntuación y espaciado adecuados para un habla natural"
+      },
+      "tip2": {
+        "title": "Emparejar Voz con Contenido",
+        "description": "Elige una voz que se ajuste al tono y audiencia de tu contenido"
+      },
+      "tip3": {
+        "title": "Probar Diferentes Opciones",
+        "description": "Prueba múltiples voces y textos para encontrar la combinación perfecta"
+      }
     }
   }
 }

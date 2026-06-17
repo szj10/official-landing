@@ -1,11 +1,11 @@
 {
   "common": {
-    "getStarted": "[TRANSLATE: Get Started]",
-    "getStartedFree": "[TRANSLATE: Get Started Free]",
-    "watchDemo": "[TRANSLATE: Watch Demo]",
-    "learnMore": "[TRANSLATE: Learn more →]",
-    "startFreeTrial": "[TRANSLATE: Start Free Trial]",
-    "viewPricing": "[TRANSLATE: View Pricing]"
+    "getStarted": "Loslegen",
+    "getStartedFree": "Kostenlos loslegen",
+    "watchDemo": "Demo ansehen",
+    "learnMore": "Mehr erfahren →",
+    "startFreeTrial": "Kostenlose Testversion starten",
+    "viewPricing": "Preise ansehen"
   },
   "header": {
     "home": "Startseite",
@@ -89,6 +89,49 @@
     "q4": {
       "question": "[TRANSLATE: What types of videos can I create?]",
       "answer": "[TRANSLATE: Marketing videos, product demos, training content, social media posts, explainer videos, corporate communications, and more. Our AI adapts to your needs and style requirements.]"
+    }
+  },
+  "playground": {
+    "badge": "Jetzt Testen",
+    "title": "TTS Spielwiese",
+    "subtitle": "Erleben Sie unsere KI-gestützte Text-zu-Sprache-Technologie. Geben Sie Ihren Text ein, wählen Sie eine Stimme und hören Sie die Magie.",
+    "textSection": {
+      "title": "Texteingabe",
+      "sampleTexts": "Beispieltexte",
+      "customText": "Oder geben Sie Ihren eigenen Text ein",
+      "placeholder": "Geben Sie den Text ein, den Sie in Sprache umwandeln möchten...",
+      "characters": "Zeichen"
+    },
+    "voiceSection": {
+      "title": "Stimmenauswahl",
+      "sampleVoices": "Beispielstimmen",
+      "uploadCustom": "Laden Sie Ihre Stimmprobe hoch",
+      "clickUpload": "Klicken zum Hochladen oder Ziehen und Ablegen",
+      "supportedFormats": "MP3, WAV, M4A bis zu 10MB",
+      "fileUploaded": "Datei erfolgreich hochgeladen"
+    },
+    "preview": {
+      "title": "Vorschau",
+      "generate": "Audio Generieren",
+      "generating": "Generierung...",
+      "playing": "Audio wird wiedergegeben...",
+      "ready": "Bereit zur Wiedergabe",
+      "noAudio": "Wählen Sie Text und Stimme, dann klicken Sie auf Generieren"
+    },
+    "tips": {
+      "title": "Tipps für Beste Ergebnisse",
+      "tip1": {
+        "title": "Klarer Text",
+        "description": "Verwenden Sie richtige Zeichensetzung und Abstände für natürliches Sprechen"
+      },
+      "tip2": {
+        "title": "Stimme an Inhalt Anpassen",
+        "description": "Wählen Sie eine Stimme, die zum Ton und Publikum Ihres Inhalts passt"
+      },
+      "tip3": {
+        "title": "Verschiedene Optionen Testen",
+        "description": "Probieren Sie mehrere Stimmen und Texte für die perfekte Kombination"
+      }
     }
   }
 }

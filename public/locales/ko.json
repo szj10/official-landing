@@ -90,5 +90,48 @@
       "question": "어떤 종류의 비디오를 제작할 수 있나요?",
       "answer": "마케팅 비디오, 제품 데모, 교육 콘텐츠, 소셜 미디어 게시물, 설명 영상, 기업 홍보 영상 등을 제작할 수 있습니다. 당사의 AI는 고객님의 필요와 스타일 요구사항에 맞춰 유연하게 조정됩니다."
     }
+  },
+  "playground": {
+    "badge": "지금 체험",
+    "title": "TTS 체험관",
+    "subtitle": "AI 기반 텍스트 음성 변환 기술을 경험하세요. 텍스트를 입력하고, 음성을 선택하고, 마법을 들어보세요.",
+    "textSection": {
+      "title": "텍스트 입력",
+      "sampleTexts": "샘플 텍스트",
+      "customText": "또는 직접 텍스트 입력",
+      "placeholder": "음성으로 변환할 텍스트를 입력하세요...",
+      "characters": "글자"
+    },
+    "voiceSection": {
+      "title": "음성 선택",
+      "sampleVoices": "샘플 음성",
+      "uploadCustom": "음성 샘플 업로드",
+      "clickUpload": "클릭하여 업로드 또는 드래그 앤 드롭",
+      "supportedFormats": "MP3, WAV, M4A (최대 10MB)",
+      "fileUploaded": "파일 업로드 완료"
+    },
+    "preview": {
+      "title": "미리보기",
+      "generate": "오디오 생성",
+      "generating": "생성 중...",
+      "playing": "오디오 재생 중...",
+      "ready": "재생 준비 완료",
+      "noAudio": "텍스트와 음성을 선택한 후 생성을 클릭하세요"
+    },
+    "tips": {
+      "title": "최상의 결과를 위한 팁",
+      "tip1": {
+        "title": "명확한 텍스트",
+        "description": "자연스러운 음성을 위해 적절한 문장 부호와 간격 사용"
+      },
+      "tip2": {
+        "title": "콘텐츠에 맞는 음성",
+        "description": "콘텐츠의 톤과 청중에 맞는 음성 선택"
+      },
+      "tip3": {
+        "title": "다양한 옵션 시도",
+        "description": "완벽한 조합을 찾기 위해 여러 음성과 텍스트 시도"
+      }
+    }
   }
 }

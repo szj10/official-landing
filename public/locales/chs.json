@@ -90,5 +90,48 @@
       "question": "我可以制作哪些类型的视频？",
       "answer": "营销视频、产品演示、培训内容、社交媒体帖子、说明视频、企业沟通视频等。我们的 AI 可以适应您的需求和风格要求。"
     }
+  },
+  "playground": {
+    "badge": "立即体验",
+    "title": "TTS 体验中心",
+    "subtitle": "体验我们 AI 驱动的文本转语音技术。输入文本，选择语音，聆听奇迹发生。",
+    "textSection": {
+      "title": "文本输入",
+      "sampleTexts": "示例文本",
+      "customText": "或输入您自己的文本",
+      "placeholder": "输入您想转换为语音的文本...",
+      "characters": "字符"
+    },
+    "voiceSection": {
+      "title": "语音选择",
+      "sampleVoices": "示例语音",
+      "uploadCustom": "上传您的语音样本",
+      "clickUpload": "点击上传或拖放文件",
+      "supportedFormats": "支持 MP3、WAV、M4A，最大 10MB",
+      "fileUploaded": "文件上传成功"
+    },
+    "preview": {
+      "title": "预览",
+      "generate": "生成音频",
+      "generating": "生成中...",
+      "playing": "正在播放音频...",
+      "ready": "准备播放",
+      "noAudio": "选择文本和语音，然后点击生成以创建音频"
+    },
+    "tips": {
+      "title": "最佳实践提示",
+      "tip1": {
+        "title": "清晰的文本",
+        "description": "使用正确的标点符号和间距以获得自然的语音效果"
+      },
+      "tip2": {
+        "title": "匹配语音与内容",
+        "description": "选择适合您内容语调和受众的语音"
+      },
+      "tip3": {
+        "title": "尝试不同选项",
+        "description": "尝试多种语音和文本以找到完美组合"
+      }
+    }
   }
 }
