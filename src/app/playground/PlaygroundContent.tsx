@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useI18n } from "@/i18n";
 
 const SAMPLE_TEXTS = [
@@ -28,6 +28,8 @@ const SAMPLE_VOICES = [
     gender: "Female",
     accent: "American",
     preview: "Professional and warm",
+    color: "from-pink-500 to-rose-500",
+    avatar: "E",
   },
   {
     id: "voice2",
@@ -35,6 +37,8 @@ const SAMPLE_VOICES = [
     gender: "Male",
     accent: "British",
     preview: "Authoritative and clear",
+    color: "from-blue-500 to-indigo-500",
+    avatar: "J",
   },
   {
     id: "voice3",
@@ -42,6 +46,8 @@ const SAMPLE_VOICES = [
     gender: "Female",
     accent: "Australian",
     preview: "Friendly and engaging",
+    color: "from-purple-500 to-violet-500",
+    avatar: "S",
   },
   {
     id: "voice4",
@@ -49,21 +55,10 @@ const SAMPLE_VOICES = [
     gender: "Male",
     accent: "American",
     preview: "Conversational and natural",
+    color: "from-emerald-500 to-teal-500",
+    avatar: "M",
   },
 ];
-
-function UploadIcon({ className }: { className?: string }) {
-  return (
-    <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth={2}
-        d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L0 6a4 4 0 014 4v6a4 4 0 01-4 4zm0 0h8m4-4v4m0 0v4m0-4h4m-4 0l4-4"
-      />
-    </svg>
-  );
-}
 
 function PlayIcon({ className }: { className?: string }) {
   return (
@@ -102,16 +97,53 @@ function SpeakerIcon({ className }: { className?: string }) {
   );
 }
 
+function MicIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={2}
+        d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01.469-1.57m0 0a3 3 0 01-1.469-1.57m0 0L9 7m4.469 4.43a3 3 0 01.469 1.57m0 0a3 3 0 01-1.469 1.57m0 0l.469.43m0 0L15 17"
+      />
+    </svg>
+  );
+}
+
+function StopIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} fill="currentColor" viewBox="0 0 24 24">
+      <rect x="6" y="6" width="12" height="12" rx="2" />
+    </svg>
+  );
+}
+
 export default function PlaygroundContent() {
   const { t } = useI18n();
   const [textInput, setTextInput] = useState("");
   const [selectedSampleText, setSelectedSampleText] = useState<string | null>(null);
   const [selectedVoice, setSelectedVoice] = useState<string | null>(null);
-  const [customVoiceFile, setCustomVoiceFile] = useState<File | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [isRecording, setIsRecording] = useState(false);
+  const [recordedAudioBlob, setRecordedAudioBlob] = useState<Blob | null>(null);
+  const [recordingTime, setRecordingTime] = useState(0);
+  const [playingVoicePreview, setPlayingVoicePreview] = useState<string | null>(null);
+
   const audioRef = useRef<HTMLAudioElement>(null);
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const audioChunksRef = useRef<Blob[]>([]);
+  const recordingIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const voicePreviewRef = useRef<HTMLAudioElement | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (recordingIntervalRef.current) {
+        clearInterval(recordingIntervalRef.current);
+      }
+    };
+  }, []);
 
   const handleSampleTextSelect = (id: string) => {
     const sample = SAMPLE_TEXTS.find((s) => s.id === id);
@@ -121,16 +153,75 @@ export default function PlaygroundContent() {
     }
   };
 
-  const handleCustomVoiceUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setCustomVoiceFile(file);
-      setSelectedVoice(null);
+  const handleVoicePreview = async (voiceId: string) => {
+    if (playingVoicePreview === voiceId) {
+      voicePreviewRef.current?.pause();
+      setPlayingVoicePreview(null);
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/tts/preview?voiceId=${voiceId}`);
+      if (!response.ok) throw new Error("Preview failed");
+
+      const data = await response.json();
+
+      if (voicePreviewRef.current) {
+        voicePreviewRef.current.pause();
+      }
+
+      const audio = new Audio(data.audioUrl);
+      voicePreviewRef.current = audio;
+      audio.onended = () => setPlayingVoicePreview(null);
+      audio.play();
+      setPlayingVoicePreview(voiceId);
+    } catch (error) {
+      console.error("Voice preview error:", error);
+    }
+  };
+
+  const startRecording = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const mediaRecorder = new MediaRecorder(stream);
+      mediaRecorderRef.current = mediaRecorder;
+      audioChunksRef.current = [];
+
+      mediaRecorder.ondataavailable = (event) => {
+        audioChunksRef.current.push(event.data);
+      };
+
+      mediaRecorder.onstop = () => {
+        const audioBlob = new Blob(audioChunksRef.current, { type: "audio/webm" });
+        setRecordedAudioBlob(audioBlob);
+        stream.getTracks().forEach((track) => track.stop());
+      };
+
+      mediaRecorder.start();
+      setIsRecording(true);
+      setRecordingTime(0);
+
+      recordingIntervalRef.current = setInterval(() => {
+        setRecordingTime((prev) => prev + 1);
+      }, 1000);
+    } catch (error) {
+      console.error("Recording error:", error);
+      alert("Unable to access microphone. Please check permissions.");
+    }
+  };
+
+  const stopRecording = () => {
+    if (mediaRecorderRef.current && isRecording) {
+      mediaRecorderRef.current.stop();
+      setIsRecording(false);
+      if (recordingIntervalRef.current) {
+        clearInterval(recordingIntervalRef.current);
+      }
     }
   };
 
   const handleGenerate = async () => {
-    if (!textInput.trim() || (!selectedVoice && !customVoiceFile)) {
+    if (!textInput.trim() || (!selectedVoice && !recordedAudioBlob)) {
       return;
     }
 
@@ -142,8 +233,8 @@ export default function PlaygroundContent() {
       if (selectedVoice) {
         formData.append("voiceId", selectedVoice);
       }
-      if (customVoiceFile) {
-        formData.append("voiceSample", customVoiceFile);
+      if (recordedAudioBlob) {
+        formData.append("voiceSample", recordedAudioBlob, "recording.webm");
       }
 
       const response = await fetch("/api/tts", {
@@ -180,6 +271,12 @@ export default function PlaygroundContent() {
     textInput ||
     (selectedSampleText ? SAMPLE_TEXTS.find((s) => s.id === selectedSampleText)?.text : "");
 
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, "0")}`;
+  };
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
       <div className="text-center mb-12">
@@ -196,7 +293,7 @@ export default function PlaygroundContent() {
       </div>
 
       <div className="grid lg:grid-cols-2 gap-8">
-        <div className="glass-panel rounded-3xl p-8 shadow-sm">
+        <div className="glass-panel rounded-3xl p-8 shadow-sm flex flex-col">
           <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
             <svg
               className="w-5 h-5 text-indigo-500"
@@ -214,7 +311,7 @@ export default function PlaygroundContent() {
             {t("playground.textSection.title")}
           </h2>
 
-          <div className="mb-6">
+          <div className="mb-6 flex-1">
             <label className="block text-sm font-medium text-gray-700 dark:text-zinc-300 mb-3">
               {t("playground.textSection.sampleTexts")}
             </label>
@@ -236,7 +333,7 @@ export default function PlaygroundContent() {
             </div>
           </div>
 
-          <div>
+          <div className="flex-1">
             <label className="block text-sm font-medium text-gray-700 dark:text-zinc-300 mb-3">
               {t("playground.textSection.customText")}
             </label>
@@ -247,7 +344,7 @@ export default function PlaygroundContent() {
                 setSelectedSampleText(null);
               }}
               placeholder={t("playground.textSection.placeholder")}
-              rows={6}
+              rows={5}
               className="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-zinc-900 border-2 border-gray-200 dark:border-zinc-700 focus:border-indigo-500 dark:focus:border-indigo-500 focus:outline-none transition-colors text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-zinc-500 resize-none text-sm"
             />
             <div className="mt-2 text-xs text-gray-500 dark:text-zinc-400">
@@ -256,87 +353,141 @@ export default function PlaygroundContent() {
           </div>
         </div>
 
-        <div className="glass-panel rounded-3xl p-8 shadow-sm">
+        <div className="glass-panel rounded-3xl p-8 shadow-sm flex flex-col">
           <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
             <SpeakerIcon className="w-5 h-5 text-purple-500" />
             {t("playground.voiceSection.title")}
           </h2>
 
-          <div className="mb-6">
+          <div className="mb-6 flex-1">
             <label className="block text-sm font-medium text-gray-700 dark:text-zinc-300 mb-3">
               {t("playground.voiceSection.sampleVoices")}
             </label>
-            <div className="grid grid-cols-2 gap-3">
+            <div className="space-y-2">
               {SAMPLE_VOICES.map((voice) => (
-                <button
+                <div
                   key={voice.id}
-                  onClick={() => {
-                    setSelectedVoice(voice.id);
-                    setCustomVoiceFile(null);
-                  }}
-                  className={`text-left px-4 py-3 rounded-xl transition-all duration-200 ${
-                    selectedVoice === voice.id
+                  className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${
+                    selectedVoice === voice.id && !recordedAudioBlob
                       ? "bg-purple-500/10 border-2 border-purple-500"
                       : "bg-gray-50 dark:bg-zinc-900 border-2 border-transparent hover:border-gray-200 dark:hover:border-zinc-700"
                   }`}
                 >
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="font-medium text-sm text-gray-900 dark:text-white">
-                      {voice.name}
-                    </span>
-                    {selectedVoice === voice.id && (
-                      <CheckIcon className="w-4 h-4 text-purple-500" />
-                    )}
+                  <div
+                    className={`w-12 h-12 rounded-full bg-gradient-to-br ${voice.color} flex items-center justify-center text-white font-bold text-lg shrink-0 shadow-lg`}
+                  >
+                    {voice.avatar}
                   </div>
-                  <div className="text-xs text-gray-500 dark:text-zinc-400">
-                    {voice.gender} • {voice.accent}
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 mb-0.5">
+                      <span className="font-semibold text-sm text-gray-900 dark:text-white">
+                        {voice.name}
+                      </span>
+                      <span className="text-xs text-gray-500 dark:text-zinc-400">
+                        {voice.gender} • {voice.accent}
+                      </span>
+                    </div>
+                    <div className="text-xs text-gray-400 dark:text-zinc-500 truncate">
+                      {voice.preview}
+                    </div>
                   </div>
-                  <div className="text-xs text-gray-400 dark:text-zinc-500 mt-1">
-                    {voice.preview}
+                  <div className="flex items-center gap-2 shrink-0">
+                    <button
+                      onClick={() => handleVoicePreview(voice.id)}
+                      className="w-8 h-8 rounded-full bg-gray-200 dark:bg-zinc-700 hover:bg-gray-300 dark:hover:bg-zinc-600 flex items-center justify-center transition-colors"
+                      title="Preview voice"
+                    >
+                      {playingVoicePreview === voice.id ? (
+                        <StopIcon className="w-3.5 h-3.5 text-gray-700 dark:text-zinc-300" />
+                      ) : (
+                        <PlayIcon className="w-3.5 h-3.5 text-gray-700 dark:text-zinc-300 ml-0.5" />
+                      )}
+                    </button>
+                    <button
+                      onClick={() => {
+                        setSelectedVoice(voice.id);
+                        setRecordedAudioBlob(null);
+                      }}
+                      className={`w-8 h-8 rounded-full flex items-center justify-center transition-all ${
+                        selectedVoice === voice.id && !recordedAudioBlob
+                          ? "bg-purple-500 text-white"
+                          : "bg-gray-200 dark:bg-zinc-700 hover:bg-gray-300 dark:hover:bg-zinc-600 text-gray-700 dark:text-zinc-300"
+                      }`}
+                      title="Select voice"
+                    >
+                      <CheckIcon className="w-4 h-4" />
+                    </button>
                   </div>
-                </button>
+                </div>
               ))}
             </div>
           </div>
 
-          <div>
+          <div className="flex-1">
             <label className="block text-sm font-medium text-gray-700 dark:text-zinc-300 mb-3">
-              {t("playground.voiceSection.uploadCustom")}
+              {t("playground.voiceSection.recordCustom")}
             </label>
-            <div className="relative">
-              <input
-                type="file"
-                accept="audio/*"
-                onChange={handleCustomVoiceUpload}
-                className="hidden"
-                id="voice-upload"
-              />
-              <label
-                htmlFor="voice-upload"
-                className="flex flex-col items-center justify-center w-full px-6 py-8 rounded-xl bg-gray-50 dark:bg-zinc-900 border-2 border-dashed border-gray-300 dark:border-zinc-700 hover:border-indigo-500 dark:hover:border-indigo-500 cursor-pointer transition-colors"
-              >
-                {customVoiceFile ? (
-                  <div className="text-center">
-                    <CheckIcon className="w-8 h-8 text-emerald-500 mx-auto mb-2" />
-                    <p className="text-sm font-medium text-gray-900 dark:text-white">
-                      {customVoiceFile.name}
-                    </p>
-                    <p className="text-xs text-gray-500 dark:text-zinc-400 mt-1">
-                      {t("playground.voiceSection.fileUploaded")}
-                    </p>
+            <div className="rounded-xl bg-gray-50 dark:bg-zinc-900 border-2 border-dashed border-gray-300 dark:border-zinc-700 p-6">
+              {recordedAudioBlob ? (
+                <div className="text-center">
+                  <div className="w-16 h-16 rounded-full bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center mx-auto mb-3 shadow-lg">
+                    <CheckIcon className="w-8 h-8 text-white" />
                   </div>
-                ) : (
-                  <>
-                    <UploadIcon className="w-8 h-8 text-gray-400 dark:text-zinc-500 mb-2" />
-                    <p className="text-sm font-medium text-gray-700 dark:text-zinc-300">
-                      {t("playground.voiceSection.clickUpload")}
-                    </p>
-                    <p className="text-xs text-gray-500 dark:text-zinc-400 mt-1">
-                      {t("playground.voiceSection.supportedFormats")}
-                    </p>
-                  </>
-                )}
-              </label>
+                  <p className="text-sm font-medium text-gray-900 dark:text-white mb-2">
+                    {t("playground.voiceSection.recordingComplete")}
+                  </p>
+                  <p className="text-xs text-gray-500 dark:text-zinc-400 mb-3">
+                    {formatTime(recordingTime)} {t("playground.voiceSection.duration")}
+                  </p>
+                  <button
+                    onClick={() => {
+                      setRecordedAudioBlob(null);
+                      setRecordingTime(0);
+                      setSelectedVoice(null);
+                    }}
+                    className="text-xs text-indigo-600 dark:text-indigo-400 hover:underline"
+                  >
+                    {t("playground.voiceSection.recordAgain")}
+                  </button>
+                </div>
+              ) : (
+                <div className="text-center">
+                  {isRecording ? (
+                    <>
+                      <div className="w-16 h-16 rounded-full bg-gradient-to-br from-red-500 to-pink-500 flex items-center justify-center mx-auto mb-3 shadow-lg animate-pulse">
+                        <MicIcon className="w-8 h-8 text-white" />
+                      </div>
+                      <p className="text-sm font-medium text-gray-900 dark:text-white mb-2">
+                        {t("playground.voiceSection.recording")} {formatTime(recordingTime)}
+                      </p>
+                      <button
+                        onClick={stopRecording}
+                        className="mt-2 px-4 py-2 rounded-lg bg-red-500 hover:bg-red-600 text-white text-xs font-medium transition-colors"
+                      >
+                        {t("playground.voiceSection.stopRecording")}
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <div className="w-16 h-16 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center mx-auto mb-3 shadow-lg">
+                        <MicIcon className="w-8 h-8 text-white" />
+                      </div>
+                      <p className="text-sm font-medium text-gray-700 dark:text-zinc-300 mb-2">
+                        {t("playground.voiceSection.recordYourVoice")}
+                      </p>
+                      <p className="text-xs text-gray-500 dark:text-zinc-400 mb-3">
+                        {t("playground.voiceSection.recordHint")}
+                      </p>
+                      <button
+                        onClick={startRecording}
+                        className="px-4 py-2 rounded-lg bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white text-xs font-medium transition-all shadow-md"
+                      >
+                        {t("playground.voiceSection.startRecording")}
+                      </button>
+                    </>
+                  )}
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -362,7 +513,7 @@ export default function PlaygroundContent() {
           </h2>
           <button
             onClick={handleGenerate}
-            disabled={!currentText || (!selectedVoice && !customVoiceFile) || isGenerating}
+            disabled={!currentText || (!selectedVoice && !recordedAudioBlob) || isGenerating}
             className="w-full sm:w-auto bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 disabled:from-gray-400 disabled:to-gray-400 text-white px-8 py-3 rounded-full transition-all duration-200 font-semibold shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/35 disabled:shadow-none hover:-translate-y-0.5 disabled:hover:translate-y-0 active:translate-y-0 text-sm disabled:cursor-not-allowed"
           >
             {isGenerating ? (

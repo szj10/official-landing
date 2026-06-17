@@ -105,10 +105,15 @@
     "voiceSection": {
       "title": "语音选择",
       "sampleVoices": "示例语音",
-      "uploadCustom": "上传您的语音样本",
-      "clickUpload": "点击上传或拖放文件",
-      "supportedFormats": "支持 MP3、WAV、M4A，最大 10MB",
-      "fileUploaded": "文件上传成功"
+      "recordCustom": "录制您的语音",
+      "recordYourVoice": "录制您自己的语音样本",
+      "recordHint": "点击开始录制您的语音",
+      "startRecording": "开始录制",
+      "stopRecording": "停止录制",
+      "recording": "录制中：",
+      "recordingComplete": "录制完成",
+      "duration": "时长",
+      "recordAgain": "重新录制"
     },
     "preview": {
       "title": "预览",

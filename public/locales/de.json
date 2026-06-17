@@ -105,10 +105,15 @@
     "voiceSection": {
       "title": "Stimmenauswahl",
       "sampleVoices": "Beispielstimmen",
-      "uploadCustom": "Laden Sie Ihre Stimmprobe hoch",
-      "clickUpload": "Klicken zum Hochladen oder Ziehen und Ablegen",
-      "supportedFormats": "MP3, WAV, M4A bis zu 10MB",
-      "fileUploaded": "Datei erfolgreich hochgeladen"
+      "recordCustom": "Stimme Aufnehmen",
+      "recordYourVoice": "Nehmen Sie Ihre eigene Stimmprobe auf",
+      "recordHint": "Klicken um Aufnahme zu starten",
+      "startRecording": "Aufnahme Starten",
+      "stopRecording": "Aufnahme Stoppen",
+      "recording": "Aufnahme:",
+      "recordingComplete": "Aufnahme Abgeschlossen",
+      "duration": "Dauer",
+      "recordAgain": "Erneut Aufnehmen"
     },
     "preview": {
       "title": "Vorschau",

@@ -105,10 +105,15 @@
     "voiceSection": {
       "title": "Selección de Voz",
       "sampleVoices": "Voces de Ejemplo",
-      "uploadCustom": "Sube Tu Muestra de Voz",
-      "clickUpload": "Clic para subir o arrastrar y soltar",
-      "supportedFormats": "MP3, WAV, M4A hasta 10MB",
-      "fileUploaded": "Archivo subido exitosamente"
+      "recordCustom": "Graba Tu Voz",
+      "recordYourVoice": "Graba tu propia muestra de voz",
+      "recordHint": "Clic para comenzar a grabar",
+      "startRecording": "Iniciar Grabación",
+      "stopRecording": "Detener Grabación",
+      "recording": "Grabando:",
+      "recordingComplete": "Grabación Completa",
+      "duration": "duración",
+      "recordAgain": "Grabar de Nuevo"
     },
     "preview": {
       "title": "Vista Previa",

@@ -105,10 +105,15 @@
     "voiceSection": {
       "title": "음성 선택",
       "sampleVoices": "샘플 음성",
-      "uploadCustom": "음성 샘플 업로드",
-      "clickUpload": "클릭하여 업로드 또는 드래그 앤 드롭",
-      "supportedFormats": "MP3, WAV, M4A (최대 10MB)",
-      "fileUploaded": "파일 업로드 완료"
+      "recordCustom": "음성 녹음",
+      "recordYourVoice": "자신의 음성 샘플 녹음",
+      "recordHint": "클릭하여 녹음 시작",
+      "startRecording": "녹음 시작",
+      "stopRecording": "녹음 중지",
+      "recording": "녹음 중:",
+      "recordingComplete": "녹음 완료",
+      "duration": "길이",
+      "recordAgain": "다시 녹음"
     },
     "preview": {
       "title": "미리보기",

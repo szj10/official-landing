@@ -105,10 +105,15 @@
     "voiceSection": {
       "title": "語音選擇",
       "sampleVoices": "範例語音",
-      "uploadCustom": "上傳您的語音樣本",
-      "clickUpload": "點擊上傳或拖放檔案",
-      "supportedFormats": "支援 MP3、WAV、M4A，最大 10MB",
-      "fileUploaded": "檔案上傳成功"
+      "recordCustom": "錄製您的語音",
+      "recordYourVoice": "錄製您自己的語音樣本",
+      "recordHint": "點擊開始錄製您的語音",
+      "startRecording": "開始錄製",
+      "stopRecording": "停止錄製",
+      "recording": "錄製中：",
+      "recordingComplete": "錄製完成",
+      "duration": "時長",
+      "recordAgain": "重新錄製"
     },
     "preview": {
       "title": "預覽",

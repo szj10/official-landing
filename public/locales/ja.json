@@ -105,10 +105,15 @@
     "voiceSection": {
       "title": "音声選択",
       "sampleVoices": "サンプル音声",
-      "uploadCustom": "音声サンプルをアップロード",
-      "clickUpload": "クリックしてアップロードまたはドラッグ＆ドロップ",
-      "supportedFormats": "MP3、WAV、M4A（最大10MB）",
-      "fileUploaded": "ファイルが正常にアップロードされました"
+      "recordCustom": "音声を録音",
+      "recordYourVoice": "自分の音声サンプルを録音",
+      "recordHint": "クリックして録音を開始",
+      "startRecording": "録音開始",
+      "stopRecording": "録音停止",
+      "recording": "録音中：",
+      "recordingComplete": "録音完了",
+      "duration": "長さ",
+      "recordAgain": "再録音"
     },
     "preview": {
       "title": "プレビュー",
