@@ -8,10 +8,10 @@
     "viewPricing": "요금제 보기"
   },
   "header": {
-    "products": "제품",
-    "solutions": "솔루션",
+    "home": "홈",
     "pricing": "요금제",
-    "resources": "리소스",
+    "playground": "체험",
+    "news": "뉴스",
     "language": "언어",
     "theme": "테마"
   },

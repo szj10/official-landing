@@ -8,10 +8,10 @@
     "viewPricing": "View Pricing"
   },
   "header": {
-    "products": "Products",
-    "solutions": "Solutions",
+    "home": "Home",
     "pricing": "Pricing",
-    "resources": "Resources",
+    "playground": "Playground",
+    "news": "News",
     "language": "Language",
     "theme": "Theme"
   },

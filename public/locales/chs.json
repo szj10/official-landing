@@ -8,10 +8,10 @@
     "viewPricing": "查看定价"
   },
   "header": {
-    "products": "产品",
-    "solutions": "解决方案",
+    "home": "首页",
     "pricing": "价格",
-    "resources": "资源",
+    "playground": "体验",
+    "news": "资讯",
     "language": "语言",
     "theme": "主题"
   },

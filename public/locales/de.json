@@ -8,10 +8,10 @@
     "viewPricing": "[TRANSLATE: View Pricing]"
   },
   "header": {
-    "products": "[TRANSLATE: Products]",
-    "solutions": "[TRANSLATE: Solutions]",
+    "home": "[TRANSLATE: Home]",
     "pricing": "[TRANSLATE: Pricing]",
-    "resources": "[TRANSLATE: Resources]",
+    "playground": "[TRANSLATE: Playground]",
+    "news": "[TRANSLATE: News]",
     "language": "[TRANSLATE: Language]",
     "theme": "[TRANSLATE: Theme]"
   },
