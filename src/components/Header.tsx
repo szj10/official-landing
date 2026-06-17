@@ -1,398 +1,446 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useTheme } from "next-themes";
 import { useI18n, localeNames, type Locale } from "@/i18n";
+
+// ─── Icons ───────────────────────────────────────────────────────────────────
+
+function SunIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={2}
+        d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"
+      />
+    </svg>
+  );
+}
+
+function MoonIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={2}
+        d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
+      />
+    </svg>
+  );
+}
+
+function MonitorIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={2}
+        d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+      />
+    </svg>
+  );
+}
+
+function CheckIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+    </svg>
+  );
+}
+
+// ─── Nav links config ─────────────────────────────────────────────────────────
+
+const NAV_LINKS = [
+  { key: "header.products", href: "/" },
+  { key: "header.solutions", href: "/" },
+  { key: "header.pricing", href: "/pricing" },
+  { key: "header.resources", href: "/" },
+] as const;
+
+// ─── Theme options ────────────────────────────────────────────────────────────
+
+const THEME_OPTIONS = [
+  { value: "light", label: "Light", Icon: SunIcon },
+  { value: "dark", label: "Dark", Icon: MoonIcon },
+  { value: "system", label: "System", Icon: MonitorIcon },
+] as const;
+
+// ─── Component ────────────────────────────────────────────────────────────────
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [languageDropdownOpen, setLanguageDropdownOpen] = useState(false);
   const [themeDropdownOpen, setThemeDropdownOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
+
   const { theme, setTheme } = useTheme();
   const { locale, setLocale, t } = useI18n();
+  const currentLang = localeNames[locale];
+
+  // Refs for focus management & inert
+  const drawerRef = useRef<HTMLDivElement>(null);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const mainContentRef = useRef<HTMLElement | null>(null);
+  const firstFocusableRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     setMounted(true);
+    mainContentRef.current = document.querySelector("main");
   }, []);
 
+  // Close drawer on Escape
+  const closeDrawer = useCallback(() => setMobileMenuOpen(false), []);
+
+  useEffect(() => {
+    if (!mobileMenuOpen) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        closeDrawer();
+        menuButtonRef.current?.focus();
+      }
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [mobileMenuOpen, closeDrawer]);
+
+  // Inert main content when drawer is open & move focus into drawer
+  useEffect(() => {
+    const main = mainContentRef.current;
+    if (mobileMenuOpen) {
+      if (main) (main as HTMLElement & { inert: boolean }).inert = true;
+      // Prevent body scroll
+      document.body.style.overflow = "hidden";
+      // Move focus into drawer after animation frame
+      requestAnimationFrame(() => firstFocusableRef.current?.focus());
+    } else {
+      if (main) (main as HTMLElement & { inert: boolean }).inert = false;
+      document.body.style.overflow = "";
+    }
+    return () => {
+      if (main) (main as HTMLElement & { inert: boolean }).inert = false;
+      document.body.style.overflow = "";
+    };
+  }, [mobileMenuOpen]);
+
+  // Close dropdowns on outside click (desktop)
   useEffect(() => {
     const handleClickOutside = () => {
       setLanguageDropdownOpen(false);
       setThemeDropdownOpen(false);
     };
-
     if (languageDropdownOpen || themeDropdownOpen) {
       document.addEventListener("click", handleClickOutside);
     }
-
-    return () => {
-      document.removeEventListener("click", handleClickOutside);
-    };
+    return () => document.removeEventListener("click", handleClickOutside);
   }, [languageDropdownOpen, themeDropdownOpen]);
 
-  const currentLang = localeNames[locale];
+  const currentThemeOption = THEME_OPTIONS.find((o) => o.value === theme);
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 dark:bg-gray-950/95 backdrop-blur-sm border-b border-gray-100 dark:border-gray-800">
-      <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-          <div className="flex items-center">
-            <Link href="/" className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-sm">H</span>
+    <>
+      {/* ── Header bar ─────────────────────────────────────────────────────── */}
+      <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 dark:bg-gray-950/95 backdrop-blur-sm border-b border-gray-100 dark:border-gray-800">
+        <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
+            {/* Logo */}
+            <div className="flex items-center">
+              <Link href="/" className="flex items-center space-x-2">
+                <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
+                  <span className="text-white font-bold text-sm">H</span>
+                </div>
+                <span className="text-xl font-bold text-gray-900 dark:text-white">Huavoi</span>
+              </Link>
+            </div>
+
+            {/* Desktop nav */}
+            <div className="hidden md:flex items-center space-x-8">
+              {NAV_LINKS.map(({ key, href }) => (
+                <Link
+                  key={key}
+                  href={href}
+                  className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
+                >
+                  {t(key)}
+                </Link>
+              ))}
+            </div>
+
+            {/* Desktop controls */}
+            <div className="hidden md:flex items-center space-x-4">
+              {/* Language */}
+              <div className="relative">
+                <button
+                  id="desktop-lang-btn"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setLanguageDropdownOpen(!languageDropdownOpen);
+                    setThemeDropdownOpen(false);
+                  }}
+                  className="flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-gray-600 dark:text-gray-300"
+                >
+                  <span className="text-lg">{currentLang.flag}</span>
+                  <span className="text-sm">{currentLang.name}</span>
+                </button>
+                {languageDropdownOpen && (
+                  <div
+                    className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-2 z-50"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    {Object.entries(localeNames).map(([code, lang]) => (
+                      <button
+                        key={code}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setLocale(code as Locale);
+                          setLanguageDropdownOpen(false);
+                        }}
+                        className="w-full flex items-center space-x-3 px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-left"
+                      >
+                        <span className="text-lg">{lang.flag}</span>
+                        <span className="text-sm text-gray-700 dark:text-gray-300">
+                          {lang.name}
+                        </span>
+                        {locale === code && <CheckIcon className="w-4 h-4 text-blue-600 ml-auto" />}
+                      </button>
+                    ))}
+                  </div>
+                )}
               </div>
-              <span className="text-xl font-bold text-gray-900 dark:text-white">Huavoi</span>
-            </Link>
-          </div>
 
-          <div className="hidden md:flex items-center space-x-8">
-            <Link
-              href="/"
-              className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
-            >
-              {t("header.products")}
-            </Link>
-            <Link
-              href="/"
-              className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
-            >
-              {t("header.solutions")}
-            </Link>
-            <Link
-              href="/pricing"
-              className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
-            >
-              {t("header.pricing")}
-            </Link>
-            <Link
-              href="/"
-              className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
-            >
-              {t("header.resources")}
-            </Link>
-          </div>
-
-          <div className="hidden md:flex items-center space-x-4">
-            <div className="relative">
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setLanguageDropdownOpen(!languageDropdownOpen);
-                  setThemeDropdownOpen(false);
-                }}
-                className="flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-gray-600 dark:text-gray-300"
-              >
-                <span className="text-lg">{currentLang.flag}</span>
-                <span className="text-sm">{currentLang.name}</span>
-              </button>
-
-              {languageDropdownOpen && (
-                <div
-                  className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-2 z-50"
-                  onClick={(e) => e.stopPropagation()}
+              {/* Theme */}
+              <div className="relative">
+                <button
+                  id="desktop-theme-btn"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setThemeDropdownOpen(!themeDropdownOpen);
+                    setLanguageDropdownOpen(false);
+                  }}
+                  className="flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-gray-600 dark:text-gray-300"
                 >
-                  {Object.entries(localeNames).map(([code, lang]) => (
-                    <button
-                      key={code}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setLocale(code as Locale);
-                        setLanguageDropdownOpen(false);
-                      }}
-                      className="w-full flex items-center space-x-3 px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-left"
-                    >
-                      <span className="text-lg">{lang.flag}</span>
-                      <span className="text-sm text-gray-700 dark:text-gray-300">{lang.name}</span>
-                      {locale === code && (
-                        <svg
-                          className="w-4 h-4 text-blue-600 ml-auto"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M5 13l4 4L19 7"
-                          />
-                        </svg>
-                      )}
-                    </button>
-                  ))}
-                </div>
-              )}
+                  {mounted && currentThemeOption && <currentThemeOption.Icon className="w-5 h-5" />}
+                </button>
+                {themeDropdownOpen && (
+                  <div
+                    className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-2 z-50"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    {THEME_OPTIONS.map(({ value, label, Icon }) => (
+                      <button
+                        key={value}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setTheme(value);
+                          setThemeDropdownOpen(false);
+                        }}
+                        className="w-full flex items-center space-x-3 px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-left"
+                      >
+                        <Icon className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+                        <span className="text-sm text-gray-700 dark:text-gray-300">{label}</span>
+                        {mounted && theme === value && (
+                          <CheckIcon className="w-4 h-4 text-blue-600 ml-auto" />
+                        )}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              <Link
+                href="/"
+                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+              >
+                {t("common.getStarted")}
+              </Link>
             </div>
 
-            <div className="relative">
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setThemeDropdownOpen(!themeDropdownOpen);
-                  setLanguageDropdownOpen(false);
-                }}
-                className="flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-gray-600 dark:text-gray-300"
-              >
-                {mounted &&
-                  (theme === "dark" ? (
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
-                      />
-                    </svg>
-                  ) : theme === "light" ? (
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"
-                      />
-                    </svg>
-                  ) : (
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-                      />
-                    </svg>
-                  ))}
-              </button>
-
-              {themeDropdownOpen && (
-                <div
-                  className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-2 z-50"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setTheme("light");
-                      setThemeDropdownOpen(false);
-                    }}
-                    className="w-full flex items-center space-x-3 px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-left"
-                  >
-                    <svg
-                      className="w-5 h-5 text-gray-600 dark:text-gray-400"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"
-                      />
-                    </svg>
-                    <span className="text-sm text-gray-700 dark:text-gray-300">Light</span>
-                    {mounted && theme === "light" && (
-                      <svg
-                        className="w-4 h-4 text-blue-600 ml-auto"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M5 13l4 4L19 7"
-                        />
-                      </svg>
-                    )}
-                  </button>
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setTheme("dark");
-                      setThemeDropdownOpen(false);
-                    }}
-                    className="w-full flex items-center space-x-3 px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-left"
-                  >
-                    <svg
-                      className="w-5 h-5 text-gray-600 dark:text-gray-400"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
-                      />
-                    </svg>
-                    <span className="text-sm text-gray-700 dark:text-gray-300">Dark</span>
-                    {mounted && theme === "dark" && (
-                      <svg
-                        className="w-4 h-4 text-blue-600 ml-auto"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M5 13l4 4L19 7"
-                        />
-                      </svg>
-                    )}
-                  </button>
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setTheme("system");
-                      setThemeDropdownOpen(false);
-                    }}
-                    className="w-full flex items-center space-x-3 px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-left"
-                  >
-                    <svg
-                      className="w-5 h-5 text-gray-600 dark:text-gray-400"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-                      />
-                    </svg>
-                    <span className="text-sm text-gray-700 dark:text-gray-300">System</span>
-                    {mounted && theme === "system" && (
-                      <svg
-                        className="w-4 h-4 text-blue-600 ml-auto"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M5 13l4 4L19 7"
-                        />
-                      </svg>
-                    )}
-                  </button>
-                </div>
-              )}
-            </div>
-
-            <Link
-              href="/"
-              className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+            {/* Mobile hamburger */}
+            <button
+              ref={menuButtonRef}
+              id="mobile-menu-btn"
+              className="md:hidden relative p-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+              aria-expanded={mobileMenuOpen}
+              aria-controls="mobile-drawer"
+              aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             >
-              {t("common.getStarted")}
-            </Link>
+              {/* Animated hamburger → X */}
+              <span className="sr-only">{mobileMenuOpen ? "Close menu" : "Open menu"}</span>
+              <div className="w-6 h-5 flex flex-col justify-between">
+                <span
+                  className={`block h-0.5 rounded-full bg-current transition-all duration-300 origin-center ${mobileMenuOpen ? "rotate-45 translate-y-[9px]" : ""}`}
+                />
+                <span
+                  className={`block h-0.5 rounded-full bg-current transition-all duration-300 ${mobileMenuOpen ? "opacity-0 scale-x-0" : ""}`}
+                />
+                <span
+                  className={`block h-0.5 rounded-full bg-current transition-all duration-300 origin-center ${mobileMenuOpen ? "-rotate-45 -translate-y-[9px]" : ""}`}
+                />
+              </div>
+            </button>
           </div>
+        </nav>
+      </header>
 
+      {/* ── Mobile drawer backdrop ──────────────────────────────────────────── */}
+      <div
+        aria-hidden="true"
+        onClick={closeDrawer}
+        className={`md:hidden fixed inset-0 z-40 bg-black/50 backdrop-blur-sm transition-opacity duration-300 ${mobileMenuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"}`}
+      />
+
+      {/* ── Mobile drawer panel ─────────────────────────────────────────────── */}
+      <div
+        ref={drawerRef}
+        id="mobile-drawer"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Navigation menu"
+        className={`md:hidden fixed top-0 left-0 bottom-0 z-50 w-[min(320px,85vw)] flex flex-col bg-white dark:bg-gray-950 shadow-2xl transition-transform duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] ${mobileMenuOpen ? "translate-x-0" : "-translate-x-full"}`}
+      >
+        {/* Drawer header */}
+        <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100 dark:border-gray-800 shrink-0">
+          <Link href="/" className="flex items-center space-x-2" onClick={closeDrawer}>
+            <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
+              <span className="text-white font-bold text-sm">H</span>
+            </div>
+            <span className="text-xl font-bold text-gray-900 dark:text-white">Huavoi</span>
+          </Link>
           <button
-            className="md:hidden p-2 text-gray-600 dark:text-gray-300"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            ref={firstFocusableRef}
+            onClick={closeDrawer}
+            aria-label="Close menu"
+            className="p-2 rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white transition-colors"
           >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              {mobileMenuOpen ? (
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              ) : (
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M4 6h16M4 12h16M4 18h16"
-                />
-              )}
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M6 18L18 6M6 6l12 12"
+              />
             </svg>
           </button>
         </div>
 
-        {mobileMenuOpen && (
-          <div className="md:hidden py-4 border-t border-gray-100 dark:border-gray-800">
-            <div className="flex flex-col space-y-4">
+        {/* Scrollable content */}
+        <div className="flex-1 overflow-y-auto overscroll-contain px-5 py-6">
+          {/* Nav links */}
+          <nav aria-label="Mobile navigation" className="space-y-1 mb-8">
+            {NAV_LINKS.map(({ key, href }, i) => (
               <Link
-                href="/"
-                className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
+                key={key}
+                href={href}
+                onClick={closeDrawer}
+                style={{ transitionDelay: mobileMenuOpen ? `${i * 40 + 60}ms` : "0ms" }}
+                className={`group flex items-center justify-between w-full px-4 py-3.5 rounded-xl text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-900 hover:text-gray-900 dark:hover:text-white transition-all duration-200 ${mobileMenuOpen ? "translate-x-0 opacity-100" : "-translate-x-4 opacity-0"}`}
               >
-                {t("header.products")}
-              </Link>
-              <Link
-                href="/"
-                className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
-              >
-                {t("header.solutions")}
-              </Link>
-              <Link
-                href="/pricing"
-                className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
-              >
-                {t("header.pricing")}
-              </Link>
-              <Link
-                href="/"
-                className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
-              >
-                {t("header.resources")}
-              </Link>
-
-              <div className="pt-4 border-t border-gray-100 dark:border-gray-800 space-y-3">
-                <div className="flex items-center space-x-2">
-                  <span className="text-sm text-gray-600 dark:text-gray-400">
-                    {t("header.language")}:
-                  </span>
-                  <select
-                    value={locale}
-                    onChange={(e) => setLocale(e.target.value as Locale)}
-                    className="flex-1 bg-gray-100 dark:bg-gray-800 border-0 rounded-lg px-3 py-2 text-sm text-gray-700 dark:text-gray-300"
-                  >
-                    {Object.entries(localeNames).map(([code, lang]) => (
-                      <option key={code} value={code}>
-                        {lang.flag} {lang.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div className="flex items-center space-x-2">
-                  <span className="text-sm text-gray-600 dark:text-gray-400">
-                    {t("header.theme")}:
-                  </span>
-                  <select
-                    value={theme}
-                    onChange={(e) => setTheme(e.target.value)}
-                    className="flex-1 bg-gray-100 dark:bg-gray-800 border-0 rounded-lg px-3 py-2 text-sm text-gray-700 dark:text-gray-300"
-                  >
-                    <option value="light">☀️ Light</option>
-                    <option value="dark">🌙 Dark</option>
-                    <option value="system">💻 System</option>
-                  </select>
-                </div>
-
-                <Link
-                  href="/"
-                  className="block bg-blue-600 text-white px-4 py-2 rounded-lg text-center"
+                <span>{t(key)}</span>
+                <svg
+                  className="w-4 h-4 text-gray-400 group-hover:text-gray-600 dark:group-hover:text-gray-300 group-hover:translate-x-0.5 transition-transform"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
                 >
-                  {t("common.getStarted")}
-                </Link>
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 5l7 7-7 7"
+                  />
+                </svg>
+              </Link>
+            ))}
+          </nav>
+
+          {/* Divider */}
+          <div className="h-px bg-gradient-to-r from-transparent via-gray-200 dark:via-gray-700 to-transparent mb-6" />
+
+          {/* Settings section */}
+          <div className="space-y-5">
+            <p className="px-1 text-xs font-semibold uppercase tracking-widest text-gray-400 dark:text-gray-500">
+              Preferences
+            </p>
+
+            {/* Language picker */}
+            <div className="space-y-1.5">
+              <p className="px-1 text-xs text-gray-500 dark:text-gray-400">
+                {t("header.language")}
+              </p>
+              <div className="grid grid-cols-2 gap-1.5 rounded-xl bg-gray-50 dark:bg-gray-900 p-1.5 border border-gray-100 dark:border-gray-800">
+                {Object.entries(localeNames).map(([code, lang]) => (
+                  <button
+                    key={code}
+                    onClick={() => setLocale(code as Locale)}
+                    className={`flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-150 ${
+                      locale === code
+                        ? "bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow-sm ring-1 ring-gray-200 dark:ring-gray-700"
+                        : "text-gray-600 dark:text-gray-400 hover:bg-white/60 dark:hover:bg-gray-800/60"
+                    }`}
+                  >
+                    <span className="text-base leading-none">{lang.flag}</span>
+                    <span className="truncate">{lang.name}</span>
+                    {locale === code && (
+                      <CheckIcon className="w-3.5 h-3.5 text-blue-600 ml-auto shrink-0" />
+                    )}
+                  </button>
+                ))}
               </div>
             </div>
+
+            {/* Theme picker */}
+            {mounted && (
+              <div className="space-y-1.5">
+                <p className="px-1 text-xs text-gray-500 dark:text-gray-400">{t("header.theme")}</p>
+                <div className="grid grid-cols-3 gap-1.5 rounded-xl bg-gray-50 dark:bg-gray-900 p-1.5 border border-gray-100 dark:border-gray-800">
+                  {THEME_OPTIONS.map(({ value, label, Icon }) => (
+                    <button
+                      key={value}
+                      onClick={() => setTheme(value)}
+                      className={`flex flex-col items-center gap-1.5 py-2.5 px-2 rounded-lg text-xs font-medium transition-all duration-150 ${
+                        theme === value
+                          ? "bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow-sm ring-1 ring-gray-200 dark:ring-gray-700"
+                          : "text-gray-500 dark:text-gray-400 hover:bg-white/60 dark:hover:bg-gray-800/60"
+                      }`}
+                    >
+                      <Icon
+                        className={`w-4.5 h-4.5 ${theme === value ? "text-blue-600" : "text-current"}`}
+                      />
+                      <span>{label}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
-        )}
-      </nav>
-    </header>
+        </div>
+
+        {/* CTA footer */}
+        <div className="shrink-0 px-5 py-5 border-t border-gray-100 dark:border-gray-800">
+          <Link
+            href="/"
+            onClick={closeDrawer}
+            className="flex items-center justify-center gap-2 w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold px-5 py-3.5 rounded-xl transition-all duration-200 shadow-lg shadow-blue-500/20 hover:shadow-blue-500/30 hover:-translate-y-0.5 active:translate-y-0"
+          >
+            {t("common.getStarted")}
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M17 8l4 4m0 0l-4 4m4-4H3"
+              />
+            </svg>
+          </Link>
+        </div>
+      </div>
+    </>
   );
 }
