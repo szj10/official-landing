@@ -199,7 +199,7 @@ export default function Footer() {
           </div>
 
           {/* Nav link columns - 2 columns on mobile */}
-          <div className="grid grid-cols-2 gap-8 lg:contents">
+          <div className="grid grid-cols-2 gap-8 lg:contents lg:col-span-2">
             {Object.entries(footerLinks).map(([section, links]) => (
               <div key={section}>
                 <h3 className="text-white font-semibold text-sm mb-5 tracking-wide">{section}</h3>
@@ -220,7 +220,7 @@ export default function Footer() {
           </div>
 
           {/* Newsletter */}
-          <div className="lg:col-span-1">
+          <div className="lg:col-span-2">
             <h3 className="text-white font-semibold text-sm mb-2 tracking-wide">Stay Updated</h3>
             <p className="text-xs text-zinc-500 mb-4 leading-relaxed">
               Get the latest AI video news and feature releases in your inbox.
