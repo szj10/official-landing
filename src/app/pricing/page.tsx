@@ -5,6 +5,18 @@ import Link from "next/link";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
+// ─── SVG Icons ──────────────────────────────────────────────────────────────
+
+function CheckIcon({ className = "w-5 h-5 text-indigo-500" }: { className?: string }) {
+  return (
+    <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+    </svg>
+  );
+}
+
+// ─── Component ────────────────────────────────────────────────────────────────
+
 export default function PricingPage() {
   const [billingCycle, setBillingCycle] = useState<"monthly" | "annual">("monthly");
 
@@ -80,111 +92,131 @@ export default function PricingPage() {
   ];
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-dot-pattern">
       <Header />
 
-      <main className="flex-1 pt-16">
-        <section className="py-20 bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-950 dark:to-gray-900">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-12">
-              <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 dark:text-white mb-6">
+      <main className="flex-1 pt-24">
+        {/* ─── Plans Grid Section ─────────────────────────────────────────── */}
+        <section className="py-16 lg:py-24 relative overflow-hidden">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div className="text-center mb-16">
+              {/* Badge */}
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full glass-panel text-xs text-indigo-600 dark:text-indigo-400 font-semibold mb-6 shadow-sm shadow-indigo-500/5">
+                <span>Flexible pricing plans</span>
+              </div>
+
+              {/* Title */}
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-gray-900 dark:text-white mb-6 tracking-tight">
                 Simple, Transparent Pricing
               </h1>
-              <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto mb-8">
+              <p className="text-lg text-gray-650 dark:text-zinc-400 max-w-2xl mx-auto mb-10 leading-relaxed">
                 Choose the perfect plan for your video creation needs. All plans include a 14-day
                 free trial with full access.
               </p>
 
-              <div className="inline-flex items-center bg-gray-100 dark:bg-gray-800 rounded-lg p-1">
+              {/* Billing cycle toggle */}
+              <div className="inline-flex items-center glass-panel rounded-full p-1 border border-gray-200/50 dark:border-zinc-800/80 shadow-md">
                 <button
                   onClick={() => setBillingCycle("monthly")}
-                  className={`px-6 py-2 rounded-lg font-medium transition-colors ${
+                  className={`px-6 py-2 rounded-full text-xs font-semibold transition-all duration-200 ${
                     billingCycle === "monthly"
-                      ? "bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm"
-                      : "text-gray-600 dark:text-gray-400"
+                      ? "bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-sm"
+                      : "text-gray-600 dark:text-zinc-400 hover:text-gray-900 dark:hover:text-white"
                   }`}
                 >
                   Monthly
                 </button>
                 <button
                   onClick={() => setBillingCycle("annual")}
-                  className={`px-6 py-2 rounded-lg font-medium transition-colors ${
+                  className={`px-6 py-2 rounded-full text-xs font-semibold transition-all duration-200 flex items-center gap-1.5 ${
                     billingCycle === "annual"
-                      ? "bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm"
-                      : "text-gray-600 dark:text-gray-400"
+                      ? "bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-sm"
+                      : "text-gray-600 dark:text-zinc-400 hover:text-gray-900 dark:hover:text-white"
                   }`}
                 >
-                  Annual
-                  <span className="ml-2 text-xs text-green-600 dark:text-green-400 font-semibold">
+                  <span>Annual</span>
+                  <span
+                    className={`px-1.5 py-0.5 rounded-full text-[10px] font-bold ${
+                      billingCycle === "annual"
+                        ? "bg-white text-indigo-600"
+                        : "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
+                    }`}
+                  >
                     Save 20%
                   </span>
                 </button>
               </div>
             </div>
 
+            {/* Plans List */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
               {plans.map((plan, i) => (
                 <div
                   key={i}
-                  className={`bg-white dark:bg-gray-800 rounded-xl p-8 ${
-                    plan.popular ? "ring-2 ring-blue-600 shadow-xl" : "shadow-sm hover:shadow-lg"
-                  } transition-shadow relative`}
+                  className={`glass-panel rounded-3xl p-8 flex flex-col justify-between transition-all duration-300 relative ${
+                    plan.popular
+                      ? "ring-2 ring-indigo-500 shadow-2xl shadow-indigo-500/10 dark:shadow-indigo-500/20 scale-102"
+                      : "shadow-sm hover:shadow-lg hover:-translate-y-1"
+                  }`}
                 >
+                  {/* Neon spotlight for popular plan */}
                   {plan.popular && (
-                    <div className="absolute -top-4 left-1/2 -translate-x-1/2">
-                      <span className="bg-blue-600 text-white px-4 py-1 rounded-full text-sm font-medium">
+                    <div className="absolute top-0 left-0 right-0 h-40 bg-gradient-to-b from-indigo-500/10 to-transparent blur-2xl -z-10 pointer-events-none" />
+                  )}
+
+                  {plan.popular && (
+                    <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
+                      <span className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white text-[10px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider shadow-md">
                         Most Popular
                       </span>
                     </div>
                   )}
 
-                  <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
-                    {plan.name}
-                  </h3>
-                  <p className="text-gray-600 dark:text-gray-300 mb-6">{plan.description}</p>
+                  <div>
+                    <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
+                      {plan.name}
+                    </h3>
+                    <p className="text-xs text-gray-500 dark:text-zinc-400 mb-6 min-h-8">
+                      {plan.description}
+                    </p>
 
-                  <div className="mb-6">
-                    {plan.price !== null ? (
-                      <>
-                        <span className="text-4xl font-bold text-gray-900 dark:text-white">
-                          ${plan.price}
+                    <div className="mb-6 flex items-baseline">
+                      {plan.price !== null ? (
+                        <>
+                          <span className="text-4xl font-extrabold text-gray-900 dark:text-white tracking-tight">
+                            ${plan.price}
+                          </span>
+                          <span className="text-xs text-gray-500 dark:text-zinc-500 ml-1">
+                            /month
+                          </span>
+                        </>
+                      ) : (
+                        <span className="text-2xl font-extrabold text-gray-900 dark:text-white tracking-tight">
+                          Custom
                         </span>
-                        <span className="text-gray-600 dark:text-gray-400">/month</span>
-                      </>
-                    ) : (
-                      <span className="text-2xl font-bold text-gray-900 dark:text-white">
-                        Custom Pricing
-                      </span>
-                    )}
-                  </div>
+                      )}
+                    </div>
 
-                  <ul className="space-y-3 mb-8">
-                    {plan.features.map((feature, j) => (
-                      <li key={j} className="flex items-start">
-                        <svg
-                          className="w-5 h-5 text-green-500 mr-2 flex-shrink-0 mt-0.5"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M5 13l4 4L19 7"
-                          />
-                        </svg>
-                        <span className="text-gray-600 dark:text-gray-300 text-sm">{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
+                    <div className="h-px bg-gray-200/50 dark:bg-zinc-800/80 mb-6" />
+
+                    <ul className="space-y-3.5 mb-8">
+                      {plan.features.map((feature, j) => (
+                        <li key={j} className="flex items-start">
+                          <CheckIcon className="w-4 h-4 text-indigo-500 dark:text-indigo-400 mr-2.5 flex-shrink-0 mt-0.5" />
+                          <span className="text-xs text-gray-650 dark:text-zinc-350 leading-tight">
+                            {feature}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
 
                   <Link
                     href="/"
-                    className={`block w-full text-center py-3 rounded-lg font-medium transition-colors ${
+                    className={`block w-full text-center py-3 rounded-xl text-xs font-semibold transition-all duration-200 ${
                       plan.popular
-                        ? "bg-blue-600 text-white hover:bg-blue-700"
-                        : "bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-600"
+                        ? "bg-gradient-to-r from-indigo-600 to-purple-600 text-white hover:from-indigo-700 hover:to-purple-700 shadow-md shadow-indigo-500/20 active:scale-98"
+                        : "bg-gray-100 hover:bg-gray-200 dark:bg-zinc-850 dark:hover:bg-zinc-800 text-gray-900 dark:text-white active:scale-98"
                     }`}
                   >
                     {plan.cta}
@@ -195,31 +227,32 @@ export default function PricingPage() {
           </div>
         </section>
 
-        <section className="py-20 bg-white dark:bg-gray-950">
+        {/* ─── Compare Plans Section ─────────────────────────────────────── */}
+        <section className="py-20 bg-white/10 dark:bg-zinc-950/10 backdrop-blur-sm border-t border-gray-200/40 dark:border-zinc-900/40">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
-              <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-4">
+              <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-gray-900 dark:text-white mb-4">
                 Compare Plans
               </h2>
             </div>
 
-            <div className="overflow-x-auto">
-              <table className="w-full">
+            <div className="overflow-x-auto rounded-2xl glass-panel shadow-lg border border-gray-200/50 dark:border-zinc-800/80">
+              <table className="w-full text-left border-collapse">
                 <thead>
-                  <tr className="border-b border-gray-200 dark:border-gray-700">
-                    <th className="text-left py-4 px-4 font-semibold text-gray-900 dark:text-white">
+                  <tr className="border-b border-gray-200 dark:border-zinc-800 bg-gray-50/50 dark:bg-zinc-900/30">
+                    <th className="py-5 px-6 text-xs font-bold text-gray-900 dark:text-white uppercase tracking-wider">
                       Feature
                     </th>
-                    <th className="text-center py-4 px-4 font-semibold text-gray-900 dark:text-white">
+                    <th className="py-5 px-6 text-center text-xs font-bold text-gray-900 dark:text-white uppercase tracking-wider">
                       Starter
                     </th>
-                    <th className="text-center py-4 px-4 font-semibold text-gray-900 dark:text-white">
+                    <th className="py-5 px-6 text-center text-xs font-bold text-gray-900 dark:text-white uppercase tracking-wider">
                       Professional
                     </th>
-                    <th className="text-center py-4 px-4 font-semibold text-gray-900 dark:text-white">
+                    <th className="py-5 px-6 text-center text-xs font-bold text-gray-900 dark:text-white uppercase tracking-wider">
                       Business
                     </th>
-                    <th className="text-center py-4 px-4 font-semibold text-gray-900 dark:text-white">
+                    <th className="py-5 px-6 text-center text-xs font-bold text-gray-900 dark:text-white uppercase tracking-wider">
                       Enterprise
                     </th>
                   </tr>
@@ -290,18 +323,23 @@ export default function PricingPage() {
                       enterprise: "✓",
                     },
                   ].map((row, i) => (
-                    <tr key={i} className="border-b border-gray-100 dark:border-gray-800">
-                      <td className="py-4 px-4 text-gray-900 dark:text-white">{row.feature}</td>
-                      <td className="py-4 px-4 text-center text-gray-600 dark:text-gray-300">
+                    <tr
+                      key={i}
+                      className="border-b border-gray-100 dark:border-zinc-900 hover:bg-gray-50/30 dark:hover:bg-zinc-900/10 transition-colors"
+                    >
+                      <td className="py-4.5 px-6 text-xs font-semibold text-gray-950 dark:text-white">
+                        {row.feature}
+                      </td>
+                      <td className="py-4.5 px-6 text-center text-xs text-gray-650 dark:text-zinc-400">
                         {row.starter}
                       </td>
-                      <td className="py-4 px-4 text-center text-gray-600 dark:text-gray-300">
+                      <td className="py-4.5 px-6 text-center text-xs text-gray-650 dark:text-zinc-400 font-semibold">
                         {row.pro}
                       </td>
-                      <td className="py-4 px-4 text-center text-gray-600 dark:text-gray-300">
+                      <td className="py-4.5 px-6 text-center text-xs text-gray-655 dark:text-zinc-400">
                         {row.business}
                       </td>
-                      <td className="py-4 px-4 text-center text-gray-600 dark:text-gray-300">
+                      <td className="py-4.5 px-6 text-center text-xs text-gray-655 dark:text-zinc-400">
                         {row.enterprise}
                       </td>
                     </tr>
@@ -312,37 +350,42 @@ export default function PricingPage() {
           </div>
         </section>
 
-        <section className="py-20 bg-gray-50 dark:bg-gray-900">
+        {/* ─── Bottom Layout CTA grids ───────────────────────────────────── */}
+        <section className="py-20">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div className="bg-white dark:bg-gray-800 rounded-xl p-8 shadow-sm">
-                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-                  Need a custom solution?
-                </h3>
-                <p className="text-gray-600 dark:text-gray-300 mb-6">
-                  Our enterprise team can build a custom video creation solution tailored to your
-                  workflow, including custom AI models, voice cloning, white-label options, and
-                  dedicated support.
-                </p>
+              <div className="glass-panel rounded-3xl p-8 shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow">
+                <div>
+                  <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">
+                    Need a custom solution?
+                  </h3>
+                  <p className="text-xs text-gray-600 dark:text-zinc-400 mb-6 leading-relaxed">
+                    Our enterprise team can build a custom video creation solution tailored to your
+                    workflow, including custom AI models, voice cloning, white-label options, and
+                    dedicated support.
+                  </p>
+                </div>
                 <Link
                   href="/"
-                  className="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors font-medium"
+                  className="w-full sm:w-auto inline-block bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-750 hover:to-purple-750 text-white text-xs font-semibold px-6 py-3 rounded-xl transition-all shadow-md active:scale-95 text-center"
                 >
                   Contact Sales
                 </Link>
               </div>
 
-              <div className="bg-white dark:bg-gray-800 rounded-xl p-8 shadow-sm">
-                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-                  Try it free for 14 days
-                </h3>
-                <p className="text-gray-600 dark:text-gray-300 mb-6">
-                  Create your first AI-powered video in minutes. No credit card required. Experience
-                  the full power of script-to-screen video creation.
-                </p>
+              <div className="glass-panel rounded-3xl p-8 shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow">
+                <div>
+                  <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">
+                    Try it free for 14 days
+                  </h3>
+                  <p className="text-xs text-gray-600 dark:text-zinc-400 mb-6 leading-relaxed">
+                    Create your first AI-powered video in minutes. No credit card required.
+                    Experience the full power of script-to-screen video creation.
+                  </p>
+                </div>
                 <Link
                   href="/"
-                  className="inline-block bg-gray-900 dark:bg-gray-700 text-white px-6 py-3 rounded-lg hover:bg-gray-800 dark:hover:bg-gray-600 transition-colors font-medium"
+                  className="w-full sm:w-auto inline-block bg-gray-900 dark:bg-zinc-800 hover:bg-gray-800 dark:hover:bg-zinc-700 text-white text-xs font-semibold px-6 py-3 rounded-xl transition-all active:scale-95 text-center"
                 >
                   Start Free Trial
                 </Link>
@@ -351,10 +394,11 @@ export default function PricingPage() {
           </div>
         </section>
 
-        <section className="py-20 bg-white dark:bg-gray-950">
+        {/* ─── FAQs ──────────────────────────────────────────────────────── */}
+        <section className="py-20 border-t border-gray-200/40 dark:border-zinc-900/40">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
-              <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-4">
+              <h2 className="text-3xl sm:text-4xl font-extrabold text-gray-900 dark:text-white mb-4">
                 Frequently Asked Questions
               </h2>
             </div>
@@ -382,24 +426,31 @@ export default function PricingPage() {
                   a: "Yes, we offer a 30-day money-back guarantee for all paid plans. If you're not satisfied with the video quality or features, contact our support team for a full refund.",
                 },
               ].map((faq, i) => (
-                <details key={i} className="bg-gray-50 dark:bg-gray-800 rounded-lg p-6 group">
-                  <summary className="cursor-pointer list-none flex justify-between items-center font-semibold text-gray-900 dark:text-white">
+                <details
+                  key={i}
+                  className="glass-panel rounded-2xl p-6 group transition-all duration-200 hover:border-indigo-500/25"
+                >
+                  <summary className="cursor-pointer list-none flex justify-between items-center font-semibold text-gray-900 dark:text-white text-sm">
                     {faq.q}
-                    <svg
-                      className="w-5 h-5 text-gray-500 dark:text-gray-400 group-open:rotate-180 transition-transform"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M19 9l-7 7-7-7"
-                      />
-                    </svg>
+                    <span className="flex-shrink-0 ml-4 w-5 h-5 rounded-full bg-gray-100 dark:bg-zinc-800 flex items-center justify-center group-open:bg-indigo-500/10 group-open:text-indigo-500 transition-colors">
+                      <svg
+                        className="w-3.5 h-3.5 text-gray-550 dark:text-zinc-450 group-open:rotate-180 group-open:text-indigo-500 transition-transform duration-200"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M19 9l-7 7-7-7"
+                        />
+                      </svg>
+                    </span>
                   </summary>
-                  <p className="mt-4 text-gray-600 dark:text-gray-300">{faq.a}</p>
+                  <p className="mt-4 text-xs text-gray-600 dark:text-zinc-400 leading-relaxed border-t border-gray-100 dark:border-zinc-850 pt-4">
+                    {faq.a}
+                  </p>
                 </details>
               ))}
             </div>

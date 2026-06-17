@@ -91,8 +91,10 @@ export default function Header() {
   const firstFocusableRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
-    setMounted(true);
     mainContentRef.current = document.querySelector("main");
+    setTimeout(() => {
+      setMounted(true);
+    }, 0);
   }, []);
 
   // Close drawer on Escape
@@ -150,26 +152,31 @@ export default function Header() {
   return (
     <>
       {/* ── Header bar ─────────────────────────────────────────────────────── */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 dark:bg-gray-950/95 backdrop-blur-sm border-b border-gray-100 dark:border-gray-800">
-        <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
+      <header className="fixed top-4 left-0 right-0 z-50 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+        <nav className="glass-panel rounded-full px-6 shadow-lg shadow-indigo-500/5 dark:shadow-indigo-500/10">
+          <div className="flex items-center justify-between h-14">
             {/* Logo */}
             <div className="flex items-center">
-              <Link href="/" className="flex items-center space-x-2">
-                <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
+              <Link
+                href="/"
+                className="flex items-center space-x-2 hover:opacity-90 transition-opacity"
+              >
+                <div className="w-8 h-8 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-full flex items-center justify-center shadow-md shadow-indigo-500/20">
                   <span className="text-white font-bold text-sm">H</span>
                 </div>
-                <span className="text-xl font-bold text-gray-900 dark:text-white">Huavoi</span>
+                <span className="text-lg font-bold bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-300 bg-clip-text text-transparent">
+                  Huavoi
+                </span>
               </Link>
             </div>
 
             {/* Desktop nav */}
-            <div className="hidden md:flex items-center space-x-8">
+            <div className="hidden md:flex items-center space-x-6">
               {NAV_LINKS.map(({ key, href }) => (
                 <Link
                   key={key}
                   href={href}
-                  className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
+                  className="text-xs font-medium text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
                 >
                   {t(key)}
                 </Link>
@@ -177,7 +184,7 @@ export default function Header() {
             </div>
 
             {/* Desktop controls */}
-            <div className="hidden md:flex items-center space-x-4">
+            <div className="hidden md:flex items-center space-x-3">
               {/* Language */}
               <div className="relative">
                 <button
@@ -187,13 +194,13 @@ export default function Header() {
                     setLanguageDropdownOpen(!languageDropdownOpen);
                     setThemeDropdownOpen(false);
                   }}
-                  className="flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-gray-100/80 dark:hover:bg-gray-800/80 transition-all duration-200 text-gray-600 dark:text-gray-300 active:scale-95"
+                  className="flex items-center space-x-1.5 px-3 py-1.5 rounded-full hover:bg-gray-100/80 dark:hover:bg-gray-800/40 transition-all duration-200 text-gray-600 dark:text-gray-300 active:scale-95 text-xs font-medium"
                 >
-                  <span className="text-lg leading-none">{currentLang.flag}</span>
-                  <span className="text-sm font-medium">{currentLang.name}</span>
+                  <span className="text-base leading-none">{currentLang.flag}</span>
+                  <span>{currentLang.name}</span>
                   <svg
-                    className={`w-4 h-4 text-gray-400 dark:text-gray-500 transition-transform duration-250 ${
-                      languageDropdownOpen ? "rotate-180 text-blue-600 dark:text-blue-400" : ""
+                    className={`w-3.5 h-3.5 text-gray-400 dark:text-gray-500 transition-transform duration-250 ${
+                      languageDropdownOpen ? "rotate-180 text-indigo-600 dark:text-indigo-400" : ""
                     }`}
                     fill="none"
                     stroke="currentColor"
@@ -208,7 +215,7 @@ export default function Header() {
                   </svg>
                 </button>
                 <div
-                  className={`absolute right-0 mt-2 w-72 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md rounded-xl shadow-xl border border-gray-200/50 dark:border-gray-800/50 p-2 z-50 transition-all duration-200 origin-top-right ${
+                  className={`absolute right-0 mt-2.5 w-72 glass-panel rounded-2xl shadow-xl p-2 z-50 transition-all duration-200 origin-top-right ${
                     languageDropdownOpen
                       ? "opacity-100 scale-100 translate-y-0 pointer-events-auto visible"
                       : "opacity-0 scale-95 -translate-y-2 pointer-events-none invisible"
@@ -224,16 +231,16 @@ export default function Header() {
                           setLocale(code as Locale);
                           setLanguageDropdownOpen(false);
                         }}
-                        className={`flex items-center space-x-2.5 px-3 py-2 rounded-lg transition-all duration-150 text-left ${
+                        className={`flex items-center space-x-2 px-2.5 py-1.5 rounded-lg transition-all duration-150 text-left ${
                           locale === code
-                            ? "bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 font-semibold"
-                            : "text-gray-700 dark:text-gray-300 hover:bg-gray-100/70 dark:hover:bg-gray-800/70"
+                            ? "bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 font-semibold"
+                            : "text-gray-700 dark:text-gray-300 hover:bg-gray-100/70 dark:hover:bg-gray-850/50"
                         }`}
                       >
-                        <span className="text-lg leading-none">{lang.flag}</span>
+                        <span className="text-base leading-none">{lang.flag}</span>
                         <span className="text-xs truncate">{lang.name}</span>
                         {locale === code && (
-                          <CheckIcon className="w-3.5 h-3.5 text-blue-600 ml-auto shrink-0" />
+                          <CheckIcon className="w-3 h-3 text-indigo-600 dark:text-indigo-400 ml-auto shrink-0" />
                         )}
                       </button>
                     ))}
@@ -250,12 +257,12 @@ export default function Header() {
                     setThemeDropdownOpen(!themeDropdownOpen);
                     setLanguageDropdownOpen(false);
                   }}
-                  className="flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-gray-100/80 dark:hover:bg-gray-800/80 transition-colors text-gray-600 dark:text-gray-300"
+                  className="flex items-center space-x-2 p-2 rounded-full hover:bg-gray-100/80 dark:hover:bg-gray-800/40 transition-all text-gray-600 dark:text-gray-300 active:scale-95"
                 >
-                  {mounted && currentThemeOption && <currentThemeOption.Icon className="w-5 h-5" />}
+                  {mounted && currentThemeOption && <currentThemeOption.Icon className="w-4 h-4" />}
                 </button>
                 <div
-                  className={`absolute right-0 mt-2 w-48 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md rounded-xl shadow-xl border border-gray-200/50 dark:border-gray-800/50 p-1.5 z-50 transition-all duration-200 origin-top-right ${
+                  className={`absolute right-0 mt-2.5 w-40 glass-panel rounded-xl shadow-xl p-1 z-50 transition-all duration-200 origin-top-right ${
                     themeDropdownOpen
                       ? "opacity-100 scale-100 translate-y-0 pointer-events-auto visible"
                       : "opacity-0 scale-95 -translate-y-2 pointer-events-none invisible"
@@ -270,18 +277,18 @@ export default function Header() {
                         setTheme(value);
                         setThemeDropdownOpen(false);
                       }}
-                      className={`w-full flex items-center space-x-3 px-3.5 py-2 rounded-lg transition-all duration-150 text-left ${
+                      className={`w-full flex items-center space-x-2.5 px-2.5 py-1.5 rounded-lg transition-all duration-150 text-left ${
                         mounted && theme === value
-                          ? "bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 font-semibold"
-                          : "text-gray-700 dark:text-gray-300 hover:bg-gray-100/70 dark:hover:bg-gray-800/70"
+                          ? "bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 font-semibold"
+                          : "text-gray-700 dark:text-gray-300 hover:bg-gray-100/70 dark:hover:bg-gray-850/55"
                       }`}
                     >
                       <Icon
-                        className={`w-5 h-5 ${mounted && theme === value ? "text-blue-600 dark:text-blue-400" : "text-gray-500 dark:text-gray-400"}`}
+                        className={`w-4 h-4 ${mounted && theme === value ? "text-indigo-600 dark:text-indigo-400" : "text-gray-500 dark:text-gray-400"}`}
                       />
-                      <span className="text-sm">{label}</span>
+                      <span className="text-xs">{label}</span>
                       {mounted && theme === value && (
-                        <CheckIcon className="w-4 h-4 text-blue-600 ml-auto" />
+                        <CheckIcon className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400 ml-auto" />
                       )}
                     </button>
                   ))}
@@ -290,7 +297,7 @@ export default function Header() {
 
               <Link
                 href="/"
-                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+                className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-4 py-1.5 rounded-full hover:from-indigo-700 hover:to-purple-700 transition-all duration-200 shadow-md shadow-indigo-500/10 hover:shadow-indigo-500/25 active:scale-95 font-medium text-xs"
               >
                 {t("common.getStarted")}
               </Link>

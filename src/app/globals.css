@@ -3,8 +3,11 @@
 @variant dark (&:where(.dark, .dark *));
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #fbfbfe;
+  --foreground: #09090b;
+  --card-bg: rgba(255, 255, 255, 0.4);
+  --card-border: rgba(9, 9, 11, 0.06);
+  --glow-color: rgba(99, 102, 241, 0.15);
 }
 
 @theme inline {
@@ -15,12 +18,107 @@
 }
 
 .dark {
-  --background: #0a0a0a;
-  --foreground: #ededed;
+  --background: #030307;
+  --foreground: #f4f4f5;
+  --card-bg: rgba(15, 23, 42, 0.35);
+  --card-border: rgba(255, 255, 255, 0.05);
+  --glow-color: rgba(139, 92, 246, 0.15);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family:
+    var(--font-sans),
+    system-ui,
+    -apple-system,
+    sans-serif;
+  overflow-x: hidden;
+}
+
+/* ─── Premium Pattern Utilities ───────────────────────────────────────────── */
+
+.bg-dot-pattern {
+  background-size: 32px 32px;
+  background-image: radial-gradient(circle, rgba(129, 140, 248, 0.08) 1px, transparent 1px);
+}
+.dark .bg-dot-pattern {
+  background-image: radial-gradient(circle, rgba(139, 92, 246, 0.05) 1px, transparent 1px);
+}
+
+.bg-spotlight {
+  background: radial-gradient(circle 800px at 50% -100px, var(--glow-color), transparent 80%);
+}
+
+.glass-panel {
+  background: var(--card-bg);
+  backdrop-filter: blur(16px) saturate(120%);
+  border: 1px solid var(--card-border);
+}
+
+/* ─── Card Glow Effect ─────────────────────────────────────────────────────── */
+
+.glow-card {
+  position: relative;
+  transition:
+    transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glow-card:hover {
+  transform: translateY(-4px) scale(1.01);
+  box-shadow: 0 20px 40px -15px rgba(99, 102, 241, 0.1);
+}
+.dark .glow-card:hover {
+  box-shadow: 0 20px 40px -15px rgba(139, 92, 246, 0.15);
+}
+
+.glow-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(
+    to bottom right,
+    rgba(99, 102, 241, 0.3),
+    transparent 50%,
+    rgba(168, 85, 247, 0.3)
+  );
+  -webkit-mask:
+    linear-gradient(#body 0 0) content-box,
+    linear-gradient(#body 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.glow-card:hover::before {
+  opacity: 1;
+}
+
+/* ─── Scroll Driven Animations ────────────────────────────────────────────── */
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(24px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @supports ((animation-timeline: view()) and (animation-range: entry)) {
+    .scroll-reveal {
+      view-timeline: --section-timeline block;
+      animation: fade-in-up linear both;
+      animation-timeline: --section-timeline;
+      animation-range: entry 10% entry 45%;
+    }
+  }
 }
