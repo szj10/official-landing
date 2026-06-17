@@ -77,6 +77,7 @@ export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [languageDropdownOpen, setLanguageDropdownOpen] = useState(false);
   const [themeDropdownOpen, setThemeDropdownOpen] = useState(false);
+  const [mobileLangOpen, setMobileLangOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
 
   const { theme, setTheme } = useTheme();
@@ -95,7 +96,10 @@ export default function Header() {
   }, []);
 
   // Close drawer on Escape
-  const closeDrawer = useCallback(() => setMobileMenuOpen(false), []);
+  const closeDrawer = useCallback(() => {
+    setMobileMenuOpen(false);
+    setMobileLangOpen(false);
+  }, []);
 
   useEffect(() => {
     if (!mobileMenuOpen) return;
@@ -183,16 +187,35 @@ export default function Header() {
                     setLanguageDropdownOpen(!languageDropdownOpen);
                     setThemeDropdownOpen(false);
                   }}
-                  className="flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-gray-600 dark:text-gray-300"
+                  className="flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-gray-100/80 dark:hover:bg-gray-800/80 transition-all duration-200 text-gray-600 dark:text-gray-300 active:scale-95"
                 >
-                  <span className="text-lg">{currentLang.flag}</span>
-                  <span className="text-sm">{currentLang.name}</span>
-                </button>
-                {languageDropdownOpen && (
-                  <div
-                    className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-2 z-50"
-                    onClick={(e) => e.stopPropagation()}
+                  <span className="text-lg leading-none">{currentLang.flag}</span>
+                  <span className="text-sm font-medium">{currentLang.name}</span>
+                  <svg
+                    className={`w-4 h-4 text-gray-400 dark:text-gray-500 transition-transform duration-250 ${
+                      languageDropdownOpen ? "rotate-180 text-blue-600 dark:text-blue-400" : ""
+                    }`}
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
                   >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M19 9l-7 7-7-7"
+                    />
+                  </svg>
+                </button>
+                <div
+                  className={`absolute right-0 mt-2 w-72 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md rounded-xl shadow-xl border border-gray-200/50 dark:border-gray-800/50 p-2 z-50 transition-all duration-200 origin-top-right ${
+                    languageDropdownOpen
+                      ? "opacity-100 scale-100 translate-y-0 pointer-events-auto visible"
+                      : "opacity-0 scale-95 -translate-y-2 pointer-events-none invisible"
+                  }`}
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <div className="grid grid-cols-2 gap-1">
                     {Object.entries(localeNames).map(([code, lang]) => (
                       <button
                         key={code}
@@ -201,17 +224,21 @@ export default function Header() {
                           setLocale(code as Locale);
                           setLanguageDropdownOpen(false);
                         }}
-                        className="w-full flex items-center space-x-3 px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-left"
+                        className={`flex items-center space-x-2.5 px-3 py-2 rounded-lg transition-all duration-150 text-left ${
+                          locale === code
+                            ? "bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 font-semibold"
+                            : "text-gray-700 dark:text-gray-300 hover:bg-gray-100/70 dark:hover:bg-gray-800/70"
+                        }`}
                       >
-                        <span className="text-lg">{lang.flag}</span>
-                        <span className="text-sm text-gray-700 dark:text-gray-300">
-                          {lang.name}
-                        </span>
-                        {locale === code && <CheckIcon className="w-4 h-4 text-blue-600 ml-auto" />}
+                        <span className="text-lg leading-none">{lang.flag}</span>
+                        <span className="text-xs truncate">{lang.name}</span>
+                        {locale === code && (
+                          <CheckIcon className="w-3.5 h-3.5 text-blue-600 ml-auto shrink-0" />
+                        )}
                       </button>
                     ))}
                   </div>
-                )}
+                </div>
               </div>
 
               {/* Theme */}
@@ -223,34 +250,42 @@ export default function Header() {
                     setThemeDropdownOpen(!themeDropdownOpen);
                     setLanguageDropdownOpen(false);
                   }}
-                  className="flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-gray-600 dark:text-gray-300"
+                  className="flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-gray-100/80 dark:hover:bg-gray-800/80 transition-colors text-gray-600 dark:text-gray-300"
                 >
                   {mounted && currentThemeOption && <currentThemeOption.Icon className="w-5 h-5" />}
                 </button>
-                {themeDropdownOpen && (
-                  <div
-                    className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-2 z-50"
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    {THEME_OPTIONS.map(({ value, label, Icon }) => (
-                      <button
-                        key={value}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setTheme(value);
-                          setThemeDropdownOpen(false);
-                        }}
-                        className="w-full flex items-center space-x-3 px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-left"
-                      >
-                        <Icon className="w-5 h-5 text-gray-600 dark:text-gray-400" />
-                        <span className="text-sm text-gray-700 dark:text-gray-300">{label}</span>
-                        {mounted && theme === value && (
-                          <CheckIcon className="w-4 h-4 text-blue-600 ml-auto" />
-                        )}
-                      </button>
-                    ))}
-                  </div>
-                )}
+                <div
+                  className={`absolute right-0 mt-2 w-48 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md rounded-xl shadow-xl border border-gray-200/50 dark:border-gray-800/50 p-1.5 z-50 transition-all duration-200 origin-top-right ${
+                    themeDropdownOpen
+                      ? "opacity-100 scale-100 translate-y-0 pointer-events-auto visible"
+                      : "opacity-0 scale-95 -translate-y-2 pointer-events-none invisible"
+                  }`}
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  {THEME_OPTIONS.map(({ value, label, Icon }) => (
+                    <button
+                      key={value}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setTheme(value);
+                        setThemeDropdownOpen(false);
+                      }}
+                      className={`w-full flex items-center space-x-3 px-3.5 py-2 rounded-lg transition-all duration-150 text-left ${
+                        mounted && theme === value
+                          ? "bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 font-semibold"
+                          : "text-gray-700 dark:text-gray-300 hover:bg-gray-100/70 dark:hover:bg-gray-800/70"
+                      }`}
+                    >
+                      <Icon
+                        className={`w-5 h-5 ${mounted && theme === value ? "text-blue-600 dark:text-blue-400" : "text-gray-500 dark:text-gray-400"}`}
+                      />
+                      <span className="text-sm">{label}</span>
+                      {mounted && theme === value && (
+                        <CheckIcon className="w-4 h-4 text-blue-600 ml-auto" />
+                      )}
+                    </button>
+                  ))}
+                </div>
               </div>
 
               <Link
@@ -374,24 +409,68 @@ export default function Header() {
               <p className="px-1 text-xs text-gray-500 dark:text-gray-400">
                 {t("header.language")}
               </p>
-              <div className="grid grid-cols-2 gap-1.5 rounded-xl bg-gray-50 dark:bg-gray-900 p-1.5 border border-gray-100 dark:border-gray-800">
-                {Object.entries(localeNames).map(([code, lang]) => (
-                  <button
-                    key={code}
-                    onClick={() => setLocale(code as Locale)}
-                    className={`flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-150 ${
-                      locale === code
-                        ? "bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow-sm ring-1 ring-gray-200 dark:ring-gray-700"
-                        : "text-gray-600 dark:text-gray-400 hover:bg-white/60 dark:hover:bg-gray-800/60"
+              <button
+                type="button"
+                onClick={() => setMobileLangOpen(!mobileLangOpen)}
+                className="w-full flex items-center justify-between px-3.5 py-3 rounded-xl bg-gray-50 dark:bg-gray-900 border border-gray-100 dark:border-gray-800 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800/60 transition-colors duration-200 active:scale-[0.99]"
+              >
+                <div className="flex items-center gap-2.5">
+                  <span className="text-lg leading-none">{currentLang.flag}</span>
+                  <span>{currentLang.name}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-xs text-gray-400 dark:text-gray-500">
+                    {Object.keys(localeNames).length} languages
+                  </span>
+                  <svg
+                    className={`w-4 h-4 text-gray-400 dark:text-gray-500 transition-transform duration-200 ${
+                      mobileLangOpen ? "rotate-180 text-blue-600" : ""
                     }`}
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
                   >
-                    <span className="text-base leading-none">{lang.flag}</span>
-                    <span className="truncate">{lang.name}</span>
-                    {locale === code && (
-                      <CheckIcon className="w-3.5 h-3.5 text-blue-600 ml-auto shrink-0" />
-                    )}
-                  </button>
-                ))}
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M19 9l-7 7-7-7"
+                    />
+                  </svg>
+                </div>
+              </button>
+
+              <div
+                className={`grid transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] ${
+                  mobileLangOpen
+                    ? "grid-rows-[1fr] opacity-100 mt-1.5"
+                    : "grid-rows-[0fr] opacity-0 pointer-events-none"
+                }`}
+              >
+                <div className="overflow-hidden">
+                  <div className="grid grid-cols-2 gap-1.5 rounded-xl bg-gray-55/70 dark:bg-gray-900/70 p-1.5 border border-gray-100 dark:border-gray-800">
+                    {Object.entries(localeNames).map(([code, lang]) => (
+                      <button
+                        key={code}
+                        onClick={() => {
+                          setLocale(code as Locale);
+                          setMobileLangOpen(false);
+                        }}
+                        className={`flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-150 ${
+                          locale === code
+                            ? "bg-white dark:bg-gray-800 text-blue-600 dark:text-blue-400 shadow-sm ring-1 ring-gray-200 dark:ring-gray-700 font-semibold"
+                            : "text-gray-600 dark:text-gray-400 hover:bg-white/60 dark:hover:bg-gray-800/60"
+                        }`}
+                      >
+                        <span className="text-base leading-none">{lang.flag}</span>
+                        <span className="truncate text-xs">{lang.name}</span>
+                        {locale === code && (
+                          <CheckIcon className="w-3.5 h-3.5 text-blue-600 ml-auto shrink-0" />
+                        )}
+                      </button>
+                    ))}
+                  </div>
+                </div>
               </div>
             </div>
 

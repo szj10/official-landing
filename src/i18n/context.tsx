@@ -3,7 +3,6 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { Locale, defaultLocale, locales } from "./config";
 
-type TranslationKeys = string;
 type TranslationValue = string | { [key: string]: TranslationValue };
 type Translations = { [key: string]: TranslationValue };
 
@@ -63,7 +62,9 @@ export function I18nProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const savedLocale = localStorage.getItem("locale") as Locale;
     if (savedLocale && locales.includes(savedLocale)) {
-      setLocaleState(savedLocale);
+      setTimeout(() => {
+        setLocaleState(savedLocale);
+      }, 0);
     }
   }, []);
 
