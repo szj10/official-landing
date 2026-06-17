@@ -44,10 +44,10 @@ function CheckIcon({ className }: { className?: string }) {
 // ─── Nav links config ─────────────────────────────────────────────────────────
 
 const NAV_LINKS = [
-  { key: "header.products", href: "/" },
-  { key: "header.solutions", href: "/" },
+  { key: "header.home", href: "/" },
   { key: "header.pricing", href: "/pricing" },
-  { key: "header.resources", href: "/" },
+  { key: "header.playground", href: "/playground" },
+  { key: "header.news", href: "/news" },
 ] as const;
 
 // ─── Theme options ────────────────────────────────────────────────────────────
@@ -359,10 +359,6 @@ export default function Header() {
 
           {/* Settings section */}
           <div className="space-y-5">
-            <p className="px-1 text-xs font-semibold uppercase tracking-widest text-gray-400 dark:text-gray-500">
-              Preferences
-            </p>
-
             {/* Language picker */}
             <div className="space-y-1.5">
               <p className="px-1 text-xs text-gray-500 dark:text-gray-400">
