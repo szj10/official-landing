@@ -68,7 +68,7 @@ export function getAllPosts(): PostMetadata[] {
         trending: post.trending,
         hot: post.hot,
         author: post.author,
-      };
+      } as PostMetadata;
     })
     .filter((post): post is PostMetadata => post !== null)
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
