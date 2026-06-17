@@ -214,7 +214,7 @@ export default function Header() {
                   </svg>
                 </button>
                 <div
-                  className={`absolute right-0 mt-2.5 w-72 glass-panel rounded-2xl shadow-xl p-2 z-50 transition-all duration-200 origin-top-right ${
+                  className={`absolute right-0 mt-2.5 w-72 bg-white dark:bg-gray-900 rounded-2xl shadow-xl p-2 z-50 border border-gray-200 dark:border-gray-700 transition-all duration-200 origin-top-right ${
                     languageDropdownOpen
                       ? "opacity-100 scale-100 translate-y-0 pointer-events-auto visible"
                       : "opacity-0 scale-95 -translate-y-2 pointer-events-none invisible"
@@ -453,7 +453,7 @@ export default function Header() {
                 }`}
               >
                 <div className="overflow-hidden">
-                  <div className="grid grid-cols-2 gap-1.5 rounded-xl bg-gray-55/70 dark:bg-gray-900/70 p-1.5 border border-gray-100 dark:border-gray-800">
+                  <div className="grid grid-cols-2 gap-1.5 rounded-xl bg-gray-100 dark:bg-gray-800 p-1.5 border border-gray-200 dark:border-gray-700">
                     {Object.entries(localeNames).map(([code, lang]) => (
                       <button
                         key={code}
