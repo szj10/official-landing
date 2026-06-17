@@ -138,7 +138,7 @@ export default function Header() {
   return (
     <>
       {/* ── Header bar ─────────────────────────────────────────────────────── */}
-      <header className="fixed top-4 left-0 right-0 z-50 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+      <header className="fixed top-4 left-0 right-0 z-50 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
         <nav className="glass-panel rounded-full px-6 shadow-lg shadow-indigo-500/5 dark:shadow-indigo-500/10">
           <div className="flex items-center justify-between h-14">
             {/* Logo */}
