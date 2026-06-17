@@ -33,19 +33,6 @@ function MoonIcon({ className }: { className?: string }) {
   );
 }
 
-function MonitorIcon({ className }: { className?: string }) {
-  return (
-    <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth={2}
-        d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-      />
-    </svg>
-  );
-}
-
 function CheckIcon({ className }: { className?: string }) {
   return (
     <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -68,7 +55,6 @@ const NAV_LINKS = [
 const THEME_OPTIONS = [
   { value: "light", label: "Light", Icon: SunIcon },
   { value: "dark", label: "Dark", Icon: MoonIcon },
-  { value: "system", label: "System", Icon: MonitorIcon },
 ] as const;
 
 // ─── Component ────────────────────────────────────────────────────────────────
@@ -76,7 +62,6 @@ const THEME_OPTIONS = [
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [languageDropdownOpen, setLanguageDropdownOpen] = useState(false);
-  const [themeDropdownOpen, setThemeDropdownOpen] = useState(false);
   const [mobileLangOpen, setMobileLangOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
 
@@ -139,15 +124,16 @@ export default function Header() {
   useEffect(() => {
     const handleClickOutside = () => {
       setLanguageDropdownOpen(false);
-      setThemeDropdownOpen(false);
     };
-    if (languageDropdownOpen || themeDropdownOpen) {
+    if (languageDropdownOpen) {
       document.addEventListener("click", handleClickOutside);
     }
     return () => document.removeEventListener("click", handleClickOutside);
-  }, [languageDropdownOpen, themeDropdownOpen]);
+  }, [languageDropdownOpen]);
 
-  const currentThemeOption = THEME_OPTIONS.find((o) => o.value === theme);
+  const toggleTheme = () => {
+    setTheme(theme === "dark" ? "light" : "dark");
+  };
 
   return (
     <>
@@ -192,7 +178,6 @@ export default function Header() {
                   onClick={(e) => {
                     e.stopPropagation();
                     setLanguageDropdownOpen(!languageDropdownOpen);
-                    setThemeDropdownOpen(false);
                   }}
                   className="flex items-center space-x-1.5 px-3 py-1.5 rounded-full hover:bg-gray-100/80 dark:hover:bg-gray-800/40 transition-all duration-200 text-gray-600 dark:text-gray-300 active:scale-95 text-xs font-medium"
                 >
@@ -248,51 +233,19 @@ export default function Header() {
               </div>
 
               {/* Theme */}
-              <div className="relative">
-                <button
-                  id="desktop-theme-btn"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setThemeDropdownOpen(!themeDropdownOpen);
-                    setLanguageDropdownOpen(false);
-                  }}
-                  className="flex items-center space-x-2 p-2 rounded-full hover:bg-gray-100/80 dark:hover:bg-gray-800/40 transition-all text-gray-600 dark:text-gray-300 active:scale-95"
-                >
-                  {mounted && currentThemeOption && <currentThemeOption.Icon className="w-4 h-4" />}
-                </button>
-                <div
-                  className={`absolute right-0 mt-2.5 w-40 glass-panel rounded-xl shadow-xl p-1 z-50 transition-all duration-200 origin-top-right ${
-                    themeDropdownOpen
-                      ? "opacity-100 scale-100 translate-y-0 pointer-events-auto visible"
-                      : "opacity-0 scale-95 -translate-y-2 pointer-events-none invisible"
-                  }`}
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  {THEME_OPTIONS.map(({ value, label, Icon }) => (
-                    <button
-                      key={value}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setTheme(value);
-                        setThemeDropdownOpen(false);
-                      }}
-                      className={`w-full flex items-center space-x-2.5 px-2.5 py-1.5 rounded-lg transition-all duration-150 text-left ${
-                        mounted && theme === value
-                          ? "bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 font-semibold"
-                          : "text-gray-700 dark:text-gray-300 hover:bg-gray-100/70 dark:hover:bg-gray-850/55"
-                      }`}
-                    >
-                      <Icon
-                        className={`w-4 h-4 ${mounted && theme === value ? "text-indigo-600 dark:text-indigo-400" : "text-gray-500 dark:text-gray-400"}`}
-                      />
-                      <span className="text-xs">{label}</span>
-                      {mounted && theme === value && (
-                        <CheckIcon className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400 ml-auto" />
-                      )}
-                    </button>
+              <button
+                id="desktop-theme-btn"
+                onClick={toggleTheme}
+                className="flex items-center space-x-2 p-2 rounded-full hover:bg-gray-100/80 dark:hover:bg-gray-800/40 transition-all text-gray-600 dark:text-gray-300 active:scale-95"
+                aria-label="Toggle theme"
+              >
+                {mounted &&
+                  (theme === "dark" ? (
+                    <SunIcon className="w-4 h-4" />
+                  ) : (
+                    <MoonIcon className="w-4 h-4" />
                   ))}
-                </div>
-              </div>
+              </button>
 
               <Link
                 href="/"
@@ -483,24 +436,32 @@ export default function Header() {
             {mounted && (
               <div className="space-y-1.5">
                 <p className="px-1 text-xs text-gray-500 dark:text-gray-400">{t("header.theme")}</p>
-                <div className="grid grid-cols-3 gap-1.5 rounded-xl bg-gray-50 dark:bg-gray-900 p-1.5 border border-gray-100 dark:border-gray-800">
-                  {THEME_OPTIONS.map(({ value, label, Icon }) => (
-                    <button
-                      key={value}
-                      onClick={() => setTheme(value)}
-                      className={`flex flex-col items-center gap-1.5 py-2.5 px-2 rounded-lg text-xs font-medium transition-all duration-150 ${
-                        theme === value
-                          ? "bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow-sm ring-1 ring-gray-200 dark:ring-gray-700"
-                          : "text-gray-500 dark:text-gray-400 hover:bg-white/60 dark:hover:bg-gray-800/60"
-                      }`}
-                    >
-                      <Icon
-                        className={`w-4.5 h-4.5 ${theme === value ? "text-blue-600" : "text-current"}`}
-                      />
-                      <span>{label}</span>
-                    </button>
-                  ))}
-                </div>
+                <button
+                  onClick={toggleTheme}
+                  className="w-full flex items-center justify-between px-3.5 py-3 rounded-xl bg-gray-50 dark:bg-gray-900 border border-gray-100 dark:border-gray-800 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800/60 transition-colors duration-200 active:scale-[0.99]"
+                >
+                  <div className="flex items-center gap-2.5">
+                    {theme === "dark" ? (
+                      <SunIcon className="w-4.5 h-4.5 text-blue-600" />
+                    ) : (
+                      <MoonIcon className="w-4.5 h-4.5 text-blue-600" />
+                    )}
+                    <span className="text-xs">{theme === "dark" ? "Light" : "Dark"}</span>
+                  </div>
+                  <svg
+                    className="w-4 h-4 text-gray-400 dark:text-gray-500"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"
+                    />
+                  </svg>
+                </button>
               </div>
             )}
           </div>
