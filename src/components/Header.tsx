@@ -48,6 +48,7 @@ const NAV_LINKS = [
   { key: "header.pricing", href: "/pricing" },
   { key: "header.playground", href: "/playground" },
   { key: "header.news", href: "/news" },
+  { key: "header.about", href: "/about" },
 ] as const;
 
 // ─── Theme options ────────────────────────────────────────────────────────────
