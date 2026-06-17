@@ -197,7 +197,6 @@ export default function Header() {
                   className="flex items-center space-x-1.5 px-3 py-1.5 rounded-full hover:bg-gray-100/80 dark:hover:bg-gray-800/40 transition-all duration-200 text-gray-600 dark:text-gray-300 active:scale-95 text-xs font-medium"
                 >
                   <span className="text-base leading-none">{currentLang.flag}</span>
-                  <span>{currentLang.name}</span>
                   <svg
                     className={`w-3.5 h-3.5 text-gray-400 dark:text-gray-500 transition-transform duration-250 ${
                       languageDropdownOpen ? "rotate-180 text-indigo-600 dark:text-indigo-400" : ""
@@ -423,7 +422,6 @@ export default function Header() {
               >
                 <div className="flex items-center gap-2.5">
                   <span className="text-lg leading-none">{currentLang.flag}</span>
-                  <span>{currentLang.name}</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="text-xs text-gray-400 dark:text-gray-500">
