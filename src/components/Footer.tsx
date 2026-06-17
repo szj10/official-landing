@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import WechatQRModal from "./WechatQRModal";
 
 // ─── Social Icons ─────────────────────────────────────────────────────────────
 
@@ -116,6 +117,7 @@ const footerLinks = {
 export default function Footer() {
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [showWechatQR, setShowWechatQR] = useState(false);
 
   const handleSubscribe = (e: React.FormEvent) => {
     e.preventDefault();
@@ -167,18 +169,32 @@ export default function Footer() {
 
             {/* Social icons */}
             <div className="flex items-center gap-2">
-              {socialLinks.map(({ name, href, Icon, hoverClass }) => (
-                <a
-                  key={name}
-                  href={href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={name}
-                  className={`w-8 h-8 rounded-lg border border-zinc-800 flex items-center justify-center text-zinc-500 transition-all duration-200 active:scale-90 ${hoverClass}`}
-                >
-                  <Icon className="w-3.5 h-3.5" />
-                </a>
-              ))}
+              {socialLinks.map(({ name, href, Icon, hoverClass }) => {
+                if (name === "WeChat") {
+                  return (
+                    <button
+                      key={name}
+                      onClick={() => setShowWechatQR(true)}
+                      aria-label={name}
+                      className={`w-8 h-8 rounded-lg border border-zinc-800 flex items-center justify-center text-zinc-500 transition-all duration-200 active:scale-90 ${hoverClass}`}
+                    >
+                      <Icon className="w-3.5 h-3.5" />
+                    </button>
+                  );
+                }
+                return (
+                  <a
+                    key={name}
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={name}
+                    className={`w-8 h-8 rounded-lg border border-zinc-800 flex items-center justify-center text-zinc-500 transition-all duration-200 active:scale-90 ${hoverClass}`}
+                  >
+                    <Icon className="w-3.5 h-3.5" />
+                  </a>
+                );
+              })}
             </div>
           </div>
 
@@ -276,6 +292,8 @@ export default function Footer() {
           </div>
         </div>
       </div>
+
+      <WechatQRModal isOpen={showWechatQR} onClose={() => setShowWechatQR(false)} />
     </footer>
   );
 }

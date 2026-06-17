@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import WechatQRModal from "@/components/WechatQRModal";
 
 function TwitterIcon({ className }: { className?: string }) {
   return (
@@ -145,46 +146,13 @@ export default function AboutContent() {
             ))}
 
             <button
-              onClick={() => setShowWechatQR(!showWechatQR)}
+              onClick={() => setShowWechatQR(true)}
               className="glass-panel rounded-2xl p-6 flex flex-col items-center justify-center gap-3 text-gray-600 dark:text-zinc-400 hover:text-[#07C160] hover:shadow-lg hover:-translate-y-1 transition-all duration-200"
             >
               <WechatIcon className="w-8 h-8" />
               <span className="text-xs font-semibold">WeChat</span>
             </button>
           </div>
-
-          {showWechatQR && (
-            <div
-              className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
-              onClick={() => setShowWechatQR(false)}
-            >
-              <div
-                className="glass-panel rounded-3xl p-8 flex flex-col items-center justify-center text-center max-w-sm mx-4"
-                onClick={(e) => e.stopPropagation()}
-              >
-                <WechatIcon className="w-12 h-12 text-green-500 mb-4" />
-                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">
-                  WeChat Official Account
-                </h3>
-                <p className="text-xs text-gray-600 dark:text-zinc-400 mb-6">
-                  Scan the QR code to follow our official WeChat account
-                </p>
-                <div className="w-40 h-40 bg-white rounded-xl flex items-center justify-center border-2 border-gray-200 dark:border-zinc-800">
-                  <div className="text-center">
-                    <div className="w-32 h-32 bg-gray-100 dark:bg-zinc-900 rounded-lg flex items-center justify-center mb-2">
-                      <span className="text-[8px] text-gray-400 dark:text-zinc-600">QR CODE</span>
-                    </div>
-                  </div>
-                </div>
-                <button
-                  onClick={() => setShowWechatQR(false)}
-                  className="mt-6 text-xs text-gray-500 dark:text-zinc-400 hover:text-gray-700 dark:hover:text-zinc-200 transition-colors"
-                >
-                  Click anywhere to close
-                </button>
-              </div>
-            </div>
-          )}
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="glass-panel rounded-3xl p-8 flex flex-col items-center justify-center text-center">
@@ -244,6 +212,8 @@ export default function AboutContent() {
           </div>
         </div>
       </section>
+
+      <WechatQRModal isOpen={showWechatQR} onClose={() => setShowWechatQR(false)} />
     </>
   );
 }
