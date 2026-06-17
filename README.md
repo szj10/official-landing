@@ -5,6 +5,7 @@ A Next.js + TypeScript project for a product landing page and pricing pages, ins
 ## Getting Started
 
 ### Prerequisites
+
 - Node.js 18.17 or later
 - npm or yarn
 
@@ -52,6 +53,7 @@ src/
 ## Pages
 
 ### Landing Page (/)
+
 - Hero section with CTA
 - Trust badges (company logos)
 - Product/solution cards
@@ -60,6 +62,7 @@ src/
 - Call-to-action banner
 
 ### Pricing Page (/pricing)
+
 - Pricing tiers (Starter, Professional, Business, Enterprise)
 - Monthly/Annual billing toggle
 - Feature comparison table
@@ -95,6 +98,7 @@ The application automatically adapts to your system's appearance preference (lig
 ## Language Support
 
 The header includes a language switcher with support for:
+
 - 🇺🇸 English
 - 🇨🇳 中文 (Chinese)
 - 🇪🇸 Español (Spanish)
@@ -107,14 +111,18 @@ Note: The language switcher UI is ready. To implement full i18n, integrate with 
 ## Customization
 
 ### Branding
+
 Update the logo and brand name in:
+
 - `src/components/Header.tsx`
 - `src/components/Footer.tsx`
 
 ### Colors
+
 The project uses Tailwind's default color palette. Customize in `tailwind.config.ts` if needed.
 
 ### Content
+
 - Landing page content: `src/app/page.tsx`
 - Pricing tiers: `src/app/pricing/page.tsx`
 

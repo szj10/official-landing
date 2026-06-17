@@ -16,7 +16,8 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Huavoi - AI-Powered Video Creation from Script to Screen",
-  description: "Transform ideas into professional videos in minutes. End-to-end AI solution for scriptwriting, voice synthesis, and video generation. One platform, complete video production.",
+  description:
+    "Transform ideas into professional videos in minutes. End-to-end AI solution for scriptwriting, voice synthesis, and video generation. One platform, complete video production.",
 };
 
 export default function RootLayout({

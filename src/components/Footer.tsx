@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import Link from "next/link";
 
 export default function Footer() {
   return (
@@ -13,35 +13,76 @@ export default function Footer() {
               <span className="text-xl font-bold text-white">Huavoi</span>
             </div>
             <p className="text-sm text-gray-400">
-              AI-powered video creation platform. Transform ideas into professional videos with scriptwriting, voice synthesis, and video generation—all in one place.
+              AI-powered video creation platform. Transform ideas into professional videos with
+              scriptwriting, voice synthesis, and video generation—all in one place.
             </p>
           </div>
 
           <div>
             <h3 className="text-white font-semibold mb-4">Products</h3>
             <ul className="space-y-2 text-sm">
-              <li><Link href="/" className="hover:text-white transition-colors">Script Writer</Link></li>
-              <li><Link href="/" className="hover:text-white transition-colors">Voice Synthesis</Link></li>
-              <li><Link href="/" className="hover:text-white transition-colors">Video Generator</Link></li>
-              <li><Link href="/" className="hover:text-white transition-colors">Enterprise</Link></li>
+              <li>
+                <Link href="/" className="hover:text-white transition-colors">
+                  Script Writer
+                </Link>
+              </li>
+              <li>
+                <Link href="/" className="hover:text-white transition-colors">
+                  Voice Synthesis
+                </Link>
+              </li>
+              <li>
+                <Link href="/" className="hover:text-white transition-colors">
+                  Video Generator
+                </Link>
+              </li>
+              <li>
+                <Link href="/" className="hover:text-white transition-colors">
+                  Enterprise
+                </Link>
+              </li>
             </ul>
           </div>
 
           <div>
             <h3 className="text-white font-semibold mb-4">Resources</h3>
             <ul className="space-y-2 text-sm">
-              <li><Link href="/" className="hover:text-white transition-colors">Documentation</Link></li>
-              <li><Link href="/" className="hover:text-white transition-colors">Blog</Link></li>
-              <li><Link href="/" className="hover:text-white transition-colors">Case Studies</Link></li>
+              <li>
+                <Link href="/" className="hover:text-white transition-colors">
+                  Documentation
+                </Link>
+              </li>
+              <li>
+                <Link href="/" className="hover:text-white transition-colors">
+                  Blog
+                </Link>
+              </li>
+              <li>
+                <Link href="/" className="hover:text-white transition-colors">
+                  Case Studies
+                </Link>
+              </li>
             </ul>
           </div>
 
           <div>
             <h3 className="text-white font-semibold mb-4">Company</h3>
             <ul className="space-y-2 text-sm">
-              <li><Link href="/" className="hover:text-white transition-colors">About</Link></li>
-              <li><Link href="/" className="hover:text-white transition-colors">Careers</Link></li>
-              <li><Link href="/" className="hover:text-white transition-colors">Contact</Link></li>
+              <li>
+                <Link href="/" className="hover:text-white transition-colors">
+                  About
+                </Link>
+              </li>
+              <li>
+                <Link href="/" className="hover:text-white transition-colors">
+                  Careers
+                </Link>
+              </li>
+              <li>
+                <Link href="/" className="hover:text-white transition-colors">
+                  Contact
+                </Link>
+              </li>
             </ul>
           </div>
         </div>

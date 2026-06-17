@@ -21,11 +21,13 @@ src/locales/
 1. **Open the target language file** (e.g., `zh.json` for Chinese)
 
 2. **Find placeholder texts** - Look for values like:
+
    ```json
    "title": "[TRANSLATE: English text here]"
    ```
 
 3. **Replace with translation**:
+
    ```json
    "title": "中文翻译"
    ```
@@ -76,6 +78,7 @@ Translations are organized by sections:
 ## 📞 Need Help?
 
 Contact the development team if you:
+
 - Find unclear or ambiguous source text
 - Need context for a specific translation
 - Encounter technical issues with the files
