@@ -107,8 +107,8 @@ const footerLinks = {
     { label: "About Us", href: "/" },
     { label: "Careers", href: "/" },
     { label: "Contact", href: "/" },
-    { label: "Privacy Policy", href: "/" },
-    { label: "Terms of Service", href: "/" },
+    { label: "Privacy Policy", href: "/privacy" },
+    { label: "Terms of Service", href: "/terms" },
   ],
 };
 
@@ -280,13 +280,17 @@ export default function Footer() {
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 py-6 text-[11px] text-zinc-600">
           <p>© {new Date().getFullYear()} Huavoi, Inc. All rights reserved.</p>
           <div className="flex items-center gap-5">
-            {["Privacy", "Terms", "Cookies"].map((item) => (
+            {[
+              { label: "Privacy", href: "/privacy" },
+              { label: "Terms", href: "/terms" },
+              { label: "Cookies", href: "/" },
+            ].map((item) => (
               <Link
-                key={item}
-                href="/"
+                key={item.label}
+                href={item.href}
                 className="hover:text-zinc-400 transition-colors duration-150"
               >
-                {item}
+                {item.label}
               </Link>
             ))}
           </div>
