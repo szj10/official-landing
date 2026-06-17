@@ -168,24 +168,26 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Nav link columns */}
-          {Object.entries(footerLinks).map(([section, links]) => (
-            <div key={section}>
-              <h3 className="text-white font-semibold text-sm mb-5 tracking-wide">{section}</h3>
-              <ul className="space-y-3">
-                {links.map(({ label, href }) => (
-                  <li key={label}>
-                    <Link
-                      href={href}
-                      className="text-xs text-zinc-500 hover:text-indigo-400 transition-colors duration-150"
-                    >
-                      {label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
+          {/* Nav link columns - 2 columns on mobile */}
+          <div className="grid grid-cols-2 gap-8 lg:contents">
+            {Object.entries(footerLinks).map(([section, links]) => (
+              <div key={section}>
+                <h3 className="text-white font-semibold text-sm mb-5 tracking-wide">{section}</h3>
+                <ul className="space-y-3">
+                  {links.map(({ label, href }) => (
+                    <li key={label}>
+                      <Link
+                        href={href}
+                        className="text-xs text-zinc-500 hover:text-indigo-400 transition-colors duration-150"
+                      >
+                        {label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
 
           {/* Newsletter */}
           <div className="lg:col-span-1">

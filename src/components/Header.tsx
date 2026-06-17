@@ -138,149 +138,153 @@ export default function Header() {
   return (
     <>
       {/* ── Header bar ─────────────────────────────────────────────────────── */}
-      <header className="fixed top-4 left-0 right-0 z-50 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-        <nav className="glass-panel rounded-full px-6 shadow-lg shadow-indigo-500/5 dark:shadow-indigo-500/10">
-          <div className="flex items-center justify-between h-14">
-            {/* Logo */}
-            <div className="flex items-center">
-              <Link
-                href="/"
-                className="flex items-center space-x-2 hover:opacity-90 transition-opacity"
-              >
-                <div className="w-8 h-8 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-full flex items-center justify-center shadow-md shadow-indigo-500/20">
-                  <span className="text-white font-bold text-sm">H</span>
-                </div>
-                <span className="text-lg font-bold bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-300 bg-clip-text text-transparent">
-                  Huavoi
-                </span>
-              </Link>
-            </div>
-
-            {/* Desktop nav */}
-            <div className="hidden md:flex items-center space-x-6">
-              {NAV_LINKS.map(({ key, href }) => (
+      <header className="fixed top-4 left-0 right-0 z-50 w-full">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <nav className="glass-panel rounded-full px-4 sm:px-6 shadow-lg shadow-indigo-500/5 dark:shadow-indigo-500/10">
+            <div className="flex items-center justify-between h-14">
+              {/* Logo */}
+              <div className="flex items-center">
                 <Link
-                  key={key}
-                  href={href}
-                  className="text-xs font-medium text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
+                  href="/"
+                  className="flex items-center space-x-2 hover:opacity-90 transition-opacity"
                 >
-                  {t(key)}
+                  <div className="w-8 h-8 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-full flex items-center justify-center shadow-md shadow-indigo-500/20">
+                    <span className="text-white font-bold text-sm">H</span>
+                  </div>
+                  <span className="text-lg font-bold bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-300 bg-clip-text text-transparent">
+                    Huavoi
+                  </span>
                 </Link>
-              ))}
-            </div>
+              </div>
 
-            {/* Desktop controls */}
-            <div className="hidden md:flex items-center space-x-3">
-              {/* Language */}
-              <div className="relative">
-                <button
-                  id="desktop-lang-btn"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setLanguageDropdownOpen(!languageDropdownOpen);
-                  }}
-                  className="flex items-center space-x-1.5 px-3 py-1.5 rounded-full hover:bg-gray-100/80 dark:hover:bg-gray-800/40 transition-all duration-200 text-gray-600 dark:text-gray-300 active:scale-95 text-xs font-medium"
-                >
-                  <span className="text-base leading-none">{currentLang.flag}</span>
-                  <svg
-                    className={`w-3.5 h-3.5 text-gray-400 dark:text-gray-500 transition-transform duration-250 ${
-                      languageDropdownOpen ? "rotate-180 text-indigo-600 dark:text-indigo-400" : ""
-                    }`}
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
+              {/* Desktop nav */}
+              <div className="hidden md:flex items-center space-x-6">
+                {NAV_LINKS.map(({ key, href }) => (
+                  <Link
+                    key={key}
+                    href={href}
+                    className="text-xs font-medium text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
                   >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M19 9l-7 7-7-7"
-                    />
-                  </svg>
-                </button>
-                <div
-                  className={`absolute right-0 mt-2.5 w-72 bg-white dark:bg-gray-900 rounded-2xl shadow-xl p-2 z-50 border border-gray-200 dark:border-gray-700 transition-all duration-200 origin-top-right ${
-                    languageDropdownOpen
-                      ? "opacity-100 scale-100 translate-y-0 pointer-events-auto visible"
-                      : "opacity-0 scale-95 -translate-y-2 pointer-events-none invisible"
-                  }`}
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <div className="grid grid-cols-2 gap-1">
-                    {Object.entries(localeNames).map(([code, lang]) => (
-                      <button
-                        key={code}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setLocale(code as Locale);
-                          setLanguageDropdownOpen(false);
-                        }}
-                        className={`flex items-center space-x-2 px-2.5 py-1.5 rounded-lg transition-all duration-150 text-left ${
-                          locale === code
-                            ? "bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 font-semibold"
-                            : "text-gray-700 dark:text-gray-300 hover:bg-gray-100/70 dark:hover:bg-gray-850/50"
-                        }`}
-                      >
-                        <span className="text-base leading-none">{lang.flag}</span>
-                        <span className="text-xs truncate">{lang.name}</span>
-                        {locale === code && (
-                          <CheckIcon className="w-3 h-3 text-indigo-600 dark:text-indigo-400 ml-auto shrink-0" />
-                        )}
-                      </button>
-                    ))}
+                    {t(key)}
+                  </Link>
+                ))}
+              </div>
+
+              {/* Desktop controls */}
+              <div className="hidden md:flex items-center space-x-3">
+                {/* Language */}
+                <div className="relative">
+                  <button
+                    id="desktop-lang-btn"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setLanguageDropdownOpen(!languageDropdownOpen);
+                    }}
+                    className="flex items-center space-x-1.5 px-3 py-1.5 rounded-full hover:bg-gray-100/80 dark:hover:bg-gray-800/40 transition-all duration-200 text-gray-600 dark:text-gray-300 active:scale-95 text-xs font-medium"
+                  >
+                    <span className="text-base leading-none">{currentLang.flag}</span>
+                    <svg
+                      className={`w-3.5 h-3.5 text-gray-400 dark:text-gray-500 transition-transform duration-250 ${
+                        languageDropdownOpen
+                          ? "rotate-180 text-indigo-600 dark:text-indigo-400"
+                          : ""
+                      }`}
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M19 9l-7 7-7-7"
+                      />
+                    </svg>
+                  </button>
+                  <div
+                    className={`absolute right-0 mt-2.5 w-72 bg-white dark:bg-gray-900 rounded-2xl shadow-xl p-2 z-50 border border-gray-200 dark:border-gray-700 transition-all duration-200 origin-top-right ${
+                      languageDropdownOpen
+                        ? "opacity-100 scale-100 translate-y-0 pointer-events-auto visible"
+                        : "opacity-0 scale-95 -translate-y-2 pointer-events-none invisible"
+                    }`}
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <div className="grid grid-cols-2 gap-1">
+                      {Object.entries(localeNames).map(([code, lang]) => (
+                        <button
+                          key={code}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setLocale(code as Locale);
+                            setLanguageDropdownOpen(false);
+                          }}
+                          className={`flex items-center space-x-2 px-2.5 py-1.5 rounded-lg transition-all duration-150 text-left ${
+                            locale === code
+                              ? "bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 font-semibold"
+                              : "text-gray-700 dark:text-gray-300 hover:bg-gray-100/70 dark:hover:bg-gray-850/50"
+                          }`}
+                        >
+                          <span className="text-base leading-none">{lang.flag}</span>
+                          <span className="text-xs truncate">{lang.name}</span>
+                          {locale === code && (
+                            <CheckIcon className="w-3 h-3 text-indigo-600 dark:text-indigo-400 ml-auto shrink-0" />
+                          )}
+                        </button>
+                      ))}
+                    </div>
                   </div>
                 </div>
+
+                {/* Theme */}
+                <button
+                  id="desktop-theme-btn"
+                  onClick={toggleTheme}
+                  className="flex items-center space-x-2 p-2 rounded-full hover:bg-gray-100/80 dark:hover:bg-gray-800/40 transition-all text-gray-600 dark:text-gray-300 active:scale-95"
+                  aria-label="Toggle theme"
+                >
+                  {mounted &&
+                    (theme === "dark" ? (
+                      <SunIcon className="w-4 h-4" />
+                    ) : (
+                      <MoonIcon className="w-4 h-4" />
+                    ))}
+                </button>
+
+                <Link
+                  href="/"
+                  className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-4 py-1.5 rounded-full hover:from-indigo-700 hover:to-purple-700 transition-all duration-200 shadow-md shadow-indigo-500/10 hover:shadow-indigo-500/25 active:scale-95 font-medium text-xs"
+                >
+                  {t("common.getStarted")}
+                </Link>
               </div>
 
-              {/* Theme */}
+              {/* Mobile hamburger */}
               <button
-                id="desktop-theme-btn"
-                onClick={toggleTheme}
-                className="flex items-center space-x-2 p-2 rounded-full hover:bg-gray-100/80 dark:hover:bg-gray-800/40 transition-all text-gray-600 dark:text-gray-300 active:scale-95"
-                aria-label="Toggle theme"
+                ref={menuButtonRef}
+                id="mobile-menu-btn"
+                className="md:hidden relative p-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                aria-expanded={mobileMenuOpen}
+                aria-controls="mobile-drawer"
+                aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               >
-                {mounted &&
-                  (theme === "dark" ? (
-                    <SunIcon className="w-4 h-4" />
-                  ) : (
-                    <MoonIcon className="w-4 h-4" />
-                  ))}
+                {/* Animated hamburger → X */}
+                <span className="sr-only">{mobileMenuOpen ? "Close menu" : "Open menu"}</span>
+                <div className="w-6 h-5 flex flex-col justify-between">
+                  <span
+                    className={`block h-0.5 rounded-full bg-current transition-all duration-300 origin-center ${mobileMenuOpen ? "rotate-45 translate-y-[9px]" : ""}`}
+                  />
+                  <span
+                    className={`block h-0.5 rounded-full bg-current transition-all duration-300 ${mobileMenuOpen ? "opacity-0 scale-x-0" : ""}`}
+                  />
+                  <span
+                    className={`block h-0.5 rounded-full bg-current transition-all duration-300 origin-center ${mobileMenuOpen ? "-rotate-45 -translate-y-[9px]" : ""}`}
+                  />
+                </div>
               </button>
-
-              <Link
-                href="/"
-                className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-4 py-1.5 rounded-full hover:from-indigo-700 hover:to-purple-700 transition-all duration-200 shadow-md shadow-indigo-500/10 hover:shadow-indigo-500/25 active:scale-95 font-medium text-xs"
-              >
-                {t("common.getStarted")}
-              </Link>
             </div>
-
-            {/* Mobile hamburger */}
-            <button
-              ref={menuButtonRef}
-              id="mobile-menu-btn"
-              className="md:hidden relative p-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-              aria-expanded={mobileMenuOpen}
-              aria-controls="mobile-drawer"
-              aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            >
-              {/* Animated hamburger → X */}
-              <span className="sr-only">{mobileMenuOpen ? "Close menu" : "Open menu"}</span>
-              <div className="w-6 h-5 flex flex-col justify-between">
-                <span
-                  className={`block h-0.5 rounded-full bg-current transition-all duration-300 origin-center ${mobileMenuOpen ? "rotate-45 translate-y-[9px]" : ""}`}
-                />
-                <span
-                  className={`block h-0.5 rounded-full bg-current transition-all duration-300 ${mobileMenuOpen ? "opacity-0 scale-x-0" : ""}`}
-                />
-                <span
-                  className={`block h-0.5 rounded-full bg-current transition-all duration-300 origin-center ${mobileMenuOpen ? "-rotate-45 -translate-y-[9px]" : ""}`}
-                />
-              </div>
-            </button>
-          </div>
-        </nav>
+          </nav>
+        </div>
       </header>
 
       {/* ── Mobile drawer backdrop ──────────────────────────────────────────── */}
