@@ -1,93 +1,93 @@
 {
   "common": {
-    "getStarted": "[TRANSLATE: Get Started]",
-    "getStartedFree": "[TRANSLATE: Get Started Free]",
-    "watchDemo": "[TRANSLATE: Watch Demo]",
-    "learnMore": "[TRANSLATE: Learn more →]",
-    "startFreeTrial": "[TRANSLATE: Start Free Trial]",
-    "viewPricing": "[TRANSLATE: View Pricing]"
+    "getStarted": "开始使用",
+    "getStartedFree": "免费开始使用",
+    "watchDemo": "观看演示",
+    "learnMore": "了解更多 →",
+    "startFreeTrial": "开始免费试用",
+    "viewPricing": "查看定价"
   },
   "header": {
-    "products": "[TRANSLATE: Products]",
-    "solutions": "[TRANSLATE: Solutions]",
-    "pricing": "[TRANSLATE: Pricing]",
-    "resources": "[TRANSLATE: Resources]",
-    "language": "[TRANSLATE: Language]",
-    "theme": "[TRANSLATE: Theme]"
+    "products": "产品",
+    "solutions": "解决方案",
+    "pricing": "价格",
+    "resources": "资源",
+    "language": "语言",
+    "theme": "主题"
   },
   "hero": {
-    "title": "[TRANSLATE: AI-Powered Video Creation]",
-    "titleHighlight": "[TRANSLATE: From Script to Screen]",
-    "subtitle": "[TRANSLATE: Transform your ideas into professional videos in minutes. Our end-to-end AI solution handles scriptwriting, voice synthesis, and video generation—all in one seamless platform.]"
+    "title": "AI 驱动视频制作",
+    "titleHighlight": "从脚本到屏幕",
+    "subtitle": "在几分钟内将您的想法转化为专业视频。我们的一站式 AI 解决方案涵盖脚本编写、语音合成和视频生成，全部在一个无缝平台上完成。"
   },
   "trust": {
-    "title": "[TRANSLATE: Trusted by 300+ leading companies worldwide]"
+    "title": "深受全球 300 多家领先企业的信赖"
   },
   "solutions": {
-    "title": "[TRANSLATE: Complete Video Production Suite]",
-    "subtitle": "[TRANSLATE: Everything you need to create stunning videos, powered by cutting-edge AI]",
+    "title": "完整的视频制作套件",
+    "subtitle": "由尖端 AI 技术驱动，提供您制作精彩视频所需的一切",
     "script": {
-      "title": "[TRANSLATE: AI Script Writer]",
-      "description": "[TRANSLATE: Generate compelling scripts tailored to your brand voice and target audience. Our AI understands context, tone, and storytelling to create engaging narratives.]"
+      "title": "AI 脚本编写器",
+      "description": "生成专为您的品牌声音和目标受众量身定制的吸引人脚本。我们的 AI 能够理解语境、语调和故事叙述，从而创作引人入胜的故事。"
     },
     "voice": {
-      "title": "[TRANSLATE: Voice Synthesis]",
-      "description": "[TRANSLATE: Choose from 200+ natural-sounding voices in 40+ languages. Professional-grade TTS engine with emotion, pacing, and emphasis control for perfect narration.]"
+      "title": "语音合成",
+      "description": "提供 40 多种语言、200 多种自然逼真的语音可供选择。专业级的语音合成（TTS）引擎，支持情感、节奏和重音控制，呈现完美旁白。"
     },
     "video": {
-      "title": "[TRANSLATE: Video Generation]",
-      "description": "[TRANSLATE: Transform scripts and audio into polished videos automatically. AI-powered visuals, transitions, and effects that match your content perfectly.]"
+      "title": "视频生成",
+      "description": "自动将脚本和音频转化为精致的视频。AI 驱动的视觉效果、转场和特效，完美契合您的内容。"
     }
   },
   "features": {
-    "title": "[TRANSLATE: Why Choose Huavoi]",
-    "subtitle": "[TRANSLATE: Professional video creation made simple, fast, and affordable]",
+    "title": "为什么选择 Huavoi",
+    "subtitle": "让专业视频制作变得简单、快速且经济实惠",
     "endToEnd": {
-      "title": "[TRANSLATE: End-to-End Solution]",
-      "description": "[TRANSLATE: From concept to final video—no need for multiple tools or vendors. One platform handles everything seamlessly.]"
+      "title": "一站式解决方案",
+      "description": "从概念到最终视频，无需使用多个工具或供应商，单一平台无缝处理一切。"
     },
     "speed": {
-      "title": "[TRANSLATE: 10x Faster]",
-      "description": "[TRANSLATE: Create professional videos in minutes instead of days. What once required a full production team now takes just a few clicks.]"
+      "title": "10倍速提升",
+      "description": "在几分钟内制作出专业视频，而非数天。过去需要一整个制作团队的工作，现在只需点击几下即可完成。"
     },
     "quality": {
-      "title": "[TRANSLATE: Studio Quality]",
-      "description": "[TRANSLATE: Broadcast-quality output with professional voices, smooth transitions, and polished visuals that rival traditional production.]"
+      "title": "影棚级品质",
+      "description": "广播级的输出品质，搭配专业配音、流畅转场和精致视觉效果，媲美传统的专业制作。"
     },
     "affordable": {
-      "title": "[TRANSLATE: Cost Effective]",
-      "description": "[TRANSLATE: Fraction of the cost of traditional video production. No expensive equipment, studios, or production teams required.]"
+      "title": "高性价比",
+      "description": "成本仅为传统视频制作的极小部分。无需昂贵的设备、影棚或制作团队。"
     },
     "customizable": {
-      "title": "[TRANSLATE: Fully Customizable]",
-      "description": "[TRANSLATE: Fine-tune every aspect—voice, pacing, visuals, branding. Maintain complete creative control while AI handles the heavy lifting.]"
+      "title": "完全可定制",
+      "description": "微调每个细节——语音、节奏、视觉效果、品牌标识。在 AI 处理繁重工作的同时，保持完整的创意主导权。"
     },
     "scalable": {
-      "title": "[TRANSLATE: Scale Instantly]",
-      "description": "[TRANSLATE: Produce one video or thousands with consistent quality. Perfect for content teams, marketing agencies, and enterprises.]"
+      "title": "即时扩展",
+      "description": "无论制作一部还是数千部视频，均能保持一致的品质。非常适合内容团队、营销机构和企业。"
     }
   },
   "cta": {
-    "title": "[TRANSLATE: Ready to Create Amazing Videos?]",
-    "subtitle": "[TRANSLATE: Join thousands of creators and businesses producing professional videos faster than ever before]"
+    "title": "准备好制作令人惊叹的视频了吗？",
+    "subtitle": "加入数千名创作者和企业的行列，以超越以往的速度制作专业视频"
   },
   "faq": {
-    "title": "[TRANSLATE: Frequently Asked Questions]",
+    "title": "常见问题",
     "q1": {
-      "question": "[TRANSLATE: What does the video creation process include?]",
-      "answer": "[TRANSLATE: Our platform provides a complete end-to-end solution: AI-powered script generation, professional voice synthesis with 200+ voices, and automated video production with matching visuals. You can use all three together or each component independently.]"
+      "question": "视频制作流程包括哪些内容？",
+      "answer": "我们的平台提供完整的一站式解决方案：AI 驱动的脚本生成、拥有 200 多种语音的专业语音合成，以及包含匹配视觉效果的自动视频制作。您可以将这三者结合使用，也可以单独使用每个组件。"
     },
     "q2": {
-      "question": "[TRANSLATE: How long does it take to create a video?]",
-      "answer": "[TRANSLATE: A typical 2-3 minute video can be created in under 10 minutes. The AI handles scriptwriting, voice generation, and video assembly automatically, dramatically reducing production time compared to traditional methods.]"
+      "question": "制作一部视频需要多长时间？",
+      "answer": "一部典型的 2-3 分钟视频可以在 10 分钟内制作完成。AI 会自动处理脚本编写、语音生成和视频合成，相比传统方法大幅缩短制作时间。"
     },
     "q3": {
-      "question": "[TRANSLATE: Can I customize the AI-generated content?]",
-      "answer": "[TRANSLATE: Absolutely. You have full control at every step—edit scripts, choose voices, adjust pacing and tone, customize visuals, and add your branding. The AI accelerates the process while you maintain creative control.]"
+      "question": "我可以自定义 AI 生成的内容吗？",
+      "answer": "当然可以。您在每一步都拥有完全的控制权——编辑脚本、选择语音、调整节奏和语调、自定义视觉效果并添加您的品牌标识。AI 负责加速流程，而您保持创意掌控。"
     },
     "q4": {
-      "question": "[TRANSLATE: What types of videos can I create?]",
-      "answer": "[TRANSLATE: Marketing videos, product demos, training content, social media posts, explainer videos, corporate communications, and more. Our AI adapts to your needs and style requirements.]"
+      "question": "我可以制作哪些类型的视频？",
+      "answer": "营销视频、产品演示、培训内容、社交媒体帖子、说明视频、企业沟通视频等。我们的 AI 可以适应您的需求和风格要求。"
     }
   }
 }
