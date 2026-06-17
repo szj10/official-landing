@@ -41,7 +41,7 @@ export default function WechatQRModal({ isOpen, onClose }: WechatQRModalProps) {
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex flex-col items-center text-center">
-          <div className="w-48 h-48 bg-white dark:bg-zinc-800 rounded-2xl flex items-center justify-center border-2 border-gray-200 dark:border-zinc-700 shadow-inner p-3">
+          <div className="relative w-48 h-48 bg-white dark:bg-zinc-800 rounded-2xl flex items-center justify-center border-2 border-gray-200 dark:border-zinc-700 shadow-inner p-3">
             <Image
               src="/images/wechat-qr.svg"
               alt="WeChat QR Code"
@@ -49,14 +49,10 @@ export default function WechatQRModal({ isOpen, onClose }: WechatQRModalProps) {
               height={180}
               className="w-full h-full"
             />
-          </div>
-
-          <p className="mt-4 text-xs text-gray-500 dark:text-zinc-500">
-            Press{" "}
-            <kbd className="px-1.5 py-0.5 rounded bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 font-mono">
+            <kbd className="absolute -top-2 -right-2 px-1.5 py-0.5 text-xs rounded bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 font-mono shadow-sm border border-gray-200 dark:border-gray-700">
               Esc
             </kbd>
-          </p>
+          </div>
         </div>
       </div>
     </div>
