@@ -7,8 +7,8 @@ This directory contains all translation files for the Huavoi application.
 ```
 public/locales/
 ├── en.json    # English (source language)
-├── zh.json    # Simplified Chinese (简体中文)
-├── zh-TW.json # Traditional Chinese (繁體中文)
+├── chs.json   # Simplified Chinese (简体中文)
+├── cht.json   # Traditional Chinese (繁體中文)
 ├── es.json    # Spanish (Español)
 ├── fr.json    # French (Français)
 ├── de.json    # German (Deutsch)
@@ -20,7 +20,7 @@ public/locales/
 
 ### For i18n Team Members
 
-1. **Open the target language file** (e.g., `zh.json` for Simplified Chinese)
+1. **Open the target language file** (e.g., `chs.json` for Simplified Chinese)
 
 2. **Find placeholder texts** - Look for values like:
 
