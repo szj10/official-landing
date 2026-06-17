@@ -45,9 +45,9 @@ function CheckIcon({ className }: { className?: string }) {
 
 const NAV_LINKS = [
   { key: "header.home", href: "/" },
-  { key: "header.pricing", href: "/pricing" },
   { key: "header.playground", href: "/playground" },
   { key: "header.news", href: "/news" },
+  { key: "header.pricing", href: "/pricing" },
   { key: "header.about", href: "/about" },
 ] as const;
 
@@ -183,7 +183,11 @@ export default function Header() {
                     }}
                     className="flex items-center space-x-1.5 px-3 py-1.5 rounded-full hover:bg-gray-100/80 dark:hover:bg-gray-800/40 transition-all duration-200 text-gray-600 dark:text-gray-300 active:scale-95 text-xs font-medium"
                   >
-                    <span className="text-base leading-none">{currentLang.flag}</span>
+                    <span
+                      className={`leading-none ${locale === "chs" || locale === "cht" ? "text-sm" : "text-base"}`}
+                    >
+                      {currentLang.flag}
+                    </span>
                     <svg
                       className={`w-3.5 h-3.5 text-gray-400 dark:text-gray-500 transition-transform duration-250 ${
                         languageDropdownOpen
@@ -225,7 +229,11 @@ export default function Header() {
                               : "text-gray-700 dark:text-gray-300 hover:bg-gray-100/70 dark:hover:bg-gray-850/50"
                           }`}
                         >
-                          <span className="text-base leading-none">{lang.flag}</span>
+                          <span
+                            className={`leading-none ${code === "chs" || code === "cht" ? "text-sm" : "text-base"}`}
+                          >
+                            {lang.flag}
+                          </span>
                           <span className="text-xs truncate">{lang.name}</span>
                           {locale === code && (
                             <CheckIcon className="w-3 h-3 text-indigo-600 dark:text-indigo-400 ml-auto shrink-0" />
@@ -375,7 +383,11 @@ export default function Header() {
                 className="w-full flex items-center justify-between px-3.5 py-3 rounded-xl bg-gray-50 dark:bg-gray-900 border border-gray-100 dark:border-gray-800 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800/60 transition-colors duration-200 active:scale-[0.99]"
               >
                 <div className="flex items-center gap-2.5">
-                  <span className="text-lg leading-none">{currentLang.flag}</span>
+                  <span
+                    className={`leading-none ${locale === "chs" || locale === "cht" ? "text-base" : "text-lg"}`}
+                  >
+                    {currentLang.flag}
+                  </span>
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="text-xs text-gray-400 dark:text-gray-500">
@@ -421,7 +433,11 @@ export default function Header() {
                             : "text-gray-600 dark:text-gray-400 hover:bg-white/60 dark:hover:bg-gray-800/60"
                         }`}
                       >
-                        <span className="text-base leading-none">{lang.flag}</span>
+                        <span
+                          className={`leading-none ${code === "chs" || code === "cht" ? "text-sm" : "text-base"}`}
+                        >
+                          {lang.flag}
+                        </span>
                         <span className="truncate text-xs">{lang.name}</span>
                         {locale === code && (
                           <CheckIcon className="w-3.5 h-3.5 text-blue-600 ml-auto shrink-0" />

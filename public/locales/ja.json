@@ -8,13 +8,13 @@
     "viewPricing": "[TRANSLATE: View Pricing]"
   },
   "header": {
-    "home": "[TRANSLATE: Home]",
-    "pricing": "[TRANSLATE: Pricing]",
-    "playground": "[TRANSLATE: Playground]",
-    "news": "[TRANSLATE: News]",
-    "about": "[TRANSLATE: About]",
-    "language": "[TRANSLATE: Language]",
-    "theme": "[TRANSLATE: Theme]"
+    "home": "ホーム",
+    "pricing": "料金",
+    "playground": "体験",
+    "news": "ニュース",
+    "about": "概要",
+    "language": "言語",
+    "theme": "テーマ"
   },
   "hero": {
     "title": "[TRANSLATE: AI-Powered Video Creation]",

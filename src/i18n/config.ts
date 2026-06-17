@@ -8,8 +8,8 @@ export const localeNames: Record<Locale, { name: string; flag: string }> = {
   de: { name: "Deutsch", flag: "🇩🇪" },
   ko: { name: "한국어", flag: "🇰🇷" },
   ja: { name: "日本語", flag: "🇯🇵" },
-  cht: { name: "繁體中文", flag: "繁" },
   chs: { name: "简体中文", flag: "简" },
+  cht: { name: "繁體中文", flag: "繁" },
 };
 
 export const defaultLocale: Locale = "en";

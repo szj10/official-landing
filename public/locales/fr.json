@@ -8,13 +8,13 @@
     "viewPricing": "[TRANSLATE: View Pricing]"
   },
   "header": {
-    "home": "[TRANSLATE: Home]",
-    "pricing": "[TRANSLATE: Pricing]",
-    "playground": "[TRANSLATE: Playground]",
-    "news": "[TRANSLATE: News]",
-    "about": "[TRANSLATE: About]",
-    "language": "[TRANSLATE: Language]",
-    "theme": "[TRANSLATE: Theme]"
+    "home": "Accueil",
+    "pricing": "Tarifs",
+    "playground": "Bac à sable",
+    "news": "Actualités",
+    "about": "À propos",
+    "language": "Langue",
+    "theme": "Thème"
   },
   "hero": {
     "title": "[TRANSLATE: AI-Powered Video Creation]",
