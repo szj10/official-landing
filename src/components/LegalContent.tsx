@@ -33,7 +33,7 @@ export default function LegalContent({ type }: { type: "terms" | "privacy" }) {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full glass-panel text-xs text-indigo-600 dark:text-indigo-400 font-semibold mb-6 shadow-sm shadow-indigo-500/5">
-              <span>Legal</span>
+              <span>{t("legal.badge")}</span>
             </div>
             <div className="animate-pulse">
               <div className="h-10 bg-gray-200 dark:bg-zinc-800 rounded-lg mb-4 mx-auto w-64" />

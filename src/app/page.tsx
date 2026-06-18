@@ -133,7 +133,7 @@ export default function Home() {
               {/* Feature Badge */}
               <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full glass-panel text-xs text-indigo-600 dark:text-indigo-400 font-semibold mb-6 shadow-sm shadow-indigo-500/5 hover:-translate-y-0.5 transition-transform duration-200">
                 <span className="flex h-1.5 w-1.5 rounded-full bg-indigo-500 animate-ping" />
-                <span>Introducing Huavoi 2.0</span>
+                <span>{t("hero.badge")}</span>
               </div>
 
               {/* Title */}
@@ -171,7 +171,7 @@ export default function Home() {
                 <div className="rounded-2xl overflow-hidden border border-gray-200/50 dark:border-zinc-800/80 bg-zinc-950 aspect-[16/10] relative shadow-inner">
                   <Image
                     src="/images/dashboard.png"
-                    alt="Huavoi Dashboard Mockup"
+                    alt={t("hero.dashboardAlt")}
                     width={1024}
                     height={640}
                     className="w-full h-full object-cover select-none"
@@ -201,7 +201,7 @@ export default function Home() {
                   className="h-10 glass-panel rounded-full flex items-center justify-center border border-gray-200/40 dark:border-zinc-800/30"
                 >
                   <span className="text-zinc-500 dark:text-zinc-400 font-bold text-xs">
-                    COMPANY {i}
+                    {t(`trust.company${i}`)}
                   </span>
                 </div>
               ))}
