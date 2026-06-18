@@ -91,6 +91,9 @@
       "answer": "Marketing videos, product demos, training content, social media posts, explainer videos, corporate communications, and more. Our AI adapts to your needs and style requirements."
     }
   },
+  "legal": {
+    "lastUpdated": "Last updated"
+  },
   "playground": {
     "badge": "Try It Now",
     "title": "TTS Playground",

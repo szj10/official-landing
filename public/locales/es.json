@@ -91,6 +91,9 @@
       "answer": "[TRANSLATE: Marketing videos, product demos, training content, social media posts, explainer videos, corporate communications, and more. Our AI adapts to your needs and style requirements.]"
     }
   },
+  "legal": {
+    "lastUpdated": "Última actualización"
+  },
   "playground": {
     "badge": "Pruébalo Ahora",
     "title": "Zona de Pruebas TTS",
