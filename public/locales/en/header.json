@@ -6,9 +6,12 @@
     "news": "News",
     "about": "About",
     "language": "Language",
-    "languages": "Languages",
+    "languages": "languages",
     "light": "Light",
     "dark": "Dark",
-    "theme": "Theme"
+    "theme": "Theme",
+    "closeMenu": "Close menu",
+    "openMenu": "Open menu",
+    "navigationMenu": "Navigation menu"
   }
 }

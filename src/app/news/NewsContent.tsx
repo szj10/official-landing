@@ -75,14 +75,14 @@ export default function NewsContent({ posts }: { posts: PostMetadata[] }) {
                 {post.trending && (
                   <div className="absolute top-4 left-4 z-10">
                     <span className="px-3 py-1 rounded-full bg-gradient-to-r from-orange-500 to-red-500 text-white text-[10px] font-bold shadow-lg">
-                      🔥 TRENDING
+                      {t("news.trending")}
                     </span>
                   </div>
                 )}
                 {post.hot && !post.trending && (
                   <div className="absolute top-4 left-4 z-10">
                     <span className="px-3 py-1 rounded-full bg-gradient-to-r from-yellow-500 to-orange-500 text-white text-[10px] font-bold shadow-lg">
-                      ⚡ HOT
+                      {t("news.hot")}
                     </span>
                   </div>
                 )}

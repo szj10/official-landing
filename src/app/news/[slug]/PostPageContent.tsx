@@ -56,12 +56,12 @@ export default function PostPageContent({
             <span className="text-sm text-gray-500 dark:text-zinc-500">{readTime}</span>
             {trending && (
               <span className="px-3 py-1 rounded-full bg-gradient-to-r from-orange-500 to-red-500 text-white text-xs font-bold">
-                🔥 TRENDING
+                {t("news.trending")}
               </span>
             )}
             {hot && !trending && (
               <span className="px-3 py-1 rounded-full bg-gradient-to-r from-yellow-500 to-orange-500 text-white text-xs font-bold">
-                ⚡ HOT
+                {t("news.hot")}
               </span>
             )}
           </div>
