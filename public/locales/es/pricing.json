@@ -1,0 +1,121 @@
+{
+  "pricing": {
+    "badge": "Planes de precios flexibles",
+    "title": "Precios simples y transparentes",
+    "subtitle": "Elige el plan perfecto para tus necesidades de creación de video. Todos los planes incluyen una prueba gratuita de 14 días con acceso completo.",
+    "monthly": "Mensual",
+    "annual": "Anual",
+    "save20": "Ahorra 20%",
+    "perMonth": "/mes",
+    "custom": "Personalizado",
+    "mostPopular": "Más popular",
+    "starter": {
+      "name": "Inicial",
+      "description": "Perfecto para individuos y proyectos pequeños",
+      "features": {
+        "f1": "10 videos/mes",
+        "f2": "Generación de guiones con IA",
+        "f3": "Selección de voz básica",
+        "f4": "Plantillas de video estándar",
+        "f5": "Soporte por correo",
+        "f6": "Calidad de salida 720p"
+      },
+      "cta": "Comenzar"
+    },
+    "professional": {
+      "name": "Profesional",
+      "description": "Para equipos en crecimiento y creadores de contenido",
+      "features": {
+        "f1": "100 videos/mes",
+        "f2": "Guiones IA avanzados",
+        "f3": "200+ voces premium",
+        "f4": "Plantillas de video personalizadas",
+        "f5": "Soporte prioritario",
+        "f6": "Calidad HD 1080p",
+        "f7": "Personalización de marca",
+        "f8": "Acceso API"
+      },
+      "cta": "Comenzar prueba gratuita"
+    },
+    "business": {
+      "name": "Empresa",
+      "description": "Para equipos de marketing y agencias",
+      "features": {
+        "f1": "Videos ilimitados",
+        "f2": "Guiones IA avanzados",
+        "f3": "Todas las voces premium",
+        "f4": "Plantillas y marca personalizadas",
+        "f5": "Soporte dedicado 24/7",
+        "f6": "Calidad Ultra HD 4K",
+        "f7": "Colaboración en equipo",
+        "f8": "Análisis avanzados",
+        "f9": "SSO y SAML"
+      },
+      "cta": "Comenzar prueba gratuita"
+    },
+    "enterprise": {
+      "name": "Corporativo",
+      "description": "Soluciones personalizadas para grandes organizaciones",
+      "features": {
+        "f1": "Todo ilimitado",
+        "f2": "Modelos IA personalizados",
+        "f3": "Clonación de voz",
+        "f4": "Solución de marca blanca",
+        "f5": "Gerente de cuenta dedicado",
+        "f6": "Despliegue local",
+        "f7": "Integraciones personalizadas",
+        "f8": "Descuentos por volumen",
+        "f9": "SLA personalizado"
+      },
+      "cta": "Contactar ventas"
+    },
+    "comparePlans": "Comparar planes",
+    "compare": {
+      "feature": "Función",
+      "videosPerMonth": "Videos por mes",
+      "aiScriptWriter": "Escritor de guiones IA",
+      "voiceSelection": "Selección de voz",
+      "videoQuality": "Calidad de video",
+      "customBranding": "Marca personalizada",
+      "teamCollaboration": "Colaboración en equipo",
+      "apiAccess": "Acceso API",
+      "voiceCloning": "Clonación de voz",
+      "whiteLabel": "Marca blanca",
+      "basic": "Básico",
+      "unlimited": "Ilimitado"
+    },
+    "customSolution": {
+      "title": "¿Necesitas una solución personalizada?",
+      "description": "Nuestro equipo empresarial puede crear una solución de video personalizada adaptada a tu flujo de trabajo, incluyendo modelos IA personalizados, clonación de voz, opciones de marca blanca y soporte dedicado.",
+      "cta": "Contactar ventas"
+    },
+    "freeTrial": {
+      "title": "Pruébalo gratis durante 14 días",
+      "description": "Crea tu primer video con IA en minutos. No se requiere tarjeta de crédito. Experimenta todo el poder de la creación de video de guion a pantalla.",
+      "cta": "Comenzar prueba gratuita"
+    },
+    "faq": {
+      "title": "Preguntas frecuentes",
+      "q1": {
+        "q": "¿Qué incluye la prueba gratuita?",
+        "a": "Acceso completo a todas las funciones durante 14 días. Crea hasta 5 videos con guionización IA, síntesis de voz y generación de video. No se requiere tarjeta de crédito."
+      },
+      "q2": {
+        "q": "¿Puedo cambiar de plan en cualquier momento?",
+        "a": "Sí, puedes actualizar o degradar tu plan en cualquier momento. Al actualizar, se te cobrará la diferencia prorrateada. Al degradar, recibirás crédito por la parte no utilizada."
+      },
+      "q3": {
+        "q": "¿Qué formatos y calidad de video soportan?",
+        "a": "Soportamos formatos MP4, MOV y WebM. La calidad va desde 720p (Inicial) hasta 1080p HD (Profesional) hasta 4K Ultra HD (Empresa y Corporativo)."
+      },
+      "q4": {
+        "q": "¿Puedo usar mis propios guiones o voces?",
+        "a": "Por supuesto. Aunque nuestra IA puede generar guiones y voces, puedes subir tus propios guiones, grabar audio personalizado o usar nuestra función de clonación de voz (Corporativo) para replicar voces específicas."
+      },
+      "q5": {
+        "q": "¿Ofrecen reembolsos?",
+        "a": "Sí, ofrecemos una garantía de devolución de 30 días para todos los planes de pago. Si no estás satisfecho con la calidad del video o las funciones, contacta a nuestro equipo de soporte para un reembolso completo."
+      }
+    }
+  }
+}

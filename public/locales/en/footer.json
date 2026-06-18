@@ -1,0 +1,29 @@
+{
+  "footer": {
+    "description": "AI-powered video creation platform. Transform ideas into professional videos with scriptwriting, voice synthesis, and video generation—all in one place.",
+    "allSystemsOperational": "All systems operational",
+    "resources": "Resources",
+    "documentation": "Documentation",
+    "newsBlog": "News & Blog",
+    "caseStudies": "Case Studies",
+    "apiReference": "API Reference",
+    "status": "Status",
+    "company": "Company",
+    "aboutUs": "About Us",
+    "careers": "Careers",
+    "contact": "Contact",
+    "privacyPolicy": "Privacy Policy",
+    "termsOfService": "Terms of Service",
+    "stayUpdated": "Stay Updated",
+    "stayUpdatedDesc": "Get the latest AI video news and feature releases in your inbox.",
+    "subscribed": "You're subscribed!",
+    "emailPlaceholder": "your@email.com",
+    "emailError": "Please enter a valid email.",
+    "subscribing": "Subscribing…",
+    "subscribe": "Subscribe",
+    "copyright": "All rights reserved.",
+    "privacy": "Privacy",
+    "terms": "Terms",
+    "cookies": "Cookies"
+  }
+}

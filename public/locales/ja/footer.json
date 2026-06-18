@@ -1,0 +1,29 @@
+{
+  "footer": {
+    "description": "AI搭載の動画制作プラットフォーム。脚本作成、音声合成、動画生成でアイデアをプロの動画に変えましょう。すべてが1か所で完結します。",
+    "allSystemsOperational": "すべてのシステム正常稼働中",
+    "resources": "リソース",
+    "documentation": "ドキュメント",
+    "newsBlog": "ニュース＆ブログ",
+    "caseStudies": "ケーススタディ",
+    "apiReference": "APIリファレンス",
+    "status": "ステータス",
+    "company": "会社",
+    "aboutUs": "会社概要",
+    "careers": "採用情報",
+    "contact": "お問い合わせ",
+    "privacyPolicy": "プライバシーポリシー",
+    "termsOfService": "利用規約",
+    "stayUpdated": "最新情報を入手",
+    "stayUpdatedDesc": "最新のAI動画ニュースや機能リリースをメールでお届けします。",
+    "subscribed": "購読完了！",
+    "emailPlaceholder": "your@email.com",
+    "emailError": "有効なメールアドレスを入力してください。",
+    "subscribing": "購読中…",
+    "subscribe": "購読する",
+    "copyright": "全著作権所有。",
+    "privacy": "プライバシー",
+    "terms": "規約",
+    "cookies": "Cookie"
+  }
+}

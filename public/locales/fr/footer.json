@@ -1,0 +1,29 @@
+{
+  "footer": {
+    "description": "Plateforme de création vidéo propulsée par l'IA. Transformez vos idées en vidéos professionnelles avec l'écriture de scripts, la synthèse vocale et la génération vidéo, tout en un seul endroit.",
+    "allSystemsOperational": "Tous les systèmes opérationnels",
+    "resources": "Ressources",
+    "documentation": "Documentation",
+    "newsBlog": "Actualités et Blog",
+    "caseStudies": "Études de cas",
+    "apiReference": "Référence API",
+    "status": "Statut",
+    "company": "Entreprise",
+    "aboutUs": "À propos",
+    "careers": "Carrières",
+    "contact": "Contact",
+    "privacyPolicy": "Politique de confidentialité",
+    "termsOfService": "Conditions d'utilisation",
+    "stayUpdated": "Restez informé",
+    "stayUpdatedDesc": "Recevez les dernières actualités vidéo IA et les lancements de fonctionnalités dans votre boîte de réception.",
+    "subscribed": "Vous êtes inscrit !",
+    "emailPlaceholder": "votre@email.com",
+    "emailError": "Veuillez entrer une adresse email valide.",
+    "subscribing": "Inscription en cours…",
+    "subscribe": "S'inscrire",
+    "copyright": "Tous droits réservés.",
+    "privacy": "Confidentialité",
+    "terms": "Conditions",
+    "cookies": "Cookies"
+  }
+}

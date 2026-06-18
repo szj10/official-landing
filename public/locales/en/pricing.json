@@ -1,0 +1,121 @@
+{
+  "pricing": {
+    "badge": "Flexible pricing plans",
+    "title": "Simple, Transparent Pricing",
+    "subtitle": "Choose the perfect plan for your video creation needs. All plans include a 14-day free trial with full access.",
+    "monthly": "Monthly",
+    "annual": "Annual",
+    "save20": "Save 20%",
+    "perMonth": "/month",
+    "custom": "Custom",
+    "mostPopular": "Most Popular",
+    "starter": {
+      "name": "Starter",
+      "description": "Perfect for individuals and small projects",
+      "features": {
+        "f1": "10 videos/month",
+        "f2": "AI script generation",
+        "f3": "Basic voice selection",
+        "f4": "Standard video templates",
+        "f5": "Email support",
+        "f6": "720p output quality"
+      },
+      "cta": "Get Started"
+    },
+    "professional": {
+      "name": "Professional",
+      "description": "For growing teams and content creators",
+      "features": {
+        "f1": "100 videos/month",
+        "f2": "Advanced AI scripts",
+        "f3": "200+ premium voices",
+        "f4": "Custom video templates",
+        "f5": "Priority support",
+        "f6": "1080p HD quality",
+        "f7": "Brand customization",
+        "f8": "API access"
+      },
+      "cta": "Start Free Trial"
+    },
+    "business": {
+      "name": "Business",
+      "description": "For marketing teams and agencies",
+      "features": {
+        "f1": "Unlimited videos",
+        "f2": "Advanced AI scripts",
+        "f3": "All premium voices",
+        "f4": "Custom templates & branding",
+        "f5": "24/7 dedicated support",
+        "f6": "4K Ultra HD quality",
+        "f7": "Team collaboration",
+        "f8": "Advanced analytics",
+        "f9": "SSO & SAML"
+      },
+      "cta": "Start Free Trial"
+    },
+    "enterprise": {
+      "name": "Enterprise",
+      "description": "Custom solutions for large organizations",
+      "features": {
+        "f1": "Unlimited everything",
+        "f2": "Custom AI models",
+        "f3": "Voice cloning",
+        "f4": "White-label solution",
+        "f5": "Dedicated account manager",
+        "f6": "On-premise deployment",
+        "f7": "Custom integrations",
+        "f8": "Volume discounts",
+        "f9": "Custom SLA"
+      },
+      "cta": "Contact Sales"
+    },
+    "comparePlans": "Compare Plans",
+    "compare": {
+      "feature": "Feature",
+      "videosPerMonth": "Videos per Month",
+      "aiScriptWriter": "AI Script Writer",
+      "voiceSelection": "Voice Selection",
+      "videoQuality": "Video Quality",
+      "customBranding": "Custom Branding",
+      "teamCollaboration": "Team Collaboration",
+      "apiAccess": "API Access",
+      "voiceCloning": "Voice Cloning",
+      "whiteLabel": "White Label",
+      "basic": "Basic",
+      "unlimited": "Unlimited"
+    },
+    "customSolution": {
+      "title": "Need a custom solution?",
+      "description": "Our enterprise team can build a custom video creation solution tailored to your workflow, including custom AI models, voice cloning, white-label options, and dedicated support.",
+      "cta": "Contact Sales"
+    },
+    "freeTrial": {
+      "title": "Try it free for 14 days",
+      "description": "Create your first AI-powered video in minutes. No credit card required. Experience the full power of script-to-screen video creation.",
+      "cta": "Start Free Trial"
+    },
+    "faq": {
+      "title": "Frequently Asked Questions",
+      "q1": {
+        "q": "What's included in the free trial?",
+        "a": "Full access to all features for 14 days. Create up to 5 videos with AI scriptwriting, voice synthesis, and video generation. No credit card required."
+      },
+      "q2": {
+        "q": "Can I switch plans at any time?",
+        "a": "Yes, you can upgrade or downgrade your plan at any time. When upgrading, you'll be charged the prorated difference. When downgrading, you'll receive credit for the unused portion."
+      },
+      "q3": {
+        "q": "What video formats and quality do you support?",
+        "a": "We support MP4, MOV, and WebM formats. Quality ranges from 720p (Starter) to 1080p HD (Professional) to 4K Ultra HD (Business and Enterprise)."
+      },
+      "q4": {
+        "q": "Can I use my own scripts or voices?",
+        "a": "Absolutely. While our AI can generate scripts and voices, you can upload your own scripts, record custom audio, or use our voice cloning feature (Enterprise) to replicate specific voices."
+      },
+      "q5": {
+        "q": "Do you offer refunds?",
+        "a": "Yes, we offer a 30-day money-back guarantee for all paid plans. If you're not satisfied with the video quality or features, contact our support team for a full refund."
+      }
+    }
+  }
+}

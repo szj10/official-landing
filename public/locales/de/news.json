@@ -1,0 +1,42 @@
+{
+  "news": {
+    "badge": "Neueste Updates",
+    "title": "Neuigkeiten & Ressourcen",
+    "subtitle": "Einblicke, Tutorials und Updates vom Huavoi-Team. Erfahren Sie, wie Sie mit KI erstaunliche Videos erstellen.",
+    "categories": {
+      "allPosts": "Alle Beiträge",
+      "productUpdates": "Produkt-Updates",
+      "industryInsights": "Brancheneinblicke",
+      "tutorials": "Tutorials",
+      "technology": "Technologie",
+      "caseStudies": "Fallstudien"
+    },
+    "readMore": "Weiterlesen",
+    "loadMore": "Weitere Beiträge laden",
+    "documentation": {
+      "title": "Dokumentation",
+      "description": "Umfassende Leitfäden und API-Dokumentation",
+      "cta": "Dokumentation ansehen"
+    },
+    "contactUs": {
+      "title": "Kontaktieren Sie uns",
+      "description": "Fragen? Wir sind hier, um zu helfen.",
+      "cta": "E-Mail senden"
+    },
+    "newsletter": {
+      "title": "Abonnieren Sie unseren Newsletter",
+      "description": "Erhalten Sie die neuesten Updates, Tutorials und Einblicke direkt in Ihrem Posteingang.",
+      "placeholder": "E-Mail eingeben",
+      "cta": "Abonnieren"
+    },
+    "post": {
+      "notFound": "Beitrag nicht gefunden",
+      "backToNews": "Zurück zu Neuigkeiten",
+      "readyToTry": "Bereit, Huavoi auszuprobieren?",
+      "startCreating": "Beginnen Sie noch heute mit der Erstellung professioneller Videos mit KI",
+      "getStartedFree": "Kostenlos loslegen",
+      "previousPost": "← Vorheriger Beitrag",
+      "nextPost": "Nächster Beitrag →"
+    }
+  }
+}

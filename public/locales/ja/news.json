@@ -1,0 +1,42 @@
+{
+  "news": {
+    "badge": "最新アップデート",
+    "title": "ニュース＆リソース",
+    "subtitle": "Huavoiチームからのインサイト、チュートリアル、アップデート。AIで素晴らしい動画を作成する方法をご紹介します。",
+    "categories": {
+      "allPosts": "すべての記事",
+      "productUpdates": "製品アップデート",
+      "industryInsights": "業界インサイト",
+      "tutorials": "チュートリアル",
+      "technology": "テクノロジー",
+      "caseStudies": "ケーススタディ"
+    },
+    "readMore": "続きを読む",
+    "loadMore": "もっと読み込む",
+    "documentation": {
+      "title": "ドキュメント",
+      "description": "包括的なガイドとAPIドキュメント",
+      "cta": "ドキュメントを見る"
+    },
+    "contactUs": {
+      "title": "お問い合わせ",
+      "description": "ご質問がありますか？お手伝いいたします。",
+      "cta": "メールを送る"
+    },
+    "newsletter": {
+      "title": "ニュースレターを購読",
+      "description": "最新のアップデート、チュートリアル、インサイトをメールでお届けします。",
+      "placeholder": "メールアドレスを入力",
+      "cta": "購読する"
+    },
+    "post": {
+      "notFound": "記事が見つかりません",
+      "backToNews": "ニュースに戻る",
+      "readyToTry": "Huavoiを試してみませんか？",
+      "startCreating": "AIで今すぐプロの動画制作を始めましょう",
+      "getStartedFree": "無料で始める",
+      "previousPost": "← 前の記事",
+      "nextPost": "次の記事 →"
+    }
+  }
+}

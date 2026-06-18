@@ -1,0 +1,29 @@
+{
+  "footer": {
+    "description": "AI 驱动的视频创作平台。将创意转化为专业视频，涵盖脚本编写、语音合成和视频生成——一站式完成。",
+    "allSystemsOperational": "所有系统运行正常",
+    "resources": "资源",
+    "documentation": "文档",
+    "newsBlog": "新闻与博客",
+    "caseStudies": "案例研究",
+    "apiReference": "API 参考",
+    "status": "系统状态",
+    "company": "公司",
+    "aboutUs": "关于我们",
+    "careers": "加入我们",
+    "contact": "联系我们",
+    "privacyPolicy": "隐私政策",
+    "termsOfService": "服务条款",
+    "stayUpdated": "保持关注",
+    "stayUpdatedDesc": "获取最新的 AI 视频资讯和功能更新，直达您的收件箱。",
+    "subscribed": "订阅成功！",
+    "emailPlaceholder": "your@email.com",
+    "emailError": "请输入有效的邮箱地址。",
+    "subscribing": "订阅中…",
+    "subscribe": "订阅",
+    "copyright": "保留所有权利。",
+    "privacy": "隐私",
+    "terms": "条款",
+    "cookies": "Cookie"
+  }
+}

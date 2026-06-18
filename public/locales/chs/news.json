@@ -1,0 +1,42 @@
+{
+  "news": {
+    "badge": "最新动态",
+    "title": "新闻与资源",
+    "subtitle": "来自 Huavoi 团队的洞察、教程和更新。了解如何用 AI 制作精彩视频。",
+    "categories": {
+      "allPosts": "全部文章",
+      "productUpdates": "产品更新",
+      "industryInsights": "行业洞察",
+      "tutorials": "教程",
+      "technology": "技术",
+      "caseStudies": "案例研究"
+    },
+    "readMore": "阅读更多",
+    "loadMore": "加载更多文章",
+    "documentation": {
+      "title": "文档",
+      "description": "全面的指南和 API 文档",
+      "cta": "查看文档"
+    },
+    "contactUs": {
+      "title": "联系我们",
+      "description": "有问题？我们随时为您提供帮助。",
+      "cta": "发送邮件"
+    },
+    "newsletter": {
+      "title": "订阅我们的通讯",
+      "description": "将最新动态、教程和洞察直接送达您的收件箱。",
+      "placeholder": "输入您的邮箱",
+      "cta": "订阅"
+    },
+    "post": {
+      "notFound": "文章未找到",
+      "backToNews": "返回新闻",
+      "readyToTry": "准备试试 Huavoi？",
+      "startCreating": "立即开始使用 AI 制作专业视频",
+      "getStartedFree": "免费开始使用",
+      "previousPost": "← 上一篇",
+      "nextPost": "下一篇 →"
+    }
+  }
+}

@@ -1,0 +1,121 @@
+{
+  "pricing": {
+    "badge": "Flexible Preispläne",
+    "title": "Einfache, transparente Preise",
+    "subtitle": "Wählen Sie den perfekten Plan für Ihre Videoerstellungsbedürfnisse. Alle Pläne beinhalten eine 14-tägige kostenlose Testversion mit vollem Zugriff.",
+    "monthly": "Monatlich",
+    "annual": "Jährlich",
+    "save20": "20% sparen",
+    "perMonth": "/Monat",
+    "custom": "Individuell",
+    "mostPopular": "Am beliebtesten",
+    "starter": {
+      "name": "Starter",
+      "description": "Perfekt für Einzelpersonen und kleine Projekte",
+      "features": {
+        "f1": "10 Videos/Monat",
+        "f2": "KI-Skripterstellung",
+        "f3": "Grundlegende Stimmauswahl",
+        "f4": "Standard-Videovorlagen",
+        "f5": "E-Mail-Support",
+        "f6": "720p Ausgabequalität"
+      },
+      "cta": "Loslegen"
+    },
+    "professional": {
+      "name": "Professionell",
+      "description": "Für wachsende Teams und Content-Ersteller",
+      "features": {
+        "f1": "100 Videos/Monat",
+        "f2": "Erweiterte KI-Skripte",
+        "f3": "200+ Premium-Stimmen",
+        "f4": "Benutzerdefinierte Videovorlagen",
+        "f5": "Prioritäts-Support",
+        "f6": "1080p HD-Qualität",
+        "f7": "Markenanpassung",
+        "f8": "API-Zugriff"
+      },
+      "cta": "Kostenlos testen"
+    },
+    "business": {
+      "name": "Business",
+      "description": "Für Marketingteams und Agenturen",
+      "features": {
+        "f1": "Unbegrenzte Videos",
+        "f2": "Erweiterte KI-Skripte",
+        "f3": "Alle Premium-Stimmen",
+        "f4": "Benutzerdefinierte Vorlagen & Marke",
+        "f5": "24/7 dedizierter Support",
+        "f6": "4K Ultra HD Qualität",
+        "f7": "Teamzusammenarbeit",
+        "f8": "Erweiterte Analysen",
+        "f9": "SSO & SAML"
+      },
+      "cta": "Kostenlos testen"
+    },
+    "enterprise": {
+      "name": "Enterprise",
+      "description": "Individuelle Lösungen für große Organisationen",
+      "features": {
+        "f1": "Alles unbegrenzt",
+        "f2": "Benutzerdefinierte KI-Modelle",
+        "f3": "Stimmklonung",
+        "f4": "White-Label-Lösung",
+        "f5": "Dedizierter Kundenbetreuer",
+        "f6": "On-Premise-Bereitstellung",
+        "f7": "Benutzerdefinierte Integrationen",
+        "f8": "Mengenrabatte",
+        "f9": "Benutzerdefinierte SLA"
+      },
+      "cta": "Vertrieb kontaktieren"
+    },
+    "comparePlans": "Pläne vergleichen",
+    "compare": {
+      "feature": "Funktion",
+      "videosPerMonth": "Videos pro Monat",
+      "aiScriptWriter": "KI-Skript-Schreiber",
+      "voiceSelection": "Stimmauswahl",
+      "videoQuality": "Videoqualität",
+      "customBranding": "Benutzerdefinierte Marke",
+      "teamCollaboration": "Teamzusammenarbeit",
+      "apiAccess": "API-Zugriff",
+      "voiceCloning": "Stimmklonung",
+      "whiteLabel": "White Label",
+      "basic": "Basis",
+      "unlimited": "Unbegrenzt"
+    },
+    "customSolution": {
+      "title": "Brauchen Sie eine individuelle Lösung?",
+      "description": "Unser Enterprise-Team kann eine maßgeschneiderte Videoerstellungslösung für Ihren Workflow entwickeln, einschließlich benutzerdefinierter KI-Modelle, Stimmklonung, White-Label-Optionen und dediziertem Support.",
+      "cta": "Vertrieb kontaktieren"
+    },
+    "freeTrial": {
+      "title": "14 Tage kostenlos testen",
+      "description": "Erstellen Sie Ihr erstes KI-Video in Minuten. Keine Kreditkarte erforderlich. Erleben Sie die volle Leistung der Videoerstellung vom Skript bis zum Bildschirm.",
+      "cta": "Kostenlos testen"
+    },
+    "faq": {
+      "title": "Häufig gestellte Fragen",
+      "q1": {
+        "q": "Was ist in der kostenlosen Testversion enthalten?",
+        "a": "Voller Zugriff auf alle Funktionen für 14 Tage. Erstellen Sie bis zu 5 Videos mit KI-Skripterstellung, Sprachsynthese und Videogenerierung. Keine Kreditkarte erforderlich."
+      },
+      "q2": {
+        "q": "Kann ich den Plan jederzeit wechseln?",
+        "a": "Ja, Sie können Ihren Plan jederzeit upgraden oder downgraden. Beim Upgrade wird Ihnen die anteilige Differenz berechnet. Beim Downgrade erhalten Sie Guthaben für den ungenutzten Teil."
+      },
+      "q3": {
+        "q": "Welche Videoformate und -qualitäten unterstützen Sie?",
+        "a": "Wir unterstützen MP4-, MOV- und WebM-Formate. Die Qualität reicht von 720p (Starter) über 1080p HD (Professionell) bis 4K Ultra HD (Business und Enterprise)."
+      },
+      "q4": {
+        "q": "Kann ich eigene Skripte oder Stimmen verwenden?",
+        "a": "Absolut. Während unsere KI Skripte und Stimmen generieren kann, können Sie eigene Skripte hochladen, benutzerdefiniertes Audio aufnehmen oder unsere Stimmklonungsfunktion (Enterprise) nutzen, um bestimmte Stimmen zu replizieren."
+      },
+      "q5": {
+        "q": "Bieten Sie Rückerstattungen an?",
+        "a": "Ja, wir bieten eine 30-tägige Geld-zurück-Garantie für alle kostenpflichtigen Pläne. Wenn Sie mit der Videoqualität oder den Funktionen nicht zufrieden sind, kontaktieren Sie unser Support-Team für eine vollständige Rückerstattung."
+      }
+    }
+  }
+}

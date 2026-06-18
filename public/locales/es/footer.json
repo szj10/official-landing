@@ -1,0 +1,29 @@
+{
+  "footer": {
+    "description": "Plataforma de creación de videos con IA. Transforma ideas en videos profesionales con guionización, síntesis de voz y generación de video, todo en un solo lugar.",
+    "allSystemsOperational": "Todos los sistemas operativos",
+    "resources": "Recursos",
+    "documentation": "Documentación",
+    "newsBlog": "Noticias y Blog",
+    "caseStudies": "Casos de estudio",
+    "apiReference": "Referencia API",
+    "status": "Estado",
+    "company": "Empresa",
+    "aboutUs": "Sobre nosotros",
+    "careers": "Carreras",
+    "contact": "Contacto",
+    "privacyPolicy": "Política de privacidad",
+    "termsOfService": "Términos de servicio",
+    "stayUpdated": "Mantente informado",
+    "stayUpdatedDesc": "Recibe las últimas noticias de video IA y lanzamientos de funciones en tu bandeja de entrada.",
+    "subscribed": "¡Te has suscrito!",
+    "emailPlaceholder": "tu@email.com",
+    "emailError": "Por favor, introduce un correo electrónico válido.",
+    "subscribing": "Suscribiendo…",
+    "subscribe": "Suscribirse",
+    "copyright": "Todos los derechos reservados.",
+    "privacy": "Privacidad",
+    "terms": "Términos",
+    "cookies": "Cookies"
+  }
+}

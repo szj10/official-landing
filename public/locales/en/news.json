@@ -1,0 +1,42 @@
+{
+  "news": {
+    "badge": "Latest Updates",
+    "title": "News & Resources",
+    "subtitle": "Insights, tutorials, and updates from the Huavoi team. Learn how to create amazing videos with AI.",
+    "categories": {
+      "allPosts": "All Posts",
+      "productUpdates": "Product Updates",
+      "industryInsights": "Industry Insights",
+      "tutorials": "Tutorials",
+      "technology": "Technology",
+      "caseStudies": "Case Studies"
+    },
+    "readMore": "Read more",
+    "loadMore": "Load More Posts",
+    "documentation": {
+      "title": "Documentation",
+      "description": "Comprehensive guides and API documentation",
+      "cta": "View Documentation"
+    },
+    "contactUs": {
+      "title": "Contact Us",
+      "description": "Have questions? We're here to help.",
+      "cta": "Send Email"
+    },
+    "newsletter": {
+      "title": "Subscribe to Our Newsletter",
+      "description": "Get the latest updates, tutorials, and insights delivered straight to your inbox.",
+      "placeholder": "Enter your email",
+      "cta": "Subscribe"
+    },
+    "post": {
+      "notFound": "Post not found",
+      "backToNews": "Back to News",
+      "readyToTry": "Ready to try Huavoi?",
+      "startCreating": "Start creating professional videos with AI today",
+      "getStartedFree": "Get Started Free",
+      "previousPost": "← Previous Post",
+      "nextPost": "Next Post →"
+    }
+  }
+}

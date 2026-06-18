@@ -1,0 +1,29 @@
+{
+  "footer": {
+    "description": "KI-gestützte Videoplattform. Verwandeln Sie Ideen in professionelle Videos mit Skripterstellung, Sprachsynthese und Videogenerierung – alles an einem Ort.",
+    "allSystemsOperational": "Alle Systeme betriebsbereit",
+    "resources": "Ressourcen",
+    "documentation": "Dokumentation",
+    "newsBlog": "Neuigkeiten & Blog",
+    "caseStudies": "Fallstudien",
+    "apiReference": "API-Referenz",
+    "status": "Status",
+    "company": "Unternehmen",
+    "aboutUs": "Über uns",
+    "careers": "Karriere",
+    "contact": "Kontakt",
+    "privacyPolicy": "Datenschutzrichtlinie",
+    "termsOfService": "Nutzungsbedingungen",
+    "stayUpdated": "Auf dem Laufenden bleiben",
+    "stayUpdatedDesc": "Erhalten Sie die neuesten KI-Video-Neuigkeiten und Funktionsveröffentlichungen in Ihrem Posteingang.",
+    "subscribed": "Sie sind angemeldet!",
+    "emailPlaceholder": "ihre@email.de",
+    "emailError": "Bitte geben Sie eine gültige E-Mail-Adresse ein.",
+    "subscribing": "Anmeldung läuft…",
+    "subscribe": "Anmelden",
+    "copyright": "Alle Rechte vorbehalten.",
+    "privacy": "Datenschutz",
+    "terms": "Bedingungen",
+    "cookies": "Cookies"
+  }
+}

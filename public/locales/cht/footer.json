@@ -1,0 +1,29 @@
+{
+  "footer": {
+    "description": "AI 驅動的影片創作平台。將創意轉化為專業影片，涵蓋腳本編寫、語音合成和影片生成——一站式完成。",
+    "allSystemsOperational": "所有系統運作正常",
+    "resources": "資源",
+    "documentation": "文件",
+    "newsBlog": "新聞與部落格",
+    "caseStudies": "案例研究",
+    "apiReference": "API 參考",
+    "status": "系統狀態",
+    "company": "公司",
+    "aboutUs": "關於我們",
+    "careers": "加入我們",
+    "contact": "聯繫我們",
+    "privacyPolicy": "隱私政策",
+    "termsOfService": "服務條款",
+    "stayUpdated": "保持關注",
+    "stayUpdatedDesc": "獲取最新的 AI 影片資訊和功能更新，直達您的收件匣。",
+    "subscribed": "訂閱成功！",
+    "emailPlaceholder": "your@email.com",
+    "emailError": "請輸入有效的電子郵件地址。",
+    "subscribing": "訂閱中…",
+    "subscribe": "訂閱",
+    "copyright": "保留所有權利。",
+    "privacy": "隱私",
+    "terms": "條款",
+    "cookies": "Cookie"
+  }
+}

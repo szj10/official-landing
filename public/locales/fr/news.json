@@ -1,0 +1,42 @@
+{
+  "news": {
+    "badge": "Dernières mises à jour",
+    "title": "Actualités et ressources",
+    "subtitle": "Perspectives, tutoriels et mises à jour de l'équipe Huavoi. Apprenez à créer des vidéos incroyables avec l'IA.",
+    "categories": {
+      "allPosts": "Tous les articles",
+      "productUpdates": "Mises à jour produit",
+      "industryInsights": "Perspectives industrielles",
+      "tutorials": "Tutoriels",
+      "technology": "Technologie",
+      "caseStudies": "Études de cas"
+    },
+    "readMore": "Lire la suite",
+    "loadMore": "Charger plus d'articles",
+    "documentation": {
+      "title": "Documentation",
+      "description": "Guides complets et documentation API",
+      "cta": "Voir la documentation"
+    },
+    "contactUs": {
+      "title": "Contactez-nous",
+      "description": "Des questions ? Nous sommes là pour vous aider.",
+      "cta": "Envoyer un email"
+    },
+    "newsletter": {
+      "title": "Abonnez-vous à notre newsletter",
+      "description": "Recevez les dernières mises à jour, tutoriels et perspectives directement dans votre boîte de réception.",
+      "placeholder": "Entrez votre email",
+      "cta": "S'abonner"
+    },
+    "post": {
+      "notFound": "Article introuvable",
+      "backToNews": "Retour aux actualités",
+      "readyToTry": "Prêt à essayer Huavoi ?",
+      "startCreating": "Commencez à créer des vidéos professionnelles avec l'IA dès aujourd'hui",
+      "getStartedFree": "Commencer gratuitement",
+      "previousPost": "← Article précédent",
+      "nextPost": "Article suivant →"
+    }
+  }
+}
