@@ -61,8 +61,9 @@ export default function NewsContent({ posts }: { posts: PostMetadata[] }) {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {posts.map((post) => (
-              <article
+              <Link
                 key={post.slug}
+                href={`/news/${post.slug}`}
                 className="glass-panel rounded-3xl overflow-hidden shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex flex-col relative"
               >
                 {post.trending && (
@@ -134,10 +135,7 @@ export default function NewsContent({ posts }: { posts: PostMetadata[] }) {
                         {post.author}
                       </span>
                     </div>
-                    <Link
-                      href={`/news/${post.slug}`}
-                      className="text-xs font-semibold text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 inline-flex items-center gap-1 group-hover:translate-x-1 transition-transform"
-                    >
+                    <span className="text-xs font-semibold text-indigo-600 dark:text-indigo-400 inline-flex items-center gap-1">
                       Read more
                       <svg
                         className="w-3.5 h-3.5"
@@ -152,10 +150,10 @@ export default function NewsContent({ posts }: { posts: PostMetadata[] }) {
                           d="M9 5l7 7-7 7"
                         />
                       </svg>
-                    </Link>
+                    </span>
                   </div>
                 </div>
-              </article>
+              </Link>
             ))}
           </div>
         </div>
