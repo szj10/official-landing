@@ -242,82 +242,82 @@ export default function PricingPage() {
                 <thead>
                   <tr className="border-b border-gray-200 dark:border-zinc-800 bg-gray-50/50 dark:bg-zinc-900/30">
                     <th className="py-5 px-6 text-xs font-bold text-gray-900 dark:text-white uppercase tracking-wider">
-                      Feature
+                      {t("pricing.compare.feature")}
                     </th>
                     <th className="py-5 px-6 text-center text-xs font-bold text-gray-900 dark:text-white uppercase tracking-wider">
-                      Starter
+                      {t("pricing.starter.name")}
                     </th>
                     <th className="py-5 px-6 text-center text-xs font-bold text-gray-900 dark:text-white uppercase tracking-wider">
-                      Professional
+                      {t("pricing.professional.name")}
                     </th>
                     <th className="py-5 px-6 text-center text-xs font-bold text-gray-900 dark:text-white uppercase tracking-wider">
-                      Business
+                      {t("pricing.business.name")}
                     </th>
                     <th className="py-5 px-6 text-center text-xs font-bold text-gray-900 dark:text-white uppercase tracking-wider">
-                      Enterprise
+                      {t("pricing.enterprise.name")}
                     </th>
                   </tr>
                 </thead>
                 <tbody>
                   {[
                     {
-                      feature: "Videos per Month",
+                      feature: t("pricing.compare.videosPerMonth"),
                       starter: "10",
                       pro: "100",
-                      business: "Unlimited",
-                      enterprise: "Unlimited",
+                      business: t("pricing.compare.unlimited"),
+                      enterprise: t("pricing.compare.unlimited"),
                     },
                     {
-                      feature: "AI Script Writer",
+                      feature: t("pricing.compare.aiScriptWriter"),
                       starter: "✓",
                       pro: "✓",
                       business: "✓",
                       enterprise: "✓",
                     },
                     {
-                      feature: "Voice Selection",
-                      starter: "Basic",
+                      feature: t("pricing.compare.voiceSelection"),
+                      starter: t("pricing.compare.basic"),
                       pro: "200+",
                       business: "200+",
-                      enterprise: "Custom",
+                      enterprise: t("pricing.custom"),
                     },
                     {
-                      feature: "Video Quality",
+                      feature: t("pricing.compare.videoQuality"),
                       starter: "720p",
                       pro: "1080p",
                       business: "4K",
                       enterprise: "4K+",
                     },
                     {
-                      feature: "Custom Branding",
+                      feature: t("pricing.compare.customBranding"),
                       starter: "—",
                       pro: "✓",
                       business: "✓",
                       enterprise: "✓",
                     },
                     {
-                      feature: "Team Collaboration",
+                      feature: t("pricing.compare.teamCollaboration"),
                       starter: "—",
                       pro: "—",
                       business: "✓",
                       enterprise: "✓",
                     },
                     {
-                      feature: "API Access",
+                      feature: t("pricing.compare.apiAccess"),
                       starter: "—",
                       pro: "✓",
                       business: "✓",
                       enterprise: "✓",
                     },
                     {
-                      feature: "Voice Cloning",
+                      feature: t("pricing.compare.voiceCloning"),
                       starter: "—",
                       pro: "—",
                       business: "—",
                       enterprise: "✓",
                     },
                     {
-                      feature: "White Label",
+                      feature: t("pricing.compare.whiteLabel"),
                       starter: "—",
                       pro: "—",
                       business: "—",
@@ -358,37 +358,34 @@ export default function PricingPage() {
               <div className="glass-panel rounded-3xl p-8 shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow">
                 <div>
                   <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">
-                    Need a custom solution?
+                    {t("pricing.customSolution.title")}
                   </h3>
                   <p className="text-xs text-gray-600 dark:text-zinc-400 mb-6 leading-relaxed">
-                    Our enterprise team can build a custom video creation solution tailored to your
-                    workflow, including custom AI models, voice cloning, white-label options, and
-                    dedicated support.
+                    {t("pricing.customSolution.description")}
                   </p>
                 </div>
                 <Link
                   href="/"
                   className="w-full sm:w-auto inline-block bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-750 hover:to-purple-750 text-white text-xs font-semibold px-6 py-3 rounded-xl transition-all shadow-md active:scale-95 text-center"
                 >
-                  Contact Sales
+                  {t("pricing.customSolution.cta")}
                 </Link>
               </div>
 
               <div className="glass-panel rounded-3xl p-8 shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow">
                 <div>
                   <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">
-                    Try it free for 14 days
+                    {t("pricing.freeTrial.title")}
                   </h3>
                   <p className="text-xs text-gray-600 dark:text-zinc-400 mb-6 leading-relaxed">
-                    Create your first AI-powered video in minutes. No credit card required.
-                    Experience the full power of script-to-screen video creation.
+                    {t("pricing.freeTrial.description")}
                   </p>
                 </div>
                 <Link
                   href="/"
                   className="w-full sm:w-auto inline-block bg-gray-900 dark:bg-zinc-800 hover:bg-gray-800 dark:hover:bg-zinc-700 text-white text-xs font-semibold px-6 py-3 rounded-xl transition-all active:scale-95 text-center"
                 >
-                  Start Free Trial
+                  {t("pricing.freeTrial.cta")}
                 </Link>
               </div>
             </div>
@@ -400,31 +397,31 @@ export default function PricingPage() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
               <h2 className="text-3xl sm:text-4xl font-extrabold text-gray-900 dark:text-white mb-4">
-                Frequently Asked Questions
+                {t("pricing.faq.title")}
               </h2>
             </div>
 
             <div className="max-w-3xl mx-auto space-y-4">
               {[
                 {
-                  q: "What's included in the free trial?",
-                  a: "Full access to all features for 14 days. Create up to 5 videos with AI scriptwriting, voice synthesis, and video generation. No credit card required.",
+                  q: t("pricing.faq.q1.q"),
+                  a: t("pricing.faq.q1.a"),
                 },
                 {
-                  q: "Can I switch plans at any time?",
-                  a: "Yes, you can upgrade or downgrade your plan at any time. When upgrading, you'll be charged the prorated difference. When downgrading, you'll receive credit for the unused portion.",
+                  q: t("pricing.faq.q2.q"),
+                  a: t("pricing.faq.q2.a"),
                 },
                 {
-                  q: "What video formats and quality do you support?",
-                  a: "We support MP4, MOV, and WebM formats. Quality ranges from 720p (Starter) to 1080p HD (Professional) to 4K Ultra HD (Business and Enterprise).",
+                  q: t("pricing.faq.q3.q"),
+                  a: t("pricing.faq.q3.a"),
                 },
                 {
-                  q: "Can I use my own scripts or voices?",
-                  a: "Absolutely. While our AI can generate scripts and voices, you can upload your own scripts, record custom audio, or use our voice cloning feature (Enterprise) to replicate specific voices.",
+                  q: t("pricing.faq.q4.q"),
+                  a: t("pricing.faq.q4.a"),
                 },
                 {
-                  q: "Do you offer refunds?",
-                  a: "Yes, we offer a 30-day money-back guarantee for all paid plans. If you're not satisfied with the video quality or features, contact our support team for a full refund.",
+                  q: t("pricing.faq.q5.q"),
+                  a: t("pricing.faq.q5.a"),
                 },
               ].map((faq, i) => (
                 <details

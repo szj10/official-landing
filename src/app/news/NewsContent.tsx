@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import type { PostMetadata } from "@/lib/posts";
+import { useI18n } from "@/i18n";
 
 function BookIcon({ className }: { className?: string }) {
   return (
@@ -18,14 +19,15 @@ function BookIcon({ className }: { className?: string }) {
 }
 
 export default function NewsContent({ posts }: { posts: PostMetadata[] }) {
+  const { t } = useI18n();
   const [visibleCount, setVisibleCount] = useState(3);
   const categories = [
-    "All Posts",
-    "Product Updates",
-    "Industry Insights",
-    "Tutorials",
-    "Technology",
-    "Case Studies",
+    t("news.categories.allPosts"),
+    t("news.categories.productUpdates"),
+    t("news.categories.industryInsights"),
+    t("news.categories.tutorials"),
+    t("news.categories.technology"),
+    t("news.categories.caseStudies"),
   ];
 
   const visiblePosts = posts.slice(0, visibleCount);
@@ -37,15 +39,14 @@ export default function NewsContent({ posts }: { posts: PostMetadata[] }) {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center mb-16">
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full glass-panel text-xs text-indigo-600 dark:text-indigo-400 font-semibold mb-6 shadow-sm shadow-indigo-500/5">
-              <span>Latest Updates</span>
+              <span>{t("news.badge")}</span>
             </div>
 
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-gray-900 dark:text-white mb-6 tracking-tight">
-              News & Resources
+              {t("news.title")}
             </h1>
             <p className="text-lg text-gray-600 dark:text-zinc-400 max-w-2xl mx-auto mb-10 leading-relaxed">
-              Insights, tutorials, and updates from the Huavoi team. Learn how to create amazing
-              videos with AI.
+              {t("news.subtitle")}
             </p>
 
             <div className="flex flex-wrap gap-3 justify-center mb-12">
@@ -141,7 +142,7 @@ export default function NewsContent({ posts }: { posts: PostMetadata[] }) {
                       </span>
                     </div>
                     <span className="text-xs font-semibold text-indigo-600 dark:text-indigo-400 inline-flex items-center gap-1">
-                      Read more
+                      {t("news.readMore")}
                       <svg
                         className="w-3.5 h-3.5"
                         fill="none"
@@ -168,7 +169,7 @@ export default function NewsContent({ posts }: { posts: PostMetadata[] }) {
                 onClick={() => setVisibleCount((prev) => prev + 3)}
                 className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white px-8 py-3 rounded-xl transition-all duration-200 font-semibold text-sm shadow-md shadow-indigo-500/20 active:scale-95 inline-flex items-center gap-2"
               >
-                Load More Posts
+                {t("news.loadMore")}
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
                     strokeLinecap="round"
@@ -189,10 +190,10 @@ export default function NewsContent({ posts }: { posts: PostMetadata[] }) {
             <div className="glass-panel rounded-3xl p-8 flex flex-col items-center justify-center text-center">
               <BookIcon className="w-12 h-12 text-indigo-500 mb-4" />
               <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">
-                Documentation
+                {t("news.documentation.title")}
               </h3>
               <p className="text-xs text-gray-600 dark:text-zinc-400 mb-6">
-                Comprehensive guides and API documentation
+                {t("news.documentation.description")}
               </p>
               <a
                 href="https://docs.huavoi.com"
@@ -201,7 +202,7 @@ export default function NewsContent({ posts }: { posts: PostMetadata[] }) {
                 className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white px-6 py-3 rounded-xl transition-all duration-200 font-semibold text-sm shadow-md shadow-indigo-500/20 active:scale-95 inline-flex items-center gap-2"
               >
                 <BookIcon className="w-4 h-4" />
-                View Documentation
+                {t("news.documentation.cta")}
               </a>
             </div>
 
@@ -221,9 +222,11 @@ export default function NewsContent({ posts }: { posts: PostMetadata[] }) {
                   />
                 </svg>
               </div>
-              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">Contact Us</h3>
+              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">
+                {t("news.contactUs.title")}
+              </h3>
               <p className="text-xs text-gray-600 dark:text-zinc-400 mb-6">
-                Have questions? We're here to help.
+                {t("news.contactUs.description")}
               </p>
               <a
                 href="mailto:contact@huavoi.com"
@@ -237,7 +240,7 @@ export default function NewsContent({ posts }: { posts: PostMetadata[] }) {
                     d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
                   />
                 </svg>
-                Send Email
+                {t("news.contactUs.cta")}
               </a>
             </div>
           </div>
@@ -263,19 +266,19 @@ export default function NewsContent({ posts }: { posts: PostMetadata[] }) {
               </svg>
             </div>
             <h2 className="text-3xl sm:text-4xl font-extrabold text-gray-900 dark:text-white mb-4">
-              Subscribe to Our Newsletter
+              {t("news.newsletter.title")}
             </h2>
             <p className="text-base text-gray-600 dark:text-zinc-400 mb-8 max-w-xl mx-auto">
-              Get the latest updates, tutorials, and insights delivered straight to your inbox.
+              {t("news.newsletter.description")}
             </p>
             <div className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
               <input
                 type="email"
-                placeholder="Enter your email"
+                placeholder={t("news.newsletter.placeholder")}
                 className="flex-1 px-4 py-3 rounded-xl glass-panel text-sm text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
               />
               <button className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white px-6 py-3 rounded-xl transition-all duration-200 font-semibold text-sm shadow-md shadow-indigo-500/20 active:scale-95">
-                Subscribe
+                {t("news.newsletter.cta")}
               </button>
             </div>
           </div>

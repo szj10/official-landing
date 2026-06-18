@@ -54,8 +54,8 @@ const NAV_LINKS = [
 // ─── Theme options ────────────────────────────────────────────────────────────
 
 const THEME_OPTIONS = [
-  { value: "light", label: "Light", Icon: SunIcon },
-  { value: "dark", label: "Dark", Icon: MoonIcon },
+  { value: "light", label: "header.light", Icon: SunIcon },
+  { value: "dark", label: "header.dark", Icon: MoonIcon },
 ] as const;
 
 // ─── Component ────────────────────────────────────────────────────────────────
@@ -274,11 +274,12 @@ export default function Header() {
                 className="md:hidden relative p-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
                 aria-expanded={mobileMenuOpen}
                 aria-controls="mobile-drawer"
-                aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+                aria-label={mobileMenuOpen ? t("header.closeMenu") : t("header.openMenu")}
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               >
-                {/* Animated hamburger → X */}
-                <span className="sr-only">{mobileMenuOpen ? "Close menu" : "Open menu"}</span>
+                <span className="sr-only">
+                  {mobileMenuOpen ? t("header.closeMenu") : t("header.openMenu")}
+                </span>
                 <div className="w-6 h-5 flex flex-col justify-between">
                   <span
                     className={`block h-0.5 rounded-full bg-current transition-all duration-300 origin-center ${mobileMenuOpen ? "rotate-45 translate-y-[9px]" : ""}`}
@@ -309,7 +310,7 @@ export default function Header() {
         id="mobile-drawer"
         role="dialog"
         aria-modal="true"
-        aria-label="Navigation menu"
+        aria-label={t("header.navigationMenu")}
         className={`md:hidden fixed top-0 left-0 bottom-0 z-50 w-[min(320px,85vw)] flex flex-col bg-white dark:bg-gray-950 shadow-2xl transition-transform duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] ${mobileMenuOpen ? "translate-x-0" : "-translate-x-full"}`}
       >
         {/* Drawer header */}
@@ -323,7 +324,7 @@ export default function Header() {
           <button
             ref={firstFocusableRef}
             onClick={closeDrawer}
-            aria-label="Close menu"
+            aria-label={t("header.closeMenu")}
             className="p-2 rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white transition-colors"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
