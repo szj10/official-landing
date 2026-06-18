@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { useI18n } from "@/i18n";
 
 // ─── SVG Icons ──────────────────────────────────────────────────────────────
 
@@ -18,75 +19,76 @@ function CheckIcon({ className = "w-5 h-5 text-indigo-500" }: { className?: stri
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export default function PricingPage() {
+  const { t } = useI18n();
   const [billingCycle, setBillingCycle] = useState<"monthly" | "annual">("monthly");
 
   const plans = [
     {
-      name: "Starter",
-      description: "Perfect for individuals and small projects",
+      name: t("pricing.starter.name"),
+      description: t("pricing.starter.description"),
       price: billingCycle === "monthly" ? 0 : 0,
       features: [
-        "10 videos/month",
-        "AI script generation",
-        "Basic voice selection",
-        "Standard video templates",
-        "Email support",
-        "720p output quality",
+        t("pricing.starter.features.f1"),
+        t("pricing.starter.features.f2"),
+        t("pricing.starter.features.f3"),
+        t("pricing.starter.features.f4"),
+        t("pricing.starter.features.f5"),
+        t("pricing.starter.features.f6"),
       ],
-      cta: "Get Started",
+      cta: t("pricing.starter.cta"),
       popular: false,
     },
     {
-      name: "Professional",
-      description: "For growing teams and content creators",
+      name: t("pricing.professional.name"),
+      description: t("pricing.professional.description"),
       price: billingCycle === "monthly" ? 49 : 39,
       features: [
-        "100 videos/month",
-        "Advanced AI scripts",
-        "200+ premium voices",
-        "Custom video templates",
-        "Priority support",
-        "1080p HD quality",
-        "Brand customization",
-        "API access",
+        t("pricing.professional.features.f1"),
+        t("pricing.professional.features.f2"),
+        t("pricing.professional.features.f3"),
+        t("pricing.professional.features.f4"),
+        t("pricing.professional.features.f5"),
+        t("pricing.professional.features.f6"),
+        t("pricing.professional.features.f7"),
+        t("pricing.professional.features.f8"),
       ],
-      cta: "Start Free Trial",
+      cta: t("pricing.professional.cta"),
       popular: true,
     },
     {
-      name: "Business",
-      description: "For marketing teams and agencies",
+      name: t("pricing.business.name"),
+      description: t("pricing.business.description"),
       price: billingCycle === "monthly" ? 199 : 159,
       features: [
-        "Unlimited videos",
-        "Advanced AI scripts",
-        "All premium voices",
-        "Custom templates & branding",
-        "24/7 dedicated support",
-        "4K Ultra HD quality",
-        "Team collaboration",
-        "Advanced analytics",
-        "SSO & SAML",
+        t("pricing.business.features.f1"),
+        t("pricing.business.features.f2"),
+        t("pricing.business.features.f3"),
+        t("pricing.business.features.f4"),
+        t("pricing.business.features.f5"),
+        t("pricing.business.features.f6"),
+        t("pricing.business.features.f7"),
+        t("pricing.business.features.f8"),
+        t("pricing.business.features.f9"),
       ],
-      cta: "Start Free Trial",
+      cta: t("pricing.business.cta"),
       popular: false,
     },
     {
-      name: "Enterprise",
-      description: "Custom solutions for large organizations",
+      name: t("pricing.enterprise.name"),
+      description: t("pricing.enterprise.description"),
       price: null,
       features: [
-        "Unlimited everything",
-        "Custom AI models",
-        "Voice cloning",
-        "White-label solution",
-        "Dedicated account manager",
-        "On-premise deployment",
-        "Custom integrations",
-        "Volume discounts",
-        "Custom SLA",
+        t("pricing.enterprise.features.f1"),
+        t("pricing.enterprise.features.f2"),
+        t("pricing.enterprise.features.f3"),
+        t("pricing.enterprise.features.f4"),
+        t("pricing.enterprise.features.f5"),
+        t("pricing.enterprise.features.f6"),
+        t("pricing.enterprise.features.f7"),
+        t("pricing.enterprise.features.f8"),
+        t("pricing.enterprise.features.f9"),
       ],
-      cta: "Contact Sales",
+      cta: t("pricing.enterprise.cta"),
       popular: false,
     },
   ];
@@ -102,16 +104,15 @@ export default function PricingPage() {
             <div className="text-center mb-16">
               {/* Badge */}
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full glass-panel text-xs text-indigo-600 dark:text-indigo-400 font-semibold mb-6 shadow-sm shadow-indigo-500/5">
-                <span>Flexible pricing plans</span>
+                <span>{t("pricing.badge")}</span>
               </div>
 
               {/* Title */}
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-gray-900 dark:text-white mb-6 tracking-tight">
-                Simple, Transparent Pricing
+                {t("pricing.title")}
               </h1>
               <p className="text-lg text-gray-650 dark:text-zinc-400 max-w-2xl mx-auto mb-10 leading-relaxed">
-                Choose the perfect plan for your video creation needs. All plans include a 14-day
-                free trial with full access.
+                {t("pricing.subtitle")}
               </p>
 
               {/* Billing cycle toggle */}
@@ -124,7 +125,7 @@ export default function PricingPage() {
                       : "text-gray-600 dark:text-zinc-400 hover:text-gray-900 dark:hover:text-white"
                   }`}
                 >
-                  Monthly
+                  {t("pricing.monthly")}
                 </button>
                 <button
                   onClick={() => setBillingCycle("annual")}
@@ -134,7 +135,7 @@ export default function PricingPage() {
                       : "text-gray-600 dark:text-zinc-400 hover:text-gray-900 dark:hover:text-white"
                   }`}
                 >
-                  <span>Annual</span>
+                  <span>{t("pricing.annual")}</span>
                   <span
                     className={`px-1.5 py-0.5 rounded-full text-[10px] font-bold ${
                       billingCycle === "annual"
@@ -142,7 +143,7 @@ export default function PricingPage() {
                         : "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
                     }`}
                   >
-                    Save 20%
+                    {t("pricing.save20")}
                   </span>
                 </button>
               </div>
@@ -167,7 +168,7 @@ export default function PricingPage() {
                   {plan.popular && (
                     <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
                       <span className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white text-[10px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider shadow-md">
-                        Most Popular
+                        {t("pricing.mostPopular")}
                       </span>
                     </div>
                   )}
@@ -187,12 +188,12 @@ export default function PricingPage() {
                             ${plan.price}
                           </span>
                           <span className="text-xs text-gray-500 dark:text-zinc-500 ml-1">
-                            /month
+                            {t("pricing.perMonth")}
                           </span>
                         </>
                       ) : (
                         <span className="text-2xl font-extrabold text-gray-900 dark:text-white tracking-tight">
-                          Custom
+                          {t("pricing.custom")}
                         </span>
                       )}
                     </div>

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import WechatQRModal from "./WechatQRModal";
+import { useI18n } from "@/i18n";
 
 // ─── Social Icons ─────────────────────────────────────────────────────────────
 
@@ -95,26 +96,30 @@ const socialLinks = [
   },
 ];
 
-const footerLinks = {
-  Resources: [
-    { label: "Documentation", href: "/" },
-    { label: "News & Blog", href: "/news" },
-    { label: "Case Studies", href: "/news" },
-    { label: "API Reference", href: "/" },
-    { label: "Status", href: "/" },
-  ],
-  Company: [
-    { label: "About Us", href: "/" },
-    { label: "Careers", href: "/" },
-    { label: "Contact", href: "/" },
-    { label: "Privacy Policy", href: "/privacy" },
-    { label: "Terms of Service", href: "/terms" },
-  ],
-};
+function useFooterLinks(t: (key: string) => string) {
+  return {
+    [t("footer.resources")]: [
+      { label: t("footer.documentation"), href: "/" },
+      { label: t("footer.newsBlog"), href: "/news" },
+      { label: t("footer.caseStudies"), href: "/news" },
+      { label: t("footer.apiReference"), href: "/" },
+      { label: t("footer.status"), href: "/" },
+    ],
+    [t("footer.company")]: [
+      { label: t("footer.aboutUs"), href: "/" },
+      { label: t("footer.careers"), href: "/" },
+      { label: t("footer.contact"), href: "/" },
+      { label: t("footer.privacyPolicy"), href: "/privacy" },
+      { label: t("footer.termsOfService"), href: "/terms" },
+    ],
+  };
+}
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export default function Footer() {
+  const { t } = useI18n();
+  const footerLinks = useFooterLinks(t);
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [showWechatQR, setShowWechatQR] = useState(false);
@@ -152,8 +157,7 @@ export default function Footer() {
             </Link>
 
             <p className="text-sm text-zinc-400 leading-relaxed max-w-xs">
-              AI-powered video creation platform. Transform ideas into professional videos with
-              scriptwriting, voice synthesis, and video generation—all in one place.
+              {t("footer.description")}
             </p>
 
             {/* System status */}
@@ -163,7 +167,7 @@ export default function Footer() {
                 <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400" />
               </span>
               <span className="text-[11px] font-medium text-emerald-400">
-                All systems operational
+                {t("footer.allSystemsOperational")}
               </span>
             </div>
 
@@ -221,9 +225,11 @@ export default function Footer() {
 
           {/* Newsletter */}
           <div className="lg:col-span-2">
-            <h3 className="text-white font-semibold text-sm mb-2 tracking-wide">Stay Updated</h3>
+            <h3 className="text-white font-semibold text-sm mb-2 tracking-wide">
+              {t("footer.stayUpdated")}
+            </h3>
             <p className="text-xs text-zinc-500 mb-4 leading-relaxed">
-              Get the latest AI video news and feature releases in your inbox.
+              {t("footer.stayUpdatedDesc")}
             </p>
 
             {status === "success" ? (
@@ -242,7 +248,7 @@ export default function Footer() {
                   />
                 </svg>
                 <span className="text-xs text-emerald-400 font-medium">
-                  You&apos;re subscribed!
+                  {t("footer.subscribed")}
                 </span>
               </div>
             ) : (
@@ -254,7 +260,7 @@ export default function Footer() {
                     setEmail(e.target.value);
                     setStatus("idle");
                   }}
-                  placeholder="your@email.com"
+                  placeholder={t("footer.emailPlaceholder")}
                   className={`bg-zinc-900 border rounded-xl px-3 py-2.5 text-xs text-white placeholder-zinc-600 focus:outline-none transition-colors ${
                     status === "error"
                       ? "border-red-500/60 focus:border-red-500"
@@ -262,14 +268,14 @@ export default function Footer() {
                   }`}
                 />
                 {status === "error" && (
-                  <p className="text-[10px] text-red-400 px-1">Please enter a valid email.</p>
+                  <p className="text-[10px] text-red-400 px-1">{t("footer.emailError")}</p>
                 )}
                 <button
                   type="submit"
                   disabled={status === "loading"}
                   className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 disabled:opacity-60 text-white rounded-xl px-4 py-2.5 text-xs font-semibold transition-all duration-200 active:scale-95 shadow-md shadow-indigo-500/20"
                 >
-                  {status === "loading" ? "Subscribing…" : "Subscribe"}
+                  {status === "loading" ? t("footer.subscribing") : t("footer.subscribe")}
                 </button>
               </form>
             )}
@@ -278,12 +284,14 @@ export default function Footer() {
 
         {/* ── Bottom bar ──────────────────────────────────────────────────────── */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 py-6 text-[11px] text-zinc-600">
-          <p>© {new Date().getFullYear()} Huavoi, Inc. All rights reserved.</p>
+          <p>
+            © {new Date().getFullYear()} Huavoi, Inc. {t("footer.copyright")}
+          </p>
           <div className="flex items-center gap-5">
             {[
-              { label: "Privacy", href: "/privacy" },
-              { label: "Terms", href: "/terms" },
-              { label: "Cookies", href: "/" },
+              { label: t("footer.privacy"), href: "/privacy" },
+              { label: t("footer.terms"), href: "/terms" },
+              { label: t("footer.cookies"), href: "/" },
             ].map((item) => (
               <Link
                 key={item.label}
