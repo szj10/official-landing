@@ -148,7 +148,7 @@ export default function PlaygroundContent() {
   const handleSampleTextSelect = (id: string) => {
     const sample = SAMPLE_TEXTS.find((s) => s.id === id);
     if (sample) {
-      setTextInput(sample.text);
+      setTextInput(t(sample.textKey));
       setSelectedSampleText(id);
     }
   };
@@ -206,7 +206,7 @@ export default function PlaygroundContent() {
       }, 1000);
     } catch (error) {
       console.error("Recording error:", error);
-      alert("Unable to access microphone. Please check permissions.");
+      alert(t("playground.microphoneError"));
     }
   };
 
@@ -250,7 +250,7 @@ export default function PlaygroundContent() {
       setAudioUrl(data.audioUrl);
     } catch (error) {
       console.error("Error generating TTS:", error);
-      alert("Failed to generate audio. Please try again.");
+      alert(t("playground.generateError"));
     } finally {
       setIsGenerating(false);
     }
@@ -269,7 +269,9 @@ export default function PlaygroundContent() {
 
   const currentText =
     textInput ||
-    (selectedSampleText ? SAMPLE_TEXTS.find((s) => s.id === selectedSampleText)?.text : "");
+    (selectedSampleText
+      ? t(SAMPLE_TEXTS.find((s) => s.id === selectedSampleText)?.textKey ?? "")
+      : "");
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
@@ -326,8 +328,8 @@ export default function PlaygroundContent() {
                       : "bg-gray-50 dark:bg-zinc-900 border-2 border-transparent hover:border-gray-200 dark:hover:border-zinc-700 text-gray-700 dark:text-zinc-300"
                   }`}
                 >
-                  <div className="font-medium text-sm mb-1">{sample.title}</div>
-                  <div className="text-xs opacity-70 line-clamp-2">{sample.text}</div>
+                  <div className="font-medium text-sm mb-1">{t(sample.titleKey)}</div>
+                  <div className="text-xs opacity-70 line-clamp-2">{t(sample.textKey)}</div>
                 </button>
               ))}
             </div>
@@ -381,21 +383,21 @@ export default function PlaygroundContent() {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-0.5">
                       <span className="font-semibold text-sm text-gray-900 dark:text-white">
-                        {voice.name}
+                        {t(voice.nameKey)}
                       </span>
                       <span className="text-xs text-gray-500 dark:text-zinc-400">
-                        {voice.gender} • {voice.accent}
+                        {t(voice.genderKey)} • {t(voice.accentKey)}
                       </span>
                     </div>
                     <div className="text-xs text-gray-400 dark:text-zinc-500 truncate">
-                      {voice.preview}
+                      {t(voice.previewKey)}
                     </div>
                   </div>
                   <div className="flex items-center gap-2 shrink-0">
                     <button
                       onClick={() => handleVoicePreview(voice.id)}
                       className="w-8 h-8 rounded-full bg-gray-200 dark:bg-zinc-700 hover:bg-gray-300 dark:hover:bg-zinc-600 flex items-center justify-center transition-colors"
-                      title="Preview voice"
+                      title={t("playground.previewVoice")}
                     >
                       {playingVoicePreview === voice.id ? (
                         <StopIcon className="w-3.5 h-3.5 text-gray-700 dark:text-zinc-300" />
@@ -413,7 +415,7 @@ export default function PlaygroundContent() {
                           ? "bg-purple-500 text-white"
                           : "bg-gray-200 dark:bg-zinc-700 hover:bg-gray-300 dark:hover:bg-zinc-600 text-gray-700 dark:text-zinc-300"
                       }`}
-                      title="Select voice"
+                      title={t("playground.selectVoice")}
                     >
                       <CheckIcon className="w-4 h-4" />
                     </button>
