@@ -6,7 +6,7 @@ import Footer from "@/components/Footer";
 import { getPostBySlug, getAllPosts, type Post } from "@/lib/posts";
 
 async function markdownToHtml(markdown: string): Promise<string> {
-  const result = await remark().use(html).process(markdown);
+  const result = await remark().use(html, { sanitize: false }).process(markdown);
   return result.toString();
 }
 
@@ -129,6 +129,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
                 prose-ol:list-decimal prose-ol:pl-6 prose-ol:space-y-2
                 prose-li:text-gray-700 dark:prose-li:text-zinc-300
                 prose-blockquote:border-l-4 prose-blockquote:border-indigo-500 prose-blockquote:pl-4 prose-blockquote:italic prose-blockquote:text-gray-600 dark:prose-blockquote:text-zinc-400
+                prose-img:rounded-2xl prose-img:shadow-lg prose-img:my-8 prose-img:w-full
                 prose-hr:border-gray-200 dark:prose-hr:border-zinc-800 prose-hr:my-12"
               dangerouslySetInnerHTML={{ __html: content }}
             />

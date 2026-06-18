@@ -15,6 +15,8 @@ We're thrilled to announce the release of Huavoi 2.0, our most significant updat
 
 ## What's New in Huavoi 2.0
 
+![Huavoi 2.0 Dashboard](/images/dashboard.png)
+
 ### Advanced AI Models
 
 Our new AI models are trained on a larger, more diverse dataset, resulting in:
@@ -38,6 +40,8 @@ We've upgraded our video rendering engine to support:
 **Multi-language Support**: Generate videos in 40+ languages with native-quality pronunciation.
 
 **Template Library**: Access 100+ professionally designed templates for various use cases.
+
+![Template Library Preview](https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=800&q=80)
 
 ## Getting Started
 

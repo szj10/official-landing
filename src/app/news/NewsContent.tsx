@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import type { PostMetadata } from "@/lib/posts";
 
@@ -17,6 +18,7 @@ function BookIcon({ className }: { className?: string }) {
 }
 
 export default function NewsContent({ posts }: { posts: PostMetadata[] }) {
+  const [visibleCount, setVisibleCount] = useState(3);
   const categories = [
     "All Posts",
     "Product Updates",
@@ -25,6 +27,9 @@ export default function NewsContent({ posts }: { posts: PostMetadata[] }) {
     "Technology",
     "Case Studies",
   ];
+
+  const visiblePosts = posts.slice(0, visibleCount);
+  const hasMore = visibleCount < posts.length;
 
   return (
     <>
@@ -60,7 +65,7 @@ export default function NewsContent({ posts }: { posts: PostMetadata[] }) {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {posts.map((post) => (
+            {visiblePosts.map((post) => (
               <Link
                 key={post.slug}
                 href={`/news/${post.slug}`}
@@ -156,6 +161,25 @@ export default function NewsContent({ posts }: { posts: PostMetadata[] }) {
               </Link>
             ))}
           </div>
+
+          {hasMore && (
+            <div className="mt-12 text-center">
+              <button
+                onClick={() => setVisibleCount((prev) => prev + 3)}
+                className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white px-8 py-3 rounded-xl transition-all duration-200 font-semibold text-sm shadow-md shadow-indigo-500/20 active:scale-95 inline-flex items-center gap-2"
+              >
+                Load More Posts
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M19 9l-7 7-7-7"
+                  />
+                </svg>
+              </button>
+            </div>
+          )}
         </div>
       </section>
 
