@@ -6,6 +6,9 @@
     "news": "뉴스",
     "about": "소개",
     "language": "언어",
+    "languages": "언어",
+    "light": "밝은",
+    "dark": "어두운",
     "theme": "테마"
   }
 }

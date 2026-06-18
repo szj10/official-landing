@@ -6,6 +6,9 @@
     "news": "ニュース",
     "about": "概要",
     "language": "言語",
+    "languages": "言語",
+    "light": "ライト",
+    "dark": "ダーク",
     "theme": "テーマ"
   }
 }

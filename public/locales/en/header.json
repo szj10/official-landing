@@ -6,6 +6,9 @@
     "news": "News",
     "about": "About",
     "language": "Language",
+    "languages": "Languages",
+    "light": "Light",
+    "dark": "Dark",
     "theme": "Theme"
   }
 }

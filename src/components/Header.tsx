@@ -392,7 +392,7 @@ export default function Header() {
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="text-xs text-gray-400 dark:text-gray-500">
-                    {Object.keys(localeNames).length} languages
+                    {Object.keys(localeNames).length} {t("header.languages")}
                   </span>
                   <svg
                     className={`w-4 h-4 text-gray-400 dark:text-gray-500 transition-transform duration-200 ${
@@ -464,7 +464,9 @@ export default function Header() {
                     ) : (
                       <MoonIcon className="w-4.5 h-4.5 text-blue-600" />
                     )}
-                    <span className="text-xs">{theme === "dark" ? "Light" : "Dark"}</span>
+                    <span className="text-xs">
+                      {theme === "dark" ? t("header.light") : t("header.dark")}
+                    </span>
                   </div>
                   <svg
                     className="w-4 h-4 text-gray-400 dark:text-gray-500"

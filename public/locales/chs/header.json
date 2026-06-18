@@ -6,6 +6,9 @@
     "news": "资讯",
     "about": "关于",
     "language": "语言",
+    "languages": "语言",
+    "light": "浅色",
+    "dark": "深色",
     "theme": "主题"
   }
 }
