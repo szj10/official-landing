@@ -9,6 +9,9 @@
     "languages": "言語",
     "light": "ライト",
     "dark": "ダーク",
-    "theme": "テーマ"
+    "theme": "テーマ",
+    "closeMenu": "[TRANSLATE: Close menu]",
+    "openMenu": "[TRANSLATE: Open menu]",
+    "navigationMenu": "[TRANSLATE: Navigation menu]"
   }
 }

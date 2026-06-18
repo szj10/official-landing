@@ -45,6 +45,50 @@
         "title": "Test Different Options",
         "description": "Try multiple voices and texts to find the perfect combination"
       }
-    }
+    },
+    "sampleTexts": {
+      "welcome": {
+        "title": "Welcome Message",
+        "text": "Welcome to Huavoi, where AI transforms your ideas into professional videos in minutes. Experience the future of content creation."
+      },
+      "product": {
+        "title": "Product Introduction",
+        "text": "Introducing our revolutionary AI-powered platform. Create stunning videos with natural voiceovers, perfect for marketing, training, and social media content."
+      },
+      "tutorial": {
+        "title": "Tutorial Step",
+        "text": "Step one: Enter your script or let our AI write it for you. Step two: Choose from over 200 natural voices. Step three: Generate your professional video instantly."
+      }
+    },
+    "sampleVoices": {
+      "voice1": {
+        "name": "Emma",
+        "gender": "Female",
+        "accent": "American",
+        "preview": "Professional and warm"
+      },
+      "voice2": {
+        "name": "James",
+        "gender": "Male",
+        "accent": "British",
+        "preview": "Authoritative and clear"
+      },
+      "voice3": {
+        "name": "Sophia",
+        "gender": "Female",
+        "accent": "Australian",
+        "preview": "Friendly and engaging"
+      },
+      "voice4": {
+        "name": "Michael",
+        "gender": "Male",
+        "accent": "American",
+        "preview": "Conversational and natural"
+      }
+    },
+    "previewVoice": "Preview voice",
+    "selectVoice": "Select voice",
+    "microphoneError": "Unable to access microphone. Please check permissions.",
+    "generateError": "Failed to generate audio. Please try again."
   }
 }

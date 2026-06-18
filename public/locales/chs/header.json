@@ -6,9 +6,12 @@
     "news": "资讯",
     "about": "关于",
     "language": "语言",
-    "languages": "语言",
+    "languages": "[TRANSLATE: languages]",
     "light": "浅色",
     "dark": "深色",
-    "theme": "主题"
+    "theme": "主题",
+    "closeMenu": "[TRANSLATE: Close menu]",
+    "openMenu": "[TRANSLATE: Open menu]",
+    "navigationMenu": "[TRANSLATE: Navigation menu]"
   }
 }

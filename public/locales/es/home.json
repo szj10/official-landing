@@ -2,10 +2,18 @@
   "hero": {
     "title": "[TRANSLATE: AI-Powered Video Creation]",
     "titleHighlight": "[TRANSLATE: From Script to Screen]",
-    "subtitle": "[TRANSLATE: Transform your ideas into professional videos in minutes. Our end-to-end AI solution handles scriptwriting, voice synthesis, and video generation—all in one seamless platform.]"
+    "subtitle": "[TRANSLATE: Transform your ideas into professional videos in minutes. Our end-to-end AI solution handles scriptwriting, voice synthesis, and video generation—all in one seamless platform.]",
+    "badge": "[TRANSLATE: Introducing Huavoi 2.0]",
+    "dashboardAlt": "[TRANSLATE: Huavoi Dashboard Mockup]"
   },
   "trust": {
-    "title": "[TRANSLATE: Trusted by 300+ leading companies worldwide]"
+    "title": "[TRANSLATE: Made 10,000+ videos as of today]",
+    "company1": "[TRANSLATE: MrBeast]",
+    "company2": "[TRANSLATE: Marques Brownlee]",
+    "company3": "[TRANSLATE: Linus Tech Tips]",
+    "company4": "[TRANSLATE: Veritasium]",
+    "company5": "[TRANSLATE: Kurzgesagt]",
+    "company6": "[TRANSLATE: Fireship]"
   },
   "solutions": {
     "title": "[TRANSLATE: Complete Video Production Suite]",

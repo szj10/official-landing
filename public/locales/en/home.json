@@ -2,10 +2,18 @@
   "hero": {
     "title": "AI-Powered Video Creation",
     "titleHighlight": "From Script to Screen",
-    "subtitle": "Transform your ideas into professional videos in minutes. Our end-to-end AI solution handles scriptwriting, voice synthesis, and video generation—all in one seamless platform."
+    "subtitle": "Transform your ideas into professional videos in minutes. Our end-to-end AI solution handles scriptwriting, voice synthesis, and video generation—all in one seamless platform.",
+    "badge": "Introducing Huavoi 2.0",
+    "dashboardAlt": "Huavoi Dashboard Mockup"
   },
   "trust": {
-    "title": "Trusted by 300+ leading companies worldwide"
+    "title": "Made 10,000+ videos as of today",
+    "company1": "MrBeast",
+    "company2": "Marques Brownlee",
+    "company3": "Linus Tech Tips",
+    "company4": "Veritasium",
+    "company5": "Kurzgesagt",
+    "company6": "Fireship"
   },
   "solutions": {
     "title": "Complete Video Production Suite",

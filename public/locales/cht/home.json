@@ -2,10 +2,18 @@
   "hero": {
     "title": "AI 驅動影片製作",
     "titleHighlight": "從腳本到螢幕",
-    "subtitle": "在幾分鐘內將您的想法轉化為專業影片。我們的一站式 AI 解決方案涵蓋腳本編寫、語音合成和影片生成，全部在一個無縫平台上完成。"
+    "subtitle": "在幾分鐘內將您的想法轉化為專業影片。我們的一站式 AI 解決方案涵蓋腳本編寫、語音合成和影片生成，全部在一個無縫平台上完成。",
+    "badge": "[TRANSLATE: Introducing Huavoi 2.0]",
+    "dashboardAlt": "[TRANSLATE: Huavoi Dashboard Mockup]"
   },
   "trust": {
-    "title": "深受全球 300 多家領先企業的信賴"
+    "title": "[TRANSLATE: Made 10,000+ videos as of today]",
+    "company1": "[TRANSLATE: MrBeast]",
+    "company2": "[TRANSLATE: Marques Brownlee]",
+    "company3": "[TRANSLATE: Linus Tech Tips]",
+    "company4": "[TRANSLATE: Veritasium]",
+    "company5": "[TRANSLATE: Kurzgesagt]",
+    "company6": "[TRANSLATE: Fireship]"
   },
   "solutions": {
     "title": "完整的影片製作套件",
