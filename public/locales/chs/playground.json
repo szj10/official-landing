@@ -1,0 +1,50 @@
+{
+  "playground": {
+    "badge": "立即体验",
+    "title": "TTS 体验中心",
+    "subtitle": "体验我们 AI 驱动的文本转语音技术。输入文本，选择语音，聆听奇迹发生。",
+    "textSection": {
+      "title": "文本输入",
+      "sampleTexts": "示例文本",
+      "customText": "或输入您自己的文本",
+      "placeholder": "输入您想转换为语音的文本...",
+      "characters": "字符"
+    },
+    "voiceSection": {
+      "title": "语音选择",
+      "sampleVoices": "示例语音",
+      "recordCustom": "录制您的语音",
+      "recordYourVoice": "录制您自己的语音样本",
+      "recordHint": "点击开始录制您的语音",
+      "startRecording": "开始录制",
+      "stopRecording": "停止录制",
+      "recording": "录制中：",
+      "recordingComplete": "录制完成",
+      "duration": "时长",
+      "recordAgain": "重新录制"
+    },
+    "preview": {
+      "title": "预览",
+      "generate": "生成音频",
+      "generating": "生成中...",
+      "playing": "正在播放音频...",
+      "ready": "准备播放",
+      "noAudio": "选择文本和语音，然后点击生成以创建音频"
+    },
+    "tips": {
+      "title": "最佳实践提示",
+      "tip1": {
+        "title": "清晰的文本",
+        "description": "使用正确的标点符号和间距以获得自然的语音效果"
+      },
+      "tip2": {
+        "title": "匹配语音与内容",
+        "description": "选择适合您内容语调和受众的语音"
+      },
+      "tip3": {
+        "title": "尝试不同选项",
+        "description": "尝试多种语音和文本以找到完美组合"
+      }
+    }
+  }
+}

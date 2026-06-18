@@ -1,21 +1,4 @@
 {
-  "common": {
-    "getStarted": "Commencer",
-    "getStartedFree": "Commencer gratuitement",
-    "watchDemo": "Voir la démo",
-    "learnMore": "En savoir plus →",
-    "startFreeTrial": "Commencer l'essai gratuit",
-    "viewPricing": "Voir les tarifs"
-  },
-  "header": {
-    "home": "Accueil",
-    "pricing": "Tarifs",
-    "playground": "Bac à sable",
-    "news": "Actualités",
-    "about": "À propos",
-    "language": "Langue",
-    "theme": "Thème"
-  },
   "hero": {
     "title": "[TRANSLATE: AI-Powered Video Creation]",
     "titleHighlight": "[TRANSLATE: From Script to Screen]",
@@ -89,57 +72,6 @@
     "q4": {
       "question": "[TRANSLATE: What types of videos can I create?]",
       "answer": "[TRANSLATE: Marketing videos, product demos, training content, social media posts, explainer videos, corporate communications, and more. Our AI adapts to your needs and style requirements.]"
-    }
-  },
-  "legal": {
-    "lastUpdated": "Dernière mise à jour"
-  },
-  "playground": {
-    "badge": "Essayez Maintenant",
-    "title": "Espace TTS",
-    "subtitle": "Découvrez notre technologie de synthèse vocale alimentée par l'IA. Entrez votre texte, choisissez une voix et écoutez la magie.",
-    "textSection": {
-      "title": "Saisie de Texte",
-      "sampleTexts": "Textes d'Exemple",
-      "customText": "Ou entrez votre propre texte",
-      "placeholder": "Entrez le texte que vous souhaitez convertir en parole...",
-      "characters": "caractères"
-    },
-    "voiceSection": {
-      "title": "Sélection de Voix",
-      "sampleVoices": "Voix d'Exemple",
-      "recordCustom": "Enregistrez Votre Voix",
-      "recordYourVoice": "Enregistrez votre propre échantillon vocal",
-      "recordHint": "Cliquez pour commencer l'enregistrement",
-      "startRecording": "Démarrer l'Enregistrement",
-      "stopRecording": "Arrêter l'Enregistrement",
-      "recording": "Enregistrement:",
-      "recordingComplete": "Enregistrement Terminé",
-      "duration": "durée",
-      "recordAgain": "Enregistrer à Nouveau"
-    },
-    "preview": {
-      "title": "Aperçu",
-      "generate": "Générer l'Audio",
-      "generating": "Génération...",
-      "playing": "Lecture audio en cours...",
-      "ready": "Prêt à jouer",
-      "noAudio": "Sélectionnez le texte et la voix, puis cliquez sur Générer"
-    },
-    "tips": {
-      "title": "Conseils pour de Meilleurs Résultats",
-      "tip1": {
-        "title": "Texte Clair",
-        "description": "Utilisez une ponctuation et un espacement appropriés pour une parole naturelle"
-      },
-      "tip2": {
-        "title": "Adapter la Voix au Contenu",
-        "description": "Choisissez une voix qui correspond au ton et à l'audience de votre contenu"
-      },
-      "tip3": {
-        "title": "Tester Différentes Options",
-        "description": "Essayez plusieurs voix et textes pour trouver la combinaison parfaite"
-      }
     }
   }
 }

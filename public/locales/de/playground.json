@@ -1,0 +1,50 @@
+{
+  "playground": {
+    "badge": "Jetzt Testen",
+    "title": "TTS Spielwiese",
+    "subtitle": "Erleben Sie unsere KI-gestützte Text-zu-Sprache-Technologie. Geben Sie Ihren Text ein, wählen Sie eine Stimme und hören Sie die Magie.",
+    "textSection": {
+      "title": "Texteingabe",
+      "sampleTexts": "Beispieltexte",
+      "customText": "Oder geben Sie Ihren eigenen Text ein",
+      "placeholder": "Geben Sie den Text ein, den Sie in Sprache umwandeln möchten...",
+      "characters": "Zeichen"
+    },
+    "voiceSection": {
+      "title": "Stimmenauswahl",
+      "sampleVoices": "Beispielstimmen",
+      "recordCustom": "Stimme Aufnehmen",
+      "recordYourVoice": "Nehmen Sie Ihre eigene Stimmprobe auf",
+      "recordHint": "Klicken um Aufnahme zu starten",
+      "startRecording": "Aufnahme Starten",
+      "stopRecording": "Aufnahme Stoppen",
+      "recording": "Aufnahme:",
+      "recordingComplete": "Aufnahme Abgeschlossen",
+      "duration": "Dauer",
+      "recordAgain": "Erneut Aufnehmen"
+    },
+    "preview": {
+      "title": "Vorschau",
+      "generate": "Audio Generieren",
+      "generating": "Generierung...",
+      "playing": "Audio wird wiedergegeben...",
+      "ready": "Bereit zur Wiedergabe",
+      "noAudio": "Wählen Sie Text und Stimme, dann klicken Sie auf Generieren"
+    },
+    "tips": {
+      "title": "Tipps für Beste Ergebnisse",
+      "tip1": {
+        "title": "Klarer Text",
+        "description": "Verwenden Sie richtige Zeichensetzung und Abstände für natürliches Sprechen"
+      },
+      "tip2": {
+        "title": "Stimme an Inhalt Anpassen",
+        "description": "Wählen Sie eine Stimme, die zum Ton und Publikum Ihres Inhalts passt"
+      },
+      "tip3": {
+        "title": "Verschiedene Optionen Testen",
+        "description": "Probieren Sie mehrere Stimmen und Texte für die perfekte Kombination"
+      }
+    }
+  }
+}

@@ -14,7 +14,28 @@ interface I18nContextType {
 
 const I18nContext = createContext<I18nContextType | undefined>(undefined);
 
+const translationFiles = ["common", "header", "home", "playground", "legal"] as const;
+
 const translationsCache: Record<Locale, Translations> = {} as Record<Locale, Translations>;
+
+function deepMerge(target: Translations, source: Translations): Translations {
+  const result = { ...target };
+  for (const key of Object.keys(source)) {
+    const sourceVal = source[key];
+    const targetVal = result[key];
+    if (
+      typeof sourceVal === "object" &&
+      sourceVal !== null &&
+      typeof targetVal === "object" &&
+      targetVal !== null
+    ) {
+      result[key] = deepMerge(targetVal as Translations, sourceVal as Translations);
+    } else {
+      result[key] = sourceVal;
+    }
+  }
+  return result;
+}
 
 async function loadTranslations(locale: Locale): Promise<Translations> {
   if (translationsCache[locale]) {
@@ -22,11 +43,16 @@ async function loadTranslations(locale: Locale): Promise<Translations> {
   }
 
   try {
-    const response = await fetch(`/locales/${locale}.json`);
-    if (!response.ok) {
-      throw new Error(`Failed to load translations for ${locale}`);
-    }
-    const translations = await response.json();
+    const results = await Promise.all(
+      translationFiles.map(async (file) => {
+        const response = await fetch(`/locales/${locale}/${file}.json`);
+        if (!response.ok) {
+          return {} as Translations;
+        }
+        return response.json() as Promise<Translations>;
+      })
+    );
+    const translations = results.reduce((acc, cur) => deepMerge(acc, cur), {} as Translations);
     translationsCache[locale] = translations;
     return translations;
   } catch (error) {

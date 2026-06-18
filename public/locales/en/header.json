@@ -1,0 +1,11 @@
+{
+  "header": {
+    "home": "Home",
+    "pricing": "Pricing",
+    "playground": "Playground",
+    "news": "News",
+    "about": "About",
+    "language": "Language",
+    "theme": "Theme"
+  }
+}

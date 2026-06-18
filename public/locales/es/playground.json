@@ -1,0 +1,50 @@
+{
+  "playground": {
+    "badge": "Pruébalo Ahora",
+    "title": "Zona de Pruebas TTS",
+    "subtitle": "Experimenta nuestra tecnología de texto a voz impulsada por IA. Ingresa tu texto, elige una voz y escucha la magia.",
+    "textSection": {
+      "title": "Entrada de Texto",
+      "sampleTexts": "Textos de Ejemplo",
+      "customText": "O ingresa tu propio texto",
+      "placeholder": "Ingresa el texto que deseas convertir a voz...",
+      "characters": "caracteres"
+    },
+    "voiceSection": {
+      "title": "Selección de Voz",
+      "sampleVoices": "Voces de Ejemplo",
+      "recordCustom": "Graba Tu Voz",
+      "recordYourVoice": "Graba tu propia muestra de voz",
+      "recordHint": "Clic para comenzar a grabar",
+      "startRecording": "Iniciar Grabación",
+      "stopRecording": "Detener Grabación",
+      "recording": "Grabando:",
+      "recordingComplete": "Grabación Completa",
+      "duration": "duración",
+      "recordAgain": "Grabar de Nuevo"
+    },
+    "preview": {
+      "title": "Vista Previa",
+      "generate": "Generar Audio",
+      "generating": "Generando...",
+      "playing": "Reproduciendo audio...",
+      "ready": "Listo para reproducir",
+      "noAudio": "Selecciona texto y voz, luego clic en Generar para crear audio"
+    },
+    "tips": {
+      "title": "Consejos para Mejores Resultados",
+      "tip1": {
+        "title": "Texto Claro",
+        "description": "Usa puntuación y espaciado adecuados para un habla natural"
+      },
+      "tip2": {
+        "title": "Emparejar Voz con Contenido",
+        "description": "Elige una voz que se ajuste al tono y audiencia de tu contenido"
+      },
+      "tip3": {
+        "title": "Probar Diferentes Opciones",
+        "description": "Prueba múltiples voces y textos para encontrar la combinación perfecta"
+      }
+    }
+  }
+}

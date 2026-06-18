@@ -1,0 +1,50 @@
+{
+  "playground": {
+    "badge": "立即體驗",
+    "title": "TTS 體驗中心",
+    "subtitle": "體驗我們 AI 驅動的文字轉語音技術。輸入文字，選擇語音，聆聽奇蹟發生。",
+    "textSection": {
+      "title": "文字輸入",
+      "sampleTexts": "範例文字",
+      "customText": "或輸入您自己的文字",
+      "placeholder": "輸入您想轉換為語音的文字...",
+      "characters": "字元"
+    },
+    "voiceSection": {
+      "title": "語音選擇",
+      "sampleVoices": "範例語音",
+      "recordCustom": "錄製您的語音",
+      "recordYourVoice": "錄製您自己的語音樣本",
+      "recordHint": "點擊開始錄製您的語音",
+      "startRecording": "開始錄製",
+      "stopRecording": "停止錄製",
+      "recording": "錄製中：",
+      "recordingComplete": "錄製完成",
+      "duration": "時長",
+      "recordAgain": "重新錄製"
+    },
+    "preview": {
+      "title": "預覽",
+      "generate": "生成音訊",
+      "generating": "生成中...",
+      "playing": "正在播放音訊...",
+      "ready": "準備播放",
+      "noAudio": "選擇文字和語音，然後點擊生成以創建音訊"
+    },
+    "tips": {
+      "title": "最佳實踐提示",
+      "tip1": {
+        "title": "清晰的文字",
+        "description": "使用正確的標點符號和間距以獲得自然的語音效果"
+      },
+      "tip2": {
+        "title": "匹配語音與內容",
+        "description": "選擇適合您內容語調和受眾的語音"
+      },
+      "tip3": {
+        "title": "嘗試不同選項",
+        "description": "嘗試多種語音和文字以找到完美組合"
+      }
+    }
+  }
+}

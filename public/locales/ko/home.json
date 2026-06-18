@@ -1,21 +1,4 @@
 {
-  "common": {
-    "getStarted": "시작하기",
-    "getStartedFree": "무료로 시작하기",
-    "watchDemo": "데모 보기",
-    "learnMore": "자세히 알아보기 →",
-    "startFreeTrial": "무료 체험 시작",
-    "viewPricing": "요금제 보기"
-  },
-  "header": {
-    "home": "홈",
-    "pricing": "요금제",
-    "playground": "체험",
-    "news": "뉴스",
-    "about": "소개",
-    "language": "언어",
-    "theme": "테마"
-  },
   "hero": {
     "title": "AI 기반 비디오 제작",
     "titleHighlight": "대본부터 스크린까지",
@@ -89,57 +72,6 @@
     "q4": {
       "question": "어떤 종류의 비디오를 제작할 수 있나요?",
       "answer": "마케팅 비디오, 제품 데모, 교육 콘텐츠, 소셜 미디어 게시물, 설명 영상, 기업 홍보 영상 등을 제작할 수 있습니다. 당사의 AI는 고객님의 필요와 스타일 요구사항에 맞춰 유연하게 조정됩니다."
-    }
-  },
-  "legal": {
-    "lastUpdated": "최종 업데이트"
-  },
-  "playground": {
-    "badge": "지금 체험",
-    "title": "TTS 체험관",
-    "subtitle": "AI 기반 텍스트 음성 변환 기술을 경험하세요. 텍스트를 입력하고, 음성을 선택하고, 마법을 들어보세요.",
-    "textSection": {
-      "title": "텍스트 입력",
-      "sampleTexts": "샘플 텍스트",
-      "customText": "또는 직접 텍스트 입력",
-      "placeholder": "음성으로 변환할 텍스트를 입력하세요...",
-      "characters": "글자"
-    },
-    "voiceSection": {
-      "title": "음성 선택",
-      "sampleVoices": "샘플 음성",
-      "recordCustom": "음성 녹음",
-      "recordYourVoice": "자신의 음성 샘플 녹음",
-      "recordHint": "클릭하여 녹음 시작",
-      "startRecording": "녹음 시작",
-      "stopRecording": "녹음 중지",
-      "recording": "녹음 중:",
-      "recordingComplete": "녹음 완료",
-      "duration": "길이",
-      "recordAgain": "다시 녹음"
-    },
-    "preview": {
-      "title": "미리보기",
-      "generate": "오디오 생성",
-      "generating": "생성 중...",
-      "playing": "오디오 재생 중...",
-      "ready": "재생 준비 완료",
-      "noAudio": "텍스트와 음성을 선택한 후 생성을 클릭하세요"
-    },
-    "tips": {
-      "title": "최상의 결과를 위한 팁",
-      "tip1": {
-        "title": "명확한 텍스트",
-        "description": "자연스러운 음성을 위해 적절한 문장 부호와 간격 사용"
-      },
-      "tip2": {
-        "title": "콘텐츠에 맞는 음성",
-        "description": "콘텐츠의 톤과 청중에 맞는 음성 선택"
-      },
-      "tip3": {
-        "title": "다양한 옵션 시도",
-        "description": "완벽한 조합을 찾기 위해 여러 음성과 텍스트 시도"
-      }
     }
   }
 }
