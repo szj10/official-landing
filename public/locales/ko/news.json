@@ -1,0 +1,42 @@
+{
+  "news": {
+    "badge": "최신 업데이트",
+    "title": "뉴스 & 리소스",
+    "subtitle": "Huavoi 팀의 인사이트, 튜토리얼, 업데이트. AI로 놀라운 영상을 만드는 방법을 알아보세요.",
+    "categories": {
+      "allPosts": "전체 글",
+      "productUpdates": "제품 업데이트",
+      "industryInsights": "업계 인사이트",
+      "tutorials": "튜토리얼",
+      "technology": "기술",
+      "caseStudies": "사례 연구"
+    },
+    "readMore": "더 읽기",
+    "loadMore": "더 불러오기",
+    "documentation": {
+      "title": "문서",
+      "description": "포괄적인 가이드와 API 문서",
+      "cta": "문서 보기"
+    },
+    "contactUs": {
+      "title": "문의하기",
+      "description": "질문이 있으신가요? 도움을 드리겠습니다.",
+      "cta": "이메일 보내기"
+    },
+    "newsletter": {
+      "title": "뉴스레터 구독",
+      "description": "최신 업데이트, 튜토리얼, 인사이트를 받아보세요.",
+      "placeholder": "이메일 입력",
+      "cta": "구독"
+    },
+    "post": {
+      "notFound": "글을 찾을 수 없습니다",
+      "backToNews": "뉴스로 돌아가기",
+      "readyToTry": "Huavoi를 사용해 보실래요?",
+      "startCreating": "AI로 오늘 바로 전문 영상 제작을 시작하세요",
+      "getStartedFree": "무료로 시작하기",
+      "previousPost": "← 이전 글",
+      "nextPost": "다음 글 →"
+    }
+  }
+}

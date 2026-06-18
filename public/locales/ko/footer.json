@@ -1,0 +1,29 @@
+{
+  "footer": {
+    "description": "AI 기반 영상 제작 플랫폼. 대본 작성, 음성 합성, 영상 생성으로 아이디어를 전문 영상으로 변환하세요. 모든 것이 한 곳에.",
+    "allSystemsOperational": "모든 시스템 정상 운영 중",
+    "resources": "리소스",
+    "documentation": "문서",
+    "newsBlog": "뉴스 & 블로그",
+    "caseStudies": "사례 연구",
+    "apiReference": "API 참조",
+    "status": "상태",
+    "company": "회사",
+    "aboutUs": "회사 소개",
+    "careers": "채용",
+    "contact": "문의",
+    "privacyPolicy": "개인정보 처리방침",
+    "termsOfService": "이용약관",
+    "stayUpdated": "최신 소식 받기",
+    "stayUpdatedDesc": "최신 AI 영상 뉴스와 기능 출시 소식을 받아보세요.",
+    "subscribed": "구독 완료!",
+    "emailPlaceholder": "your@email.com",
+    "emailError": "유효한 이메일 주소를 입력해 주세요.",
+    "subscribing": "구독 중…",
+    "subscribe": "구독",
+    "copyright": "모든 권리 보유.",
+    "privacy": "개인정보",
+    "terms": "약관",
+    "cookies": "쿠키"
+  }
+}
