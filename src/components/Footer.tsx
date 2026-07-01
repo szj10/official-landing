@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import WechatQRModal from "./WechatQRModal";
+import NewsletterSignup from "./NewsletterSignup";
 import { useI18n } from "@/i18n";
 
 // ─── Social Icons ─────────────────────────────────────────────────────────────
@@ -120,22 +121,7 @@ function useFooterLinks(t: (key: string) => string) {
 export default function Footer() {
   const { t } = useI18n();
   const footerLinks = useFooterLinks(t);
-  const [email, setEmail] = useState("");
-  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [showWechatQR, setShowWechatQR] = useState(false);
-
-  const handleSubscribe = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!email || !email.includes("@")) {
-      setStatus("error");
-      return;
-    }
-    setStatus("loading");
-    setTimeout(() => {
-      setStatus("success");
-      setEmail("");
-    }, 1000);
-  };
 
   return (
     <footer className="relative overflow-hidden bg-zinc-950 border-t border-zinc-900/80 text-zinc-400">
@@ -224,62 +210,7 @@ export default function Footer() {
           </div>
 
           {/* Newsletter */}
-          <div className="lg:col-span-2">
-            <h3 className="text-white font-semibold text-sm mb-2 tracking-wide">
-              {t("footer.stayUpdated")}
-            </h3>
-            <p className="text-xs text-zinc-500 mb-4 leading-relaxed">
-              {t("footer.stayUpdatedDesc")}
-            </p>
-
-            {status === "success" ? (
-              <div className="flex items-center gap-2 px-3 py-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
-                <svg
-                  className="w-4 h-4 text-emerald-400 shrink-0"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M5 13l4 4L19 7"
-                  />
-                </svg>
-                <span className="text-xs text-emerald-400 font-medium">
-                  {t("footer.subscribed")}
-                </span>
-              </div>
-            ) : (
-              <form onSubmit={handleSubscribe} className="flex flex-col gap-2">
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => {
-                    setEmail(e.target.value);
-                    setStatus("idle");
-                  }}
-                  placeholder={t("footer.emailPlaceholder")}
-                  className={`bg-zinc-900 border rounded-xl px-3 py-2.5 text-xs text-white placeholder-zinc-600 focus:outline-none transition-colors ${
-                    status === "error"
-                      ? "border-red-500/60 focus:border-red-500"
-                      : "border-zinc-800 focus:border-indigo-500"
-                  }`}
-                />
-                {status === "error" && (
-                  <p className="text-[10px] text-red-400 px-1">{t("footer.emailError")}</p>
-                )}
-                <button
-                  type="submit"
-                  disabled={status === "loading"}
-                  className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 disabled:opacity-60 text-white rounded-xl px-4 py-2.5 text-xs font-semibold transition-all duration-200 active:scale-95 shadow-md shadow-indigo-500/20"
-                >
-                  {status === "loading" ? t("footer.subscribing") : t("footer.subscribe")}
-                </button>
-              </form>
-            )}
-          </div>
+          <NewsletterSignup />
         </div>
 
         {/* ── Bottom bar ──────────────────────────────────────────────────────── */}

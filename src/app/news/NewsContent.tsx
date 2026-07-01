@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import type { PostMetadata } from "@/lib/posts";
 import { useI18n } from "@/i18n";
+import NewsletterSignup from "@/components/NewsletterSignup";
 
 function BookIcon({ className }: { className?: string }) {
   return (
@@ -249,39 +250,7 @@ export default function NewsContent({ posts }: { posts: PostMetadata[] }) {
 
       <section className="py-20 bg-white/5 dark:bg-zinc-950/5 backdrop-blur-sm border-t border-gray-200/40 dark:border-zinc-900/40">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="glass-panel rounded-3xl p-12 lg:p-16 text-center">
-            <div className="w-16 h-16 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg">
-              <svg
-                className="w-8 h-8 text-white"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-                />
-              </svg>
-            </div>
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-gray-900 dark:text-white mb-4">
-              {t("news.newsletter.title")}
-            </h2>
-            <p className="text-base text-gray-600 dark:text-zinc-400 mb-8 max-w-xl mx-auto">
-              {t("news.newsletter.description")}
-            </p>
-            <div className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
-              <input
-                type="email"
-                placeholder={t("news.newsletter.placeholder")}
-                className="flex-1 px-4 py-3 rounded-xl glass-panel text-sm text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              />
-              <button className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white px-6 py-3 rounded-xl transition-all duration-200 font-semibold text-sm shadow-md shadow-indigo-500/20 active:scale-95">
-                {t("news.newsletter.cta")}
-              </button>
-            </div>
-          </div>
+          <NewsletterSignup compact={true} />
         </div>
       </section>
     </>
