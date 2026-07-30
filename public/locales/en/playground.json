@@ -8,7 +8,9 @@
       "sampleTexts": "Sample Texts",
       "customText": "Or enter your own text",
       "placeholder": "Enter the text you want to convert to speech...",
-      "characters": "characters"
+      "characters": "chars",
+      "words": "words",
+      "maxWords": "Max 200 words"
     },
     "voiceSection": {
       "title": "Voice Selection",
@@ -21,7 +23,8 @@
       "recording": "Recording:",
       "recordingComplete": "Recording Complete",
       "duration": "duration",
-      "recordAgain": "Record Again"
+      "recordAgain": "Record Again",
+      "customVoiceNote": "Custom voice recording is not supported for TTS generation yet. Please select a voice above."
     },
     "preview": {
       "title": "Preview",
@@ -29,8 +32,21 @@
       "generating": "Generating...",
       "playing": "Playing audio...",
       "ready": "Ready to play",
-      "noAudio": "Select text and voice, then click Generate to create audio"
+      "noAudio": "Select text and voice, then click Generate to create audio",
+      "cached": "Cached result",
+      "download": "Download audio"
     },
+    "status": {
+      "queued": "Job queued — waiting for processing...",
+      "processing": "Synthesizing speech...",
+      "completed": "Audio ready!",
+      "failed": "Generation failed",
+      "rateLimited": "Rate limit exceeded"
+    },
+    "rateLimitTitle": "Rate limit reached",
+    "rateLimitMessage": "You've used all 5 free requests this hour. Try again in",
+    "errorTitle": "Generation failed",
+    "streamError": "Lost connection to the server. Please try again.",
     "tips": {
       "title": "Tips for Best Results",
       "tip1": {
@@ -49,41 +65,41 @@
     "sampleTexts": {
       "welcome": {
         "title": "Welcome Message",
-        "text": "Welcome to Huavoi, where AI transforms your ideas into professional videos in minutes. Experience the future of content creation."
+        "text": "欢迎来到华沃，AI让您的创意在几分钟内变为专业视频。体验内容创作的未来。"
       },
       "product": {
         "title": "Product Introduction",
-        "text": "Introducing our revolutionary AI-powered platform. Create stunning videos with natural voiceovers, perfect for marketing, training, and social media content."
+        "text": "隆重推出我们革命性的AI驱动平台。创作带有自然配音的精彩视频，完美适合营销、培训及社交媒体内容。"
       },
       "tutorial": {
         "title": "Tutorial Step",
-        "text": "Step one: Enter your script or let our AI write it for you. Step two: Choose from over 200 natural voices. Step three: Generate your professional video instantly."
+        "text": "第一步：输入您的脚本，或让我们的AI为您撰写。第二步：从200多个自然声音中选择。第三步：即刻生成您的专业视频。"
       }
     },
     "sampleVoices": {
       "voice1": {
-        "name": "Emma",
+        "name": "Lakesys",
         "gender": "Female",
-        "accent": "American",
-        "preview": "Professional and warm"
+        "accent": "Chinese",
+        "preview": "Smooth and natural"
       },
       "voice2": {
-        "name": "James",
+        "name": "Hef",
         "gender": "Male",
-        "accent": "British",
-        "preview": "Authoritative and clear"
+        "accent": "Chinese",
+        "preview": "Clear and expressive"
       },
       "voice3": {
-        "name": "Sophia",
-        "gender": "Female",
-        "accent": "Australian",
-        "preview": "Friendly and engaging"
+        "name": "Andhelo",
+        "gender": "Male",
+        "accent": "Chinese",
+        "preview": "Warm and engaging"
       },
       "voice4": {
-        "name": "Michael",
-        "gender": "Male",
-        "accent": "American",
-        "preview": "Conversational and natural"
+        "name": "Whaat",
+        "gender": "Female",
+        "accent": "Chinese",
+        "preview": "Energetic and bright"
       }
     },
     "previewVoice": "Preview voice",

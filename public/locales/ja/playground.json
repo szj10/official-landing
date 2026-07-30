@@ -7,44 +7,104 @@
       "title": "テキスト入力",
       "sampleTexts": "サンプルテキスト",
       "customText": "または独自のテキストを入力",
-      "placeholder": "音声に変換したいテキストを入力...",
-      "characters": "文字"
+      "placeholder": "音声に変換したいテキストを入力してください...",
+      "characters": "文字",
+      "words": "語",
+      "maxWords": "最大200語"
     },
     "voiceSection": {
       "title": "音声選択",
       "sampleVoices": "サンプル音声",
       "recordCustom": "音声を録音",
-      "recordYourVoice": "自分の音声サンプルを録音",
+      "recordYourVoice": "自分の声を録音する",
       "recordHint": "クリックして録音を開始",
       "startRecording": "録音開始",
       "stopRecording": "録音停止",
       "recording": "録音中：",
       "recordingComplete": "録音完了",
-      "duration": "長さ",
-      "recordAgain": "再録音"
+      "duration": "時間",
+      "recordAgain": "再録音",
+      "customVoiceNote": "現在、カスタム録音でのTTS生成はサポートされていません。上から音声を選択してください。"
     },
     "preview": {
       "title": "プレビュー",
       "generate": "音声を生成",
       "generating": "生成中...",
-      "playing": "音声を再生中...",
-      "ready": "再生準備完了",
-      "noAudio": "テキストと音声を選択し、生成をクリックして音声を作成"
+      "playing": "再生中...",
+      "ready": "再生可能",
+      "noAudio": "テキストと音声を選択し、生成をクリックして音声を作成",
+      "cached": "キャッシュ済み",
+      "download": "音声をダウンロード"
     },
+    "status": {
+      "queued": "ジョブをキュー中...",
+      "processing": "音声を合成中...",
+      "completed": "音声の準備ができました！",
+      "failed": "生成に失敗しました",
+      "rateLimited": "レート制限を超えました"
+    },
+    "rateLimitTitle": "リクエスト上限に達しました",
+    "rateLimitMessage": "1時間あたり5回の無料リクエストを使い切りました。再試行まで：",
+    "errorTitle": "生成失敗",
+    "streamError": "サーバーとの接続が切れました。もう一度お試しください。",
     "tips": {
       "title": "最良の結果を得るためのヒント",
       "tip1": {
         "title": "明確なテキスト",
-        "description": "自然な音声のために適切な句読点とスペースを使用"
+        "description": "自然な発音のために適切な句読点とスペースを使用"
       },
       "tip2": {
-        "title": "コンテンツに合った音声",
-        "description": "コンテンツのトーンと聴衆に合った音声を選択"
+        "title": "コンテンツに合わせた音声",
+        "description": "コンテンツのトーンと対象者に合った音声を選択"
       },
       "tip3": {
-        "title": "異なるオプションを試す",
-        "description": "完璧な組み合わせを見つけるために複数の音声とテキストを試す"
+        "title": "さまざまなオプションを試す",
+        "description": "複数の音声とテキストを試して最適な組み合わせを見つける"
       }
-    }
+    },
+    "sampleTexts": {
+      "welcome": {
+        "title": "ウェルカムメッセージ",
+        "text": "欢迎来到华沃，AI让您的创意在几分钟内变为专业视频。体验内容创作的未来。"
+      },
+      "product": {
+        "title": "製品紹介",
+        "text": "隆重推出我们革命性的AI驱动平台。创作带有自然配音的精彩视频，完美适合营销、培训及社交媒体内容。"
+      },
+      "tutorial": {
+        "title": "チュートリアル",
+        "text": "第一步：输入您的脚本，或让我们的AI为您撰写。第二步：从200多个自然声音中选择。第三步：即刻生成您的专业视频。"
+      }
+    },
+    "sampleVoices": {
+      "voice1": {
+        "name": "Lakesys",
+        "gender": "女性",
+        "accent": "中国語",
+        "preview": "滑らかで自然"
+      },
+      "voice2": {
+        "name": "Hef",
+        "gender": "男性",
+        "accent": "中国語",
+        "preview": "クリアで表現豊か"
+      },
+      "voice3": {
+        "name": "Andhelo",
+        "gender": "男性",
+        "accent": "中国語",
+        "preview": "温かく親しみやすい"
+      },
+      "voice4": {
+        "name": "Whaat",
+        "gender": "女性",
+        "accent": "中国語",
+        "preview": "エネルギッシュで明るい"
+      }
+    },
+    "previewVoice": "音声プレビュー",
+    "selectVoice": "音声を選択",
+    "microphoneError": "マイクにアクセスできません。権限を確認してください。",
+    "generateError": "音声の生成に失敗しました。もう一度お試しください。"
   }
 }

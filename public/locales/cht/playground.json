@@ -8,7 +8,9 @@
       "sampleTexts": "範例文字",
       "customText": "或輸入您自己的文字",
       "placeholder": "輸入您想轉換為語音的文字...",
-      "characters": "字元"
+      "characters": "字元",
+      "words": "詞",
+      "maxWords": "最多 200 詞"
     },
     "voiceSection": {
       "title": "語音選擇",
@@ -21,7 +23,8 @@
       "recording": "錄製中：",
       "recordingComplete": "錄製完成",
       "duration": "時長",
-      "recordAgain": "重新錄製"
+      "recordAgain": "重新錄製",
+      "customVoiceNote": "目前不支援使用自訂錄音進行語音合成，請在上方選擇一個聲音。"
     },
     "preview": {
       "title": "預覽",
@@ -29,8 +32,21 @@
       "generating": "生成中...",
       "playing": "正在播放音訊...",
       "ready": "準備播放",
-      "noAudio": "選擇文字和語音，然後點擊生成以創建音訊"
+      "noAudio": "選擇文字和語音，然後點擊生成以創建音訊",
+      "cached": "已快取結果",
+      "download": "下載音訊"
     },
+    "status": {
+      "queued": "任務排隊中，等待處理...",
+      "processing": "正在合成語音...",
+      "completed": "音訊已就緒！",
+      "failed": "生成失敗",
+      "rateLimited": "已超出請求限制"
+    },
+    "rateLimitTitle": "已達請求上限",
+    "rateLimitMessage": "您本小時內的 5 次免費請求已用完，請在以下時間後重試：",
+    "errorTitle": "生成失敗",
+    "streamError": "與伺服器連接中斷，請重試。",
     "tips": {
       "title": "最佳實踐提示",
       "tip1": {
@@ -45,6 +61,50 @@
         "title": "嘗試不同選項",
         "description": "嘗試多種語音和文字以找到完美組合"
       }
-    }
+    },
+    "sampleTexts": {
+      "welcome": {
+        "title": "歡迎致辭",
+        "text": "歡迎來到華沃，AI 讓您的創意在幾分鐘內變為專業影片。體驗內容創作的未來。"
+      },
+      "product": {
+        "title": "產品介紹",
+        "text": "隆重推出我們革命性的 AI 驅動平台。創作帶有自然配音的精彩影片，完美適合行銷、培訓及社群媒體內容。"
+      },
+      "tutorial": {
+        "title": "操作步驟",
+        "text": "第一步：輸入您的腳本，或讓我們的 AI 為您撰寫。第二步：從 200 多個自然聲音中選擇。第三步：即刻生成您的專業影片。"
+      }
+    },
+    "sampleVoices": {
+      "voice1": {
+        "name": "Lakesys",
+        "gender": "女聲",
+        "accent": "中文",
+        "preview": "流暢自然"
+      },
+      "voice2": {
+        "name": "Hef",
+        "gender": "男聲",
+        "accent": "中文",
+        "preview": "清晰富有表現力"
+      },
+      "voice3": {
+        "name": "Andhelo",
+        "gender": "男聲",
+        "accent": "中文",
+        "preview": "溫暖親切"
+      },
+      "voice4": {
+        "name": "Whaat",
+        "gender": "女聲",
+        "accent": "中文",
+        "preview": "充滿活力"
+      }
+    },
+    "previewVoice": "試聽語音",
+    "selectVoice": "選擇語音",
+    "microphoneError": "無法存取麥克風，請檢查權限設定。",
+    "generateError": "音訊生成失敗，請重試。"
   }
 }

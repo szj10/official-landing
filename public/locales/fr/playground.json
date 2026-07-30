@@ -5,46 +5,106 @@
     "subtitle": "Découvrez notre technologie de synthèse vocale alimentée par l'IA. Entrez votre texte, choisissez une voix et écoutez la magie.",
     "textSection": {
       "title": "Saisie de Texte",
-      "sampleTexts": "Textes d'Exemple",
+      "sampleTexts": "Exemples de Textes",
       "customText": "Ou entrez votre propre texte",
-      "placeholder": "Entrez le texte que vous souhaitez convertir en parole...",
-      "characters": "caractères"
+      "placeholder": "Entrez le texte à convertir en parole...",
+      "characters": "caractères",
+      "words": "mots",
+      "maxWords": "Max. 200 mots"
     },
     "voiceSection": {
-      "title": "Sélection de Voix",
-      "sampleVoices": "Voix d'Exemple",
-      "recordCustom": "Enregistrez Votre Voix",
+      "title": "Sélection de la Voix",
+      "sampleVoices": "Voix Exemples",
+      "recordCustom": "Enregistrez votre voix",
       "recordYourVoice": "Enregistrez votre propre échantillon vocal",
       "recordHint": "Cliquez pour commencer l'enregistrement",
-      "startRecording": "Démarrer l'Enregistrement",
-      "stopRecording": "Arrêter l'Enregistrement",
-      "recording": "Enregistrement:",
-      "recordingComplete": "Enregistrement Terminé",
+      "startRecording": "Démarrer l'enregistrement",
+      "stopRecording": "Arrêter l'enregistrement",
+      "recording": "Enregistrement :",
+      "recordingComplete": "Enregistrement terminé",
       "duration": "durée",
-      "recordAgain": "Enregistrer à Nouveau"
+      "recordAgain": "Réenregistrer",
+      "customVoiceNote": "L'utilisation d'enregistrements personnalisés pour la génération TTS n'est pas encore prise en charge. Veuillez sélectionner une voix ci-dessus."
     },
     "preview": {
       "title": "Aperçu",
-      "generate": "Générer l'Audio",
-      "generating": "Génération...",
+      "generate": "Générer l'audio",
+      "generating": "Génération en cours...",
       "playing": "Lecture audio en cours...",
-      "ready": "Prêt à jouer",
-      "noAudio": "Sélectionnez le texte et la voix, puis cliquez sur Générer"
+      "ready": "Prêt à lire",
+      "noAudio": "Sélectionnez un texte et une voix, puis cliquez sur Générer",
+      "cached": "Résultat en cache",
+      "download": "Télécharger l'audio"
     },
+    "status": {
+      "queued": "Tâche en attente...",
+      "processing": "Synthèse en cours...",
+      "completed": "Audio prêt !",
+      "failed": "Échec de la génération",
+      "rateLimited": "Limite de requêtes dépassée"
+    },
+    "rateLimitTitle": "Limite de requêtes atteinte",
+    "rateLimitMessage": "Vous avez utilisé vos 5 requêtes gratuites cette heure. Réessayez dans :",
+    "errorTitle": "Échec de la génération",
+    "streamError": "Connexion au serveur perdue. Veuillez réessayer.",
     "tips": {
-      "title": "Conseils pour de Meilleurs Résultats",
+      "title": "Conseils pour de meilleurs résultats",
       "tip1": {
-        "title": "Texte Clair",
-        "description": "Utilisez une ponctuation et un espacement appropriés pour une parole naturelle"
+        "title": "Texte clair",
+        "description": "Utilisez une ponctuation et des espaces corrects pour une parole naturelle"
       },
       "tip2": {
-        "title": "Adapter la Voix au Contenu",
-        "description": "Choisissez une voix qui correspond au ton et à l'audience de votre contenu"
+        "title": "Adaptez la voix au contenu",
+        "description": "Choisissez une voix qui correspond au ton et au public de votre contenu"
       },
       "tip3": {
-        "title": "Tester Différentes Options",
+        "title": "Testez différentes options",
         "description": "Essayez plusieurs voix et textes pour trouver la combinaison parfaite"
       }
-    }
+    },
+    "sampleTexts": {
+      "welcome": {
+        "title": "Message de bienvenue",
+        "text": "欢迎来到华沃，AI让您的创意在几分钟内变为专业视频。体验内容创作的未来。"
+      },
+      "product": {
+        "title": "Présentation du produit",
+        "text": "隆重推出我们革命性的AI驱动平台。创作带有自然配音的精彩视频，完美适合营销、培训及社交媒体内容。"
+      },
+      "tutorial": {
+        "title": "Étape du tutoriel",
+        "text": "第一步：输入您的脚本，或让我们的AI为您撰写。第二步：从200多个自然声音中选择。第三步：即刻生成您的专业视频。"
+      }
+    },
+    "sampleVoices": {
+      "voice1": {
+        "name": "Lakesys",
+        "gender": "Féminin",
+        "accent": "Chinois",
+        "preview": "Fluide et naturel"
+      },
+      "voice2": {
+        "name": "Hef",
+        "gender": "Masculin",
+        "accent": "Chinois",
+        "preview": "Clair et expressif"
+      },
+      "voice3": {
+        "name": "Andhelo",
+        "gender": "Masculin",
+        "accent": "Chinois",
+        "preview": "Chaleureux et engageant"
+      },
+      "voice4": {
+        "name": "Whaat",
+        "gender": "Féminin",
+        "accent": "Chinois",
+        "preview": "Énergique et lumineux"
+      }
+    },
+    "previewVoice": "Aperçu de la voix",
+    "selectVoice": "Sélectionner la voix",
+    "microphoneError": "Impossible d'accéder au microphone. Veuillez vérifier les permissions.",
+    "generateError": "Échec de la génération audio. Veuillez réessayer."
   }
 }

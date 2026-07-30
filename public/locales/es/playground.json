@@ -8,20 +8,23 @@
       "sampleTexts": "Textos de Ejemplo",
       "customText": "O ingresa tu propio texto",
       "placeholder": "Ingresa el texto que deseas convertir a voz...",
-      "characters": "caracteres"
+      "characters": "caracteres",
+      "words": "palabras",
+      "maxWords": "Máx. 200 palabras"
     },
     "voiceSection": {
       "title": "Selección de Voz",
       "sampleVoices": "Voces de Ejemplo",
-      "recordCustom": "Graba Tu Voz",
+      "recordCustom": "Graba tu Voz",
       "recordYourVoice": "Graba tu propia muestra de voz",
-      "recordHint": "Clic para comenzar a grabar",
+      "recordHint": "Haz clic para comenzar a grabar",
       "startRecording": "Iniciar Grabación",
       "stopRecording": "Detener Grabación",
       "recording": "Grabando:",
       "recordingComplete": "Grabación Completa",
       "duration": "duración",
-      "recordAgain": "Grabar de Nuevo"
+      "recordAgain": "Grabar Nuevamente",
+      "customVoiceNote": "El uso de grabaciones personalizadas para TTS no está soportado actualmente. Por favor, selecciona una voz arriba."
     },
     "preview": {
       "title": "Vista Previa",
@@ -29,22 +32,79 @@
       "generating": "Generando...",
       "playing": "Reproduciendo audio...",
       "ready": "Listo para reproducir",
-      "noAudio": "Selecciona texto y voz, luego clic en Generar para crear audio"
+      "noAudio": "Selecciona texto y voz, luego haz clic en Generar para crear audio",
+      "cached": "Resultado en caché",
+      "download": "Descargar audio"
     },
+    "status": {
+      "queued": "Trabajo en cola...",
+      "processing": "Sintetizando voz...",
+      "completed": "¡Audio listo!",
+      "failed": "Generación fallida",
+      "rateLimited": "Límite de solicitudes excedido"
+    },
+    "rateLimitTitle": "Límite de solicitudes alcanzado",
+    "rateLimitMessage": "Has usado tus 5 solicitudes gratuitas por hora. Vuelve a intentarlo en:",
+    "errorTitle": "Generación fallida",
+    "streamError": "Se perdió la conexión con el servidor. Por favor, inténtalo de nuevo.",
     "tips": {
       "title": "Consejos para Mejores Resultados",
       "tip1": {
         "title": "Texto Claro",
-        "description": "Usa puntuación y espaciado adecuados para un habla natural"
+        "description": "Usa puntuación y espaciado correctos para un habla natural"
       },
       "tip2": {
-        "title": "Emparejar Voz con Contenido",
-        "description": "Elige una voz que se ajuste al tono y audiencia de tu contenido"
+        "title": "Combina Voz con Contenido",
+        "description": "Elige una voz que se adapte al tono y la audiencia de tu contenido"
       },
       "tip3": {
-        "title": "Probar Diferentes Opciones",
-        "description": "Prueba múltiples voces y textos para encontrar la combinación perfecta"
+        "title": "Prueba Diferentes Opciones",
+        "description": "Experimenta con varias voces y textos para encontrar la combinación perfecta"
       }
-    }
+    },
+    "sampleTexts": {
+      "welcome": {
+        "title": "Mensaje de Bienvenida",
+        "text": "欢迎来到华沃，AI让您的创意在几分钟内变为专业视频。体验内容创作的未来。"
+      },
+      "product": {
+        "title": "Introducción al Producto",
+        "text": "隆重推出我们革命性的AI驱动平台。创作带有自然配音的精彩视频，完美适合营销、培训及社交媒体内容。"
+      },
+      "tutorial": {
+        "title": "Paso del Tutorial",
+        "text": "第一步：输入您的脚本，或让我们的AI为您撰写。第二步：从200多个自然声音中选择。第三步：即刻生成您的专业视频。"
+      }
+    },
+    "sampleVoices": {
+      "voice1": {
+        "name": "Lakesys",
+        "gender": "Femenino",
+        "accent": "Chino",
+        "preview": "Suave y natural"
+      },
+      "voice2": {
+        "name": "Hef",
+        "gender": "Masculino",
+        "accent": "Chino",
+        "preview": "Claro y expresivo"
+      },
+      "voice3": {
+        "name": "Andhelo",
+        "gender": "Masculino",
+        "accent": "Chino",
+        "preview": "Cálido y envolvente"
+      },
+      "voice4": {
+        "name": "Whaat",
+        "gender": "Femenino",
+        "accent": "Chino",
+        "preview": "Enérgico y brillante"
+      }
+    },
+    "previewVoice": "Vista previa de voz",
+    "selectVoice": "Seleccionar voz",
+    "microphoneError": "No se puede acceder al micrófono. Por favor verifica los permisos.",
+    "generateError": "Error al generar el audio. Por favor inténtalo de nuevo."
   }
 }
