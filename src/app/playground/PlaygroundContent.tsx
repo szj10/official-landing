@@ -2,6 +2,9 @@
 
 import { useState, useRef, useEffect } from "react";
 import { useI18n } from "@/i18n";
+import { PLAYGROUND_VOICES } from "./voices.config";
+
+// Voice config is centralised in voices.config.ts — edit that file to add/remove voices.
 
 const SAMPLE_TEXTS = [
   {
@@ -21,45 +24,27 @@ const SAMPLE_TEXTS = [
   },
 ];
 
-const SAMPLE_VOICES = [
-  {
-    id: "voice1",
-    nameKey: "playground.sampleVoices.voice1.name",
-    genderKey: "playground.sampleVoices.voice1.gender",
-    accentKey: "playground.sampleVoices.voice1.accent",
-    previewKey: "playground.sampleVoices.voice1.preview",
-    color: "from-pink-500 to-rose-500",
-    avatar: "E",
-  },
-  {
-    id: "voice2",
-    nameKey: "playground.sampleVoices.voice2.name",
-    genderKey: "playground.sampleVoices.voice2.gender",
-    accentKey: "playground.sampleVoices.voice2.accent",
-    previewKey: "playground.sampleVoices.voice2.preview",
-    color: "from-blue-500 to-indigo-500",
-    avatar: "J",
-  },
-  {
-    id: "voice3",
-    nameKey: "playground.sampleVoices.voice3.name",
-    genderKey: "playground.sampleVoices.voice3.gender",
-    accentKey: "playground.sampleVoices.voice3.accent",
-    previewKey: "playground.sampleVoices.voice3.preview",
-    color: "from-purple-500 to-violet-500",
-    avatar: "S",
-  },
-  {
-    id: "voice4",
-    nameKey: "playground.sampleVoices.voice4.name",
-    genderKey: "playground.sampleVoices.voice4.gender",
-    accentKey: "playground.sampleVoices.voice4.accent",
-    previewKey: "playground.sampleVoices.voice4.preview",
-    color: "from-emerald-500 to-teal-500",
-    avatar: "M",
-  },
-];
+// ---------------------------------------------------------------------------
+// TTS Job status type (mirrors backend PlaygroundTTSJobResponse)
+// ---------------------------------------------------------------------------
+type TTSJobStatus = "queued" | "processing" | "completed" | "failed" | "rate_limited";
 
+interface TTSJobResponse {
+  job_id: string;
+  status: TTSJobStatus;
+  stream_url: string | null;
+  audio_path: string | null;
+  audio_duration: number | null;
+  error_message: string | null;
+  is_cached: boolean;
+  expires_at: string;
+  created_at: string;
+  completed_at: string | null;
+}
+
+// ---------------------------------------------------------------------------
+// Icons
+// ---------------------------------------------------------------------------
 function PlayIcon({ className }: { className?: string }) {
   return (
     <svg className={className} fill="currentColor" viewBox="0 0 24 24">
@@ -118,33 +103,124 @@ function StopIcon({ className }: { className?: string }) {
   );
 }
 
+function AlertIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={2}
+        d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+      />
+    </svg>
+  );
+}
+
+function DownloadIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={2}
+        d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+      />
+    </svg>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Helpers
+// ---------------------------------------------------------------------------
+function formatTime(seconds: number) {
+  const mins = Math.floor(seconds / 60);
+  const secs = seconds % 60;
+  return `${mins}:${secs.toString().padStart(2, "0")}`;
+}
+
+function formatRetryAfter(seconds: number) {
+  if (seconds >= 3600) return `${Math.ceil(seconds / 3600)}h`;
+  if (seconds >= 60) return `${Math.ceil(seconds / 60)}m`;
+  return `${seconds}s`;
+}
+
+// ---------------------------------------------------------------------------
+// Component
+// ---------------------------------------------------------------------------
 export default function PlaygroundContent() {
   const { t } = useI18n();
+
+  // --- Text state ---
   const [textInput, setTextInput] = useState("");
   const [selectedSampleText, setSelectedSampleText] = useState<string | null>(null);
+
+  // --- Voice state ---
   const [selectedVoice, setSelectedVoice] = useState<string | null>(null);
-  const [isGenerating, setIsGenerating] = useState(false);
-  const [audioUrl, setAudioUrl] = useState<string | null>(null);
-  const [isPlaying, setIsPlaying] = useState(false);
+  const [playingVoicePreview, setPlayingVoicePreview] = useState<string | null>(null);
+
+  // --- Recording state ---
   const [isRecording, setIsRecording] = useState(false);
   const [recordedAudioBlob, setRecordedAudioBlob] = useState<Blob | null>(null);
   const [recordingTime, setRecordingTime] = useState(0);
-  const [playingVoicePreview, setPlayingVoicePreview] = useState<string | null>(null);
 
+  // --- Generation state ---
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [generationStatus, setGenerationStatus] = useState<TTSJobStatus | null>(null);
+  const [audioUrl, setAudioUrl] = useState<string | null>(null);
+  const [audioDuration, setAudioDuration] = useState<number | null>(null);
+  const [isCachedResult, setIsCachedResult] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [rateLimitRetryAfter, setRateLimitRetryAfter] = useState<number | null>(null);
+
+  // --- Playback state ---
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [audioProgress, setAudioProgress] = useState(0);
+  const [audioCurrentTime, setAudioCurrentTime] = useState(0);
+
+  // --- Refs ---
   const audioRef = useRef<HTMLAudioElement>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
   const recordingIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const voicePreviewRef = useRef<HTMLAudioElement | null>(null);
+  const eventSourceRef = useRef<EventSource | null>(null);
 
+  // Cleanup on unmount
   useEffect(() => {
     return () => {
-      if (recordingIntervalRef.current) {
-        clearInterval(recordingIntervalRef.current);
-      }
+      if (recordingIntervalRef.current) clearInterval(recordingIntervalRef.current);
+      if (eventSourceRef.current) eventSourceRef.current.close();
     };
   }, []);
 
+  // Audio progress tracking
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    const handleTimeUpdate = () => {
+      if (audio.duration) {
+        setAudioProgress((audio.currentTime / audio.duration) * 100);
+        setAudioCurrentTime(audio.currentTime);
+      }
+    };
+    const handleEnded = () => {
+      setIsPlaying(false);
+      setAudioProgress(0);
+      setAudioCurrentTime(0);
+    };
+
+    audio.addEventListener("timeupdate", handleTimeUpdate);
+    audio.addEventListener("ended", handleEnded);
+    return () => {
+      audio.removeEventListener("timeupdate", handleTimeUpdate);
+      audio.removeEventListener("ended", handleEnded);
+    };
+  }, [audioUrl]);
+
+  // ---------------------------------------------------------------------------
+  // Sample text selection
+  // ---------------------------------------------------------------------------
   const handleSampleTextSelect = (id: string) => {
     const sample = SAMPLE_TEXTS.find((s) => s.id === id);
     if (sample) {
@@ -153,33 +229,39 @@ export default function PlaygroundContent() {
     }
   };
 
-  const handleVoicePreview = async (voiceId: string) => {
+  // ---------------------------------------------------------------------------
+  // Voice preview — plays local audio file from /public/audio_prompts/
+  // ---------------------------------------------------------------------------
+  const handleVoicePreview = (voiceId: string) => {
+    const voice = PLAYGROUND_VOICES.find((v) => v.id === voiceId);
+    if (!voice) return;
+
+    // Toggle off if already playing
     if (playingVoicePreview === voiceId) {
       voicePreviewRef.current?.pause();
       setPlayingVoicePreview(null);
       return;
     }
 
-    try {
-      const response = await fetch(`/api/tts/preview?voiceId=${voiceId}`);
-      if (!response.ok) throw new Error("Preview failed");
-
-      const data = await response.json();
-
-      if (voicePreviewRef.current) {
-        voicePreviewRef.current.pause();
-      }
-
-      const audio = new Audio(data.audioUrl);
-      voicePreviewRef.current = audio;
-      audio.onended = () => setPlayingVoicePreview(null);
-      audio.play();
-      setPlayingVoicePreview(voiceId);
-    } catch (error) {
-      console.error("Voice preview error:", error);
+    // Stop any currently playing preview
+    if (voicePreviewRef.current) {
+      voicePreviewRef.current.pause();
     }
+
+    const audio = new Audio(voice.localAudioFile);
+    voicePreviewRef.current = audio;
+    audio.onended = () => setPlayingVoicePreview(null);
+    audio.onerror = () => {
+      console.warn(`Preview audio not available for ${voiceId} at ${voice.localAudioFile}`);
+      setPlayingVoicePreview(null);
+    };
+    audio.play().catch(() => setPlayingVoicePreview(null));
+    setPlayingVoicePreview(voiceId);
   };
 
+  // ---------------------------------------------------------------------------
+  // Microphone recording
+  // ---------------------------------------------------------------------------
   const startRecording = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -220,45 +302,177 @@ export default function PlaygroundContent() {
     }
   };
 
+  // ---------------------------------------------------------------------------
+  // Generate — calls backend playground TTS API then streams status via SSE
+  // ---------------------------------------------------------------------------
   const handleGenerate = async () => {
-    if (!textInput.trim() || (!selectedVoice && !recordedAudioBlob)) {
-      return;
+    const text = textInput.trim();
+    if (!text || !selectedVoice) return;
+
+    const voice = PLAYGROUND_VOICES.find((v) => v.id === selectedVoice);
+    if (!voice) return;
+
+    // Reset state
+    setIsGenerating(true);
+    setGenerationStatus(null);
+    setAudioUrl(null);
+    setAudioDuration(null);
+    setIsCachedResult(false);
+    setErrorMessage(null);
+    setRateLimitRetryAfter(null);
+    setIsPlaying(false);
+    setAudioProgress(0);
+
+    // Close any existing SSE stream
+    if (eventSourceRef.current) {
+      eventSourceRef.current.close();
+      eventSourceRef.current = null;
     }
 
-    setIsGenerating(true);
-
     try {
-      const formData = new FormData();
-      formData.append("text", textInput);
-      if (selectedVoice) {
-        formData.append("voiceId", selectedVoice);
-      }
-      if (recordedAudioBlob) {
-        formData.append("voiceSample", recordedAudioBlob, "recording.webm");
-      }
-
-      const response = await fetch("/api/tts", {
+      // Step 1: Create playground TTS job
+      const res = await fetch("/api/v1/playground/tts", {
         method: "POST",
-        body: formData,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          text,
+          voice_id: voice.backendVoiceId,
+          language: voice.language,
+        }),
       });
 
-      if (!response.ok) {
-        throw new Error("TTS generation failed");
+      if (res.status === 429) {
+        const body = await res.json();
+        const retryAfter: number = body?.detail?.retry_after ?? 3600;
+        setRateLimitRetryAfter(retryAfter);
+        setGenerationStatus("rate_limited");
+        setIsGenerating(false);
+        return;
       }
 
-      const data = await response.json();
-      setAudioUrl(data.audioUrl);
-    } catch (error) {
-      console.error("Error generating TTS:", error);
-      alert(t("playground.generateError"));
-    } finally {
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        const detail =
+          typeof body?.detail === "string" ? body.detail : t("playground.generateError");
+        setErrorMessage(detail);
+        setGenerationStatus("failed");
+        setIsGenerating(false);
+        return;
+      }
+
+      const job: TTSJobResponse = await res.json();
+
+      // If it's a cached completed result, resolve immediately
+      if (job.status === "completed" && job.audio_path) {
+        const resolvedUrl = resolveAudioUrl(job.audio_path);
+        setAudioUrl(resolvedUrl);
+        setAudioDuration(job.audio_duration);
+        setIsCachedResult(job.is_cached);
+        setGenerationStatus("completed");
+        setIsGenerating(false);
+        return;
+      }
+
+      // Step 2: Open SSE stream for real-time updates
+      setGenerationStatus(job.status);
+      listenToSSEStream(
+        job.job_id,
+        job.stream_url ?? `/api/v1/playground/tts/${job.job_id}/stream`
+      );
+    } catch (err) {
+      console.error("Generate error:", err);
+      setErrorMessage(t("playground.generateError"));
+      setGenerationStatus("failed");
       setIsGenerating(false);
     }
   };
 
+  /**
+   * Resolve audio_path from backend into a playable URL.
+   * The backend stores a MinIO/S3 path. We proxy through Next.js rewrites
+   * to the backend's presigned URL endpoint (or serve directly if the backend
+   * returns full URLs). For now, route through /api/v1/playground/audio/:path*.
+   *
+   * NOTE: If the backend provides a full URL in audio_path, use it directly.
+   * Otherwise, strip and build the proxied path.
+   */
+  function resolveAudioUrl(audioPath: string): string {
+    // If already a full URL, use directly
+    if (audioPath.startsWith("http://") || audioPath.startsWith("https://")) {
+      return audioPath;
+    }
+    // Proxy through Next.js rewrite to backend storage
+    return `/api/v1/playground/audio/${audioPath}`;
+  }
+
+  /**
+   * Open an EventSource (SSE) to the backend stream URL and update state
+   * as job status changes until a terminal state is reached.
+   */
+  function listenToSSEStream(jobId: string, streamUrl: string) {
+    // streamUrl from backend is like /api/v1/playground/tts/{job_id}/stream
+    // which is already proxied by Next.js rewrites
+    const es = new EventSource(streamUrl);
+    eventSourceRef.current = es;
+
+    es.onmessage = (event) => {
+      try {
+        const job: TTSJobResponse = JSON.parse(event.data);
+        setGenerationStatus(job.status);
+
+        if (job.status === "completed") {
+          if (job.audio_path) {
+            const resolvedUrl = resolveAudioUrl(job.audio_path);
+            setAudioUrl(resolvedUrl);
+            setAudioDuration(job.audio_duration);
+            setIsCachedResult(job.is_cached);
+          }
+          setIsGenerating(false);
+          es.close();
+          eventSourceRef.current = null;
+        } else if (job.status === "failed") {
+          setErrorMessage(job.error_message ?? t("playground.generateError"));
+          setIsGenerating(false);
+          es.close();
+          eventSourceRef.current = null;
+        } else if (job.status === "rate_limited") {
+          setRateLimitRetryAfter(3600);
+          setIsGenerating(false);
+          es.close();
+          eventSourceRef.current = null;
+        }
+      } catch (e) {
+        console.error("SSE parse error:", e);
+      }
+    };
+
+    es.onerror = (err) => {
+      console.error(`SSE error for job ${jobId}:`, err);
+      es.close();
+      eventSourceRef.current = null;
+
+      // If still generating and no audio, mark as failed
+      setIsGenerating((prev) => {
+        if (prev) {
+          setGenerationStatus((status) => {
+            if (status !== "completed" && status !== "failed") {
+              setErrorMessage(t("playground.streamError"));
+              return "failed";
+            }
+            return status;
+          });
+          return false;
+        }
+        return prev;
+      });
+    };
+  }
+
+  // ---------------------------------------------------------------------------
+  // Audio playback
+  // ---------------------------------------------------------------------------
   const togglePlayback = () => {
     if (!audioRef.current) return;
-
     if (isPlaying) {
       audioRef.current.pause();
     } else {
@@ -267,20 +481,56 @@ export default function PlaygroundContent() {
     setIsPlaying(!isPlaying);
   };
 
+  const handleSeek = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!audioRef.current || !audioRef.current.duration) return;
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const pct = x / rect.width;
+    audioRef.current.currentTime = pct * audioRef.current.duration;
+  };
+
+  const handleDownload = () => {
+    if (!audioUrl) return;
+    const a = document.createElement("a");
+    a.href = audioUrl;
+    a.download = `huavoi-tts-${Date.now()}.wav`;
+    a.click();
+  };
+
+  // ---------------------------------------------------------------------------
+  // Derived values
+  // ---------------------------------------------------------------------------
   const currentText =
     textInput ||
     (selectedSampleText
       ? t(SAMPLE_TEXTS.find((s) => s.id === selectedSampleText)?.textKey ?? "")
       : "");
 
-  const formatTime = (seconds: number) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins}:${secs.toString().padStart(2, "0")}`;
+  const canGenerate = !!currentText && !!selectedVoice && !isGenerating;
+
+  const statusLabel = () => {
+    switch (generationStatus) {
+      case "queued":
+        return t("playground.status.queued");
+      case "processing":
+        return t("playground.status.processing");
+      case "completed":
+        return t("playground.status.completed");
+      case "failed":
+        return t("playground.status.failed");
+      case "rate_limited":
+        return t("playground.status.rateLimited");
+      default:
+        return "";
+    }
   };
 
+  // ---------------------------------------------------------------------------
+  // Render
+  // ---------------------------------------------------------------------------
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      {/* Header */}
       <div className="text-center mb-12">
         <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full glass-panel text-xs text-indigo-600 dark:text-indigo-400 font-semibold mb-6 shadow-sm shadow-indigo-500/5">
           <SpeakerIcon className="w-3.5 h-3.5" />
@@ -295,6 +545,7 @@ export default function PlaygroundContent() {
       </div>
 
       <div className="grid lg:grid-cols-2 gap-8">
+        {/* === Text Input Panel === */}
         <div className="glass-panel rounded-3xl p-8 shadow-sm flex flex-col">
           <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
             <svg
@@ -313,7 +564,8 @@ export default function PlaygroundContent() {
             {t("playground.textSection.title")}
           </h2>
 
-          <div className="mb-6 flex-1">
+          {/* Sample text presets */}
+          <div className="mb-6">
             <label className="block text-sm font-medium text-gray-700 dark:text-zinc-300 mb-3">
               {t("playground.textSection.sampleTexts")}
             </label>
@@ -335,6 +587,7 @@ export default function PlaygroundContent() {
             </div>
           </div>
 
+          {/* Custom text */}
           <div className="flex-1">
             <label className="block text-sm font-medium text-gray-700 dark:text-zinc-300 mb-3">
               {t("playground.textSection.customText")}
@@ -349,24 +602,39 @@ export default function PlaygroundContent() {
               rows={5}
               className="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-zinc-900 border-2 border-gray-200 dark:border-zinc-700 focus:border-indigo-500 dark:focus:border-indigo-500 focus:outline-none transition-colors text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-zinc-500 resize-none text-sm"
             />
-            <div className="mt-2 text-xs text-gray-500 dark:text-zinc-400">
-              {textInput.length} {t("playground.textSection.characters")}
+            <div className="mt-2 flex items-center justify-between text-xs text-gray-500 dark:text-zinc-400">
+              <span>
+                {textInput.trim().split(/\s+/).filter(Boolean).length}{" "}
+                {t("playground.textSection.words")} / {textInput.length}{" "}
+                {t("playground.textSection.characters")}
+              </span>
+              <span
+                className={
+                  textInput.trim().split(/\s+/).filter(Boolean).length > 200
+                    ? "text-red-500 font-semibold"
+                    : ""
+                }
+              >
+                {t("playground.textSection.maxWords")}
+              </span>
             </div>
           </div>
         </div>
 
+        {/* === Voice Selection Panel === */}
         <div className="glass-panel rounded-3xl p-8 shadow-sm flex flex-col">
           <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
             <SpeakerIcon className="w-5 h-5 text-purple-500" />
             {t("playground.voiceSection.title")}
           </h2>
 
+          {/* Sample voices */}
           <div className="mb-6 flex-1">
             <label className="block text-sm font-medium text-gray-700 dark:text-zinc-300 mb-3">
               {t("playground.voiceSection.sampleVoices")}
             </label>
             <div className="space-y-2">
-              {SAMPLE_VOICES.map((voice) => (
+              {PLAYGROUND_VOICES.map((voice) => (
                 <div
                   key={voice.id}
                   className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${
@@ -394,6 +662,7 @@ export default function PlaygroundContent() {
                     </div>
                   </div>
                   <div className="flex items-center gap-2 shrink-0">
+                    {/* Preview button — plays local audio file */}
                     <button
                       onClick={() => handleVoicePreview(voice.id)}
                       className="w-8 h-8 rounded-full bg-gray-200 dark:bg-zinc-700 hover:bg-gray-300 dark:hover:bg-zinc-600 flex items-center justify-center transition-colors"
@@ -405,6 +674,7 @@ export default function PlaygroundContent() {
                         <PlayIcon className="w-3.5 h-3.5 text-gray-700 dark:text-zinc-300 ml-0.5" />
                       )}
                     </button>
+                    {/* Select button */}
                     <button
                       onClick={() => {
                         setSelectedVoice(voice.id);
@@ -425,6 +695,7 @@ export default function PlaygroundContent() {
             </div>
           </div>
 
+          {/* Mic recording section */}
           <div className="flex-1">
             <label className="block text-sm font-medium text-gray-700 dark:text-zinc-300 mb-3">
               {t("playground.voiceSection.recordCustom")}
@@ -440,6 +711,9 @@ export default function PlaygroundContent() {
                   </p>
                   <p className="text-xs text-gray-500 dark:text-zinc-400 mb-3">
                     {formatTime(recordingTime)} {t("playground.voiceSection.duration")}
+                  </p>
+                  <p className="text-xs text-amber-600 dark:text-amber-400 mb-3">
+                    {t("playground.voiceSection.customVoiceNote")}
                   </p>
                   <button
                     onClick={() => {
@@ -495,6 +769,7 @@ export default function PlaygroundContent() {
         </div>
       </div>
 
+      {/* === Preview / Generation Panel === */}
       <div className="mt-8 glass-panel rounded-3xl p-8 shadow-sm">
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-6">
           <h2 className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
@@ -515,7 +790,7 @@ export default function PlaygroundContent() {
           </h2>
           <button
             onClick={handleGenerate}
-            disabled={!currentText || (!selectedVoice && !recordedAudioBlob) || isGenerating}
+            disabled={!canGenerate}
             className="w-full sm:w-auto bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 disabled:from-gray-400 disabled:to-gray-400 text-white px-8 py-3 rounded-full transition-all duration-200 font-semibold shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/35 disabled:shadow-none hover:-translate-y-0.5 disabled:hover:translate-y-0 active:translate-y-0 text-sm disabled:cursor-not-allowed"
           >
             {isGenerating ? (
@@ -535,7 +810,7 @@ export default function PlaygroundContent() {
                     d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                   />
                 </svg>
-                {t("playground.preview.generating")}
+                {statusLabel() || t("playground.preview.generating")}
               </span>
             ) : (
               t("playground.preview.generate")
@@ -543,56 +818,133 @@ export default function PlaygroundContent() {
           </button>
         </div>
 
+        {/* Rate limit error */}
+        {generationStatus === "rate_limited" && rateLimitRetryAfter !== null && (
+          <div className="mb-4 flex items-start gap-3 px-4 py-3 rounded-xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 text-amber-700 dark:text-amber-300">
+            <AlertIcon className="w-5 h-5 shrink-0 mt-0.5" />
+            <div>
+              <p className="text-sm font-semibold">{t("playground.rateLimitTitle")}</p>
+              <p className="text-xs mt-0.5">
+                {t("playground.rateLimitMessage")} {formatRetryAfter(rateLimitRetryAfter)}
+              </p>
+            </div>
+          </div>
+        )}
+
+        {/* Generation error */}
+        {generationStatus === "failed" && errorMessage && (
+          <div className="mb-4 flex items-start gap-3 px-4 py-3 rounded-xl bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300">
+            <AlertIcon className="w-5 h-5 shrink-0 mt-0.5" />
+            <div>
+              <p className="text-sm font-semibold">{t("playground.errorTitle")}</p>
+              <p className="text-xs mt-0.5">{errorMessage}</p>
+            </div>
+          </div>
+        )}
+
+        {/* Processing indicator */}
+        {isGenerating && (generationStatus === "queued" || generationStatus === "processing") && (
+          <div className="mb-4 px-4 py-3 rounded-xl bg-indigo-50 dark:bg-indigo-950/30 border border-indigo-200 dark:border-indigo-800">
+            <div className="flex items-center gap-3 mb-2">
+              <div className="flex gap-1">
+                <span className="w-2 h-2 rounded-full bg-indigo-500 animate-bounce [animation-delay:0ms]" />
+                <span className="w-2 h-2 rounded-full bg-indigo-500 animate-bounce [animation-delay:150ms]" />
+                <span className="w-2 h-2 rounded-full bg-indigo-500 animate-bounce [animation-delay:300ms]" />
+              </div>
+              <span className="text-sm text-indigo-700 dark:text-indigo-300 font-medium">
+                {statusLabel()}
+              </span>
+            </div>
+            <div className="h-1 w-full bg-indigo-100 dark:bg-indigo-900 rounded-full overflow-hidden">
+              <div className="h-full bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full animate-pulse w-3/4" />
+            </div>
+          </div>
+        )}
+
+        {/* Audio player */}
         {audioUrl ? (
           <div className="bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-indigo-950/30 dark:to-purple-950/30 rounded-2xl p-6">
+            {/* Cached badge */}
+            {isCachedResult && (
+              <div className="flex items-center gap-1.5 mb-3">
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-300 text-xs font-medium">
+                  <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
+                  </svg>
+                  {t("playground.preview.cached")}
+                </span>
+              </div>
+            )}
+
             <div className="flex items-center gap-4">
+              {/* Play/Pause button */}
               <button
                 onClick={togglePlayback}
-                className="w-14 h-14 rounded-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white flex items-center justify-center shadow-lg shadow-indigo-500/25 transition-all hover:scale-105 active:scale-95"
+                className="w-14 h-14 rounded-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white flex items-center justify-center shadow-lg shadow-indigo-500/25 transition-all hover:scale-105 active:scale-95 shrink-0"
               >
                 {isPlaying ? <PauseIcon className="w-6 h-6" /> : <PlayIcon className="w-6 h-6" />}
               </button>
-              <div className="flex-1">
-                <audio
-                  ref={audioRef}
-                  src={audioUrl}
-                  onEnded={() => setIsPlaying(false)}
-                  className="hidden"
-                />
-                <div className="h-2 bg-gray-200 dark:bg-zinc-700 rounded-full overflow-hidden">
+
+              <div className="flex-1 min-w-0">
+                <audio ref={audioRef} src={audioUrl} className="hidden" />
+
+                {/* Seekable progress bar */}
+                <div
+                  className="h-2 bg-gray-200 dark:bg-zinc-700 rounded-full overflow-hidden cursor-pointer"
+                  onClick={handleSeek}
+                >
                   <div
-                    className="h-full bg-gradient-to-r from-indigo-500 to-purple-500 w-0 animate-pulse"
-                    style={{ width: isPlaying ? "100%" : "0%" }}
+                    className="h-full bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full transition-all duration-300"
+                    style={{ width: `${audioProgress}%` }}
                   />
                 </div>
-                <p className="text-xs text-gray-600 dark:text-zinc-400 mt-2">
-                  {isPlaying ? t("playground.preview.playing") : t("playground.preview.ready")}
-                </p>
+
+                <div className="flex items-center justify-between mt-1.5">
+                  <p className="text-xs text-gray-600 dark:text-zinc-400">
+                    {formatTime(Math.floor(audioCurrentTime))}
+                    {audioDuration ? ` / ${formatTime(Math.floor(audioDuration))}` : ""}
+                  </p>
+                  <p className="text-xs text-gray-500 dark:text-zinc-500">
+                    {isPlaying ? t("playground.preview.playing") : t("playground.preview.ready")}
+                  </p>
+                </div>
               </div>
+
+              {/* Download button */}
+              <button
+                onClick={handleDownload}
+                className="w-10 h-10 rounded-full bg-gray-100 dark:bg-zinc-800 hover:bg-gray-200 dark:hover:bg-zinc-700 flex items-center justify-center transition-colors shrink-0"
+                title={t("playground.preview.download")}
+              >
+                <DownloadIcon className="w-4 h-4 text-gray-600 dark:text-zinc-400" />
+              </button>
             </div>
           </div>
         ) : (
-          <div className="bg-gray-50 dark:bg-zinc-900 rounded-2xl p-12 text-center">
-            <svg
-              className="w-16 h-16 text-gray-300 dark:text-zinc-600 mx-auto mb-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={1.5}
-                d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"
-              />
-            </svg>
-            <p className="text-sm text-gray-500 dark:text-zinc-400">
-              {t("playground.preview.noAudio")}
-            </p>
-          </div>
+          !isGenerating && (
+            <div className="bg-gray-50 dark:bg-zinc-900 rounded-2xl p-12 text-center">
+              <svg
+                className="w-16 h-16 text-gray-300 dark:text-zinc-600 mx-auto mb-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={1.5}
+                  d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"
+                />
+              </svg>
+              <p className="text-sm text-gray-500 dark:text-zinc-400">
+                {t("playground.preview.noAudio")}
+              </p>
+            </div>
+          )
         )}
       </div>
 
+      {/* === Tips Section === */}
       <div className="mt-12 glass-panel rounded-3xl p-8 shadow-sm">
         <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6">
           {t("playground.tips.title")}
