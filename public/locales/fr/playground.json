@@ -62,20 +62,6 @@
         "description": "Essayez plusieurs voix et textes pour trouver la combinaison parfaite"
       }
     },
-    "sampleTexts": {
-      "welcome": {
-        "title": "Message de bienvenue",
-        "text": "欢迎来到华沃，AI让您的创意在几分钟内变为专业视频。体验内容创作的未来。"
-      },
-      "product": {
-        "title": "Présentation du produit",
-        "text": "隆重推出我们革命性的AI驱动平台。创作带有自然配音的精彩视频，完美适合营销、培训及社交媒体内容。"
-      },
-      "tutorial": {
-        "title": "Étape du tutoriel",
-        "text": "第一步：输入您的脚本，或让我们的AI为您撰写。第二步：从200多个自然声音中选择。第三步：即刻生成您的专业视频。"
-      }
-    },
     "sampleVoices": {
       "voice1": {
         "name": "Lakesys",

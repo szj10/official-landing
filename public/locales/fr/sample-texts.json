@@ -1,0 +1,13 @@
+{
+  "sampleTexts": {
+    "playful": {
+      "text": "Attends... tu es sérieux, tu demandes des conseils amoureux à un robot? Bon, d'accord! Étape un: arrête de lui écrire à deux heures du matin. Étape deux... en fait, c'est tout."
+    },
+    "mockNews": {
+      "text": "Info de dernière minute: un humain découvre qu'il est plus facile de parler à une IA qu'à sa propre famille. Les experts sont choqués. La famille, elle... beaucoup moins."
+    },
+    "curious": {
+      "text": "Petite question... si un chatbot rit de sa propre blague dans une pièce vide, est-ce que ça compte comme drôle? Je demande pour un ami. Un ami très seul, et très perdu."
+    }
+  }
+}

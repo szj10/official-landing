@@ -1,0 +1,13 @@
+{
+  "sampleTexts": {
+    "playful": {
+      "text": "Wait... did you seriously just ask a robot for relationship advice? Okay, fine! Step one: stop texting them at 2 a.m. Step two... actually, that's it. That's the whole plan."
+    },
+    "mockNews": {
+      "text": "Breaking news: local human discovers that talking to an AI is easier than talking to their own family. Experts are shocked. Family members? Not so much."
+    },
+    "curious": {
+      "text": "Okay, quick question... if a chatbot laughs at its own joke in an empty room, does it still count as funny? Asking for a friend. A very lonely, very confused friend."
+    }
+  }
+}

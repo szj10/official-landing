@@ -5,22 +5,20 @@ import { useI18n } from "@/i18n";
 import { PLAYGROUND_VOICES } from "./voices.config";
 
 // Voice config is centralised in voices.config.ts — edit that file to add/remove voices.
+// Sample texts are stored in public/locales/{locale}/sample-texts.json for easier management.
 
 const SAMPLE_TEXTS = [
   {
-    id: "welcome",
-    titleKey: "playground.sampleTexts.welcome.title",
-    textKey: "playground.sampleTexts.welcome.text",
+    id: "playful",
+    textKey: "sampleTexts.playful.text",
   },
   {
-    id: "product",
-    titleKey: "playground.sampleTexts.product.title",
-    textKey: "playground.sampleTexts.product.text",
+    id: "mockNews",
+    textKey: "sampleTexts.mockNews.text",
   },
   {
-    id: "tutorial",
-    titleKey: "playground.sampleTexts.tutorial.title",
-    textKey: "playground.sampleTexts.tutorial.text",
+    id: "curious",
+    textKey: "sampleTexts.curious.text",
   },
 ];
 
@@ -580,7 +578,6 @@ export default function PlaygroundContent() {
                       : "bg-gray-50 dark:bg-zinc-900 border-2 border-transparent hover:border-gray-200 dark:hover:border-zinc-700 text-gray-700 dark:text-zinc-300"
                   }`}
                 >
-                  <div className="font-medium text-sm mb-1">{t(sample.titleKey)}</div>
                   <div className="text-xs opacity-70 line-clamp-2">{t(sample.textKey)}</div>
                 </button>
               ))}

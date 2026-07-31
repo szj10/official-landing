@@ -1,0 +1,13 @@
+{
+  "sampleTexts": {
+    "playful": {
+      "text": "Moment mal... du fragst allen Ernstes einen Roboter um Beziehungstipps? Na gut! Schritt eins: Hör auf, ihm um zwei Uhr morgens zu schreiben. Schritt zwei... eigentlich war's das schon."
+    },
+    "mockNews": {
+      "text": "Eilmeldung: Ein Mensch stellt fest, dass Reden mit einer KI leichter ist als Reden mit der eigenen Familie. Experten sind schockiert. Die Familie... eher weniger."
+    },
+    "curious": {
+      "text": "Kurze Frage... wenn ein Chatbot in einem leeren Zimmer über seinen eigenen Witz lacht, zählt das dann als lustig? Ich frage für einen Freund. Einen sehr einsamen, sehr verwirrten Freund."
+    }
+  }
+}

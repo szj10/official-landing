@@ -19,6 +19,7 @@ const translationFiles = [
   "header",
   "home",
   "playground",
+  "sample-texts",
   "legal",
   "footer",
   "pricing",
