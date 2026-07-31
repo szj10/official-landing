@@ -24,7 +24,12 @@
       "recordingComplete": "Aufnahme abgeschlossen",
       "duration": "Dauer",
       "recordAgain": "Erneut aufnehmen",
-      "customVoiceNote": "Die Nutzung eigener Aufnahmen für TTS wird derzeit nicht unterstützt. Bitte wählen Sie oben eine Stimme."
+      "customVoiceNote": "Die Nutzung eigener Aufnahmen für TTS wird derzeit nicht unterstützt. Bitte wählen Sie oben eine Stimme.",
+      "uploading": "Sprachprobe wird hochgeladen...",
+      "uploadSuccess": "Sprachprobe erfolgreich hochgeladen!",
+      "readyToGenerate": "Bereit zur Sprachsynthese mit Ihrer Aufnahme",
+      "uploadError": "Fehler beim Hochladen der Sprachprobe. Bitte versuchen Sie es erneut.",
+      "uploadRateLimit": "Limit erreicht. Bitte versuchen Sie es in {time} erneut."
     },
     "preview": {
       "title": "Vorschau",

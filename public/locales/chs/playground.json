@@ -24,7 +24,12 @@
       "recordingComplete": "录制完成",
       "duration": "时长",
       "recordAgain": "重新录制",
-      "customVoiceNote": "暂不支持使用自定义录音进行语音合成，请在上方选择一个声音。"
+      "customVoiceNote": "暂不支持使用自定义录音进行语音合成，请在上方选择一个声音。",
+      "uploading": "正在上传语音样本...",
+      "uploadSuccess": "语音样本上传成功！",
+      "readyToGenerate": "已就绪，可以使用您的语音样本合成语音",
+      "uploadError": "上传语音样本失败，请重试。",
+      "uploadRateLimit": "已达上传上限，请在 {time} 后重试。"
     },
     "preview": {
       "title": "预览",

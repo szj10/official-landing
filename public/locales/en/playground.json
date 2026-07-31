@@ -24,7 +24,12 @@
       "recordingComplete": "Recording Complete",
       "duration": "duration",
       "recordAgain": "Record Again",
-      "customVoiceNote": "Custom voice recording is not supported for TTS generation yet. Please select a voice above."
+      "customVoiceNote": "Custom voice recording is not supported for TTS generation yet. Please select a voice above.",
+      "uploading": "Uploading voice sample...",
+      "uploadSuccess": "Voice sample uploaded successfully!",
+      "readyToGenerate": "Ready to generate speech with your voice sample",
+      "uploadError": "Failed to upload voice sample. Please try again.",
+      "uploadRateLimit": "Upload limit reached. Please try again in {time}."
     },
     "preview": {
       "title": "Preview",

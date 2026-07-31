@@ -24,7 +24,12 @@
       "recordingComplete": "錄製完成",
       "duration": "時長",
       "recordAgain": "重新錄製",
-      "customVoiceNote": "目前不支援使用自訂錄音進行語音合成，請在上方選擇一個聲音。"
+      "customVoiceNote": "目前不支援使用自訂錄音進行語音合成，請在上方選擇一個聲音。",
+      "uploading": "正在上傳語音樣本...",
+      "uploadSuccess": "語音樣本上傳成功！",
+      "readyToGenerate": "已就緒，可以使用您的語音樣本合成語音",
+      "uploadError": "上傳語音樣本失敗，請重試。",
+      "uploadRateLimit": "已達上傳上限，請在 {time} 後重試。"
     },
     "preview": {
       "title": "預覽",

@@ -24,7 +24,12 @@
       "recordingComplete": "Grabación Completa",
       "duration": "duración",
       "recordAgain": "Grabar Nuevamente",
-      "customVoiceNote": "El uso de grabaciones personalizadas para TTS no está soportado actualmente. Por favor, selecciona una voz arriba."
+      "customVoiceNote": "El uso de grabaciones personalizadas para TTS no está soportado actualmente. Por favor, selecciona una voz arriba.",
+      "uploading": "Subiendo muestra de voz...",
+      "uploadSuccess": "¡Muestra de voz subida con éxito!",
+      "readyToGenerate": "Listo para generar voz con tu muestra",
+      "uploadError": "Error al subir la muestra de voz. Inténtalo de nuevo.",
+      "uploadRateLimit": "Límite de subida alcanzado. Inténtalo de nuevo en {time}."
     },
     "preview": {
       "title": "Vista Previa",

@@ -24,7 +24,12 @@
       "recordingComplete": "Enregistrement terminé",
       "duration": "durée",
       "recordAgain": "Réenregistrer",
-      "customVoiceNote": "L'utilisation d'enregistrements personnalisés pour la génération TTS n'est pas encore prise en charge. Veuillez sélectionner une voix ci-dessus."
+      "customVoiceNote": "L'utilisation d'enregistrements personnalisés pour la génération TTS n'est pas encore prise en charge. Veuillez sélectionner une voix ci-dessus.",
+      "uploading": "Téléversement de l'échantillon vocal...",
+      "uploadSuccess": "Échantillon vocal téléversé avec succès !",
+      "readyToGenerate": "Prêt à générer la voix à partir de votre échantillon",
+      "uploadError": "Échec du téléversement. Veuillez réessayer.",
+      "uploadRateLimit": "Limite de téléversement atteinte. Veuillez réessayer dans {time}."
     },
     "preview": {
       "title": "Aperçu",

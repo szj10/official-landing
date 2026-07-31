@@ -24,7 +24,12 @@
       "recordingComplete": "録音完了",
       "duration": "時間",
       "recordAgain": "再録音",
-      "customVoiceNote": "現在、カスタム録音でのTTS生成はサポートされていません。上から音声を選択してください。"
+      "customVoiceNote": "現在、カスタム録音でのTTS生成はサポートされていません。上から音声を選択してください。",
+      "uploading": "音声サンプルをアップロード中...",
+      "uploadSuccess": "音声サンプルのアップロードが完了しました！",
+      "readyToGenerate": "あなたの音声サンプルを使用して音声生成の準備ができました",
+      "uploadError": "音声サンプルのアップロードに失敗しました。もう一度お試しください。",
+      "uploadRateLimit": "アップロード制限に達しました。{time} 後にもう一度お試しください。"
     },
     "preview": {
       "title": "プレビュー",

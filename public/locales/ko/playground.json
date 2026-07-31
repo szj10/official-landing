@@ -22,9 +22,14 @@
       "stopRecording": "녹음 중지",
       "recording": "녹음 중:",
       "recordingComplete": "녹음 완료",
-      "duration": "길이",
-      "recordAgain": "다시 녹음",
-      "customVoiceNote": "현재 사용자 정의 녹음을 사용한 TTS 생성은 지원되지 않습니다. 위에서 음성을 선택해 주세요."
+      "duration": "소요 시간",
+      "recordAgain": "다시 녹음하기",
+      "customVoiceNote": "사용자 지정 음성 녹음을 통한 TTS 생성은 아직 지원되지 않습니다. 위에서 음성을 선택해 주세요.",
+      "uploading": "음성 샘플 업로드 중...",
+      "uploadSuccess": "음성 샘플 업로드 완료!",
+      "readyToGenerate": "녹음된 음성 샘플로 음성을 생성할 준비가 되었습니다.",
+      "uploadError": "음성 샘플 업로드에 실패했습니다. 다시 시도해 주세요.",
+      "uploadRateLimit": "업로드 한도에 도달했습니다. {time} 후에 다시 시도해 주세요."
     },
     "preview": {
       "title": "미리보기",
