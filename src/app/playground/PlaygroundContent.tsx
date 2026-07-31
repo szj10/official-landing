@@ -169,8 +169,8 @@ export default function PlaygroundContent() {
   const [selectedVoice, setSelectedVoice] = useState<string | null>("voice1");
   const [playingVoicePreview, setPlayingVoicePreview] = useState<string | null>(null);
 
-  // --- Collapsible custom voice recording state ---
-  const [isCustomRecordExpanded, setIsCustomRecordExpanded] = useState(false);
+  // --- Voice panel toggle: "stock" shows sample voices, "custom" shows recording ---
+  const [activeVoicePanel, setActiveVoicePanel] = useState<"stock" | "custom">("stock");
 
   // --- Recording state ---
   const [isRecording, setIsRecording] = useState(false);
@@ -369,7 +369,7 @@ export default function PlaygroundContent() {
 
         // Automatically activate custom voice selection
         setSelectedVoice(null);
-        setIsCustomRecordExpanded(true);
+        setActiveVoicePanel("custom");
 
         stream.getTracks().forEach((track) => track.stop());
 
@@ -781,85 +781,120 @@ export default function PlaygroundContent() {
               )}
             </h2>
 
-            {/* Default Stock Voices (Primary Emphasis) */}
-            <div className="mb-4">
-              <div className="flex items-center justify-between mb-3">
-                <label className="text-sm font-medium text-gray-700 dark:text-zinc-300">
-                  {t("playground.voiceSection.sampleVoices")}
-                </label>
-              </div>
-              <div className="space-y-2">
-                {PLAYGROUND_VOICES.map((voice) => (
-                  <div
-                    key={voice.id}
-                    onClick={() => {
-                      setSelectedVoice(voice.id);
-                    }}
-                    className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 cursor-pointer ${
-                      selectedVoice === voice.id && !recordedAudioBlob
-                        ? "bg-purple-500/10 border-2 border-purple-500 shadow-sm"
-                        : "bg-gray-50 dark:bg-zinc-900 border-2 border-transparent hover:border-gray-200 dark:hover:border-zinc-700"
-                    }`}
-                  >
+            {/* Sample Voices — toggles with Custom Voice panel */}
+            {activeVoicePanel === "stock" && (
+              <div className="mb-4">
+                <div className="space-y-2">
+                  {PLAYGROUND_VOICES.map((voice) => (
                     <div
-                      className={`w-10 h-10 rounded-full bg-gradient-to-br ${voice.color} flex items-center justify-center text-white font-bold text-base shrink-0 shadow-md`}
+                      key={voice.id}
+                      onClick={() => {
+                        setSelectedVoice(voice.id);
+                      }}
+                      className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 cursor-pointer ${
+                        selectedVoice === voice.id && !recordedAudioBlob
+                          ? "bg-purple-500/10 border-2 border-purple-500 shadow-sm"
+                          : "bg-gray-50 dark:bg-zinc-900 border-2 border-transparent hover:border-gray-200 dark:hover:border-zinc-700"
+                      }`}
                     >
-                      {voice.avatar}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 mb-0.5">
-                        <span className="font-semibold text-sm text-gray-900 dark:text-white truncate">
-                          {t(voice.nameKey)}
-                        </span>
-                        <span className="text-xs text-gray-400 dark:text-zinc-500">
-                          {voice.gender === "male" ? t("common.male") : t("common.female")}
-                        </span>
-                      </div>
-                      <div className="text-xs text-gray-400 dark:text-zinc-500 truncate">
-                        {t(voice.previewKey)}
-                      </div>
-                    </div>
-                    <div
-                      className="flex items-center gap-2 shrink-0"
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      <button
-                        onClick={() => handleVoicePreview(voice.id)}
-                        className="w-8 h-8 rounded-full bg-gray-200 dark:bg-zinc-700 hover:bg-gray-300 dark:hover:bg-zinc-600 flex items-center justify-center transition-colors"
-                        title={t("playground.previewVoice")}
+                      <div
+                        className={`w-10 h-10 rounded-full bg-gradient-to-br ${voice.color} flex items-center justify-center text-white font-bold text-base shrink-0 shadow-md`}
                       >
-                        {playingVoicePreview === voice.id ? (
-                          <StopIcon className="w-3.5 h-3.5 text-gray-700 dark:text-zinc-300" />
-                        ) : (
-                          <PlayIcon className="w-3.5 h-3.5 text-gray-700 dark:text-zinc-300 ml-0.5" />
-                        )}
-                      </button>
-                      <button
-                        onClick={() => {
-                          setSelectedVoice(voice.id);
-                        }}
-                        className={`w-8 h-8 rounded-full flex items-center justify-center transition-all ${
-                          selectedVoice === voice.id && !recordedAudioBlob
-                            ? "bg-purple-500 text-white shadow-sm"
-                            : "bg-gray-200 dark:bg-zinc-700 hover:bg-gray-300 dark:hover:bg-zinc-600 text-gray-700 dark:text-zinc-300"
-                        }`}
-                        title={t("playground.selectVoice")}
+                        {voice.avatar}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 mb-0.5">
+                          <span className="font-semibold text-sm text-gray-900 dark:text-white truncate">
+                            {t(voice.nameKey)}
+                          </span>
+                          <span className="text-xs text-gray-400 dark:text-zinc-500">
+                            {voice.gender === "male" ? t("common.male") : t("common.female")}
+                          </span>
+                        </div>
+                        <div className="text-xs text-gray-400 dark:text-zinc-500 truncate">
+                          {t(voice.previewKey)}
+                        </div>
+                      </div>
+                      <div
+                        className="flex items-center gap-2 shrink-0"
+                        onClick={(e) => e.stopPropagation()}
                       >
-                        <CheckIcon className="w-4 h-4" />
-                      </button>
+                        <button
+                          onClick={() => handleVoicePreview(voice.id)}
+                          className="w-8 h-8 rounded-full bg-gray-200 dark:bg-zinc-700 hover:bg-gray-300 dark:hover:bg-zinc-600 flex items-center justify-center transition-colors"
+                          title={t("playground.previewVoice")}
+                        >
+                          {playingVoicePreview === voice.id ? (
+                            <StopIcon className="w-3.5 h-3.5 text-gray-700 dark:text-zinc-300" />
+                          ) : (
+                            <PlayIcon className="w-3.5 h-3.5 text-gray-700 dark:text-zinc-300 ml-0.5" />
+                          )}
+                        </button>
+                        <button
+                          onClick={() => {
+                            setSelectedVoice(voice.id);
+                          }}
+                          className={`w-8 h-8 rounded-full flex items-center justify-center transition-all ${
+                            selectedVoice === voice.id && !recordedAudioBlob
+                              ? "bg-purple-500 text-white shadow-sm"
+                              : "bg-gray-200 dark:bg-zinc-700 hover:bg-gray-300 dark:hover:bg-zinc-600 text-gray-700 dark:text-zinc-300"
+                          }`}
+                          title={t("playground.selectVoice")}
+                        >
+                          <CheckIcon className="w-4 h-4" />
+                        </button>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
           </div>
 
-          {/* Collapsible Custom Voice Recording Section */}
-          <div className="mt-4 border-t border-gray-100 dark:border-zinc-800/80 pt-4">
+          {/* Two-panel accordion: Sample Voices ↔ Custom Voice Recording */}
+          <div className="mt-4 border-t border-gray-100 dark:border-zinc-800/80 pt-4 space-y-2">
+            {/* Sample Voices toggle button — same style as Custom Voice button */}
             <button
-              onClick={() => setIsCustomRecordExpanded(!isCustomRecordExpanded)}
+              onClick={() => setActiveVoicePanel("stock")}
               className={`w-full flex items-center justify-between p-3.5 rounded-2xl transition-all duration-200 ${
-                !selectedVoice && recordedAudioBlob
+                activeVoicePanel === "stock"
+                  ? "bg-purple-500/10 border-2 border-purple-500"
+                  : "bg-gray-50 dark:bg-zinc-900 hover:bg-gray-100 dark:hover:bg-zinc-800 border-2 border-transparent"
+              }`}
+            >
+              <div className="flex items-center gap-3 text-left">
+                <div className="w-9 h-9 rounded-full bg-gradient-to-br from-purple-500 to-indigo-500 text-white flex items-center justify-center shrink-0 shadow-md">
+                  <SpeakerIcon className="w-4 h-4" />
+                </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm font-semibold text-gray-900 dark:text-white">
+                      {t("playground.voiceSection.sampleVoices")}
+                    </span>
+                    {activeVoicePanel === "stock" && selectedVoice && !recordedAudioBlob && (
+                      <span className="px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded bg-purple-500 text-white">
+                        Active
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-xs text-gray-500 dark:text-zinc-400">
+                    {t("playground.previewVoice")}
+                  </p>
+                </div>
+              </div>
+              <ChevronIcon
+                className="w-5 h-5 text-gray-400 dark:text-zinc-500"
+                open={activeVoicePanel === "stock"}
+              />
+            </button>
+
+            {/* Custom Voice Recording toggle button */}
+            <button
+              onClick={() => {
+                setActiveVoicePanel("custom");
+              }}
+              className={`w-full flex items-center justify-between p-3.5 rounded-2xl transition-all duration-200 ${
+                activeVoicePanel === "custom"
                   ? "bg-purple-500/10 border-2 border-purple-500"
                   : "bg-gray-50 dark:bg-zinc-900 hover:bg-gray-100 dark:hover:bg-zinc-800 border-2 border-transparent"
               }`}
@@ -886,12 +921,12 @@ export default function PlaygroundContent() {
               </div>
               <ChevronIcon
                 className="w-5 h-5 text-gray-400 dark:text-zinc-500"
-                open={isCustomRecordExpanded}
+                open={activeVoicePanel === "custom"}
               />
             </button>
 
             {/* Expanded Custom Voice Studio */}
-            {isCustomRecordExpanded && (
+            {activeVoicePanel === "custom" && (
               <div className="mt-3 p-4 rounded-2xl bg-gray-50 dark:bg-zinc-900/90 border border-gray-200/80 dark:border-zinc-800 space-y-3">
                 {/* 10s-15s Reading Prompt Guide Text */}
                 <div className="p-3.5 rounded-xl bg-indigo-50/70 dark:bg-indigo-950/40 border border-indigo-100 dark:border-indigo-900/60">
