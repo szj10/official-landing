@@ -127,6 +127,19 @@ function DownloadIcon({ className }: { className?: string }) {
   );
 }
 
+function ChevronIcon({ className, open }: { className?: string; open?: boolean }) {
+  return (
+    <svg
+      className={`${className} transform transition-transform duration-200 ${open ? "rotate-180" : ""}`}
+      fill="none"
+      stroke="currentColor"
+      viewBox="0 0 24 24"
+    >
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+    </svg>
+  );
+}
+
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
@@ -153,8 +166,11 @@ export default function PlaygroundContent() {
   const [selectedSampleText, setSelectedSampleText] = useState<string | null>(null);
 
   // --- Voice state ---
-  const [selectedVoice, setSelectedVoice] = useState<string | null>(null);
+  const [selectedVoice, setSelectedVoice] = useState<string | null>("voice1");
   const [playingVoicePreview, setPlayingVoicePreview] = useState<string | null>(null);
+
+  // --- Collapsible custom voice recording state ---
+  const [isCustomRecordExpanded, setIsCustomRecordExpanded] = useState(false);
 
   // --- Recording state ---
   const [isRecording, setIsRecording] = useState(false);
@@ -165,6 +181,13 @@ export default function PlaygroundContent() {
   );
   const [anonymousVoiceId, setAnonymousVoiceId] = useState<number | null>(null);
   const [uploadError, setUploadError] = useState<string | null>(null);
+
+  // --- Recorded voice preview & playback state ---
+  const [recordedAudioUrl, setRecordedAudioUrl] = useState<string | null>(null);
+  const [isRecPlaying, setIsRecPlaying] = useState(false);
+  const [recAudioProgress, setRecAudioProgress] = useState(0);
+  const [recAudioCurrentTime, setRecAudioCurrentTime] = useState(0);
+  const [recAudioDuration, setRecAudioDuration] = useState(0);
 
   // --- Generation state ---
   const [isGenerating, setIsGenerating] = useState(false);
@@ -182,6 +205,7 @@ export default function PlaygroundContent() {
 
   // --- Refs ---
   const audioRef = useRef<HTMLAudioElement>(null);
+  const recAudioRef = useRef<HTMLAudioElement | null>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
   const recordingIntervalRef = useRef<NodeJS.Timeout | null>(null);
@@ -193,10 +217,42 @@ export default function PlaygroundContent() {
     return () => {
       if (recordingIntervalRef.current) clearInterval(recordingIntervalRef.current);
       if (eventSourceRef.current) eventSourceRef.current.close();
+      if (recordedAudioUrl) URL.revokeObjectURL(recordedAudioUrl);
     };
-  }, []);
+  }, [recordedAudioUrl]);
 
-  // Audio progress tracking
+  // Track recorded audio playback progress
+  useEffect(() => {
+    const audio = recAudioRef.current;
+    if (!audio) return;
+
+    const handleTimeUpdate = () => {
+      if (audio.duration) {
+        setRecAudioProgress((audio.currentTime / audio.duration) * 100);
+        setRecAudioCurrentTime(audio.currentTime);
+        setRecAudioDuration(audio.duration);
+      }
+    };
+    const handleEnded = () => {
+      setIsRecPlaying(false);
+      setRecAudioProgress(0);
+      setRecAudioCurrentTime(0);
+    };
+    const handleLoadedMetadata = () => {
+      if (audio.duration) setRecAudioDuration(audio.duration);
+    };
+
+    audio.addEventListener("timeupdate", handleTimeUpdate);
+    audio.addEventListener("ended", handleEnded);
+    audio.addEventListener("loadedmetadata", handleLoadedMetadata);
+    return () => {
+      audio.removeEventListener("timeupdate", handleTimeUpdate);
+      audio.removeEventListener("ended", handleEnded);
+      audio.removeEventListener("loadedmetadata", handleLoadedMetadata);
+    };
+  }, [recordedAudioUrl]);
+
+  // Generated audio progress tracking
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
@@ -220,6 +276,30 @@ export default function PlaygroundContent() {
       audio.removeEventListener("ended", handleEnded);
     };
   }, [audioUrl]);
+
+  // ---------------------------------------------------------------------------
+  // Recorded Voice Playback Toggle & Seek
+  // ---------------------------------------------------------------------------
+  const toggleRecPlayback = () => {
+    if (!recAudioRef.current) return;
+    if (isRecPlaying) {
+      recAudioRef.current.pause();
+      setIsRecPlaying(false);
+    } else {
+      recAudioRef.current
+        .play()
+        .then(() => setIsRecPlaying(true))
+        .catch(() => setIsRecPlaying(false));
+    }
+  };
+
+  const handleRecSeek = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!recAudioRef.current || !recAudioRef.current.duration) return;
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const pct = x / rect.width;
+    recAudioRef.current.currentTime = pct * recAudioRef.current.duration;
+  };
 
   // ---------------------------------------------------------------------------
   // Sample text selection
@@ -279,9 +359,33 @@ export default function PlaygroundContent() {
       mediaRecorder.onstop = async () => {
         const audioBlob = new Blob(audioChunksRef.current, { type: "audio/webm" });
         setRecordedAudioBlob(audioBlob);
+
+        // Create playable Blob URL
+        const blobUrl = URL.createObjectURL(audioBlob);
+        setRecordedAudioUrl((prev) => {
+          if (prev) URL.revokeObjectURL(prev);
+          return blobUrl;
+        });
+
+        // Automatically activate custom voice selection
+        setSelectedVoice(null);
+        setIsCustomRecordExpanded(true);
+
         stream.getTracks().forEach((track) => track.stop());
-        // Immediately upload the recording to the backend
+
+        // Upload recording to backend
         await uploadRecordingToBackend(audioBlob);
+
+        // Auto playback recorded voice
+        setTimeout(() => {
+          if (recAudioRef.current) {
+            recAudioRef.current.currentTime = 0;
+            recAudioRef.current
+              .play()
+              .then(() => setIsRecPlaying(true))
+              .catch((err) => console.warn("Auto-playback skipped:", err));
+          }
+        }, 250);
       };
 
       mediaRecorder.start();
@@ -304,7 +408,6 @@ export default function PlaygroundContent() {
       if (recordingIntervalRef.current) {
         clearInterval(recordingIntervalRef.current);
       }
-      // onstop handler fires asynchronously; upload is triggered there
     }
   };
 
@@ -319,7 +422,7 @@ export default function PlaygroundContent() {
     try {
       const formData = new FormData();
       formData.append("file", blob, "recording.webm");
-      formData.append("language", locale); // locale is already the shorthand code
+      formData.append("language", locale);
 
       const res = await fetch("/api/v1/playground/upload-voice-prompt", {
         method: "POST",
@@ -363,20 +466,15 @@ export default function PlaygroundContent() {
   // ---------------------------------------------------------------------------
   const handleGenerate = async () => {
     const text = textInput.trim();
-    // Allow generation either with a selected community voice or an uploaded recording
     const hasVoice = !!selectedVoice && !recordedAudioBlob;
     const hasRecording =
       !!recordedAudioBlob && uploadStatus === "success" && anonymousVoiceId !== null;
     if (!text || (!hasVoice && !hasRecording)) return;
 
-    // Determine the language to send:
-    //  - community voice: language from voice config
-    //  - recording: current UI locale (matches backend shorthand)
     const voice = hasVoice ? PLAYGROUND_VOICES.find((v) => v.id === selectedVoice) : null;
     if (hasVoice && !voice) return;
     const language = hasVoice ? voice!.language : locale;
 
-    // Reset state
     setIsGenerating(true);
     setGenerationStatus(null);
     setAudioUrl(null);
@@ -387,14 +485,12 @@ export default function PlaygroundContent() {
     setIsPlaying(false);
     setAudioProgress(0);
 
-    // Close any existing SSE stream
     if (eventSourceRef.current) {
       eventSourceRef.current.close();
       eventSourceRef.current = null;
     }
 
     try {
-      // Step 1: Create playground TTS job
       const requestBody = hasVoice
         ? { text, voice_id: voice!.backendVoiceId, language }
         : { text, anonymous_voice_id: anonymousVoiceId, language };
@@ -426,7 +522,6 @@ export default function PlaygroundContent() {
 
       const job: TTSJobResponse = await res.json();
 
-      // If it's a cached completed result, resolve immediately
       if (job.status === "completed" && job.audio_path) {
         const resolvedUrl = resolveAudioUrl(job.audio_path);
         setAudioUrl(resolvedUrl);
@@ -437,7 +532,6 @@ export default function PlaygroundContent() {
         return;
       }
 
-      // Step 2: Open SSE stream for real-time updates
       setGenerationStatus(job.status);
       listenToSSEStream(
         job.job_id,
@@ -451,31 +545,14 @@ export default function PlaygroundContent() {
     }
   };
 
-  /**
-   * Resolve audio_path from backend into a playable URL.
-   * The backend stores a MinIO/S3 path. We proxy through Next.js rewrites
-   * to the backend's presigned URL endpoint (or serve directly if the backend
-   * returns full URLs). For now, route through /api/v1/playground/audio/:path*.
-   *
-   * NOTE: If the backend provides a full URL in audio_path, use it directly.
-   * Otherwise, strip and build the proxied path.
-   */
   function resolveAudioUrl(audioPath: string): string {
-    // If already a full URL, use directly
     if (audioPath.startsWith("http://") || audioPath.startsWith("https://")) {
       return audioPath;
     }
-    // Proxy through Next.js rewrite to backend storage
     return `/api/v1/playground/audio/${audioPath}`;
   }
 
-  /**
-   * Open an EventSource (SSE) to the backend stream URL and update state
-   * as job status changes until a terminal state is reached.
-   */
   function listenToSSEStream(jobId: string, streamUrl: string) {
-    // streamUrl from backend is like /api/v1/playground/tts/{job_id}/stream
-    // which is already proxied by Next.js rewrites
     const es = new EventSource(streamUrl);
     eventSourceRef.current = es;
 
@@ -515,7 +592,6 @@ export default function PlaygroundContent() {
       es.close();
       eventSourceRef.current = null;
 
-      // If still generating and no audio, mark as failed
       setIsGenerating((prev) => {
         if (prev) {
           setGenerationStatus((status) => {
@@ -611,277 +687,375 @@ export default function PlaygroundContent() {
         </p>
       </div>
 
-      <div className="grid lg:grid-cols-2 gap-8">
+      <div className="grid lg:grid-cols-2 gap-8 items-start">
         {/* === Text Input Panel === */}
-        <div className="glass-panel rounded-3xl p-8 shadow-sm flex flex-col">
-          <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
-            <svg
-              className="w-5 h-5 text-indigo-500"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-              />
-            </svg>
-            {t("playground.textSection.title")}
-          </h2>
-
-          {/* Sample text presets */}
-          <div className="mb-6">
-            <label className="block text-sm font-medium text-gray-700 dark:text-zinc-300 mb-3">
-              {t("playground.textSection.sampleTexts")}
-            </label>
-            <div className="space-y-2">
-              {SAMPLE_TEXTS.map((sample) => (
-                <button
-                  key={sample.id}
-                  onClick={() => handleSampleTextSelect(sample.id)}
-                  className={`w-full text-left px-4 py-3 rounded-xl transition-all duration-200 ${
-                    selectedSampleText === sample.id
-                      ? "bg-indigo-500/10 border-2 border-indigo-500 text-indigo-700 dark:text-indigo-300"
-                      : "bg-gray-50 dark:bg-zinc-900 border-2 border-transparent hover:border-gray-200 dark:hover:border-zinc-700 text-gray-700 dark:text-zinc-300"
-                  }`}
-                >
-                  <div className="text-xs opacity-70 line-clamp-2">{t(sample.textKey)}</div>
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Custom text */}
-          <div className="flex-1">
-            <label className="block text-sm font-medium text-gray-700 dark:text-zinc-300 mb-3">
-              {t("playground.textSection.customText")}
-            </label>
-            <textarea
-              value={textInput}
-              onChange={(e) => {
-                setTextInput(e.target.value);
-                setSelectedSampleText(null);
-              }}
-              placeholder={t("playground.textSection.placeholder")}
-              rows={5}
-              className="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-zinc-900 border-2 border-gray-200 dark:border-zinc-700 focus:border-indigo-500 dark:focus:border-indigo-500 focus:outline-none transition-colors text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-zinc-500 resize-none text-sm"
-            />
-            <div className="mt-2 flex items-center justify-between text-xs text-gray-500 dark:text-zinc-400">
-              <span>
-                {textInput.trim().split(/\s+/).filter(Boolean).length}{" "}
-                {t("playground.textSection.words")} / {textInput.length}{" "}
-                {t("playground.textSection.characters")}
-              </span>
-              <span
-                className={
-                  textInput.trim().split(/\s+/).filter(Boolean).length > 200
-                    ? "text-red-500 font-semibold"
-                    : ""
-                }
+        <div className="glass-panel rounded-3xl p-8 shadow-sm flex flex-col justify-between h-full">
+          <div>
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
+              <svg
+                className="w-5 h-5 text-indigo-500"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
               >
-                {t("playground.textSection.maxWords")}
-              </span>
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                />
+              </svg>
+              {t("playground.textSection.title")}
+            </h2>
+
+            {/* Sample text presets */}
+            <div className="mb-6">
+              <label className="block text-sm font-medium text-gray-700 dark:text-zinc-300 mb-3">
+                {t("playground.textSection.sampleTexts")}
+              </label>
+              <div className="space-y-2">
+                {SAMPLE_TEXTS.map((sample) => (
+                  <button
+                    key={sample.id}
+                    onClick={() => handleSampleTextSelect(sample.id)}
+                    className={`w-full text-left px-4 py-3 rounded-xl transition-all duration-200 ${
+                      selectedSampleText === sample.id
+                        ? "bg-indigo-500/10 border-2 border-indigo-500 text-indigo-700 dark:text-indigo-300 font-medium"
+                        : "bg-gray-50 dark:bg-zinc-900 border-2 border-transparent hover:border-gray-200 dark:hover:border-zinc-700 text-gray-700 dark:text-zinc-300"
+                    }`}
+                  >
+                    <div className="text-xs opacity-80 line-clamp-2">{t(sample.textKey)}</div>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Custom text */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-zinc-300 mb-3">
+                {t("playground.textSection.customText")}
+              </label>
+              <textarea
+                value={textInput}
+                onChange={(e) => {
+                  setTextInput(e.target.value);
+                  setSelectedSampleText(null);
+                }}
+                placeholder={t("playground.textSection.placeholder")}
+                rows={5}
+                className="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-zinc-900 border-2 border-gray-200 dark:border-zinc-700 focus:border-indigo-500 dark:focus:border-indigo-500 focus:outline-none transition-colors text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-zinc-500 resize-none text-sm"
+              />
+              <div className="mt-2 flex items-center justify-between text-xs text-gray-500 dark:text-zinc-400">
+                <span>
+                  {textInput.trim().split(/\s+/).filter(Boolean).length}{" "}
+                  {t("playground.textSection.words")} / {textInput.length}{" "}
+                  {t("playground.textSection.characters")}
+                </span>
+                <span
+                  className={
+                    textInput.trim().split(/\s+/).filter(Boolean).length > 200
+                      ? "text-red-500 font-semibold"
+                      : ""
+                  }
+                >
+                  {t("playground.textSection.maxWords")}
+                </span>
+              </div>
             </div>
           </div>
         </div>
 
         {/* === Voice Selection Panel === */}
-        <div className="glass-panel rounded-3xl p-8 shadow-sm flex flex-col">
-          <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
-            <SpeakerIcon className="w-5 h-5 text-purple-500" />
-            {t("playground.voiceSection.title")}
-          </h2>
+        <div className="glass-panel rounded-3xl p-8 shadow-sm flex flex-col justify-between h-full">
+          <div>
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6 flex items-center justify-between">
+              <span className="flex items-center gap-2">
+                <SpeakerIcon className="w-5 h-5 text-purple-500" />
+                {t("playground.voiceSection.title")}
+              </span>
+              {recordedAudioBlob && uploadStatus === "success" && !selectedVoice && (
+                <span className="text-xs px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-medium flex items-center gap-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                  {t("playground.voiceSection.customVoiceActive")}
+                </span>
+              )}
+            </h2>
 
-          {/* Sample voices */}
-          <div className="mb-6 flex-1">
-            <label className="block text-sm font-medium text-gray-700 dark:text-zinc-300 mb-3">
-              {t("playground.voiceSection.sampleVoices")}
-            </label>
-            <div className="space-y-2">
-              {PLAYGROUND_VOICES.map((voice) => (
-                <div
-                  key={voice.id}
-                  className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${
-                    selectedVoice === voice.id && !recordedAudioBlob
-                      ? "bg-purple-500/10 border-2 border-purple-500"
-                      : "bg-gray-50 dark:bg-zinc-900 border-2 border-transparent hover:border-gray-200 dark:hover:border-zinc-700"
-                  }`}
-                >
+            {/* Default Stock Voices (Primary Emphasis) */}
+            <div className="mb-4">
+              <div className="flex items-center justify-between mb-3">
+                <label className="text-sm font-medium text-gray-700 dark:text-zinc-300">
+                  {t("playground.voiceSection.sampleVoices")}
+                </label>
+              </div>
+              <div className="space-y-2">
+                {PLAYGROUND_VOICES.map((voice) => (
                   <div
-                    className={`w-12 h-12 rounded-full bg-gradient-to-br ${voice.color} flex items-center justify-center text-white font-bold text-lg shrink-0 shadow-lg`}
+                    key={voice.id}
+                    onClick={() => {
+                      setSelectedVoice(voice.id);
+                    }}
+                    className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 cursor-pointer ${
+                      selectedVoice === voice.id && !recordedAudioBlob
+                        ? "bg-purple-500/10 border-2 border-purple-500 shadow-sm"
+                        : "bg-gray-50 dark:bg-zinc-900 border-2 border-transparent hover:border-gray-200 dark:hover:border-zinc-700"
+                    }`}
                   >
-                    {voice.avatar}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-0.5">
-                      <span className="font-semibold text-sm text-gray-900 dark:text-white">
-                        {t(voice.nameKey)}
-                      </span>
-                      <span className="text-xs text-gray-500 dark:text-zinc-400">
-                        {voice.gender === "male" ? t("common.male") : t("common.female")}
-                      </span>
-                    </div>
-                    <div className="text-xs text-gray-400 dark:text-zinc-500 truncate">
-                      {t(voice.previewKey)}
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2 shrink-0">
-                    {/* Preview button — plays local audio file */}
-                    <button
-                      onClick={() => handleVoicePreview(voice.id)}
-                      className="w-8 h-8 rounded-full bg-gray-200 dark:bg-zinc-700 hover:bg-gray-300 dark:hover:bg-zinc-600 flex items-center justify-center transition-colors"
-                      title={t("playground.previewVoice")}
+                    <div
+                      className={`w-10 h-10 rounded-full bg-gradient-to-br ${voice.color} flex items-center justify-center text-white font-bold text-base shrink-0 shadow-md`}
                     >
-                      {playingVoicePreview === voice.id ? (
-                        <StopIcon className="w-3.5 h-3.5 text-gray-700 dark:text-zinc-300" />
-                      ) : (
-                        <PlayIcon className="w-3.5 h-3.5 text-gray-700 dark:text-zinc-300 ml-0.5" />
-                      )}
-                    </button>
-                    {/* Select button */}
-                    <button
-                      onClick={() => {
-                        setSelectedVoice(voice.id);
-                        setRecordedAudioBlob(null);
-                      }}
-                      className={`w-8 h-8 rounded-full flex items-center justify-center transition-all ${
-                        selectedVoice === voice.id && !recordedAudioBlob
-                          ? "bg-purple-500 text-white"
-                          : "bg-gray-200 dark:bg-zinc-700 hover:bg-gray-300 dark:hover:bg-zinc-600 text-gray-700 dark:text-zinc-300"
-                      }`}
-                      title={t("playground.selectVoice")}
+                      {voice.avatar}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 mb-0.5">
+                        <span className="font-semibold text-sm text-gray-900 dark:text-white truncate">
+                          {t(voice.nameKey)}
+                        </span>
+                        <span className="text-xs text-gray-400 dark:text-zinc-500">
+                          {voice.gender === "male" ? t("common.male") : t("common.female")}
+                        </span>
+                      </div>
+                      <div className="text-xs text-gray-400 dark:text-zinc-500 truncate">
+                        {t(voice.previewKey)}
+                      </div>
+                    </div>
+                    <div
+                      className="flex items-center gap-2 shrink-0"
+                      onClick={(e) => e.stopPropagation()}
                     >
-                      <CheckIcon className="w-4 h-4" />
-                    </button>
+                      <button
+                        onClick={() => handleVoicePreview(voice.id)}
+                        className="w-8 h-8 rounded-full bg-gray-200 dark:bg-zinc-700 hover:bg-gray-300 dark:hover:bg-zinc-600 flex items-center justify-center transition-colors"
+                        title={t("playground.previewVoice")}
+                      >
+                        {playingVoicePreview === voice.id ? (
+                          <StopIcon className="w-3.5 h-3.5 text-gray-700 dark:text-zinc-300" />
+                        ) : (
+                          <PlayIcon className="w-3.5 h-3.5 text-gray-700 dark:text-zinc-300 ml-0.5" />
+                        )}
+                      </button>
+                      <button
+                        onClick={() => {
+                          setSelectedVoice(voice.id);
+                        }}
+                        className={`w-8 h-8 rounded-full flex items-center justify-center transition-all ${
+                          selectedVoice === voice.id && !recordedAudioBlob
+                            ? "bg-purple-500 text-white shadow-sm"
+                            : "bg-gray-200 dark:bg-zinc-700 hover:bg-gray-300 dark:hover:bg-zinc-600 text-gray-700 dark:text-zinc-300"
+                        }`}
+                        title={t("playground.selectVoice")}
+                      >
+                        <CheckIcon className="w-4 h-4" />
+                      </button>
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           </div>
 
-          {/* Mic recording section */}
-          <div className="flex-1">
-            <label className="block text-sm font-medium text-gray-700 dark:text-zinc-300 mb-3">
-              {t("playground.voiceSection.recordCustom")}
-            </label>
-            <div className="rounded-xl bg-gray-50 dark:bg-zinc-900 border-2 border-dashed border-gray-300 dark:border-zinc-700 p-6">
-              {recordedAudioBlob ? (
-                <div className="text-center">
-                  {uploadStatus === "uploading" && (
-                    <>
-                      <div className="w-16 h-16 rounded-full bg-gradient-to-br from-indigo-400 to-purple-400 flex items-center justify-center mx-auto mb-3 shadow-lg">
-                        <svg
-                          className="animate-spin w-8 h-8 text-white"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                        >
-                          <circle
-                            className="opacity-25"
-                            cx="12"
-                            cy="12"
-                            r="10"
-                            stroke="currentColor"
-                            strokeWidth="4"
-                          />
-                          <path
-                            className="opacity-75"
-                            fill="currentColor"
-                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                          />
-                        </svg>
-                      </div>
-                      <p className="text-sm font-medium text-gray-700 dark:text-zinc-300 mb-1">
-                        {t("playground.voiceSection.uploading")}
-                      </p>
-                      <p className="text-xs text-gray-400 dark:text-zinc-500">
-                        {formatTime(recordingTime)} {t("playground.voiceSection.duration")}
-                      </p>
-                    </>
-                  )}
-
-                  {uploadStatus === "success" && (
-                    <>
-                      <div className="w-16 h-16 rounded-full bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center mx-auto mb-3 shadow-lg">
-                        <CheckIcon className="w-8 h-8 text-white" />
-                      </div>
-                      <p className="text-sm font-medium text-gray-900 dark:text-white mb-1">
-                        {t("playground.voiceSection.uploadSuccess")}
-                      </p>
-                      <p className="text-xs text-gray-500 dark:text-zinc-400 mb-3">
-                        {formatTime(recordingTime)} {t("playground.voiceSection.duration")}
-                      </p>
-                      <p className="text-xs text-emerald-600 dark:text-emerald-400 mb-3">
-                        {t("playground.voiceSection.readyToGenerate")}
-                      </p>
-                    </>
-                  )}
-
-                  {uploadStatus === "error" && (
-                    <>
-                      <div className="w-16 h-16 rounded-full bg-gradient-to-br from-red-500 to-rose-500 flex items-center justify-center mx-auto mb-3 shadow-lg">
-                        <AlertIcon className="w-8 h-8 text-white" />
-                      </div>
-                      <p className="text-sm font-medium text-red-700 dark:text-red-400 mb-1">
-                        {uploadError ?? t("playground.voiceSection.uploadError")}
-                      </p>
-                    </>
-                  )}
-
-                  <button
-                    onClick={() => {
-                      setRecordedAudioBlob(null);
-                      setRecordingTime(0);
-                      setSelectedVoice(null);
-                      setUploadStatus("idle");
-                      setAnonymousVoiceId(null);
-                      setUploadError(null);
-                    }}
-                    className="text-xs text-indigo-600 dark:text-indigo-400 hover:underline mt-1"
-                  >
-                    {t("playground.voiceSection.recordAgain")}
-                  </button>
+          {/* Collapsible Custom Voice Recording Section */}
+          <div className="mt-4 border-t border-gray-100 dark:border-zinc-800/80 pt-4">
+            <button
+              onClick={() => setIsCustomRecordExpanded(!isCustomRecordExpanded)}
+              className={`w-full flex items-center justify-between p-3.5 rounded-2xl transition-all duration-200 ${
+                !selectedVoice && recordedAudioBlob
+                  ? "bg-purple-500/10 border-2 border-purple-500"
+                  : "bg-gray-50 dark:bg-zinc-900 hover:bg-gray-100 dark:hover:bg-zinc-800 border-2 border-transparent"
+              }`}
+            >
+              <div className="flex items-center gap-3 text-left">
+                <div className="w-9 h-9 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 text-white flex items-center justify-center shrink-0 shadow-md">
+                  <MicIcon className="w-4 h-4" />
                 </div>
-              ) : (
-                <div className="text-center">
-                  {isRecording ? (
-                    <>
-                      <div className="w-16 h-16 rounded-full bg-gradient-to-br from-red-500 to-pink-500 flex items-center justify-center mx-auto mb-3 shadow-lg animate-pulse">
-                        <MicIcon className="w-8 h-8 text-white" />
-                      </div>
-                      <p className="text-sm font-medium text-gray-900 dark:text-white mb-2">
-                        {t("playground.voiceSection.recording")} {formatTime(recordingTime)}
-                      </p>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm font-semibold text-gray-900 dark:text-white">
+                      {t("playground.voiceSection.recordCustom")}
+                    </span>
+                    {!selectedVoice && recordedAudioBlob && uploadStatus === "success" && (
+                      <span className="px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded bg-purple-500 text-white">
+                        Active
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-xs text-gray-500 dark:text-zinc-400">
+                    {t("playground.voiceSection.recordCustomSubtitle")}
+                  </p>
+                </div>
+              </div>
+              <ChevronIcon
+                className="w-5 h-5 text-gray-400 dark:text-zinc-500"
+                open={isCustomRecordExpanded}
+              />
+            </button>
+
+            {/* Expanded Custom Voice Studio */}
+            {isCustomRecordExpanded && (
+              <div className="mt-3 p-4 rounded-2xl bg-gray-50 dark:bg-zinc-900/90 border border-gray-200/80 dark:border-zinc-800 space-y-3">
+                {/* 10s-15s Reading Prompt Guide Text */}
+                <div className="p-3.5 rounded-xl bg-indigo-50/70 dark:bg-indigo-950/40 border border-indigo-100 dark:border-indigo-900/60">
+                  <div className="flex items-center gap-1.5 mb-1 text-xs font-semibold text-indigo-700 dark:text-indigo-300">
+                    <svg
+                      className="w-3.5 h-3.5 text-indigo-500"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01.469-1.57m0 0a3 3 0 01-1.469-1.57m0 0L9 7m4.469 4.43a3 3 0 01.469 1.57m0 0a3 3 0 01-1.469 1.57m0 0l.469.43m0 0L15 17"
+                      />
+                    </svg>
+                    <span>{t("playground.voiceSection.promptGuideTitle")}</span>
+                  </div>
+                  <p className="text-xs text-gray-800 dark:text-zinc-200 italic leading-relaxed font-medium">
+                    &quot;{t("playground.voiceSection.promptGuideText")}&quot;
+                  </p>
+                </div>
+
+                {/* Recording / Playback Container */}
+                <div className="rounded-xl border-2 border-dashed border-gray-300 dark:border-zinc-700 p-4 bg-white dark:bg-zinc-950/50">
+                  {recordedAudioBlob ? (
+                    <div className="space-y-3 text-center">
+                      {/* Audio Playback Controls for Recorded Voice */}
+                      {recordedAudioUrl && (
+                        <div className="p-3 rounded-xl bg-gray-50 dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 flex items-center gap-3 text-left">
+                          <button
+                            onClick={toggleRecPlayback}
+                            className="w-9 h-9 rounded-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white flex items-center justify-center shrink-0 shadow-md transition-transform active:scale-95"
+                            title={
+                              isRecPlaying
+                                ? t("playground.voiceSection.stopRecorded")
+                                : t("playground.voiceSection.playRecorded")
+                            }
+                          >
+                            {isRecPlaying ? (
+                              <PauseIcon className="w-4 h-4" />
+                            ) : (
+                              <PlayIcon className="w-4 h-4 ml-0.5" />
+                            )}
+                          </button>
+                          <div className="flex-1 min-w-0">
+                            <audio ref={recAudioRef} src={recordedAudioUrl} className="hidden" />
+                            <div className="flex items-center justify-between text-xs font-medium text-gray-700 dark:text-zinc-300 mb-1">
+                              <span>{t("playground.voiceSection.recordedPreview")}</span>
+                              <span className="text-[11px] text-gray-400 font-mono">
+                                {formatTime(Math.floor(recAudioCurrentTime))} /{" "}
+                                {formatTime(Math.floor(recAudioDuration || recordingTime))}
+                              </span>
+                            </div>
+                            <div
+                              className="h-1.5 bg-gray-200 dark:bg-zinc-700 rounded-full overflow-hidden cursor-pointer"
+                              onClick={handleRecSeek}
+                            >
+                              <div
+                                className="h-full bg-gradient-to-r from-indigo-500 to-purple-500 transition-all duration-150"
+                                style={{ width: `${recAudioProgress}%` }}
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Backend Upload Status */}
+                      {uploadStatus === "uploading" && (
+                        <div className="flex items-center justify-center gap-2 text-xs text-indigo-600 dark:text-indigo-400 font-medium">
+                          <svg className="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
+                            <circle
+                              className="opacity-25"
+                              cx="12"
+                              cy="12"
+                              r="10"
+                              stroke="currentColor"
+                              strokeWidth="4"
+                            />
+                            <path
+                              className="opacity-75"
+                              fill="currentColor"
+                              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                            />
+                          </svg>
+                          <span>{t("playground.voiceSection.uploading")}</span>
+                        </div>
+                      )}
+
+                      {uploadStatus === "success" && (
+                        <div className="flex items-center justify-center gap-1.5 text-xs text-emerald-600 dark:text-emerald-400 font-medium">
+                          <CheckIcon className="w-4 h-4" />
+                          <span>{t("playground.voiceSection.uploadSuccess")}</span>
+                        </div>
+                      )}
+
+                      {uploadStatus === "error" && (
+                        <div className="flex items-center justify-center gap-1.5 text-xs text-red-600 dark:text-red-400 font-medium">
+                          <AlertIcon className="w-4 h-4" />
+                          <span>{uploadError ?? t("playground.voiceSection.uploadError")}</span>
+                        </div>
+                      )}
+
+                      {/* Re-record button */}
                       <button
-                        onClick={stopRecording}
-                        className="mt-2 px-4 py-2 rounded-lg bg-red-500 hover:bg-red-600 text-white text-xs font-medium transition-colors"
+                        onClick={() => {
+                          if (recAudioRef.current) recAudioRef.current.pause();
+                          setIsRecPlaying(false);
+                          setRecordedAudioBlob(null);
+                          setRecordedAudioUrl(null);
+                          setRecordingTime(0);
+                          setSelectedVoice("voice1");
+                          setUploadStatus("idle");
+                          setAnonymousVoiceId(null);
+                          setUploadError(null);
+                        }}
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gray-100 dark:bg-zinc-800 hover:bg-gray-200 dark:hover:bg-zinc-700 text-xs font-medium text-gray-700 dark:text-zinc-300 transition-colors"
                       >
-                        {t("playground.voiceSection.stopRecording")}
+                        <MicIcon className="w-3.5 h-3.5" />
+                        <span>{t("playground.voiceSection.recordAgain")}</span>
                       </button>
-                    </>
+                    </div>
                   ) : (
-                    <>
-                      <div className="w-16 h-16 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center mx-auto mb-3 shadow-lg">
-                        <MicIcon className="w-8 h-8 text-white" />
-                      </div>
-                      <p className="text-sm font-medium text-gray-700 dark:text-zinc-300 mb-2">
-                        {t("playground.voiceSection.recordYourVoice")}
-                      </p>
-                      <p className="text-xs text-gray-500 dark:text-zinc-400 mb-3">
-                        {t("playground.voiceSection.recordHint")}
-                      </p>
-                      <button
-                        onClick={startRecording}
-                        className="px-4 py-2 rounded-lg bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white text-xs font-medium transition-all shadow-md"
-                      >
-                        {t("playground.voiceSection.startRecording")}
-                      </button>
-                    </>
+                    <div className="text-center py-1">
+                      {isRecording ? (
+                        <>
+                          <div className="w-12 h-12 rounded-full bg-gradient-to-br from-red-500 to-pink-500 flex items-center justify-center mx-auto mb-2 shadow-lg animate-pulse">
+                            <MicIcon className="w-6 h-6 text-white" />
+                          </div>
+                          <p className="text-xs font-bold text-red-600 dark:text-red-400 mb-1">
+                            {t("playground.voiceSection.recording")} {formatTime(recordingTime)}
+                          </p>
+                          <p className="text-[11px] text-gray-500 dark:text-zinc-400 mb-2">
+                            {t("playground.voiceSection.promptGuideTitle")}
+                          </p>
+                          <button
+                            onClick={stopRecording}
+                            className="px-4 py-1.5 rounded-lg bg-red-500 hover:bg-red-600 text-white text-xs font-bold transition-colors shadow-md active:scale-95"
+                          >
+                            {t("playground.voiceSection.stopRecording")}
+                          </button>
+                        </>
+                      ) : (
+                        <>
+                          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center mx-auto mb-2 shadow-md">
+                            <MicIcon className="w-5 h-5 text-white" />
+                          </div>
+                          <p className="text-xs font-medium text-gray-600 dark:text-zinc-400 mb-2">
+                            {t("playground.voiceSection.recordHint")}
+                          </p>
+                          <button
+                            onClick={startRecording}
+                            className="px-4 py-1.5 rounded-lg bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white text-xs font-semibold transition-all shadow-md active:scale-95"
+                          >
+                            {t("playground.voiceSection.startRecording")}
+                          </button>
+                        </>
+                      )}
+                    </div>
                   )}
                 </div>
-              )}
-            </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
