@@ -11,7 +11,6 @@
  *                     (copy the wav from MinIO to /public/audio_prompts/<filename>)
  *   - nameKey       : i18n translation key for the display name
  *   - genderKey     : i18n translation key for gender label
- *   - accentKey     : i18n translation key for accent/style label
  *   - previewKey    : i18n translation key for short description
  *   - color         : Tailwind gradient classes for the avatar circle
  *   - avatar        : Single letter shown inside the avatar circle
@@ -30,7 +29,6 @@ export interface PlaygroundVoice {
   localAudioFile: string;
   nameKey: string;
   genderKey: string;
-  accentKey: string;
   previewKey: string;
   color: string;
   avatar: string;
@@ -48,7 +46,6 @@ export const PLAYGROUND_VOICES: PlaygroundVoice[] = [
     localAudioFile: "/audio_prompts/lakesys.wav",
     nameKey: "playground.sampleVoices.voice1.name",
     genderKey: "playground.sampleVoices.voice1.gender",
-    accentKey: "playground.sampleVoices.voice1.accent",
     previewKey: "playground.sampleVoices.voice1.preview",
     color: "from-pink-500 to-rose-500",
     avatar: "L",
@@ -61,7 +58,6 @@ export const PLAYGROUND_VOICES: PlaygroundVoice[] = [
     localAudioFile: "/audio_prompts/hef.wav",
     nameKey: "playground.sampleVoices.voice2.name",
     genderKey: "playground.sampleVoices.voice2.gender",
-    accentKey: "playground.sampleVoices.voice2.accent",
     previewKey: "playground.sampleVoices.voice2.preview",
     color: "from-blue-500 to-indigo-500",
     avatar: "H",
@@ -74,7 +70,6 @@ export const PLAYGROUND_VOICES: PlaygroundVoice[] = [
     localAudioFile: "/audio_prompts/andhelo.wav",
     nameKey: "playground.sampleVoices.voice3.name",
     genderKey: "playground.sampleVoices.voice3.gender",
-    accentKey: "playground.sampleVoices.voice3.accent",
     previewKey: "playground.sampleVoices.voice3.preview",
     color: "from-purple-500 to-violet-500",
     avatar: "A",
@@ -87,7 +82,6 @@ export const PLAYGROUND_VOICES: PlaygroundVoice[] = [
     localAudioFile: "/audio_prompts/whaat-goina-be.wav",
     nameKey: "playground.sampleVoices.voice4.name",
     genderKey: "playground.sampleVoices.voice4.gender",
-    accentKey: "playground.sampleVoices.voice4.accent",
     previewKey: "playground.sampleVoices.voice4.preview",
     color: "from-emerald-500 to-teal-500",
     avatar: "W",

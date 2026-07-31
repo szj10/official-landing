@@ -654,7 +654,7 @@ export default function PlaygroundContent() {
                         {t(voice.nameKey)}
                       </span>
                       <span className="text-xs text-gray-500 dark:text-zinc-400">
-                        {t(voice.genderKey)} • {t(voice.accentKey)}
+                        {t(voice.genderKey)}
                       </span>
                     </div>
                     <div className="text-xs text-gray-400 dark:text-zinc-500 truncate">
