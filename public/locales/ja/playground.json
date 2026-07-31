@@ -62,32 +62,6 @@
         "description": "複数の音声とテキストを試して最適な組み合わせを見つける"
       }
     },
-    "sampleVoices": {
-      "voice1": {
-        "name": "Lakesys",
-        "gender": "女性",
-        "accent": "中国語",
-        "preview": "滑らかで自然"
-      },
-      "voice2": {
-        "name": "Hef",
-        "gender": "男性",
-        "accent": "中国語",
-        "preview": "クリアで表現豊か"
-      },
-      "voice3": {
-        "name": "Andhelo",
-        "gender": "男性",
-        "accent": "中国語",
-        "preview": "温かく親しみやすい"
-      },
-      "voice4": {
-        "name": "Whaat",
-        "gender": "女性",
-        "accent": "中国語",
-        "preview": "エネルギッシュで明るい"
-      }
-    },
     "previewVoice": "音声プレビュー",
     "selectVoice": "音声を選択",
     "microphoneError": "マイクにアクセスできません。権限を確認してください。",

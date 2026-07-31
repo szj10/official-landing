@@ -1,0 +1,24 @@
+{
+  "sampleVoices": {
+    "voice1": {
+      "name": "Lakesys",
+      "gender": "female",
+      "preview": "滑らかで自然"
+    },
+    "voice2": {
+      "name": "Hef",
+      "gender": "male",
+      "preview": "明確で表現力豊か"
+    },
+    "voice3": {
+      "name": "Andhelo",
+      "gender": "male",
+      "preview": "温かく魅力的"
+    },
+    "voice4": {
+      "name": "Whaat",
+      "gender": "female",
+      "preview": "エネルギッシュで明るい"
+    }
+  }
+}

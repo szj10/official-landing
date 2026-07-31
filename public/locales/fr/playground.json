@@ -62,32 +62,6 @@
         "description": "Essayez plusieurs voix et textes pour trouver la combinaison parfaite"
       }
     },
-    "sampleVoices": {
-      "voice1": {
-        "name": "Lakesys",
-        "gender": "Féminin",
-        "accent": "Chinois",
-        "preview": "Fluide et naturel"
-      },
-      "voice2": {
-        "name": "Hef",
-        "gender": "Masculin",
-        "accent": "Chinois",
-        "preview": "Clair et expressif"
-      },
-      "voice3": {
-        "name": "Andhelo",
-        "gender": "Masculin",
-        "accent": "Chinois",
-        "preview": "Chaleureux et engageant"
-      },
-      "voice4": {
-        "name": "Whaat",
-        "gender": "Féminin",
-        "accent": "Chinois",
-        "preview": "Énergique et lumineux"
-      }
-    },
     "previewVoice": "Aperçu de la voix",
     "selectVoice": "Sélectionner la voix",
     "microphoneError": "Impossible d'accéder au microphone. Veuillez vérifier les permissions.",

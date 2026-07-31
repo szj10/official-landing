@@ -62,32 +62,6 @@
         "description": "Experimenta con varias voces y textos para encontrar la combinación perfecta"
       }
     },
-    "sampleVoices": {
-      "voice1": {
-        "name": "Lakesys",
-        "gender": "Femenino",
-        "accent": "Chino",
-        "preview": "Suave y natural"
-      },
-      "voice2": {
-        "name": "Hef",
-        "gender": "Masculino",
-        "accent": "Chino",
-        "preview": "Claro y expresivo"
-      },
-      "voice3": {
-        "name": "Andhelo",
-        "gender": "Masculino",
-        "accent": "Chino",
-        "preview": "Cálido y envolvente"
-      },
-      "voice4": {
-        "name": "Whaat",
-        "gender": "Femenino",
-        "accent": "Chino",
-        "preview": "Enérgico y brillante"
-      }
-    },
     "previewVoice": "Vista previa de voz",
     "selectVoice": "Seleccionar voz",
     "microphoneError": "No se puede acceder al micrófono. Por favor verifica los permisos.",

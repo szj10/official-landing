@@ -62,32 +62,6 @@
         "description": "다양한 음성과 텍스트로 완벽한 조합 찾기"
       }
     },
-    "sampleVoices": {
-      "voice1": {
-        "name": "Lakesys",
-        "gender": "여성",
-        "accent": "중국어",
-        "preview": "부드럽고 자연스러움"
-      },
-      "voice2": {
-        "name": "Hef",
-        "gender": "남성",
-        "accent": "중국어",
-        "preview": "명확하고 표현력 있음"
-      },
-      "voice3": {
-        "name": "Andhelo",
-        "gender": "남성",
-        "accent": "중국어",
-        "preview": "따뜻하고 친근함"
-      },
-      "voice4": {
-        "name": "Whaat",
-        "gender": "여성",
-        "accent": "중국어",
-        "preview": "활기차고 밝음"
-      }
-    },
     "previewVoice": "음성 미리듣기",
     "selectVoice": "음성 선택",
     "microphoneError": "마이크에 접근할 수 없습니다. 권한을 확인해주세요.",

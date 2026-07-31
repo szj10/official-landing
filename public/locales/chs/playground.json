@@ -62,32 +62,6 @@
         "description": "尝试多种语音和文本以找到完美组合"
       }
     },
-    "sampleVoices": {
-      "voice1": {
-        "name": "Lakesys",
-        "gender": "女声",
-        "accent": "中文",
-        "preview": "流畅自然"
-      },
-      "voice2": {
-        "name": "Hef",
-        "gender": "男声",
-        "accent": "中文",
-        "preview": "清晰富有表现力"
-      },
-      "voice3": {
-        "name": "Andhelo",
-        "gender": "男声",
-        "accent": "中文",
-        "preview": "温暖亲切"
-      },
-      "voice4": {
-        "name": "Whaat",
-        "gender": "女声",
-        "accent": "中文",
-        "preview": "充满活力"
-      }
-    },
     "previewVoice": "试听语音",
     "selectVoice": "选择语音",
     "microphoneError": "无法访问麦克风，请检查权限设置。",

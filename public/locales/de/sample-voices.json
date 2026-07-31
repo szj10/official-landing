@@ -1,0 +1,24 @@
+{
+  "sampleVoices": {
+    "voice1": {
+      "name": "Lakesys",
+      "gender": "female",
+      "preview": "Fließend und natürlich"
+    },
+    "voice2": {
+      "name": "Hef",
+      "gender": "male",
+      "preview": "Klar und ausdrucksstark"
+    },
+    "voice3": {
+      "name": "Andhelo",
+      "gender": "male",
+      "preview": "Warm und einnehmend"
+    },
+    "voice4": {
+      "name": "Whaat",
+      "gender": "female",
+      "preview": "Energiegeladen und hell"
+    }
+  }
+}
