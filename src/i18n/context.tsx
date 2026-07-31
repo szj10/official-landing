@@ -20,6 +20,7 @@ const translationFiles = [
   "home",
   "playground",
   "sample-texts",
+  "sample-voices",
   "legal",
   "footer",
   "pricing",

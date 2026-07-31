@@ -10,12 +10,12 @@
  *   - localAudioFile: Path under /public/ for the instant browser preview
  *                     (copy the wav from MinIO to /public/audio_prompts/<filename>)
  *   - nameKey       : i18n translation key for the display name
- *   - genderKey     : i18n translation key for gender label
+ *   - gender        : Gender identifier - either "male" or "female"
  *   - previewKey    : i18n translation key for short description
  *   - color         : Tailwind gradient classes for the avatar circle
  *   - avatar        : Single letter shown inside the avatar circle
  *
- * Translation keys live in /public/locales/<locale>/playground.json
+ * Translation keys live in /public/locales/<locale>/sample-voices.json
  * under the "sampleVoices" namespace (voice1, voice2, …).
  *
  * ⚠️  The voice must have is_shared=true AND is_approved=true in the backend
@@ -28,7 +28,7 @@ export interface PlaygroundVoice {
   language: string;
   localAudioFile: string;
   nameKey: string;
-  genderKey: string;
+  gender: "male" | "female";
   previewKey: string;
   color: string;
   avatar: string;
@@ -44,9 +44,9 @@ export const PLAYGROUND_VOICES: PlaygroundVoice[] = [
     backendVoiceId: 105,
     language: "zh",
     localAudioFile: "/audio_prompts/lakesys.wav",
-    nameKey: "playground.sampleVoices.voice1.name",
-    genderKey: "playground.sampleVoices.voice1.gender",
-    previewKey: "playground.sampleVoices.voice1.preview",
+    nameKey: "sampleVoices.voice1.name",
+    gender: "female",
+    previewKey: "sampleVoices.voice1.preview",
     color: "from-pink-500 to-rose-500",
     avatar: "L",
   },
@@ -56,9 +56,9 @@ export const PLAYGROUND_VOICES: PlaygroundVoice[] = [
     backendVoiceId: 106,
     language: "zh",
     localAudioFile: "/audio_prompts/hef.wav",
-    nameKey: "playground.sampleVoices.voice2.name",
-    genderKey: "playground.sampleVoices.voice2.gender",
-    previewKey: "playground.sampleVoices.voice2.preview",
+    nameKey: "sampleVoices.voice2.name",
+    gender: "male",
+    previewKey: "sampleVoices.voice2.preview",
     color: "from-blue-500 to-indigo-500",
     avatar: "H",
   },
@@ -68,9 +68,9 @@ export const PLAYGROUND_VOICES: PlaygroundVoice[] = [
     backendVoiceId: 108,
     language: "zh",
     localAudioFile: "/audio_prompts/andhelo.wav",
-    nameKey: "playground.sampleVoices.voice3.name",
-    genderKey: "playground.sampleVoices.voice3.gender",
-    previewKey: "playground.sampleVoices.voice3.preview",
+    nameKey: "sampleVoices.voice3.name",
+    gender: "male",
+    previewKey: "sampleVoices.voice3.preview",
     color: "from-purple-500 to-violet-500",
     avatar: "A",
   },
@@ -80,9 +80,9 @@ export const PLAYGROUND_VOICES: PlaygroundVoice[] = [
     backendVoiceId: 104,
     language: "zh",
     localAudioFile: "/audio_prompts/whaat-goina-be.wav",
-    nameKey: "playground.sampleVoices.voice4.name",
-    genderKey: "playground.sampleVoices.voice4.gender",
-    previewKey: "playground.sampleVoices.voice4.preview",
+    nameKey: "sampleVoices.voice4.name",
+    gender: "female",
+    previewKey: "sampleVoices.voice4.preview",
     color: "from-emerald-500 to-teal-500",
     avatar: "W",
   },

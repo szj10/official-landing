@@ -651,7 +651,7 @@ export default function PlaygroundContent() {
                         {t(voice.nameKey)}
                       </span>
                       <span className="text-xs text-gray-500 dark:text-zinc-400">
-                        {t(voice.genderKey)}
+                        {voice.gender === "male" ? t("common.male") : t("common.female")}
                       </span>
                     </div>
                     <div className="text-xs text-gray-400 dark:text-zinc-500 truncate">
