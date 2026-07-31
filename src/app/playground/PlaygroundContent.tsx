@@ -146,7 +146,7 @@ function formatRetryAfter(seconds: number) {
 // Component
 // ---------------------------------------------------------------------------
 export default function PlaygroundContent() {
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
 
   // --- Text state ---
   const [textInput, setTextInput] = useState("");
@@ -160,6 +160,11 @@ export default function PlaygroundContent() {
   const [isRecording, setIsRecording] = useState(false);
   const [recordedAudioBlob, setRecordedAudioBlob] = useState<Blob | null>(null);
   const [recordingTime, setRecordingTime] = useState(0);
+  const [uploadStatus, setUploadStatus] = useState<"idle" | "uploading" | "success" | "error">(
+    "idle"
+  );
+  const [anonymousVoiceId, setAnonymousVoiceId] = useState<number | null>(null);
+  const [uploadError, setUploadError] = useState<string | null>(null);
 
   // --- Generation state ---
   const [isGenerating, setIsGenerating] = useState(false);
@@ -271,10 +276,12 @@ export default function PlaygroundContent() {
         audioChunksRef.current.push(event.data);
       };
 
-      mediaRecorder.onstop = () => {
+      mediaRecorder.onstop = async () => {
         const audioBlob = new Blob(audioChunksRef.current, { type: "audio/webm" });
         setRecordedAudioBlob(audioBlob);
         stream.getTracks().forEach((track) => track.stop());
+        // Immediately upload the recording to the backend
+        await uploadRecordingToBackend(audioBlob);
       };
 
       mediaRecorder.start();
@@ -297,6 +304,57 @@ export default function PlaygroundContent() {
       if (recordingIntervalRef.current) {
         clearInterval(recordingIntervalRef.current);
       }
+      // onstop handler fires asynchronously; upload is triggered there
+    }
+  };
+
+  // ---------------------------------------------------------------------------
+  // Upload the recorded blob to the backend anonymous audio prompt endpoint
+  // ---------------------------------------------------------------------------
+  const uploadRecordingToBackend = async (blob: Blob) => {
+    setUploadStatus("uploading");
+    setUploadError(null);
+    setAnonymousVoiceId(null);
+
+    try {
+      const formData = new FormData();
+      formData.append("file", blob, "recording.webm");
+      formData.append("language", locale); // locale is already the shorthand code
+
+      const res = await fetch("/api/v1/playground/upload-voice-prompt", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (res.status === 429) {
+        const body = await res.json().catch(() => ({}));
+        const retryAfter: number = body?.detail?.retry_after ?? 3600;
+        setUploadStatus("error");
+        setUploadError(
+          t("playground.voiceSection.uploadRateLimit").replace(
+            "{time}",
+            formatRetryAfter(retryAfter)
+          )
+        );
+        return;
+      }
+
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        const detail =
+          typeof body?.detail === "string" ? body.detail : t("playground.voiceSection.uploadError");
+        setUploadStatus("error");
+        setUploadError(detail);
+        return;
+      }
+
+      const data = await res.json();
+      setAnonymousVoiceId(data.anonymous_voice_id);
+      setUploadStatus("success");
+    } catch (err) {
+      console.error("Upload error:", err);
+      setUploadStatus("error");
+      setUploadError(t("playground.voiceSection.uploadError"));
     }
   };
 
@@ -305,10 +363,18 @@ export default function PlaygroundContent() {
   // ---------------------------------------------------------------------------
   const handleGenerate = async () => {
     const text = textInput.trim();
-    if (!text || !selectedVoice) return;
+    // Allow generation either with a selected community voice or an uploaded recording
+    const hasVoice = !!selectedVoice && !recordedAudioBlob;
+    const hasRecording =
+      !!recordedAudioBlob && uploadStatus === "success" && anonymousVoiceId !== null;
+    if (!text || (!hasVoice && !hasRecording)) return;
 
-    const voice = PLAYGROUND_VOICES.find((v) => v.id === selectedVoice);
-    if (!voice) return;
+    // Determine the language to send:
+    //  - community voice: language from voice config
+    //  - recording: current UI locale (matches backend shorthand)
+    const voice = hasVoice ? PLAYGROUND_VOICES.find((v) => v.id === selectedVoice) : null;
+    if (hasVoice && !voice) return;
+    const language = hasVoice ? voice!.language : locale;
 
     // Reset state
     setIsGenerating(true);
@@ -329,14 +395,14 @@ export default function PlaygroundContent() {
 
     try {
       // Step 1: Create playground TTS job
+      const requestBody = hasVoice
+        ? { text, voice_id: voice!.backendVoiceId, language }
+        : { text, anonymous_voice_id: anonymousVoiceId, language };
+
       const res = await fetch("/api/v1/playground/tts", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          text,
-          voice_id: voice.backendVoiceId,
-          language: voice.language,
-        }),
+        body: JSON.stringify(requestBody),
       });
 
       if (res.status === 429) {
@@ -504,7 +570,10 @@ export default function PlaygroundContent() {
       ? t(SAMPLE_TEXTS.find((s) => s.id === selectedSampleText)?.textKey ?? "")
       : "");
 
-  const canGenerate = !!currentText && !!selectedVoice && !isGenerating;
+  const hasSelectedVoice = !!selectedVoice && !recordedAudioBlob;
+  const hasUploadedRecording =
+    !!recordedAudioBlob && uploadStatus === "success" && anonymousVoiceId !== null;
+  const canGenerate = !!currentText && (hasSelectedVoice || hasUploadedRecording) && !isGenerating;
 
   const statusLabel = () => {
     switch (generationStatus) {
@@ -700,25 +769,76 @@ export default function PlaygroundContent() {
             <div className="rounded-xl bg-gray-50 dark:bg-zinc-900 border-2 border-dashed border-gray-300 dark:border-zinc-700 p-6">
               {recordedAudioBlob ? (
                 <div className="text-center">
-                  <div className="w-16 h-16 rounded-full bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center mx-auto mb-3 shadow-lg">
-                    <CheckIcon className="w-8 h-8 text-white" />
-                  </div>
-                  <p className="text-sm font-medium text-gray-900 dark:text-white mb-2">
-                    {t("playground.voiceSection.recordingComplete")}
-                  </p>
-                  <p className="text-xs text-gray-500 dark:text-zinc-400 mb-3">
-                    {formatTime(recordingTime)} {t("playground.voiceSection.duration")}
-                  </p>
-                  <p className="text-xs text-amber-600 dark:text-amber-400 mb-3">
-                    {t("playground.voiceSection.customVoiceNote")}
-                  </p>
+                  {uploadStatus === "uploading" && (
+                    <>
+                      <div className="w-16 h-16 rounded-full bg-gradient-to-br from-indigo-400 to-purple-400 flex items-center justify-center mx-auto mb-3 shadow-lg">
+                        <svg
+                          className="animate-spin w-8 h-8 text-white"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                        >
+                          <circle
+                            className="opacity-25"
+                            cx="12"
+                            cy="12"
+                            r="10"
+                            stroke="currentColor"
+                            strokeWidth="4"
+                          />
+                          <path
+                            className="opacity-75"
+                            fill="currentColor"
+                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                          />
+                        </svg>
+                      </div>
+                      <p className="text-sm font-medium text-gray-700 dark:text-zinc-300 mb-1">
+                        {t("playground.voiceSection.uploading")}
+                      </p>
+                      <p className="text-xs text-gray-400 dark:text-zinc-500">
+                        {formatTime(recordingTime)} {t("playground.voiceSection.duration")}
+                      </p>
+                    </>
+                  )}
+
+                  {uploadStatus === "success" && (
+                    <>
+                      <div className="w-16 h-16 rounded-full bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center mx-auto mb-3 shadow-lg">
+                        <CheckIcon className="w-8 h-8 text-white" />
+                      </div>
+                      <p className="text-sm font-medium text-gray-900 dark:text-white mb-1">
+                        {t("playground.voiceSection.uploadSuccess")}
+                      </p>
+                      <p className="text-xs text-gray-500 dark:text-zinc-400 mb-3">
+                        {formatTime(recordingTime)} {t("playground.voiceSection.duration")}
+                      </p>
+                      <p className="text-xs text-emerald-600 dark:text-emerald-400 mb-3">
+                        {t("playground.voiceSection.readyToGenerate")}
+                      </p>
+                    </>
+                  )}
+
+                  {uploadStatus === "error" && (
+                    <>
+                      <div className="w-16 h-16 rounded-full bg-gradient-to-br from-red-500 to-rose-500 flex items-center justify-center mx-auto mb-3 shadow-lg">
+                        <AlertIcon className="w-8 h-8 text-white" />
+                      </div>
+                      <p className="text-sm font-medium text-red-700 dark:text-red-400 mb-1">
+                        {uploadError ?? t("playground.voiceSection.uploadError")}
+                      </p>
+                    </>
+                  )}
+
                   <button
                     onClick={() => {
                       setRecordedAudioBlob(null);
                       setRecordingTime(0);
                       setSelectedVoice(null);
+                      setUploadStatus("idle");
+                      setAnonymousVoiceId(null);
+                      setUploadError(null);
                     }}
-                    className="text-xs text-indigo-600 dark:text-indigo-400 hover:underline"
+                    className="text-xs text-indigo-600 dark:text-indigo-400 hover:underline mt-1"
                   >
                     {t("playground.voiceSection.recordAgain")}
                   </button>
