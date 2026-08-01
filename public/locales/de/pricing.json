@@ -9,47 +9,50 @@
     "perMonth": "/Monat",
     "custom": "Individuell",
     "mostPopular": "Am beliebtesten",
-    "starter": {
-      "name": "Starter",
+    "free": {
+      "name": "Kostenlos",
       "description": "Perfekt für Einzelpersonen und kleine Projekte",
       "features": {
         "f1": "10 Videos/Monat",
-        "f2": "KI-Skripterstellung",
-        "f3": "Grundlegende Stimmauswahl",
-        "f4": "Standard-Videovorlagen",
-        "f5": "E-Mail-Support",
-        "f6": "720p Ausgabequalität"
+        "f2": "2 benutzerdefinierte Stimmen",
+        "f3": "KI-Skripterstellung",
+        "f4": "Grundlegende Stimmauswahl",
+        "f5": "Standard-Videovorlagen",
+        "f6": "E-Mail-Support",
+        "f7": "720p Ausgabequalität"
       },
       "cta": "Loslegen"
     },
-    "professional": {
+    "pro": {
       "name": "Professionell",
       "description": "Für wachsende Teams und Content-Ersteller",
       "features": {
         "f1": "100 Videos/Monat",
-        "f2": "Erweiterte KI-Skripte",
-        "f3": "200+ Premium-Stimmen",
-        "f4": "Benutzerdefinierte Videovorlagen",
-        "f5": "Prioritäts-Support",
-        "f6": "1080p HD-Qualität",
-        "f7": "Markenanpassung",
-        "f8": "API-Zugriff"
+        "f2": "5 benutzerdefinierte Stimmen",
+        "f3": "Erweiterte KI-Skripte",
+        "f4": "200+ Premium-Stimmen",
+        "f5": "Benutzerdefinierte Videovorlagen",
+        "f6": "Prioritäts-Support",
+        "f7": "1080p HD-Qualität",
+        "f8": "Markenanpassung",
+        "f9": "API-Zugriff"
       },
       "cta": "Kostenlos testen"
     },
-    "business": {
-      "name": "Business",
+    "premium": {
+      "name": "Premium",
       "description": "Für Marketingteams und Agenturen",
       "features": {
         "f1": "Unbegrenzte Videos",
-        "f2": "Erweiterte KI-Skripte",
-        "f3": "Alle Premium-Stimmen",
-        "f4": "Benutzerdefinierte Vorlagen & Marke",
-        "f5": "24/7 dedizierter Support",
-        "f6": "4K Ultra HD Qualität",
-        "f7": "Teamzusammenarbeit",
-        "f8": "Erweiterte Analysen",
-        "f9": "SSO & SAML"
+        "f2": "10 benutzerdefinierte Stimmen",
+        "f3": "Erweiterte KI-Skripte",
+        "f4": "Alle Premium-Stimmen",
+        "f5": "Benutzerdefinierte Vorlagen & Marke",
+        "f6": "24/7 dedizierter Support",
+        "f7": "4K Ultra HD Qualität",
+        "f8": "Teamzusammenarbeit",
+        "f9": "Erweiterte Analysen",
+        "f10": "SSO & SAML"
       },
       "cta": "Kostenlos testen"
     },
@@ -58,14 +61,15 @@
       "description": "Individuelle Lösungen für große Organisationen",
       "features": {
         "f1": "Alles unbegrenzt",
-        "f2": "Benutzerdefinierte KI-Modelle",
-        "f3": "Stimmklonung",
-        "f4": "White-Label-Lösung",
-        "f5": "Dedizierter Kundenbetreuer",
-        "f6": "On-Premise-Bereitstellung",
-        "f7": "Benutzerdefinierte Integrationen",
-        "f8": "Mengenrabatte",
-        "f9": "Benutzerdefinierte SLA"
+        "f2": "Unbegrenzte benutzerdefinierte Stimmen",
+        "f3": "Benutzerdefinierte KI-Modelle",
+        "f4": "Stimmklonung",
+        "f5": "White-Label-Lösung",
+        "f6": "Dedizierter Kundenbetreuer",
+        "f7": "On-Premise-Bereitstellung",
+        "f8": "Benutzerdefinierte Integrationen",
+        "f9": "Mengenrabatte",
+        "f10": "Benutzerdefinierte SLA"
       },
       "cta": "Vertrieb kontaktieren"
     },
@@ -73,6 +77,7 @@
     "compare": {
       "feature": "Funktion",
       "videosPerMonth": "Videos pro Monat",
+      "voiceCreations": "Benutzerdefinierte Stimmen",
       "aiScriptWriter": "KI-Skript-Schreiber",
       "voiceSelection": "Stimmauswahl",
       "videoQuality": "Videoqualität",

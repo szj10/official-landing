@@ -22,59 +22,66 @@ export default function PricingPage() {
   const { t } = useI18n();
   const [billingCycle, setBillingCycle] = useState<"monthly" | "annual">("monthly");
 
+  const handleContactSales = () => {
+    window.location.href = "mailto:abc@example.com";
+  };
+
   const plans = [
     {
-      name: t("pricing.starter.name"),
-      description: t("pricing.starter.description"),
+      name: "Free",
+      description: t("pricing.free.description"),
       price: billingCycle === "monthly" ? 0 : 0,
       features: [
-        t("pricing.starter.features.f1"),
-        t("pricing.starter.features.f2"),
-        t("pricing.starter.features.f3"),
-        t("pricing.starter.features.f4"),
-        t("pricing.starter.features.f5"),
-        t("pricing.starter.features.f6"),
+        t("pricing.free.features.f1"),
+        t("pricing.free.features.f2"),
+        t("pricing.free.features.f3"),
+        t("pricing.free.features.f4"),
+        t("pricing.free.features.f5"),
+        t("pricing.free.features.f6"),
+        t("pricing.free.features.f7"),
       ],
-      cta: t("pricing.starter.cta"),
+      cta: t("pricing.free.cta"),
       popular: false,
     },
     {
-      name: t("pricing.professional.name"),
-      description: t("pricing.professional.description"),
+      name: "Pro",
+      description: t("pricing.pro.description"),
       price: billingCycle === "monthly" ? 49 : 39,
       features: [
-        t("pricing.professional.features.f1"),
-        t("pricing.professional.features.f2"),
-        t("pricing.professional.features.f3"),
-        t("pricing.professional.features.f4"),
-        t("pricing.professional.features.f5"),
-        t("pricing.professional.features.f6"),
-        t("pricing.professional.features.f7"),
-        t("pricing.professional.features.f8"),
+        t("pricing.pro.features.f1"),
+        t("pricing.pro.features.f2"),
+        t("pricing.pro.features.f3"),
+        t("pricing.pro.features.f4"),
+        t("pricing.pro.features.f5"),
+        t("pricing.pro.features.f6"),
+        t("pricing.pro.features.f7"),
+        t("pricing.pro.features.f8"),
+        t("pricing.pro.features.f9"),
       ],
-      cta: t("pricing.professional.cta"),
+      cta: t("pricing.pro.cta"),
       popular: true,
     },
     {
-      name: t("pricing.business.name"),
-      description: t("pricing.business.description"),
+      name: "Premium",
+      description: t("pricing.premium.description"),
       price: billingCycle === "monthly" ? 199 : 159,
       features: [
-        t("pricing.business.features.f1"),
-        t("pricing.business.features.f2"),
-        t("pricing.business.features.f3"),
-        t("pricing.business.features.f4"),
-        t("pricing.business.features.f5"),
-        t("pricing.business.features.f6"),
-        t("pricing.business.features.f7"),
-        t("pricing.business.features.f8"),
-        t("pricing.business.features.f9"),
+        t("pricing.premium.features.f1"),
+        t("pricing.premium.features.f2"),
+        t("pricing.premium.features.f3"),
+        t("pricing.premium.features.f4"),
+        t("pricing.premium.features.f5"),
+        t("pricing.premium.features.f6"),
+        t("pricing.premium.features.f7"),
+        t("pricing.premium.features.f8"),
+        t("pricing.premium.features.f9"),
+        t("pricing.premium.features.f10"),
       ],
-      cta: t("pricing.business.cta"),
+      cta: t("pricing.premium.cta"),
       popular: false,
     },
     {
-      name: t("pricing.enterprise.name"),
+      name: "Enterprise",
       description: t("pricing.enterprise.description"),
       price: null,
       features: [
@@ -87,9 +94,11 @@ export default function PricingPage() {
         t("pricing.enterprise.features.f7"),
         t("pricing.enterprise.features.f8"),
         t("pricing.enterprise.features.f9"),
+        t("pricing.enterprise.features.f10"),
       ],
       cta: t("pricing.enterprise.cta"),
       popular: false,
+      isEnterprise: true,
     },
   ];
 
@@ -214,6 +223,12 @@ export default function PricingPage() {
 
                   <Link
                     href="/"
+                    onClick={(e) => {
+                      if (plan.isEnterprise) {
+                        e.preventDefault();
+                        handleContactSales();
+                      }
+                    }}
                     className={`block w-full text-center py-3 rounded-xl text-xs font-semibold transition-all duration-200 ${
                       plan.popular
                         ? "bg-gradient-to-r from-indigo-600 to-purple-600 text-white hover:from-indigo-700 hover:to-purple-700 shadow-md shadow-indigo-500/20 active:scale-98"

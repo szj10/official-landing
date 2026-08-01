@@ -9,47 +9,50 @@
     "perMonth": "/month",
     "custom": "Custom",
     "mostPopular": "Most Popular",
-    "starter": {
-      "name": "Starter",
+    "free": {
+      "name": "Free",
       "description": "Perfect for individuals and small projects",
       "features": {
         "f1": "10 videos/month",
-        "f2": "AI script generation",
-        "f3": "Basic voice selection",
-        "f4": "Standard video templates",
-        "f5": "Email support",
-        "f6": "720p output quality"
+        "f2": "2 custom voice creations",
+        "f3": "AI script generation",
+        "f4": "Basic voice selection",
+        "f5": "Standard video templates",
+        "f6": "Email support",
+        "f7": "720p output quality"
       },
       "cta": "Get Started"
     },
-    "professional": {
-      "name": "Professional",
+    "pro": {
+      "name": "Pro",
       "description": "For growing teams and content creators",
       "features": {
         "f1": "100 videos/month",
-        "f2": "Advanced AI scripts",
-        "f3": "200+ premium voices",
-        "f4": "Custom video templates",
-        "f5": "Priority support",
-        "f6": "1080p HD quality",
-        "f7": "Brand customization",
-        "f8": "API access"
+        "f2": "5 custom voice creations",
+        "f3": "Advanced AI scripts",
+        "f4": "200+ premium voices",
+        "f5": "Custom video templates",
+        "f6": "Priority support",
+        "f7": "1080p HD quality",
+        "f8": "Brand customization",
+        "f9": "API access"
       },
       "cta": "Start Free Trial"
     },
-    "business": {
-      "name": "Business",
+    "premium": {
+      "name": "Premium",
       "description": "For marketing teams and agencies",
       "features": {
         "f1": "Unlimited videos",
-        "f2": "Advanced AI scripts",
-        "f3": "All premium voices",
-        "f4": "Custom templates & branding",
-        "f5": "24/7 dedicated support",
-        "f6": "4K Ultra HD quality",
-        "f7": "Team collaboration",
-        "f8": "Advanced analytics",
-        "f9": "SSO & SAML"
+        "f2": "10 custom voice creations",
+        "f3": "Advanced AI scripts",
+        "f4": "All premium voices",
+        "f5": "Custom templates & branding",
+        "f6": "24/7 dedicated support",
+        "f7": "4K Ultra HD quality",
+        "f8": "Team collaboration",
+        "f9": "Advanced analytics",
+        "f10": "SSO & SAML"
       },
       "cta": "Start Free Trial"
     },
@@ -58,14 +61,15 @@
       "description": "Custom solutions for large organizations",
       "features": {
         "f1": "Unlimited everything",
-        "f2": "Custom AI models",
-        "f3": "Voice cloning",
-        "f4": "White-label solution",
-        "f5": "Dedicated account manager",
-        "f6": "On-premise deployment",
-        "f7": "Custom integrations",
-        "f8": "Volume discounts",
-        "f9": "Custom SLA"
+        "f2": "Unlimited custom voice creations",
+        "f3": "Custom AI models",
+        "f4": "Voice cloning",
+        "f5": "White-label solution",
+        "f6": "Dedicated account manager",
+        "f7": "On-premise deployment",
+        "f8": "Custom integrations",
+        "f9": "Volume discounts",
+        "f10": "Custom SLA"
       },
       "cta": "Contact Sales"
     },
@@ -73,6 +77,7 @@
     "compare": {
       "feature": "Feature",
       "videosPerMonth": "Videos per Month",
+      "voiceCreations": "Custom Voice Creations",
       "aiScriptWriter": "AI Script Writer",
       "voiceSelection": "Voice Selection",
       "videoQuality": "Video Quality",

@@ -9,47 +9,50 @@
     "perMonth": "/mes",
     "custom": "Personalizado",
     "mostPopular": "Más popular",
-    "starter": {
-      "name": "Inicial",
+    "free": {
+      "name": "Gratuito",
       "description": "Perfecto para individuos y proyectos pequeños",
       "features": {
         "f1": "10 videos/mes",
-        "f2": "Generación de guiones con IA",
-        "f3": "Selección de voz básica",
-        "f4": "Plantillas de video estándar",
-        "f5": "Soporte por correo",
-        "f6": "Calidad de salida 720p"
+        "f2": "2 voces personalizadas",
+        "f3": "Generación de guiones con IA",
+        "f4": "Selección de voz básica",
+        "f5": "Plantillas de video estándar",
+        "f6": "Soporte por correo",
+        "f7": "Calidad de salida 720p"
       },
       "cta": "Comenzar"
     },
-    "professional": {
+    "pro": {
       "name": "Profesional",
       "description": "Para equipos en crecimiento y creadores de contenido",
       "features": {
         "f1": "100 videos/mes",
-        "f2": "Guiones IA avanzados",
-        "f3": "200+ voces premium",
-        "f4": "Plantillas de video personalizadas",
-        "f5": "Soporte prioritario",
-        "f6": "Calidad HD 1080p",
-        "f7": "Personalización de marca",
-        "f8": "Acceso API"
+        "f2": "5 voces personalizadas",
+        "f3": "Guiones IA avanzados",
+        "f4": "200+ voces premium",
+        "f5": "Plantillas de video personalizadas",
+        "f6": "Soporte prioritario",
+        "f7": "Calidad HD 1080p",
+        "f8": "Personalización de marca",
+        "f9": "Acceso API"
       },
       "cta": "Comenzar prueba gratuita"
     },
-    "business": {
-      "name": "Empresa",
+    "premium": {
+      "name": "Premium",
       "description": "Para equipos de marketing y agencias",
       "features": {
         "f1": "Videos ilimitados",
-        "f2": "Guiones IA avanzados",
-        "f3": "Todas las voces premium",
-        "f4": "Plantillas y marca personalizadas",
-        "f5": "Soporte dedicado 24/7",
-        "f6": "Calidad Ultra HD 4K",
-        "f7": "Colaboración en equipo",
-        "f8": "Análisis avanzados",
-        "f9": "SSO y SAML"
+        "f2": "10 voces personalizadas",
+        "f3": "Guiones IA avanzados",
+        "f4": "Todas las voces premium",
+        "f5": "Plantillas y marca personalizadas",
+        "f6": "Soporte dedicado 24/7",
+        "f7": "Calidad Ultra HD 4K",
+        "f8": "Colaboración en equipo",
+        "f9": "Análisis avanzados",
+        "f10": "SSO y SAML"
       },
       "cta": "Comenzar prueba gratuita"
     },
@@ -58,14 +61,15 @@
       "description": "Soluciones personalizadas para grandes organizaciones",
       "features": {
         "f1": "Todo ilimitado",
-        "f2": "Modelos IA personalizados",
-        "f3": "Clonación de voz",
-        "f4": "Solución de marca blanca",
-        "f5": "Gerente de cuenta dedicado",
-        "f6": "Despliegue local",
-        "f7": "Integraciones personalizadas",
-        "f8": "Descuentos por volumen",
-        "f9": "SLA personalizado"
+        "f2": "Voces personalizadas ilimitadas",
+        "f3": "Modelos IA personalizados",
+        "f4": "Clonación de voz",
+        "f5": "Solución de marca blanca",
+        "f6": "Gerente de cuenta dedicado",
+        "f7": "Despliegue local",
+        "f8": "Integraciones personalizadas",
+        "f9": "Descuentos por volumen",
+        "f10": "SLA personalizado"
       },
       "cta": "Contactar ventas"
     },
@@ -73,6 +77,7 @@
     "compare": {
       "feature": "Función",
       "videosPerMonth": "Videos por mes",
+      "voiceCreations": "Voces personalizadas",
       "aiScriptWriter": "Escritor de guiones IA",
       "voiceSelection": "Selección de voz",
       "videoQuality": "Calidad de video",
