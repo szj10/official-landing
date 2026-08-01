@@ -1126,39 +1126,17 @@ export default function PlaygroundContent() {
             </div>
 
             {/* Generate Button */}
-            <button
-              onClick={handleGenerate}
-              disabled={isGenerating}
-              className="w-full sm:w-auto bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 disabled:from-indigo-400 disabled:to-purple-400 dark:disabled:from-indigo-700 dark:disabled:to-purple-700 text-white px-6 py-2.5 rounded-xl transition-all duration-200 font-semibold text-sm shadow-md shadow-indigo-500/20 hover:shadow-indigo-500/35 hover:scale-[1.02] active:scale-[0.98] disabled:cursor-not-allowed flex items-center justify-center gap-2"
-            >
-              {isGenerating ? (
-                <>
-                  <svg className="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
-                    <circle
-                      className="opacity-25"
-                      cx="12"
-                      cy="12"
-                      r="10"
-                      stroke="currentColor"
-                      strokeWidth="4"
-                    />
-                    <path
-                      className="opacity-75"
-                      fill="currentColor"
-                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                    />
-                  </svg>
-                  <span>{statusLabel() || t("playground.preview.generating")}</span>
-                </>
-              ) : (
-                <>
-                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M8 5v14l11-7z" />
-                  </svg>
-                  <span>{t("playground.preview.generate")}</span>
-                </>
-              )}
-            </button>
+            {!(isGenerating || audioUrl) && (
+              <button
+                onClick={handleGenerate}
+                className="w-full sm:w-auto bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 disabled:from-indigo-400 disabled:to-purple-400 dark:disabled:from-indigo-700 dark:disabled:to-purple-700 text-white px-6 py-2.5 rounded-xl transition-all duration-200 font-semibold text-sm shadow-md shadow-indigo-500/20 hover:shadow-indigo-500/35 hover:scale-[1.02] active:scale-[0.98] disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              >
+                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M8 5v14l11-7z" />
+                </svg>
+                <span>{t("playground.preview.generate")}</span>
+              </button>
+            )}
           </div>
 
           {/* Empty text warning */}
@@ -1230,7 +1208,28 @@ export default function PlaygroundContent() {
 
             {/* Audio player */}
             {audioUrl ? (
-              <div className="bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-indigo-950/40 dark:to-purple-950/40 rounded-2xl p-6 border border-indigo-100/50 dark:border-indigo-900/50 shadow-sm">
+              <div className="relative bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-indigo-950/40 dark:to-purple-950/40 rounded-2xl p-6 border border-indigo-100/50 dark:border-indigo-900/50 shadow-sm">
+                {/* Close Button */}
+                <button
+                  onClick={() => {
+                    setAudioUrl(null);
+                    setGenerationStatus(null);
+                    if (audioRef.current) audioRef.current.pause();
+                    setIsPlaying(false);
+                  }}
+                  className="absolute top-4 right-4 w-8 h-8 rounded-full bg-black/5 hover:bg-black/10 dark:bg-white/10 dark:hover:bg-white/20 flex items-center justify-center transition-colors text-gray-500 hover:text-gray-700 dark:text-zinc-400 dark:hover:text-zinc-200"
+                  aria-label="Close"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
+                </button>
+
                 {/* Cached badge */}
                 {isCachedResult && (
                   <div className="flex items-center gap-1.5 mb-4">
