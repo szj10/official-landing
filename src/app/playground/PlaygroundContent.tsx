@@ -767,23 +767,8 @@ export default function PlaygroundContent() {
 
         {/* === Voice Selection Panel === */}
         <div className="glass-panel rounded-3xl p-8 shadow-sm flex flex-col justify-between h-full">
-          <div>
-            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6 flex items-center justify-between">
-              <span className="flex items-center gap-2">
-                <SpeakerIcon className="w-5 h-5 text-purple-500" />
-                {t("playground.voiceSection.title")}
-              </span>
-              {recordedAudioBlob && uploadStatus === "success" && !selectedVoice && (
-                <span className="text-xs px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-medium flex items-center gap-1">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                  {t("playground.voiceSection.customVoiceActive")}
-                </span>
-              )}
-            </h2>
-          </div>
-
           {/* Two-panel accordion: Sample Voices ↔ Custom Voice Recording */}
-          <div className="mt-4 border-t border-gray-100 dark:border-zinc-800/80 pt-4 space-y-2">
+          <div className="space-y-2">
             {/* Sample Voices toggle button — same style as Custom Voice button */}
             <button
               onClick={() => setActiveVoicePanel("stock")}
