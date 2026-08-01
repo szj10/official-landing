@@ -13,32 +13,23 @@
       "maxWords": "최대 200단어"
     },
     "voiceSection": {
-      "title": "음성 선택",
       "sampleVoices": "샘플 음성",
       "recordCustom": "사용자 지정 음성 녹음",
       "recordCustomSubtitle": "10초 음성 녹음으로 내 목소리 클로닝",
-      "expandRecording": "내 목소리 녹음하기",
-      "collapseRecording": "녹음 창 접기",
       "promptGuideTitle": "낭독 안내 텍스트 (10-15초)",
       "promptGuideText": "아침 햇살이 포근하게 세상을 비추고, 시원한 바람이 나뭇잎을 간지럽힙니다. 새로운 하루가 활기차게 시작됩니다.",
-      "recordYourVoice": "내 목소리 샘플 녹음",
       "recordHint": "마이크 버튼을 누르고 위 텍스트를 소리 내어 읽어주세요.",
       "startRecording": "녹음 시작",
       "stopRecording": "녹음 중지",
       "recording": "녹음 중...",
-      "recordingComplete": "녹음 완료",
-      "duration": "소요 시간",
       "recordAgain": "다시 녹음하기",
-      "customVoiceNote": "녹음한 사용자 지정 음성으로 음성이 합성됩니다.",
       "uploading": "음성 샘플 업로드 중...",
       "uploadSuccess": "음성 샘플 업로드 완료!",
-      "readyToGenerate": "녹음된 음성 샘플로 음성을 생성할 준비가 되었습니다.",
       "uploadError": "음성 샘플 업로드에 실패했습니다. 다시 시도해 주세요.",
       "uploadRateLimit": "업로드 한도에 도달했습니다. {time} 후에 다시 시도해 주세요.",
       "playRecorded": "녹음 듣기",
       "stopRecorded": "재생 중지",
-      "recordedPreview": "녹음된 음성 미리듣기",
-      "customVoiceActive": "사용자 지정 음성 적용 됨"
+      "recordedPreview": "녹음된 음성 미리듣기"
     },
     "preview": {
       "title": "미리보기",

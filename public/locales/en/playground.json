@@ -13,32 +13,23 @@
       "maxWords": "Max 200 words"
     },
     "voiceSection": {
-      "title": "Voice Selection",
       "sampleVoices": "Sample Voices",
       "recordCustom": "Record Custom Voice",
       "recordCustomSubtitle": "Clone your voice with a 10s audio recording",
-      "expandRecording": "Record Custom Voice",
-      "collapseRecording": "Collapse Recording",
       "promptGuideTitle": "Reading Prompt (10-15s)",
       "promptGuideText": "The sun rises quietly over the ocean, painting the morning sky with warm golden light while a gentle breeze carries the fresh smell of pine.",
-      "recordYourVoice": "Record your own voice sample",
       "recordHint": "Click the microphone button and read the prompt text aloud.",
       "startRecording": "Start Recording",
       "stopRecording": "Stop Recording",
       "recording": "Recording...",
-      "recordingComplete": "Recording Complete",
-      "duration": "duration",
       "recordAgain": "Record Again",
-      "customVoiceNote": "Your custom recording will be used for synthesis.",
       "uploading": "Uploading voice sample...",
       "uploadSuccess": "Voice sample uploaded successfully!",
-      "readyToGenerate": "Ready to generate speech with your recorded voice",
       "uploadError": "Failed to upload voice sample. Please try again.",
       "uploadRateLimit": "Upload limit reached. Please try again in {time}.",
       "playRecorded": "Play Recording",
       "stopRecorded": "Stop Playback",
-      "recordedPreview": "Recorded Voice Preview",
-      "customVoiceActive": "Custom Voice Active"
+      "recordedPreview": "Recorded Voice Preview"
     },
     "preview": {
       "title": "Preview",

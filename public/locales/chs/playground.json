@@ -13,32 +13,23 @@
       "maxWords": "最多 200 词"
     },
     "voiceSection": {
-      "title": "语音选择",
       "sampleVoices": "示例语音",
       "recordCustom": "录制自定义声音",
       "recordCustomSubtitle": "通过 10 秒语音录制克隆您的声音",
-      "expandRecording": "录制自定义声音",
-      "collapseRecording": "收起录音界面",
       "promptGuideTitle": "朗读导引文本 (10-15秒)",
       "promptGuideText": "清晨的阳光洒在大地上，清风拂过树梢，鸟儿在枝头欢快地歌唱，新的一天充满了希望与活力。",
-      "recordYourVoice": "录制您自己的语音样本",
       "recordHint": "点击麦克风按钮，并大声朗读上方示例文本。",
       "startRecording": "开始录制",
       "stopRecording": "停止录制",
       "recording": "正在录制...",
-      "recordingComplete": "录制完成",
-      "duration": "时长",
       "recordAgain": "重新录制",
-      "customVoiceNote": "自定义录音已就绪，可用于合成语音。",
       "uploading": "正在上传语音样本...",
       "uploadSuccess": "语音样本上传成功！",
-      "readyToGenerate": "已就绪，可以使用您的语音样本合成语音",
       "uploadError": "上传语音样本失败，请重试。",
       "uploadRateLimit": "已达上传上限，请在 {time} 后重试。",
       "playRecorded": "播放录音",
       "stopRecorded": "停止播放",
-      "recordedPreview": "录音试听",
-      "customVoiceActive": "自定义声音已生效"
+      "recordedPreview": "录音试听"
     },
     "preview": {
       "title": "预览",

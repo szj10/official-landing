@@ -13,32 +13,23 @@
       "maxWords": "Max. 200 Wörter"
     },
     "voiceSection": {
-      "title": "Stimme wählen",
       "sampleVoices": "Beispielstimmen",
       "recordCustom": "Eigene Stimme aufnehmen",
       "recordCustomSubtitle": "Klonen Sie Ihre Stimme mit einer 10-Sekunden-Aufnahme",
-      "expandRecording": "Eigene Stimme aufnehmen",
-      "collapseRecording": "Aufnahme einklappen",
       "promptGuideTitle": "Leseanleitung (10-15 Sek.)",
       "promptGuideText": "Die Sonne geht langsam über den Bergen auf und taucht den Himmel in ein warmes, goldenes Licht. Die kühle Morgenluft tut gut.",
-      "recordYourVoice": "Eigenes Stimmbeispiel aufnehmen",
       "recordHint": "Klicken Sie auf das Mikrofon und lesen Sie den obigen Text laut vor.",
       "startRecording": "Aufnahme starten",
       "stopRecording": "Aufnahme stoppen",
       "recording": "Aufnahme läuft...",
-      "recordingComplete": "Aufnahme abgeschlossen",
-      "duration": "Dauer",
       "recordAgain": "Erneut aufnehmen",
-      "customVoiceNote": "Ihre Aufnahme wird für die Sprachsynthese verwendet.",
       "uploading": "Sprachprobe wird hochgeladen...",
       "uploadSuccess": "Sprachprobe erfolgreich hochgeladen!",
-      "readyToGenerate": "Bereit zur Sprachsynthese mit Ihrer Aufnahme",
       "uploadError": "Fehler beim Hochladen der Sprachprobe. Bitte versuchen Sie es erneut.",
       "uploadRateLimit": "Limit erreicht. Bitte versuchen Sie es in {time} erneut.",
       "playRecorded": "Aufnahme abspielen",
       "stopRecorded": "Wiedergabe stoppen",
-      "recordedPreview": "Vorschau der Aufnahme",
-      "customVoiceActive": "Eigene Stimme aktiv"
+      "recordedPreview": "Vorschau der Aufnahme"
     },
     "preview": {
       "title": "Vorschau",

@@ -13,32 +13,23 @@
       "maxWords": "Max. 200 mots"
     },
     "voiceSection": {
-      "title": "Sélection de la Voix",
       "sampleVoices": "Voix Exemples",
       "recordCustom": "Enregistrez une voix personnalisée",
       "recordCustomSubtitle": "Clonez votre voix avec un enregistrement de 10 secondes",
-      "expandRecording": "Enregistrez votre voix",
-      "collapseRecording": "Réduire l'enregistrement",
       "promptGuideTitle": "Guide de lecture (10-15s)",
       "promptGuideText": "Le soleil se lève doucement sur l'océan, illuminant le ciel de teintes dorées pendant qu'une brise légère rafraîchit l'air.",
-      "recordYourVoice": "Enregistrez votre propre échantillon vocal",
       "recordHint": "Cliquez sur le microphone et lisez le texte ci-dessus à haute voix.",
       "startRecording": "Démarrer l'enregistrement",
       "stopRecording": "Arrêter l'enregistrement",
       "recording": "Enregistrement en cours...",
-      "recordingComplete": "Enregistrement terminé",
-      "duration": "durée",
       "recordAgain": "Réenregistrer",
-      "customVoiceNote": "Votre enregistrement sera utilisé pour générer la voix.",
       "uploading": "Téléversement de l'échantillon vocal...",
       "uploadSuccess": "Échantillon vocal téléversé avec succès !",
-      "readyToGenerate": "Prêt à générer la voix à partir de votre échantillon",
       "uploadError": "Échec du téléversement. Veuillez réessayer.",
       "uploadRateLimit": "Limite de téléversement atteinte. Veuillez réessayer dans {time}.",
       "playRecorded": "Lire l'enregistrement",
       "stopRecorded": "Arrêter la lecture",
-      "recordedPreview": "Aperçu de l'enregistrement",
-      "customVoiceActive": "Voix personnalisée active"
+      "recordedPreview": "Aperçu de l'enregistrement"
     },
     "preview": {
       "title": "Aperçu",

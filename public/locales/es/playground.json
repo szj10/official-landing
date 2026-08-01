@@ -13,32 +13,23 @@
       "maxWords": "Máx. 200 palabras"
     },
     "voiceSection": {
-      "title": "Selección de Voz",
       "sampleVoices": "Voces de Ejemplo",
       "recordCustom": "Graba tu Voz Personalizada",
       "recordCustomSubtitle": "Clona tu voz con una grabación de audio de 10 segundos",
-      "expandRecording": "Graba tu Voz",
-      "collapseRecording": "Plegar Grabación",
       "promptGuideTitle": "Guía de Lectura (10-15s)",
       "promptGuideText": "El sol nace suavemente sobre las montañas, iluminando el cielo con tonos cálidos mientras una suave brisa recorre el verde bosque.",
-      "recordYourVoice": "Graba tu propia muestra de voz",
       "recordHint": "Haz clic en el micrófono y lee el texto de arriba en voz alta.",
       "startRecording": "Iniciar Grabación",
       "stopRecording": "Detener Grabación",
       "recording": "Grabando...",
-      "recordingComplete": "Grabación Completa",
-      "duration": "duración",
       "recordAgain": "Grabar Nuevamente",
-      "customVoiceNote": "Tu grabación se usará para sintetizar la voz.",
       "uploading": "Subiendo muestra de voz...",
       "uploadSuccess": "¡Muestra de voz subida con éxito!",
-      "readyToGenerate": "Listo para generar voz con tu muestra",
       "uploadError": "Error al subir la muestra de voz. Inténtalo de nuevo.",
       "uploadRateLimit": "Límite de subida alcanzado. Inténtalo de nuevo en {time}.",
       "playRecorded": "Reproducir Grabación",
       "stopRecorded": "Detener Reproducción",
-      "recordedPreview": "Vista Previa de Grabación",
-      "customVoiceActive": "Voz Personalizada Activa"
+      "recordedPreview": "Vista Previa de Grabación"
     },
     "preview": {
       "title": "Vista Previa",
