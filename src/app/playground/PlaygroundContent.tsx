@@ -780,75 +780,6 @@ export default function PlaygroundContent() {
                 </span>
               )}
             </h2>
-
-            {/* Sample Voices — toggles with Custom Voice panel */}
-            {activeVoicePanel === "stock" && (
-              <div className="mb-4">
-                <div className="space-y-2">
-                  {PLAYGROUND_VOICES.map((voice) => (
-                    <div
-                      key={voice.id}
-                      onClick={() => {
-                        setSelectedVoice(voice.id);
-                      }}
-                      className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 cursor-pointer ${
-                        selectedVoice === voice.id && !recordedAudioBlob
-                          ? "bg-purple-500/10 border-2 border-purple-500 shadow-sm"
-                          : "bg-gray-50 dark:bg-zinc-900 border-2 border-transparent hover:border-gray-200 dark:hover:border-zinc-700"
-                      }`}
-                    >
-                      <div
-                        className={`w-10 h-10 rounded-full bg-gradient-to-br ${voice.color} flex items-center justify-center text-white font-bold text-base shrink-0 shadow-md`}
-                      >
-                        {voice.avatar}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 mb-0.5">
-                          <span className="font-semibold text-sm text-gray-900 dark:text-white truncate">
-                            {t(voice.nameKey)}
-                          </span>
-                          <span className="text-xs text-gray-400 dark:text-zinc-500">
-                            {voice.gender === "male" ? t("common.male") : t("common.female")}
-                          </span>
-                        </div>
-                        <div className="text-xs text-gray-400 dark:text-zinc-500 truncate">
-                          {t(voice.previewKey)}
-                        </div>
-                      </div>
-                      <div
-                        className="flex items-center gap-2 shrink-0"
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        <button
-                          onClick={() => handleVoicePreview(voice.id)}
-                          className="w-8 h-8 rounded-full bg-gray-200 dark:bg-zinc-700 hover:bg-gray-300 dark:hover:bg-zinc-600 flex items-center justify-center transition-colors"
-                          title={t("playground.previewVoice")}
-                        >
-                          {playingVoicePreview === voice.id ? (
-                            <StopIcon className="w-3.5 h-3.5 text-gray-700 dark:text-zinc-300" />
-                          ) : (
-                            <PlayIcon className="w-3.5 h-3.5 text-gray-700 dark:text-zinc-300 ml-0.5" />
-                          )}
-                        </button>
-                        <button
-                          onClick={() => {
-                            setSelectedVoice(voice.id);
-                          }}
-                          className={`w-8 h-8 rounded-full flex items-center justify-center transition-all ${
-                            selectedVoice === voice.id && !recordedAudioBlob
-                              ? "bg-purple-500 text-white shadow-sm"
-                              : "bg-gray-200 dark:bg-zinc-700 hover:bg-gray-300 dark:hover:bg-zinc-600 text-gray-700 dark:text-zinc-300"
-                          }`}
-                          title={t("playground.selectVoice")}
-                        >
-                          <CheckIcon className="w-4 h-4" />
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
           </div>
 
           {/* Two-panel accordion: Sample Voices ↔ Custom Voice Recording */}
@@ -887,6 +818,73 @@ export default function PlaygroundContent() {
                 open={activeVoicePanel === "stock"}
               />
             </button>
+
+            {/* Expanded Sample Voices */}
+            {activeVoicePanel === "stock" && (
+              <div className="mt-3 p-4 rounded-2xl bg-gray-50 dark:bg-zinc-900/90 border border-gray-200/80 dark:border-zinc-800 space-y-2">
+                {PLAYGROUND_VOICES.map((voice) => (
+                  <div
+                    key={voice.id}
+                    onClick={() => {
+                      setSelectedVoice(voice.id);
+                    }}
+                    className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 cursor-pointer ${
+                      selectedVoice === voice.id && !recordedAudioBlob
+                        ? "bg-purple-500/10 border-2 border-purple-500 shadow-sm"
+                        : "bg-white dark:bg-zinc-950/50 border-2 border-transparent hover:border-gray-200 dark:hover:border-zinc-700"
+                    }`}
+                  >
+                    <div
+                      className={`w-10 h-10 rounded-full bg-gradient-to-br ${voice.color} flex items-center justify-center text-white font-bold text-base shrink-0 shadow-md`}
+                    >
+                      {voice.avatar}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 mb-0.5">
+                        <span className="font-semibold text-sm text-gray-900 dark:text-white truncate">
+                          {t(voice.nameKey)}
+                        </span>
+                        <span className="text-xs text-gray-400 dark:text-zinc-500">
+                          {voice.gender === "male" ? t("common.male") : t("common.female")}
+                        </span>
+                      </div>
+                      <div className="text-xs text-gray-400 dark:text-zinc-500 truncate">
+                        {t(voice.previewKey)}
+                      </div>
+                    </div>
+                    <div
+                      className="flex items-center gap-2 shrink-0"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <button
+                        onClick={() => handleVoicePreview(voice.id)}
+                        className="w-8 h-8 rounded-full bg-gray-200 dark:bg-zinc-700 hover:bg-gray-300 dark:hover:bg-zinc-600 flex items-center justify-center transition-colors"
+                        title={t("playground.previewVoice")}
+                      >
+                        {playingVoicePreview === voice.id ? (
+                          <StopIcon className="w-3.5 h-3.5 text-gray-700 dark:text-zinc-300" />
+                        ) : (
+                          <PlayIcon className="w-3.5 h-3.5 text-gray-700 dark:text-zinc-300 ml-0.5" />
+                        )}
+                      </button>
+                      <button
+                        onClick={() => {
+                          setSelectedVoice(voice.id);
+                        }}
+                        className={`w-8 h-8 rounded-full flex items-center justify-center transition-all ${
+                          selectedVoice === voice.id && !recordedAudioBlob
+                            ? "bg-purple-500 text-white shadow-sm"
+                            : "bg-gray-200 dark:bg-zinc-700 hover:bg-gray-300 dark:hover:bg-zinc-600 text-gray-700 dark:text-zinc-300"
+                        }`}
+                        title={t("playground.selectVoice")}
+                      >
+                        <CheckIcon className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
 
             {/* Custom Voice Recording toggle button */}
             <button
