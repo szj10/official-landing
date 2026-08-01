@@ -76,6 +76,7 @@
     "previewVoice": "音声プレビュー",
     "selectVoice": "音声を選択",
     "microphoneError": "マイクにアクセスできません。権限を確認してください。",
-    "generateError": "音声の生成に失敗しました。もう一度お試しください。"
+    "generateError": "音声の生成に失敗しました。もう一度お試しください。",
+    "emptyTextWarning": "音声を生成する前にテキストを入力してください。"
   }
 }

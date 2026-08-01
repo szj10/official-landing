@@ -76,6 +76,7 @@
     "previewVoice": "Aperçu de la voix",
     "selectVoice": "Sélectionner la voix",
     "microphoneError": "Impossible d'accéder au microphone. Veuillez vérifier les permissions.",
-    "generateError": "Échec de la génération audio. Veuillez réessayer."
+    "generateError": "Échec de la génération audio. Veuillez réessayer.",
+    "emptyTextWarning": "Veuillez saisir du texte avant de générer l'audio."
   }
 }

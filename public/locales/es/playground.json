@@ -76,6 +76,7 @@
     "previewVoice": "Vista previa de voz",
     "selectVoice": "Seleccionar voz",
     "microphoneError": "No se puede acceder al micrófono. Por favor verifica los permisos.",
-    "generateError": "Error al generar el audio. Por favor inténtalo de nuevo."
+    "generateError": "Error al generar el audio. Por favor inténtalo de nuevo.",
+    "emptyTextWarning": "Por favor, introduce texto antes de generar el audio."
   }
 }

@@ -200,6 +200,7 @@ export default function PlaygroundContent() {
   const [isCachedResult, setIsCachedResult] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [rateLimitRetryAfter, setRateLimitRetryAfter] = useState<number | null>(null);
+  const [emptyTextWarning, setEmptyTextWarning] = useState(false);
 
   // --- Playback state ---
   const [isPlaying, setIsPlaying] = useState(false);
@@ -472,7 +473,12 @@ export default function PlaygroundContent() {
     const hasVoice = !!selectedVoice && !recordedAudioBlob;
     const hasRecording =
       !!recordedAudioBlob && uploadStatus === "success" && anonymousVoiceId !== null;
-    if (!text || (!hasVoice && !hasRecording)) return;
+    if (!text) {
+      setEmptyTextWarning(true);
+      return;
+    }
+    setEmptyTextWarning(false);
+    if (!hasVoice && !hasRecording) return;
 
     const voice = hasVoice ? PLAYGROUND_VOICES.find((v) => v.id === selectedVoice) : null;
     if (hasVoice && !voice) return;
@@ -656,7 +662,7 @@ export default function PlaygroundContent() {
   const hasSelectedVoice = !!selectedVoice && !recordedAudioBlob;
   const hasUploadedRecording =
     !!recordedAudioBlob && uploadStatus === "success" && anonymousVoiceId !== null;
-  const canGenerate = !!currentText && (hasSelectedVoice || hasUploadedRecording) && !isGenerating;
+  const canGenerate = (hasSelectedVoice || hasUploadedRecording) && !isGenerating;
 
   const statusLabel = () => {
     switch (generationStatus) {
@@ -1090,23 +1096,24 @@ export default function PlaygroundContent() {
         </div>
 
         {/* === Generation & Preview Section === */}
-        <div className="p-8 lg:p-10 border-t border-gray-200/50 dark:border-zinc-800/50 bg-white/60 dark:bg-zinc-900/40">
-          <div className="max-w-3xl mx-auto text-center mb-8">
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
+        <div className="px-6 py-5 lg:px-10 lg:py-8 border-t border-gray-200/50 dark:border-zinc-800/50 bg-white/60 dark:bg-zinc-900/40">
+          {/* Speed + Generate — compact row on all screens */}
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 mb-5">
+            <h2 className="hidden sm:block text-base font-semibold text-gray-900 dark:text-white">
               {t("playground.preview.title")}
             </h2>
 
-            {/* Minimal Speed Selector */}
-            <div className="flex items-center justify-center gap-3 mb-6">
+            {/* Speed Selector */}
+            <div className="flex items-center gap-2">
               <span className="text-xs font-medium text-gray-500 dark:text-zinc-400 uppercase tracking-wider">
                 {t("playground.speedSection.title")}
               </span>
-              <div className="flex items-center bg-gray-100 dark:bg-zinc-800 rounded-full p-1 shadow-inner">
+              <div className="flex items-center bg-gray-100 dark:bg-zinc-800 rounded-full p-0.5 shadow-inner">
                 {(["slow", "normal", "fast"] as const).map((s) => (
                   <button
                     key={s}
                     onClick={() => setSpeed(s)}
-                    className={`px-4 py-1.5 text-xs font-semibold rounded-full transition-all duration-200 ${
+                    className={`px-3 py-1 text-xs font-semibold rounded-full transition-all duration-200 ${
                       speed === s
                         ? "bg-white dark:bg-zinc-700 text-indigo-600 dark:text-indigo-400 shadow-sm"
                         : "text-gray-500 dark:text-zinc-400 hover:text-gray-700 dark:hover:text-zinc-200"
@@ -1118,43 +1125,63 @@ export default function PlaygroundContent() {
               </div>
             </div>
 
-            {/* Prominent Generate Button */}
-            <div className="max-w-md mx-auto">
+            {/* Generate Button */}
+            <button
+              onClick={handleGenerate}
+              disabled={isGenerating}
+              className="w-full sm:w-auto bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 disabled:from-indigo-400 disabled:to-purple-400 dark:disabled:from-indigo-700 dark:disabled:to-purple-700 text-white px-6 py-2.5 rounded-xl transition-all duration-200 font-semibold text-sm shadow-md shadow-indigo-500/20 hover:shadow-indigo-500/35 hover:scale-[1.02] active:scale-[0.98] disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            >
+              {isGenerating ? (
+                <>
+                  <svg className="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    />
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    />
+                  </svg>
+                  <span>{statusLabel() || t("playground.preview.generating")}</span>
+                </>
+              ) : (
+                <>
+                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M8 5v14l11-7z" />
+                  </svg>
+                  <span>{t("playground.preview.generate")}</span>
+                </>
+              )}
+            </button>
+          </div>
+
+          {/* Empty text warning */}
+          {emptyTextWarning && (
+            <div className="mb-4 flex items-center gap-2.5 px-4 py-2.5 rounded-xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 text-amber-700 dark:text-amber-300">
+              <AlertIcon className="w-4 h-4 shrink-0" />
+              <p className="text-xs font-medium flex-1">{t("playground.emptyTextWarning")}</p>
               <button
-                onClick={handleGenerate}
-                disabled={!canGenerate}
-                className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 disabled:from-gray-300 disabled:to-gray-400 dark:disabled:from-zinc-700 dark:disabled:to-zinc-800 disabled:text-gray-500 dark:disabled:text-zinc-500 text-white px-8 py-4 rounded-2xl transition-all duration-200 font-bold text-lg shadow-xl shadow-indigo-500/25 hover:shadow-indigo-500/40 disabled:shadow-none hover:scale-[1.02] disabled:hover:scale-100 active:scale-[0.98] disabled:cursor-not-allowed flex items-center justify-center gap-3"
+                onClick={() => setEmptyTextWarning(false)}
+                className="text-amber-500 hover:text-amber-700 dark:hover:text-amber-200 transition-colors ml-1"
+                aria-label="Dismiss"
               >
-                {isGenerating ? (
-                  <>
-                    <svg className="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24">
-                      <circle
-                        className="opacity-25"
-                        cx="12"
-                        cy="12"
-                        r="10"
-                        stroke="currentColor"
-                        strokeWidth="4"
-                      />
-                      <path
-                        className="opacity-75"
-                        fill="currentColor"
-                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                      />
-                    </svg>
-                    <span>{statusLabel() || t("playground.preview.generating")}</span>
-                  </>
-                ) : (
-                  <>
-                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M8 5v14l11-7z" />
-                    </svg>
-                    <span>{t("playground.preview.generate")}</span>
-                  </>
-                )}
+                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
               </button>
             </div>
-          </div>
+          )}
 
           <div className="max-w-3xl mx-auto">
             {/* Rate limit error */}

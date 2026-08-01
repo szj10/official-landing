@@ -76,6 +76,7 @@
     "previewVoice": "Stimme vorhören",
     "selectVoice": "Stimme auswählen",
     "microphoneError": "Mikrofon nicht zugänglich. Bitte Berechtigungen prüfen.",
-    "generateError": "Audio-Generierung fehlgeschlagen. Bitte erneut versuchen."
+    "generateError": "Audio-Generierung fehlgeschlagen. Bitte erneut versuchen.",
+    "emptyTextWarning": "Bitte gib Text ein, bevor du Audio generierst."
   }
 }

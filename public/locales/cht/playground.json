@@ -76,6 +76,7 @@
     "previewVoice": "試聽語音",
     "selectVoice": "選擇語音",
     "microphoneError": "無法存取麥克風，請檢查權限設定。",
-    "generateError": "音訊生成失敗，請重試。"
+    "generateError": "音訊生成失敗，請重試。",
+    "emptyTextWarning": "請先輸入文字再生成音訊。"
   }
 }

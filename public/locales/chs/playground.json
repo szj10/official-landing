@@ -76,6 +76,7 @@
     "previewVoice": "试听语音",
     "selectVoice": "选择语音",
     "microphoneError": "无法访问麦克风，请检查权限设置。",
-    "generateError": "音频生成失败，请重试。"
+    "generateError": "音频生成失败，请重试。",
+    "emptyTextWarning": "请先输入文字再生成音频。"
   }
 }
