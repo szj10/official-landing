@@ -18,6 +18,14 @@ export const metadata: Metadata = {
   title: "Huavoi - AI-Powered Video Creation from Script to Screen",
   description:
     "Transform ideas into professional videos in minutes. End-to-end AI solution for scriptwriting, voice synthesis, and video generation. One platform, complete video production.",
+  icons: {
+    icon: [
+      { url: "/icons8/icons8-voice-color-16.png", sizes: "16x16", type: "image/png" },
+      { url: "/icons8/icons8-voice-color-32.png", sizes: "32x32", type: "image/png" },
+      { url: "/icons8/icons8-voice-color-96.png", sizes: "96x96", type: "image/png" },
+    ],
+    apple: [{ url: "/icons8/icons8-voice-color-96.png", sizes: "96x96", type: "image/png" }],
+  },
 };
 
 export default function RootLayout({
