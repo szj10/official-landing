@@ -7,7 +7,7 @@ A Next.js + TypeScript project for a product landing page and pricing pages, ins
 ### Prerequisites
 
 - Node.js 18.17 or later
-- npm or yarn
+- npm
 
 ### Installation
 

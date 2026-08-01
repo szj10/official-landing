@@ -1,67 +1,86 @@
 # Translation Files (i18n)
 
-This directory contains all translation files for the Huavoi application.
+This directory contains all translation files for the Huavoi application, organized by language and namespace.
 
 ## 📁 File Structure
 
 ```
 public/locales/
-├── en.json    # English (source language)
-├── chs.json   # Simplified Chinese (简体中文)
-├── cht.json   # Traditional Chinese (繁體中文)
-├── es.json    # Spanish (Español)
-├── fr.json    # French (Français)
-├── de.json    # German (Deutsch)
-├── ja.json    # Japanese (日本語)
-└── ko.json    # Korean (한국어)
+├── en/                          # English (source language)
+│   ├── common.json
+│   ├── footer.json
+│   ├── header.json
+│   ├── home.json
+│   ├── legal.json
+│   ├── news.json
+│   ├── playground.json
+│   ├── pricing.json
+│   ├── sample-texts.json
+│   └── sample-voices.json
+├── chs/                         # Simplified Chinese (简体中文)
+├── cht/                         # Traditional Chinese (繁體中文)
+├── es/                          # Spanish (Español)
+├── fr/                          # French (Français)
+├── de/                          # German (Deutsch)
+├── ja/                          # Japanese (日本語)
+└── ko/                          # Korean (한국어)
 ```
+
+Each language folder contains the same namespace files as the English folder.
 
 ## 🎯 How to Translate
 
 ### For i18n Team Members
 
-1. **Open the target language file** (e.g., `chs.json` for Simplified Chinese)
+1. **Navigate to the target language folder** (e.g., `public/locales/chs/` for Simplified Chinese)
 
-2. **Find placeholder texts** - Look for values like:
+2. **Open the namespace file** (e.g., `header.json`, `home.json`, etc.)
+
+3. **Find placeholder texts** - Look for values like:
 
    ```json
    "title": "[TRANSLATE: English text here]"
    ```
 
-3. **Replace with translation**:
+4. **Replace with translation**:
 
    ```json
    "title": "中文翻译"
    ```
 
-4. **Save the file** - Changes will be automatically reflected in the app
+5. **Save the file** - Changes will be automatically reflected in the app when you restart `npm run dev`
 
 ### Translation Guidelines
 
 - **Keep the JSON structure intact** - Only modify the values, not the keys
 - **Maintain placeholders** - If a translation is not ready, keep the `[TRANSLATE: ...]` format
-- **Preserve formatting** - Keep any special characters like `→` or emojis
+- **Preserve formatting** - Keep any special characters like `→`, emojis, or HTML-like tags
 - **Test your changes** - Run `npm run dev` to see translations in action
+- **Consistency** - Use consistent terminology across all namespace files
 
-## 📝 Translation Keys Organization
+## 📝 Namespace Files
 
-Translations are organized by sections:
+Translations are organized by functional areas:
 
-- `common` - Shared buttons and links (Get Started, Learn More, etc.)
-- `header` - Navigation menu items
-- `hero` - Main landing page hero section
-- `trust` - Trust badges section
-- `solutions` - Product solutions cards
-- `features` - Feature highlights
-- `cta` - Call-to-action sections
-- `faq` - Frequently asked questions
+- **`common.json`** - Shared buttons and links (Get Started, Learn More, etc.)
+- **`header.json`** - Navigation menu items and header elements
+- **`home.json`** - Main landing page hero section, features, and trust sections
+- **`pricing.json`** - Pricing page content and plan descriptions
+- **`footer.json`** - Footer links and information
+- **`news.json`** - News and blog-related content
+- **`playground.json`** - Playground/demo page content
+- **`legal.json`** - Legal page references (Privacy Policy, Terms of Service)
+- **`sample-texts.json`** - Sample text examples used in the application
+- **`sample-voices.json`** - Sample voice descriptions and metadata
 
 ## 🔄 Adding a New Language
 
-1. Copy `en.json` to a new file (e.g., `ko.json` for Korean)
-2. Replace all English text with `[TRANSLATE: original text]` placeholders
-3. Add the language to the configuration in `src/i18n/config.ts`
-4. Add the language option in the Header component
+1. Create a new folder in `public/locales/` with the language code (e.g., `pt/` for Portuguese)
+2. Copy all JSON files from the `en/` folder to the new language folder
+3. Replace all English text with `[TRANSLATE: original text]` placeholders
+4. Add the language configuration to `next.config.ts` or the i18n configuration
+5. Add the language option in the Header component
+6. Translate files one namespace at a time
 
 ## 💡 Tips
 
@@ -69,13 +88,15 @@ Translations are organized by sections:
 - Keep translations concise - UI space may be limited
 - Consider cultural nuances, not just literal translations
 - For long texts, ensure they fit in the UI layout
+- Test in dark mode to ensure translated text doesn't overflow
 
 ## 🛠️ Technical Details
 
 - Format: JSON
 - Encoding: UTF-8
-- Nesting: Supported (use dot notation in code: `t('hero.title')`)
-- Missing translations: Falls back to English
+- Nesting: Supported (use dot notation in code: `t('namespace:key.nested')`)
+- Missing translations: Falls back to the English version from the `en/` folder
+- i18n Library: `next-intl` (configured for Next.js App Router)
 
 ## 📞 Need Help?
 
@@ -84,3 +105,4 @@ Contact the development team if you:
 - Find unclear or ambiguous source text
 - Need context for a specific translation
 - Encounter technical issues with the files
+- Have questions about namespace organization

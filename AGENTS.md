@@ -26,13 +26,13 @@ This project is a Next.js (App Router) landing page and pricing application for 
 - **Styling**: Use Tailwind CSS utility classes.
 - **Type Safety**: Use TypeScript. Avoid explicit `any`.
 - **Formatting**: The project uses Prettier and `lint-staged`. Ensure files are formatted before committing.
-- **Internationalization**: Content should be managed via `next-intl`. Translations are located in `src/locales/`.
+- **Internationalization**: Content is managed via `next-intl`. Translations are located in `public/locales/` organized by language code (en, chs, cht, es, fr, de, ja, ko) with namespace files (common.json, header.json, home.json, pricing.json, etc.).
 - **Components**: UI components reside in `src/components/`. Pages are in `src/app/`.
 
 ## Key Files
 
 - `src/app/`: Next.js App Router pages (Landing, Pricing).
-- `src/components/`: Reusable UI components (Header, Footer).
-- `src/locales/`: JSON translation files.
-- `tailwind.config.ts`: Tailwind configuration (if applicable, though Tailwind 4 uses CSS).
+- `src/components/`: Reusable UI components (Header, Footer, etc.).
+- `public/locales/`: Translation files organized by language (en, chs, cht, es, fr, de, ja, ko) with namespace files for different sections.
 - `next.config.ts`: Next.js configuration.
+- `tailwind.config.ts`: Tailwind CSS configuration.
