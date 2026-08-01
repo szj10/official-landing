@@ -169,6 +169,9 @@ export default function PlaygroundContent() {
   const [selectedVoice, setSelectedVoice] = useState<string | null>("voice1");
   const [playingVoicePreview, setPlayingVoicePreview] = useState<string | null>(null);
 
+  // --- Speed state ---
+  const [speed, setSpeed] = useState<"slow" | "normal" | "fast">("normal");
+
   // --- Voice panel toggle: "stock" shows sample voices, "custom" shows recording ---
   const [activeVoicePanel, setActiveVoicePanel] = useState<"stock" | "custom">("stock");
 
@@ -475,6 +478,10 @@ export default function PlaygroundContent() {
     if (hasVoice && !voice) return;
     const language = hasVoice ? voice!.language : locale;
 
+    // Calculate rate based on speed setting
+    const rateMap = { slow: 0.3, normal: 0.5, fast: 0.8 };
+    const rate = rateMap[speed];
+
     setIsGenerating(true);
     setGenerationStatus(null);
     setAudioUrl(null);
@@ -492,8 +499,8 @@ export default function PlaygroundContent() {
 
     try {
       const requestBody = hasVoice
-        ? { text, voice_id: voice!.backendVoiceId, language }
-        : { text, anonymous_voice_id: anonymousVoiceId, language };
+        ? { text, voice_id: voice!.backendVoiceId, language, rate }
+        : { text, anonymous_voice_id: anonymousVoiceId, language, rate };
 
       const res = await fetch("/api/v1/playground/tts", {
         method: "POST",
@@ -812,6 +819,7 @@ export default function PlaygroundContent() {
                     key={voice.id}
                     onClick={() => {
                       setSelectedVoice(voice.id);
+                      handleVoicePreview(voice.id);
                     }}
                     className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 cursor-pointer ${
                       selectedVoice === voice.id && !recordedAudioBlob
@@ -1080,31 +1088,87 @@ export default function PlaygroundContent() {
 
       {/* === Preview / Generation Panel === */}
       <div className="mt-8 glass-panel rounded-3xl p-8 shadow-sm">
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-6">
-          <h2 className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
-            <svg
-              className="w-5 h-5 text-pink-500"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"
-              />
-            </svg>
-            {t("playground.preview.title")}
-          </h2>
+        <div className="flex flex-col gap-6 mb-6">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+              <svg
+                className="w-5 h-5 text-pink-500"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"
+                />
+              </svg>
+              {t("playground.preview.title")}
+            </h2>
+          </div>
+
+          {/* Speed Selector */}
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+            <label className="text-sm font-semibold text-gray-700 dark:text-zinc-300 flex items-center gap-2">
+              <svg
+                className="w-4 h-4 text-indigo-500"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M13 10V3L4 14h7v7l9-11h-7z"
+                />
+              </svg>
+              {t("playground.speedSection.title")}
+            </label>
+            <div className="flex gap-2 w-full sm:w-auto">
+              <button
+                onClick={() => setSpeed("slow")}
+                className={`flex-1 sm:flex-none px-6 py-2.5 rounded-xl font-semibold text-sm transition-all duration-200 ${
+                  speed === "slow"
+                    ? "bg-gradient-to-r from-blue-500 to-cyan-500 text-white shadow-lg shadow-blue-500/25"
+                    : "bg-gray-100 dark:bg-zinc-800 text-gray-700 dark:text-zinc-300 hover:bg-gray-200 dark:hover:bg-zinc-700"
+                }`}
+              >
+                {t("playground.speedSection.slow")}
+              </button>
+              <button
+                onClick={() => setSpeed("normal")}
+                className={`flex-1 sm:flex-none px-6 py-2.5 rounded-xl font-semibold text-sm transition-all duration-200 ${
+                  speed === "normal"
+                    ? "bg-gradient-to-r from-indigo-500 to-purple-500 text-white shadow-lg shadow-indigo-500/25"
+                    : "bg-gray-100 dark:bg-zinc-800 text-gray-700 dark:text-zinc-300 hover:bg-gray-200 dark:hover:bg-zinc-700"
+                }`}
+              >
+                {t("playground.speedSection.normal")}
+              </button>
+              <button
+                onClick={() => setSpeed("fast")}
+                className={`flex-1 sm:flex-none px-6 py-2.5 rounded-xl font-semibold text-sm transition-all duration-200 ${
+                  speed === "fast"
+                    ? "bg-gradient-to-r from-pink-500 to-red-500 text-white shadow-lg shadow-pink-500/25"
+                    : "bg-gray-100 dark:bg-zinc-800 text-gray-700 dark:text-zinc-300 hover:bg-gray-200 dark:hover:bg-zinc-700"
+                }`}
+              >
+                {t("playground.speedSection.fast")}
+              </button>
+            </div>
+          </div>
+
+          {/* Generate Button - More Prominent */}
           <button
             onClick={handleGenerate}
             disabled={!canGenerate}
-            className="w-full sm:w-auto bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 disabled:from-gray-400 disabled:to-gray-400 text-white px-8 py-3 rounded-full transition-all duration-200 font-semibold shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/35 disabled:shadow-none hover:-translate-y-0.5 disabled:hover:translate-y-0 active:translate-y-0 text-sm disabled:cursor-not-allowed"
+            className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 disabled:from-gray-400 disabled:to-gray-400 text-white px-8 py-4 rounded-2xl transition-all duration-200 font-bold text-base shadow-2xl shadow-indigo-500/30 hover:shadow-indigo-500/50 disabled:shadow-none hover:scale-[1.02] disabled:hover:scale-100 active:scale-[0.98] disabled:cursor-not-allowed flex items-center justify-center gap-3"
           >
             {isGenerating ? (
-              <span className="flex items-center justify-center gap-2">
-                <svg className="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
+              <>
+                <svg className="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24">
                   <circle
                     className="opacity-25"
                     cx="12"
@@ -1119,10 +1183,15 @@ export default function PlaygroundContent() {
                     d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                   />
                 </svg>
-                {statusLabel() || t("playground.preview.generating")}
-              </span>
+                <span>{statusLabel() || t("playground.preview.generating")}</span>
+              </>
             ) : (
-              t("playground.preview.generate")
+              <>
+                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M8 5v14l11-7z" />
+                </svg>
+                <span>{t("playground.preview.generate")}</span>
+              </>
             )}
           </button>
         </div>

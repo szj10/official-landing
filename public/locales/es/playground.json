@@ -31,6 +31,12 @@
       "stopRecorded": "Detener Reproducción",
       "recordedPreview": "Vista Previa de Grabación"
     },
+    "speedSection": {
+      "title": "Velocidad de Voz",
+      "slow": "Lento",
+      "normal": "Normal",
+      "fast": "Rápido"
+    },
     "preview": {
       "title": "Vista Previa",
       "generate": "Generar Audio",

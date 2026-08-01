@@ -31,6 +31,12 @@
       "stopRecorded": "Arrêter la lecture",
       "recordedPreview": "Aperçu de l'enregistrement"
     },
+    "speedSection": {
+      "title": "Vitesse de Parole",
+      "slow": "Lent",
+      "normal": "Normal",
+      "fast": "Rapide"
+    },
     "preview": {
       "title": "Aperçu",
       "generate": "Générer l'audio",

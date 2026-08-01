@@ -31,6 +31,12 @@
       "stopRecorded": "재생 중지",
       "recordedPreview": "녹음된 음성 미리듣기"
     },
+    "speedSection": {
+      "title": "음성 속도",
+      "slow": "느리게",
+      "normal": "보통",
+      "fast": "빠르게"
+    },
     "preview": {
       "title": "미리보기",
       "generate": "오디오 생성",

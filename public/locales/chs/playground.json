@@ -31,6 +31,12 @@
       "stopRecorded": "停止播放",
       "recordedPreview": "录音试听"
     },
+    "speedSection": {
+      "title": "语速",
+      "slow": "慢速",
+      "normal": "正常",
+      "fast": "快速"
+    },
     "preview": {
       "title": "预览",
       "generate": "生成音频",
