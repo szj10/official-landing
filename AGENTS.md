@@ -13,13 +13,13 @@ This project is a Next.js (App Router) landing page and pricing application for 
 
 ## Building and Running
 
-| Command          | Description                        |
-| :--------------- | :--------------------------------- |
-| `npm run dev`    | Starts the development server.     |
-| `npm run build`  | Builds the project for production. |
-| `npm start`      | Starts the production server.      |
-| `npm run lint`   | Runs ESLint.                       |
-| `npm run format` | Runs Prettier to format code.      |
+| Command           | Description                        |
+| :---------------- | :--------------------------------- |
+| `pnpm run dev`    | Starts the development server.     |
+| `pnpm run build`  | Builds the project for production. |
+| `pnpm start`      | Starts the production server.      |
+| `pnpm run lint`   | Runs ESLint.                       |
+| `pnpm run format` | Runs Prettier to format code.      |
 
 ## Development Conventions
 
