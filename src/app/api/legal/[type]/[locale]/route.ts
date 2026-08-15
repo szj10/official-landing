@@ -4,7 +4,7 @@ import path from "path";
 import matter from "gray-matter";
 import { remark } from "remark";
 import html from "remark-html";
-import { locales, defaultLocale, type Locale } from "@/i18n/config";
+import { locales, defaultLocale } from "@/i18n/config";
 
 async function markdownToHtml(markdown: string): Promise<string> {
   const result = await remark().use(html).process(markdown);

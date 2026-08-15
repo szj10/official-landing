@@ -12,10 +12,7 @@ interface NewsletterSignupProps {
   layout?: "stacked" | "inline";
 }
 
-export default function NewsletterSignup({
-  compact = false,
-  layout = "inline",
-}: NewsletterSignupProps) {
+export default function NewsletterSignup({ compact = false }: NewsletterSignupProps) {
   const { t } = useI18n();
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
