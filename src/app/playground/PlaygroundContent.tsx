@@ -579,9 +579,8 @@ export default function PlaygroundContent() {
       text: textSnippet,
       voice_name: vName,
       audio_path: jobToSave.audio_path,
-      created_at: jobToSave.created_at || new Date().toISOString(),
-      expires_at:
-        jobToSave.expires_at || new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+      created_at: jobToSave.created_at,
+      expires_at: jobToSave.expires_at,
     };
 
     setHistoryJobs((prev) => {
