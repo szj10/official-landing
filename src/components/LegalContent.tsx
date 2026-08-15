@@ -15,16 +15,31 @@ export default function LegalContent({ type }: { type: "terms" | "privacy" }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    setLoading(true);
-    fetch(`/api/legal/${type}/${locale}`)
+    let mounted = true;
+    const controller = new AbortController();
+
+    // Defer setting loading to avoid synchronous setState inside effect
+    Promise.resolve().then(() => {
+      if (mounted) setLoading(true);
+    });
+
+    fetch(`/api/legal/${type}/${locale}`, { signal: controller.signal })
       .then((res) => res.json())
       .then((json: LegalData) => {
+        if (!mounted) return;
         setData(json);
         setLoading(false);
       })
-      .catch(() => {
+      .catch((err) => {
+        if (!mounted) return;
+        if (err.name === "AbortError") return;
         setLoading(false);
       });
+
+    return () => {
+      mounted = false;
+      controller.abort();
+    };
   }, [type, locale]);
 
   if (loading || !data) {

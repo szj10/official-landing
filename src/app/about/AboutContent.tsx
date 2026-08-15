@@ -192,7 +192,7 @@ export default function AboutContent() {
               </div>
               <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">Contact Us</h3>
               <p className="text-xs text-gray-600 dark:text-zinc-400 mb-6">
-                Have questions? We're here to help.
+                Have questions? We&apos;re here to help.
               </p>
               <a
                 href="mailto:contact@huavoi.com"

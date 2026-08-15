@@ -2,7 +2,7 @@ import { remark } from "remark";
 import html from "remark-html";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { getPostBySlug, getAllPosts, type Post } from "@/lib/posts";
+import { getPostBySlug, getAllPosts } from "@/lib/posts";
 import PostPageContent, { PostNotFound } from "./PostPageContent";
 
 async function markdownToHtml(markdown: string): Promise<string> {
