@@ -1179,53 +1179,16 @@ export default function PlaygroundContent() {
 
         {/* Queue Status Card */}
         {(() => {
-          // Get queue data directly from currentJob
-          const currentPos =
-            currentJob?.queue_position != null ? Number(currentJob.queue_position) : null;
-          const currentAhead =
-            currentJob?.jobs_ahead != null ? Number(currentJob.jobs_ahead) : null;
-          const currentDepth =
-            currentJob?.queue_depth != null ? Number(currentJob.queue_depth) : null;
-          const currentWait =
-            currentJob?.estimated_wait_seconds != null
-              ? Number(currentJob.estimated_wait_seconds)
-              : null;
+          // Simply use the last valid queue metrics from our state
+          const queueData = lastQueueMetrics;
 
-          const hasCurrentMetrics =
-            currentPos !== null &&
-            !isNaN(currentPos) &&
-            currentAhead !== null &&
-            !isNaN(currentAhead) &&
-            currentDepth !== null &&
-            !isNaN(currentDepth) &&
-            currentWait !== null &&
-            !isNaN(currentWait);
-
-          const queueData = hasCurrentMetrics
-            ? {
-                position: currentPos,
-                jobsAhead: currentAhead,
-                queueDepth: currentDepth,
-                estimatedWaitSeconds: currentWait,
-              }
-            : lastQueueMetrics
-              ? {
-                  position: lastQueueMetrics.position,
-                  jobsAhead: lastQueueMetrics.jobsAhead,
-                  queueDepth: lastQueueMetrics.queueDepth,
-                  estimatedWaitSeconds: lastQueueMetrics.estimatedWaitSeconds,
-                }
-              : null;
-
-          // Show card when queued, even without metrics yet (SSE will populate them)
+          // Show card when queued, even without metrics yet (polling will populate them)
           const shouldShow = isGenerating && generationStatus === "queued";
 
           console.log("🔍 Queue Card Render Debug:", {
             isGenerating,
             generationStatus,
             hasCurrentJob: !!currentJob,
-            currentJobQueuePosition: currentJob?.queue_position,
-            currentJobHasAllQueueFields: hasCurrentMetrics,
             queueData,
             lastQueueMetrics,
             shouldShow,
