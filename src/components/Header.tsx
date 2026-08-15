@@ -51,13 +51,6 @@ const NAV_LINKS = [
   { key: "header.about", href: "/about" },
 ] as const;
 
-// ─── Theme options ────────────────────────────────────────────────────────────
-
-const THEME_OPTIONS = [
-  { value: "light", label: "header.light", Icon: SunIcon },
-  { value: "dark", label: "header.dark", Icon: MoonIcon },
-] as const;
-
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export default function Header() {
