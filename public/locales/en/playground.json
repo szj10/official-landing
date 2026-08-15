@@ -54,6 +54,15 @@
       "failed": "Generation failed",
       "rateLimited": "Rate limit exceeded"
     },
+    "queue": {
+      "title": "Queue Status",
+      "position": "Position",
+      "jobsAhead": "Jobs Ahead",
+      "estimatedWait": "Estimated Wait",
+      "nextInLine": "You're next in line!",
+      "inProgress": "Your job is queued",
+      "updatesAutomatically": "Updates automatically"
+    },
     "rateLimitTitle": "Rate limit reached",
     "rateLimitMessage": "You've used all 5 free requests this hour. Try again in",
     "errorTitle": "Generation failed",
