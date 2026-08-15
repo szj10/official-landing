@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect, startTransition } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useI18n } from "@/i18n";
 import { PLAYGROUND_VOICES } from "./voices.config";
 import { formatWaitTime } from "@/lib/utils/time-format";
@@ -45,6 +45,21 @@ interface TTSJobResponse {
   jobs_ahead?: number | null;
   queue_depth?: number | null;
   estimated_wait_seconds?: number | null;
+}
+
+export interface HistoryVoice {
+  anonymous_voice_id: number;
+  audio_duration: number | null;
+  expires_at: string;
+}
+
+export interface HistoryTTSJob {
+  playground_job_id: number | string;
+  text: string;
+  voice_name: string;
+  audio_path: string | null;
+  created_at: string;
+  expires_at: string;
 }
 
 // ---------------------------------------------------------------------------
@@ -223,6 +238,13 @@ export default function PlaygroundContent() {
   const [audioProgress, setAudioProgress] = useState(0);
   const [audioCurrentTime, setAudioCurrentTime] = useState(0);
 
+  // --- History state ---
+  const [historyVoices, setHistoryVoices] = useState<HistoryVoice[]>([]);
+  const [historyJobs, setHistoryJobs] = useState<HistoryTTSJob[]>([]);
+  const [showHistoryJobs, setShowHistoryJobs] = useState(false);
+  const [playingHistoryVoiceId, setPlayingHistoryVoiceId] = useState<number | null>(null);
+  const [playingHistoryJobId, setPlayingHistoryJobId] = useState<number | string | null>(null);
+
   // --- Refs ---
   const audioRef = useRef<HTMLAudioElement>(null);
   const recAudioRef = useRef<HTMLAudioElement | null>(null);
@@ -232,6 +254,75 @@ export default function PlaygroundContent() {
   const voicePreviewRef = useRef<HTMLAudioElement | null>(null);
   const eventSourceRef = useRef<EventSource | null>(null);
   const pollingIntervalRef = useRef<NodeJS.Timeout | null>(null);
+
+  // --- History Persistence ---
+  useEffect(() => {
+    const loadHistory = async () => {
+      try {
+        // Load voices
+        const storedVoices = localStorage.getItem("playground_voice_ids");
+        if (storedVoices) {
+          const voices: HistoryVoice[] = JSON.parse(storedVoices);
+          const now = new Date().getTime();
+          const validIds = voices
+            .filter((v) => new Date(v.expires_at).getTime() > now)
+            .map((v) => v.anonymous_voice_id);
+
+          if (validIds.length > 0) {
+            const res = await fetch(
+              `/api/v1/playground/history/voices?${validIds.map((id) => `ids=${id}`).join("&")}`
+            );
+            if (res.ok) {
+              const data = await res.json();
+              setHistoryVoices(data);
+              localStorage.setItem("playground_voice_ids", JSON.stringify(data));
+            }
+          } else {
+            localStorage.setItem("playground_voice_ids", "[]");
+          }
+        }
+
+        // Load TTS jobs
+        const storedJobs = localStorage.getItem("playground_tts_jobs");
+        if (storedJobs) {
+          const jobs: HistoryTTSJob[] = JSON.parse(storedJobs);
+          const now = new Date().getTime();
+          const validJobs = jobs.filter((j) => new Date(j.expires_at).getTime() > now);
+          const validIds = validJobs.map((j) => j.playground_job_id);
+
+          if (validIds.length > 0) {
+            const res = await fetch(
+              `/api/v1/playground/history/tts?${validIds.map((id) => `ids=${id}`).join("&")}`
+            );
+            if (res.ok) {
+              const backendJobs: TTSJobResponse[] = await res.json();
+              // Merge local info (text, voice_name) with backend status
+              const mergedJobs = validJobs
+                .map((localJob) => {
+                  const bj = backendJobs.find((b) => b.job_id === localJob.playground_job_id);
+                  if (bj && bj.status === "completed") {
+                    return {
+                      ...localJob,
+                      audio_path: bj.audio_path,
+                    };
+                  }
+                  return localJob;
+                })
+                .filter((j) => j.audio_path !== null); // Only keep completed
+
+              setHistoryJobs(mergedJobs);
+              localStorage.setItem("playground_tts_jobs", JSON.stringify(mergedJobs));
+            }
+          } else {
+            localStorage.setItem("playground_tts_jobs", "[]");
+          }
+        }
+      } catch (err) {
+        console.error("Failed to load playground history:", err);
+      }
+    };
+    loadHistory();
+  }, []);
 
   // Cleanup on unmount
   useEffect(() => {
@@ -363,6 +454,22 @@ export default function PlaygroundContent() {
     setPlayingVoicePreview(voiceId);
   };
 
+  const playHistoryVoice = (voiceId: number) => {
+    if (playingHistoryVoiceId === voiceId) {
+      voicePreviewRef.current?.pause();
+      setPlayingHistoryVoiceId(null);
+      return;
+    }
+    if (voicePreviewRef.current) {
+      voicePreviewRef.current.pause();
+    }
+    const audio = new Audio(`/api/v1/playground/audio/voice-prompt/${voiceId}`);
+    voicePreviewRef.current = audio;
+    audio.onended = () => setPlayingHistoryVoiceId(null);
+    audio.play().catch(() => setPlayingHistoryVoiceId(null));
+    setPlayingHistoryVoiceId(voiceId);
+  };
+
   // ---------------------------------------------------------------------------
   // Microphone recording
   // ---------------------------------------------------------------------------
@@ -475,6 +582,18 @@ export default function PlaygroundContent() {
       const data = await res.json();
       setAnonymousVoiceId(data.anonymous_voice_id);
       setUploadStatus("success");
+
+      // Save to history
+      const newVoice: HistoryVoice = {
+        anonymous_voice_id: data.anonymous_voice_id,
+        audio_duration: data.audio_duration,
+        expires_at: data.expires_at,
+      };
+      setHistoryVoices((prev) => {
+        const next = [newVoice, ...prev].slice(0, 50);
+        localStorage.setItem("playground_voice_ids", JSON.stringify(next));
+        return next;
+      });
     } catch (err) {
       console.error("Upload error:", err);
       setUploadStatus("error");
@@ -582,6 +701,32 @@ export default function PlaygroundContent() {
     setIsGenerating(false);
   }
 
+  // Helper: Save completed job to history
+  function saveCompletedJob(jobToSave: TTSJobResponse) {
+    const vName = selectedVoice
+      ? t(PLAYGROUND_VOICES.find((v) => v.id === selectedVoice)?.nameKey ?? "")
+      : t("playground.voiceSection.customVoice");
+
+    const textSnippet = currentText.slice(0, 50) + (currentText.length > 50 ? "..." : "");
+
+    const newJob: HistoryTTSJob = {
+      playground_job_id: jobToSave.job_id,
+      text: textSnippet,
+      voice_name: vName,
+      audio_path: jobToSave.audio_path,
+      created_at: jobToSave.created_at || new Date().toISOString(),
+      expires_at:
+        jobToSave.expires_at || new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+    };
+
+    setHistoryJobs((prev) => {
+      if (prev.find((p) => p.playground_job_id === newJob.playground_job_id)) return prev;
+      const next = [newJob, ...prev].slice(0, 50);
+      localStorage.setItem("playground_tts_jobs", JSON.stringify(next));
+      return next;
+    });
+  }
+
   // Helper: Handle initial job response
   function handleJobResponse(job: TTSJobResponse) {
     setCurrentJob(job);
@@ -593,6 +738,7 @@ export default function PlaygroundContent() {
       setAudioDuration(job.audio_duration);
       setIsCachedResult(job.is_cached);
       setIsGenerating(false);
+      saveCompletedJob(job);
       return;
     }
 
@@ -681,6 +827,7 @@ export default function PlaygroundContent() {
         setIsCachedResult(job.is_cached);
       }
       setIsGenerating(false);
+      saveCompletedJob(job);
       if (pollingIntervalRef.current) clearInterval(pollingIntervalRef.current);
     } else if (job.status === "failed") {
       handleGenerationError(job.error_message ?? t("playground.generateError"));
@@ -691,23 +838,41 @@ export default function PlaygroundContent() {
     }
   }
 
-  // Helper: Cleanup SSE connection
-  function cleanupSSE(es: EventSource) {
-    es.close();
-    eventSourceRef.current = null;
-  }
-
   // ---------------------------------------------------------------------------
   // Audio playback
   // ---------------------------------------------------------------------------
   const togglePlayback = () => {
     if (!audioRef.current) return;
-    if (isPlaying) {
+    if (isPlaying && !playingHistoryJobId) {
       audioRef.current.pause();
+      setIsPlaying(false);
     } else {
-      audioRef.current.play();
+      if (playingHistoryJobId) {
+        setPlayingHistoryJobId(null);
+        if (currentJob?.audio_path) setAudioUrl(resolveAudioUrl(currentJob.audio_path));
+        else setAudioUrl(null);
+      }
+      setTimeout(() => {
+        audioRef.current?.play();
+        setIsPlaying(true);
+      }, 50);
     }
-    setIsPlaying(!isPlaying);
+  };
+
+  const playHistoryJob = (jobId: string | number, path: string | null) => {
+    if (!path) return;
+    if (playingHistoryJobId === jobId && isPlaying) {
+      audioRef.current?.pause();
+      setIsPlaying(false);
+      setPlayingHistoryJobId(null);
+      if (currentJob?.audio_path) setAudioUrl(resolveAudioUrl(currentJob.audio_path));
+      else setAudioUrl(null);
+    } else {
+      setAudioUrl(resolveAudioUrl(path));
+      setPlayingHistoryJobId(jobId);
+      setIsPlaying(true);
+      setTimeout(() => audioRef.current?.play(), 50);
+    }
   };
 
   const handleSeek = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -738,7 +903,6 @@ export default function PlaygroundContent() {
   const hasSelectedVoice = !!selectedVoice && !recordedAudioBlob;
   const hasUploadedRecording =
     !!recordedAudioBlob && uploadStatus === "success" && anonymousVoiceId !== null;
-  const canGenerate = (hasSelectedVoice || hasUploadedRecording) && !isGenerating;
 
   const statusLabel = () => {
     switch (generationStatus) {
@@ -1096,6 +1260,65 @@ export default function PlaygroundContent() {
                   )}
                 </div>
               )}
+
+              {/* History Voices */}
+              {historyVoices.length > 0 && (
+                <div className="w-full mt-8 pt-6 border-t border-gray-200 dark:border-zinc-700/50">
+                  <h4 className="text-sm font-semibold text-gray-500 dark:text-zinc-400 mb-4 px-2">
+                    Recent Voice Prompts
+                  </h4>
+                  <div className="space-y-2 max-h-48 overflow-y-auto pr-2 custom-scrollbar">
+                    {historyVoices.map((voice) => (
+                      <div
+                        key={voice.anonymous_voice_id}
+                        className={`flex items-center justify-between p-3 rounded-xl border transition-all cursor-pointer ${
+                          anonymousVoiceId === voice.anonymous_voice_id
+                            ? "bg-indigo-50 dark:bg-indigo-900/20 border-indigo-500 shadow-sm"
+                            : "bg-white dark:bg-zinc-800 border-gray-100 dark:border-zinc-700 hover:border-indigo-300 dark:hover:border-indigo-600"
+                        }`}
+                        onClick={() => {
+                          setAnonymousVoiceId(voice.anonymous_voice_id);
+                          setRecordedAudioBlob(null); // Clear new recording if any
+                          if (recordedAudioUrl) {
+                            URL.revokeObjectURL(recordedAudioUrl);
+                            setRecordedAudioUrl(null);
+                          }
+                          setUploadStatus("success");
+                        }}
+                      >
+                        <div className="flex items-center gap-3">
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              playHistoryVoice(voice.anonymous_voice_id);
+                            }}
+                            className="w-8 h-8 rounded-full bg-indigo-100 dark:bg-indigo-900/40 text-indigo-600 dark:text-indigo-400 flex items-center justify-center hover:bg-indigo-200 dark:hover:bg-indigo-900/60 transition-colors shrink-0"
+                          >
+                            {playingHistoryVoiceId === voice.anonymous_voice_id ? (
+                              <StopIcon className="w-4 h-4" />
+                            ) : (
+                              <PlayIcon className="w-4 h-4 ml-0.5" />
+                            )}
+                          </button>
+                          <div className="flex flex-col">
+                            <span className="text-sm font-medium text-gray-900 dark:text-white">
+                              Voice Prompt #{voice.anonymous_voice_id}
+                            </span>
+                            <span className="text-xs text-gray-500">
+                              {voice.audio_duration ? formatTime(voice.audio_duration) : "0:00"}
+                            </span>
+                          </div>
+                        </div>
+                        {anonymousVoiceId === voice.anonymous_voice_id && (
+                          <div className="text-indigo-600 dark:text-indigo-400 mr-2">
+                            <CheckIcon className="w-5 h-5" />
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           )}
         </section>
@@ -1184,15 +1407,6 @@ export default function PlaygroundContent() {
 
           // Show card when queued, even without metrics yet (polling will populate them)
           const shouldShow = isGenerating && generationStatus === "queued";
-
-          console.log("🔍 Queue Card Render Debug:", {
-            isGenerating,
-            generationStatus,
-            hasCurrentJob: !!currentJob,
-            queueData,
-            lastQueueMetrics,
-            shouldShow,
-          });
 
           if (!shouldShow) return null;
 
@@ -1394,6 +1608,73 @@ export default function PlaygroundContent() {
           </div>
         )}
       </div>
+
+      {/* Recent Generations History */}
+      {historyJobs.length > 0 && (
+        <section className="mt-8 mb-4">
+          <button
+            onClick={() => setShowHistoryJobs(!showHistoryJobs)}
+            className="w-full flex items-center justify-between px-6 py-4 glass-panel rounded-2xl shadow-sm border border-white/20 dark:border-zinc-800/50 hover:bg-white/50 dark:hover:bg-zinc-800/50 transition-colors group"
+          >
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-full bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 flex items-center justify-center">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+              </div>
+              <span className="font-bold text-gray-900 dark:text-white group-hover:text-indigo-600 transition-colors">
+                Recent Generations
+              </span>
+            </div>
+            <ChevronIcon className="w-5 h-5 text-gray-400" open={showHistoryJobs} />
+          </button>
+
+          {showHistoryJobs && (
+            <div className="mt-4 space-y-3 animate-fade-in-up max-h-96 overflow-y-auto pr-2 custom-scrollbar">
+              {historyJobs.map((job) => (
+                <div
+                  key={job.playground_job_id}
+                  className="flex items-center gap-4 p-4 glass-panel rounded-2xl border border-white/20 dark:border-zinc-800/50 shadow-sm hover:border-indigo-200 dark:hover:border-indigo-800/50 transition-all"
+                >
+                  <button
+                    onClick={() => playHistoryJob(job.playground_job_id, job.audio_path)}
+                    className="w-12 h-12 rounded-full bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-100 dark:hover:bg-indigo-900/40 flex items-center justify-center transition-colors shrink-0"
+                  >
+                    {playingHistoryJobId === job.playground_job_id && isPlaying ? (
+                      <PauseIcon className="w-5 h-5" />
+                    ) : (
+                      <PlayIcon className="w-5 h-5 ml-0.5" />
+                    )}
+                  </button>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-semibold text-gray-900 dark:text-white truncate">
+                      {job.text}
+                    </p>
+                    <div className="flex items-center gap-3 mt-1 text-xs text-gray-500 dark:text-zinc-400">
+                      <span className="flex items-center gap-1">
+                        <SpeakerIcon className="w-3.5 h-3.5" />
+                        {job.voice_name}
+                      </span>
+                      <span>•</span>
+                      <span>
+                        {new Date(job.created_at).toLocaleTimeString(undefined, {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </section>
+      )}
 
       {/* Sticky Bottom Action Bar (Mobile & Desktop) */}
       <div className="fixed bottom-0 left-0 right-0 z-50 p-4 sm:p-6 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xl border-t border-gray-200/50 dark:border-zinc-800/50 shadow-[0_-10px_40px_rgba(0,0,0,0.05)]">
