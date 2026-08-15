@@ -242,6 +242,7 @@ export default function PlaygroundContent() {
   const [historyVoices, setHistoryVoices] = useState<HistoryVoice[]>([]);
   const [historyJobs, setHistoryJobs] = useState<HistoryTTSJob[]>([]);
   const [showHistoryJobs, setShowHistoryJobs] = useState(false);
+  const [showHistoryVoices, setShowHistoryVoices] = useState(false);
   const [playingHistoryVoiceId, setPlayingHistoryVoiceId] = useState<number | null>(null);
   const [playingHistoryJobId, setPlayingHistoryJobId] = useState<number | string | null>(null);
 
@@ -1261,62 +1262,74 @@ export default function PlaygroundContent() {
                 </div>
               )}
 
-              {/* History Voices */}
+              {/* History Voices — collapsible */}
               {historyVoices.length > 0 && (
-                <div className="w-full mt-8 pt-6 border-t border-gray-200 dark:border-zinc-700/50">
-                  <h4 className="text-sm font-semibold text-gray-500 dark:text-zinc-400 mb-4 px-2">
-                    Recent Voice Prompts
-                  </h4>
-                  <div className="space-y-2 max-h-48 overflow-y-auto pr-2 custom-scrollbar">
-                    {historyVoices.map((voice) => (
-                      <div
-                        key={voice.anonymous_voice_id}
-                        className={`flex items-center justify-between p-3 rounded-xl border transition-all cursor-pointer ${
-                          anonymousVoiceId === voice.anonymous_voice_id
-                            ? "bg-indigo-50 dark:bg-indigo-900/20 border-indigo-500 shadow-sm"
-                            : "bg-white dark:bg-zinc-800 border-gray-100 dark:border-zinc-700 hover:border-indigo-300 dark:hover:border-indigo-600"
-                        }`}
-                        onClick={() => {
-                          setAnonymousVoiceId(voice.anonymous_voice_id);
-                          setRecordedAudioBlob(null); // Clear new recording if any
-                          if (recordedAudioUrl) {
-                            URL.revokeObjectURL(recordedAudioUrl);
-                            setRecordedAudioUrl(null);
-                          }
-                          setUploadStatus("success");
-                        }}
-                      >
-                        <div className="flex items-center gap-3">
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              playHistoryVoice(voice.anonymous_voice_id);
-                            }}
-                            className="w-8 h-8 rounded-full bg-indigo-100 dark:bg-indigo-900/40 text-indigo-600 dark:text-indigo-400 flex items-center justify-center hover:bg-indigo-200 dark:hover:bg-indigo-900/60 transition-colors shrink-0"
-                          >
-                            {playingHistoryVoiceId === voice.anonymous_voice_id ? (
-                              <StopIcon className="w-4 h-4" />
-                            ) : (
-                              <PlayIcon className="w-4 h-4 ml-0.5" />
-                            )}
-                          </button>
-                          <div className="flex flex-col">
-                            <span className="text-sm font-medium text-gray-900 dark:text-white">
-                              Voice Prompt #{voice.anonymous_voice_id}
-                            </span>
-                            <span className="text-xs text-gray-500">
-                              {voice.audio_duration ? formatTime(voice.audio_duration) : "0:00"}
-                            </span>
+                <div className="w-full mt-6 pt-5 border-t border-gray-200 dark:border-zinc-700/50">
+                  <button
+                    onClick={() => setShowHistoryVoices((v) => !v)}
+                    className="w-full flex items-center justify-between px-1 py-1 text-left group"
+                  >
+                    <span className="text-xs font-semibold text-gray-500 dark:text-zinc-400 uppercase tracking-wider group-hover:text-indigo-500 transition-colors">
+                      Recent Voice Prompts
+                      <span className="ml-2 text-[10px] font-medium bg-gray-100 dark:bg-zinc-700 text-gray-500 dark:text-zinc-400 px-1.5 py-0.5 rounded-full">
+                        {historyVoices.length}
+                      </span>
+                    </span>
+                    <ChevronIcon className="w-4 h-4 text-gray-400" open={showHistoryVoices} />
+                  </button>
+
+                  {showHistoryVoices && (
+                    <div className="mt-3 space-y-2 max-h-48 overflow-y-auto pr-2 custom-scrollbar">
+                      {historyVoices.map((voice) => (
+                        <div
+                          key={voice.anonymous_voice_id}
+                          className={`flex items-center justify-between p-3 rounded-xl border transition-all cursor-pointer ${
+                            anonymousVoiceId === voice.anonymous_voice_id
+                              ? "bg-indigo-50 dark:bg-indigo-900/20 border-indigo-500 shadow-sm"
+                              : "bg-white dark:bg-zinc-800 border-gray-100 dark:border-zinc-700 hover:border-indigo-300 dark:hover:border-indigo-600"
+                          }`}
+                          onClick={() => {
+                            setAnonymousVoiceId(voice.anonymous_voice_id);
+                            setRecordedAudioBlob(null);
+                            if (recordedAudioUrl) {
+                              URL.revokeObjectURL(recordedAudioUrl);
+                              setRecordedAudioUrl(null);
+                            }
+                            setUploadStatus("success");
+                          }}
+                        >
+                          <div className="flex items-center gap-3">
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                playHistoryVoice(voice.anonymous_voice_id);
+                              }}
+                              className="w-8 h-8 rounded-full bg-indigo-100 dark:bg-indigo-900/40 text-indigo-600 dark:text-indigo-400 flex items-center justify-center hover:bg-indigo-200 dark:hover:bg-indigo-900/60 transition-colors shrink-0"
+                            >
+                              {playingHistoryVoiceId === voice.anonymous_voice_id ? (
+                                <StopIcon className="w-4 h-4" />
+                              ) : (
+                                <PlayIcon className="w-4 h-4 ml-0.5" />
+                              )}
+                            </button>
+                            <div className="flex flex-col">
+                              <span className="text-sm font-medium text-gray-900 dark:text-white">
+                                Voice Prompt #{voice.anonymous_voice_id}
+                              </span>
+                              <span className="text-xs text-gray-500">
+                                {voice.audio_duration ? formatTime(voice.audio_duration) : "0:00"}
+                              </span>
+                            </div>
                           </div>
+                          {anonymousVoiceId === voice.anonymous_voice_id && (
+                            <div className="text-indigo-600 dark:text-indigo-400 mr-2">
+                              <CheckIcon className="w-5 h-5" />
+                            </div>
+                          )}
                         </div>
-                        {anonymousVoiceId === voice.anonymous_voice_id && (
-                          <div className="text-indigo-600 dark:text-indigo-400 mr-2">
-                            <CheckIcon className="w-5 h-5" />
-                          </div>
-                        )}
-                      </div>
-                    ))}
-                  </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               )}
             </div>
@@ -1388,13 +1401,6 @@ export default function PlaygroundContent() {
                     <span>{audioDuration ? formatTime(Math.floor(audioDuration)) : "0:00"}</span>
                   </div>
                 </div>
-
-                <button
-                  onClick={handleDownload}
-                  className="w-12 h-12 rounded-full bg-white/20 hover:bg-white/30 backdrop-blur-md flex items-center justify-center transition-colors shrink-0 border border-white/30"
-                >
-                  <DownloadIcon className="w-6 h-6" />
-                </button>
               </div>
             </div>
           </section>
@@ -1614,11 +1620,11 @@ export default function PlaygroundContent() {
         <section className="mt-8 mb-4">
           <button
             onClick={() => setShowHistoryJobs(!showHistoryJobs)}
-            className="w-full flex items-center justify-between px-6 py-4 glass-panel rounded-2xl shadow-sm border border-white/20 dark:border-zinc-800/50 hover:bg-white/50 dark:hover:bg-zinc-800/50 transition-colors group"
+            className="w-full flex items-center justify-between px-5 py-3.5 glass-panel rounded-2xl shadow-sm border border-white/20 dark:border-zinc-800/50 hover:bg-white/50 dark:hover:bg-zinc-800/50 transition-colors group"
           >
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 flex items-center justify-center">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="w-7 h-7 rounded-full bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 flex items-center justify-center">
+                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -1627,11 +1633,14 @@ export default function PlaygroundContent() {
                   />
                 </svg>
               </div>
-              <span className="font-bold text-gray-900 dark:text-white group-hover:text-indigo-600 transition-colors">
+              <span className="text-sm font-semibold text-gray-700 dark:text-zinc-300 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
                 Recent Generations
+                <span className="ml-2 text-[10px] font-medium bg-gray-100 dark:bg-zinc-700 text-gray-500 dark:text-zinc-400 px-1.5 py-0.5 rounded-full">
+                  {historyJobs.length}
+                </span>
               </span>
             </div>
-            <ChevronIcon className="w-5 h-5 text-gray-400" open={showHistoryJobs} />
+            <ChevronIcon className="w-4 h-4 text-gray-400" open={showHistoryJobs} />
           </button>
 
           {showHistoryJobs && (
@@ -1704,11 +1713,37 @@ export default function PlaygroundContent() {
           {/* Generate Button */}
           <button
             onClick={handleGenerate}
-            disabled={isGenerating || (!hasSelectedVoice && !hasUploadedRecording)}
-            className="flex-1 sm:flex-none bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 disabled:opacity-50 text-white px-8 py-3 rounded-2xl transition-all font-bold text-sm sm:text-base shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40 active:scale-95 flex items-center justify-center gap-2"
+            disabled={
+              isGenerating ||
+              uploadStatus === "uploading" ||
+              (!hasSelectedVoice && !hasUploadedRecording)
+            }
+            className="flex-1 sm:flex-none bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 disabled:opacity-40 disabled:cursor-not-allowed text-white px-8 py-3 rounded-2xl transition-all font-bold text-sm sm:text-base shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40 active:scale-95 flex items-center justify-center gap-2"
           >
-            <SpeakerIcon className="w-5 h-5" />
-            <span>{t("playground.preview.generate")}</span>
+            {uploadStatus === "uploading" ? (
+              <svg className="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24">
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                />
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                />
+              </svg>
+            ) : (
+              <SpeakerIcon className="w-5 h-5" />
+            )}
+            <span>
+              {uploadStatus === "uploading"
+                ? t("playground.voiceSection.uploading")
+                : t("playground.preview.generate")}
+            </span>
           </button>
         </div>
       </div>
