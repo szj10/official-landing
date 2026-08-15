@@ -12,7 +12,7 @@ interface AudioPlayerProps {
   audioCurrentTime: number;
   audioDuration: number | null;
   isCachedResult: boolean;
-  audioRef: RefObject<HTMLAudioElement | null>;
+  audioRef?: RefObject<HTMLAudioElement | null>;
   onTogglePlayback: () => void;
   onSeek: (e: React.MouseEvent<HTMLDivElement>) => void;
   onDownload: () => void;
@@ -20,13 +20,11 @@ interface AudioPlayerProps {
 }
 
 export function AudioPlayer({
-  audioUrl,
   isPlaying,
   audioProgress,
   audioCurrentTime,
   audioDuration,
   isCachedResult,
-  audioRef,
   onTogglePlayback,
   onSeek,
   onDownload,
@@ -82,7 +80,6 @@ export function AudioPlayer({
         </button>
 
         <div className="flex-1 w-full">
-          <audio ref={audioRef} src={audioUrl} className="hidden" />
           <div className="flex justify-between items-end mb-2">
             <span className="font-bold text-base sm:text-lg">
               {isPlaying ? t("playground.preview.playing") : t("playground.preview.ready")}

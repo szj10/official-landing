@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { ChevronIcon, LockIcon, CheckIcon } from "./icons";
+import { ChevronIcon, CheckIcon } from "./icons";
 
 interface StepHeaderProps {
   stepNumber: number;
@@ -9,7 +9,6 @@ interface StepHeaderProps {
   badgeColorClass: string;
   isExpanded: boolean;
   isCompleted?: boolean;
-  isLocked?: boolean;
   summary?: React.ReactNode;
   onClick: () => void;
   children?: React.ReactNode;
@@ -22,7 +21,6 @@ export function StepHeader({
   badgeColorClass,
   isExpanded,
   isCompleted = false,
-  isLocked = false,
   summary,
   onClick,
   children,
@@ -33,19 +31,13 @@ export function StepHeader({
       className={`glass-panel rounded-3xl transition-all duration-300 border ${
         isExpanded
           ? "shadow-lg border-indigo-500/20 dark:border-indigo-500/30 p-5 sm:p-8"
-          : isLocked
-            ? "border-white/10 dark:border-zinc-800/30 opacity-70 p-4 sm:p-5"
-            : "border-white/20 dark:border-zinc-800/50 hover:border-indigo-200 dark:hover:border-indigo-800/50 p-4 sm:p-5 cursor-pointer shadow-sm hover:shadow-md"
+          : "border-white/20 dark:border-zinc-800/50 hover:border-indigo-200 dark:hover:border-indigo-800/50 p-4 sm:p-5 cursor-pointer shadow-sm hover:shadow-md"
       }`}
     >
       {/* Clickable Header Row */}
       <div
-        onClick={() => {
-          if (!isLocked) onClick();
-        }}
-        className={`flex items-center justify-between gap-3 select-none ${
-          !isExpanded && !isLocked ? "cursor-pointer" : ""
-        }`}
+        onClick={onClick}
+        className="flex items-center justify-between gap-3 select-none cursor-pointer"
       >
         <div className="flex items-center gap-3 min-w-0 flex-1">
           {/* Step Number / Icon Badge */}
@@ -56,13 +48,7 @@ export function StepHeader({
                 : badgeColorClass
             }`}
           >
-            {isCompleted && !isExpanded ? (
-              <CheckIcon className="w-4 h-4" />
-            ) : isLocked ? (
-              <LockIcon className="w-3.5 h-3.5" />
-            ) : (
-              stepNumber
-            )}
+            {isCompleted && !isExpanded ? <CheckIcon className="w-4 h-4" /> : stepNumber}
           </span>
 
           {/* Title & summary in collapsed mode */}
@@ -84,19 +70,13 @@ export function StepHeader({
         <div className="flex items-center gap-2 shrink-0">
           {headerRight}
 
-          {!isLocked ? (
-            <button
-              type="button"
-              className="p-1 rounded-full text-gray-400 hover:text-gray-600 dark:hover:text-zinc-200 transition-colors"
-              aria-label={isExpanded ? "Collapse" : "Expand"}
-            >
-              <ChevronIcon className="w-4 h-4 sm:w-5 sm:h-5" open={isExpanded} />
-            </button>
-          ) : (
-            <span className="text-xs text-gray-400 font-medium px-2 py-0.5 rounded-full bg-gray-100 dark:bg-zinc-800">
-              Locked
-            </span>
-          )}
+          <button
+            type="button"
+            className="p-1 rounded-full text-gray-400 hover:text-gray-600 dark:hover:text-zinc-200 transition-colors"
+            aria-label={isExpanded ? "Collapse" : "Expand"}
+          >
+            <ChevronIcon className="w-4 h-4 sm:w-5 sm:h-5" open={isExpanded} />
+          </button>
         </div>
       </div>
 

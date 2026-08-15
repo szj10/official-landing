@@ -46,7 +46,6 @@ export function VoiceRecorder({
   historyVoices,
   showHistoryVoices,
   playingHistoryVoiceId,
-  recAudioRef,
   onStartRecording,
   onStopRecording,
   onToggleRecPlayback,
@@ -78,7 +77,6 @@ export function VoiceRecorder({
                   )}
                 </button>
                 <div className="flex-1">
-                  <audio ref={recAudioRef} src={recordedAudioUrl} className="hidden" />
                   <div className="flex justify-between text-xs font-semibold mb-1.5 text-gray-700 dark:text-zinc-300">
                     <span>{t("playground.voiceSection.recordedPreview")}</span>
                     <span className="font-mono text-gray-500">

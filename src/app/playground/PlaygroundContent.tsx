@@ -27,7 +27,7 @@ import {
 export default function PlaygroundContent() {
   const { t, locale } = useI18n();
 
-  // --- Active Wizard Step (accordion: only one section open at a time) ---
+  // --- Active Wizard Step (accordion: only one section open at a time, but no locks) ---
   const [activeStep, setActiveStep] = useState<WizardStep>("text");
 
   // --- Step 1: Text state ---
@@ -91,7 +91,7 @@ export default function PlaygroundContent() {
   const [playingHistoryVoiceId, setPlayingHistoryVoiceId] = useState<number | null>(null);
   const [playingHistoryJobId, setPlayingHistoryJobId] = useState<number | string | null>(null);
 
-  // --- Refs ---
+  // --- Persistent Refs ---
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const recAudioRef = useRef<HTMLAudioElement | null>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
@@ -237,6 +237,23 @@ export default function PlaygroundContent() {
     };
   }, [audioUrl]);
 
+  // Helper to stop all other audio sources when a new one starts
+  const stopAllOtherAudio = (except: "tts" | "rec" | "preview") => {
+    if (except !== "tts") {
+      if (audioRef.current) audioRef.current.pause();
+      setIsPlaying(false);
+    }
+    if (except !== "rec") {
+      if (recAudioRef.current) recAudioRef.current.pause();
+      setIsRecPlaying(false);
+    }
+    if (except !== "preview") {
+      if (voicePreviewRef.current) voicePreviewRef.current.pause();
+      setPlayingVoicePreview(null);
+      setPlayingHistoryVoiceId(null);
+    }
+  };
+
   // ---------------------------------------------------------------------------
   // Recorded Audio Controls
   // ---------------------------------------------------------------------------
@@ -246,6 +263,7 @@ export default function PlaygroundContent() {
       recAudioRef.current.pause();
       setIsRecPlaying(false);
     } else {
+      stopAllOtherAudio("rec");
       recAudioRef.current
         .play()
         .then(() => setIsRecPlaying(true))
@@ -285,9 +303,7 @@ export default function PlaygroundContent() {
       return;
     }
 
-    if (voicePreviewRef.current) {
-      voicePreviewRef.current.pause();
-    }
+    stopAllOtherAudio("preview");
 
     const audio = new Audio(voice.localAudioFile);
     voicePreviewRef.current = audio;
@@ -312,9 +328,9 @@ export default function PlaygroundContent() {
       setPlayingHistoryVoiceId(null);
       return;
     }
-    if (voicePreviewRef.current) {
-      voicePreviewRef.current.pause();
-    }
+
+    stopAllOtherAudio("preview");
+
     const audio = new Audio(`/api/v1/playground/audio/voice-prompt/${voiceId}`);
     voicePreviewRef.current = audio;
     audio.onended = () => setPlayingHistoryVoiceId(null);
@@ -327,6 +343,7 @@ export default function PlaygroundContent() {
   // ---------------------------------------------------------------------------
   const startRecording = async () => {
     try {
+      stopAllOtherAudio("preview");
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       const mediaRecorder = new MediaRecorder(stream);
       mediaRecorderRef.current = mediaRecorder;
@@ -355,6 +372,7 @@ export default function PlaygroundContent() {
 
         setTimeout(() => {
           if (recAudioRef.current) {
+            stopAllOtherAudio("rec");
             recAudioRef.current.currentTime = 0;
             recAudioRef.current
               .play()
@@ -463,7 +481,6 @@ export default function PlaygroundContent() {
       return;
     }
 
-    // Switch focus to Synthesize step
     setActiveStep("synthesize");
 
     const isStock = activeVoicePanel === "stock";
@@ -685,6 +702,7 @@ export default function PlaygroundContent() {
       audioRef.current.pause();
       setIsPlaying(false);
     } else {
+      stopAllOtherAudio("tts");
       if (playingHistoryJobId) {
         setPlayingHistoryJobId(null);
         if (currentJob?.audio_path) setAudioUrl(resolveAudioUrl(currentJob.audio_path));
@@ -706,6 +724,7 @@ export default function PlaygroundContent() {
       if (currentJob?.audio_path) setAudioUrl(resolveAudioUrl(currentJob.audio_path));
       else setAudioUrl(null);
     } else {
+      stopAllOtherAudio("tts");
       setAudioUrl(resolveAudioUrl(path));
       setPlayingHistoryJobId(jobId);
       setIsPlaying(true);
@@ -767,10 +786,14 @@ export default function PlaygroundContent() {
       ? "⏳ In Progress..."
       : canGenerate
         ? "✨ Ready to Synthesize"
-        : "Pending inputs";
+        : "Browse or Synthesize";
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-16 pb-32 sm:pb-32">
+      {/* Persistent HTML Audio Elements (prevents playback interruption on step collapse/expand) */}
+      {recordedAudioUrl && <audio ref={recAudioRef} src={recordedAudioUrl} className="hidden" />}
+      {audioUrl && <audio ref={audioRef} src={audioUrl} className="hidden" />}
+
       {/* Header */}
       <div className="text-center mb-8 sm:mb-12">
         <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full glass-panel text-xs text-indigo-600 dark:text-indigo-400 font-semibold mb-4 shadow-sm">
@@ -795,7 +818,7 @@ export default function PlaygroundContent() {
           isExpanded={activeStep === "text"}
           isCompleted={!!textInput.trim()}
           summary={step1Summary}
-          onClick={() => setActiveStep("text")}
+          onClick={() => setActiveStep(activeStep === "text" ? "voice" : "text")}
         >
           <TextInputStep
             textInput={textInput}
@@ -816,9 +839,8 @@ export default function PlaygroundContent() {
           badgeColorClass="bg-purple-100 dark:bg-purple-900/50 text-purple-600 dark:text-purple-400"
           isExpanded={activeStep === "voice"}
           isCompleted={canGenerate}
-          isLocked={!textInput.trim()}
           summary={step2Summary}
-          onClick={() => setActiveStep("voice")}
+          onClick={() => setActiveStep(activeStep === "voice" ? "synthesize" : "voice")}
         >
           <VoiceStep
             activeVoicePanel={activeVoicePanel}
@@ -880,9 +902,8 @@ export default function PlaygroundContent() {
           badgeColorClass="bg-emerald-100 dark:bg-emerald-900/50 text-emerald-600 dark:text-emerald-400"
           isExpanded={activeStep === "synthesize"}
           isCompleted={!!audioUrl}
-          isLocked={!textInput.trim() || !canGenerate}
           summary={step3Summary}
-          onClick={() => setActiveStep("synthesize")}
+          onClick={() => setActiveStep(activeStep === "synthesize" ? "text" : "synthesize")}
         >
           <SynthesizeStep
             isGenerating={isGenerating}
