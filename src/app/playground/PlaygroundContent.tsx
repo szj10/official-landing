@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, startTransition } from "react";
 import { useI18n } from "@/i18n";
 import { PLAYGROUND_VOICES } from "./voices.config";
+import { formatWaitTime } from "@/lib/utils/time-format";
 
 // Voice config is centralised in voices.config.ts — edit that file to add/remove voices.
 // Sample texts are stored in public/locales/{locale}/sample-texts.json for easier management.
@@ -28,7 +29,7 @@ const SAMPLE_TEXTS = [
 type TTSJobStatus = "queued" | "processing" | "completed" | "failed" | "rate_limited";
 
 interface TTSJobResponse {
-  job_id: string;
+  job_id: string | number;
   status: TTSJobStatus;
   stream_url: string | null;
   audio_path: string | null;
@@ -38,6 +39,12 @@ interface TTSJobResponse {
   expires_at: string;
   created_at: string;
   completed_at: string | null;
+  ratio?: number;
+  // Queue metrics (only present when status is "queued")
+  queue_position?: number | null;
+  jobs_ahead?: number | null;
+  queue_depth?: number | null;
+  estimated_wait_seconds?: number | null;
 }
 
 // ---------------------------------------------------------------------------
@@ -195,12 +202,21 @@ export default function PlaygroundContent() {
   // --- Generation state ---
   const [isGenerating, setIsGenerating] = useState(false);
   const [generationStatus, setGenerationStatus] = useState<TTSJobStatus | null>(null);
+  const [currentJob, setCurrentJob] = useState<TTSJobResponse | null>(null);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const [audioDuration, setAudioDuration] = useState<number | null>(null);
   const [isCachedResult, setIsCachedResult] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [rateLimitRetryAfter, setRateLimitRetryAfter] = useState<number | null>(null);
   const [emptyTextWarning, setEmptyTextWarning] = useState(false);
+
+  // Preserve queue metrics for display (even after job completes)
+  const [lastQueueMetrics, setLastQueueMetrics] = useState<{
+    position: number;
+    jobsAhead: number;
+    queueDepth: number;
+    estimatedWaitSeconds: number;
+  } | null>(null);
 
   // --- Playback state ---
   const [isPlaying, setIsPlaying] = useState(false);
@@ -215,6 +231,7 @@ export default function PlaygroundContent() {
   const recordingIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const voicePreviewRef = useRef<HTMLAudioElement | null>(null);
   const eventSourceRef = useRef<EventSource | null>(null);
+  const pollingIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
   // Cleanup on unmount
   useEffect(() => {
@@ -473,6 +490,7 @@ export default function PlaygroundContent() {
     const hasVoice = !!selectedVoice && !recordedAudioBlob;
     const hasRecording =
       !!recordedAudioBlob && uploadStatus === "success" && anonymousVoiceId !== null;
+
     if (!text) {
       setEmptyTextWarning(true);
       return;
@@ -488,20 +506,8 @@ export default function PlaygroundContent() {
     const rateMap = { slow: 0.3, normal: 0.5, fast: 0.8 };
     const rate = rateMap[speed];
 
-    setIsGenerating(true);
-    setGenerationStatus(null);
-    setAudioUrl(null);
-    setAudioDuration(null);
-    setIsCachedResult(false);
-    setErrorMessage(null);
-    setRateLimitRetryAfter(null);
-    setIsPlaying(false);
-    setAudioProgress(0);
-
-    if (eventSourceRef.current) {
-      eventSourceRef.current.close();
-      eventSourceRef.current = null;
-    }
+    // Reset state
+    resetGenerationState();
 
     try {
       const requestBody = hasVoice
@@ -516,10 +522,7 @@ export default function PlaygroundContent() {
 
       if (res.status === 429) {
         const body = await res.json();
-        const retryAfter: number = body?.detail?.retry_after ?? 3600;
-        setRateLimitRetryAfter(retryAfter);
-        setGenerationStatus("rate_limited");
-        setIsGenerating(false);
+        handleRateLimitError(body?.detail?.retry_after ?? 3600);
         return;
       }
 
@@ -527,37 +530,77 @@ export default function PlaygroundContent() {
         const body = await res.json().catch(() => ({}));
         const detail =
           typeof body?.detail === "string" ? body.detail : t("playground.generateError");
-        setErrorMessage(detail);
-        setGenerationStatus("failed");
-        setIsGenerating(false);
+        handleGenerationError(detail);
         return;
       }
 
       const job: TTSJobResponse = await res.json();
+      console.log("🎬 Initial Job Response:", job);
 
-      if (job.status === "completed" && job.audio_path) {
-        const resolvedUrl = resolveAudioUrl(job.audio_path);
-        setAudioUrl(resolvedUrl);
-        setAudioDuration(job.audio_duration);
-        setIsCachedResult(job.is_cached);
-        setGenerationStatus("completed");
-        setIsGenerating(false);
-        return;
-      }
-
-      setGenerationStatus(job.status);
-      listenToSSEStream(
-        job.job_id,
-        job.stream_url ?? `/api/v1/playground/tts/${job.job_id}/stream`
-      );
+      handleJobResponse(job);
     } catch (err) {
       console.error("Generate error:", err);
-      setErrorMessage(t("playground.generateError"));
-      setGenerationStatus("failed");
-      setIsGenerating(false);
+      handleGenerationError(t("playground.generateError"));
     }
   };
 
+  // Helper: Reset all generation-related state
+  function resetGenerationState() {
+    setIsGenerating(true);
+    setGenerationStatus(null);
+    setCurrentJob(null);
+    setAudioUrl(null);
+    setAudioDuration(null);
+    setIsCachedResult(false);
+    setErrorMessage(null);
+    setRateLimitRetryAfter(null);
+    setIsPlaying(false);
+    setAudioProgress(0);
+    setLastQueueMetrics(null);
+
+    if (eventSourceRef.current) {
+      eventSourceRef.current.close();
+      eventSourceRef.current = null;
+    }
+    if (pollingIntervalRef.current) {
+      clearInterval(pollingIntervalRef.current);
+      pollingIntervalRef.current = null;
+    }
+  }
+
+  // Helper: Handle rate limit error
+  function handleRateLimitError(retryAfter: number) {
+    setRateLimitRetryAfter(retryAfter);
+    setGenerationStatus("rate_limited");
+    setIsGenerating(false);
+  }
+
+  // Helper: Handle generation error
+  function handleGenerationError(message: string) {
+    setErrorMessage(message);
+    setGenerationStatus("failed");
+    setIsGenerating(false);
+  }
+
+  // Helper: Handle initial job response
+  function handleJobResponse(job: TTSJobResponse) {
+    setCurrentJob(job);
+    setGenerationStatus(job.status);
+
+    // If already completed, set audio immediately
+    if (job.status === "completed" && job.audio_path) {
+      setAudioUrl(resolveAudioUrl(job.audio_path));
+      setAudioDuration(job.audio_duration);
+      setIsCachedResult(job.is_cached);
+      setIsGenerating(false);
+      return;
+    }
+
+    // Otherwise, poll for job status
+    pollJobStatus(job.job_id);
+  }
+
+  // Helper: Resolve audio URL
   function resolveAudioUrl(audioPath: string): string {
     if (audioPath.startsWith("http://") || audioPath.startsWith("https://")) {
       return audioPath;
@@ -565,60 +608,93 @@ export default function PlaygroundContent() {
     return `/api/v1/playground/audio/${audioPath}`;
   }
 
-  function listenToSSEStream(jobId: string, streamUrl: string) {
-    const es = new EventSource(streamUrl);
-    eventSourceRef.current = es;
+  // Helper: Poll job status
+  function pollJobStatus(jobId: string | number) {
+    if (pollingIntervalRef.current) {
+      clearInterval(pollingIntervalRef.current);
+    }
 
-    es.onmessage = (event) => {
-      try {
-        const job: TTSJobResponse = JSON.parse(event.data);
-        setGenerationStatus(job.status);
+    // Initial fetch to get queue metrics right away without waiting 1s
+    fetchJobStatus(jobId);
 
-        if (job.status === "completed") {
-          if (job.audio_path) {
-            const resolvedUrl = resolveAudioUrl(job.audio_path);
-            setAudioUrl(resolvedUrl);
-            setAudioDuration(job.audio_duration);
-            setIsCachedResult(job.is_cached);
-          }
-          setIsGenerating(false);
-          es.close();
-          eventSourceRef.current = null;
-        } else if (job.status === "failed") {
-          setErrorMessage(job.error_message ?? t("playground.generateError"));
-          setIsGenerating(false);
-          es.close();
-          eventSourceRef.current = null;
-        } else if (job.status === "rate_limited") {
-          setRateLimitRetryAfter(3600);
-          setIsGenerating(false);
-          es.close();
-          eventSourceRef.current = null;
+    pollingIntervalRef.current = setInterval(() => {
+      fetchJobStatus(jobId);
+    }, 1000);
+  }
+
+  async function fetchJobStatus(jobId: string | number) {
+    try {
+      const res = await fetch(`/api/v1/playground/tts/${jobId}`);
+      if (!res.ok) {
+        if (res.status === 429) {
+          const body = await res.json();
+          handleRateLimitError(body?.detail?.retry_after ?? 3600);
+          if (pollingIntervalRef.current) clearInterval(pollingIntervalRef.current);
+          return;
         }
-      } catch (e) {
-        console.error("SSE parse error:", e);
+        return; // Ignore transient errors
       }
-    };
 
-    es.onerror = (err) => {
-      console.error(`SSE error for job ${jobId}:`, err);
-      es.close();
-      eventSourceRef.current = null;
+      const job: TTSJobResponse = await res.json();
+      console.log("📊 Polling Update:", job.status, job.queue_position ?? "");
+      handleJobUpdate(job);
+    } catch (e) {
+      console.error("Polling error:", e);
+    }
+  }
 
-      setIsGenerating((prev) => {
-        if (prev) {
-          setGenerationStatus((status) => {
-            if (status !== "completed" && status !== "failed") {
-              setErrorMessage(t("playground.streamError"));
-              return "failed";
-            }
-            return status;
-          });
-          return false;
-        }
-        return prev;
+  // Helper: Handle job update (from polling)
+  function handleJobUpdate(job: TTSJobResponse) {
+    setCurrentJob(job);
+    setGenerationStatus(job.status);
+
+    // Update queue metrics if present (handle both numbers and strings)
+    const pos = job.queue_position != null ? Number(job.queue_position) : null;
+    const ahead = job.jobs_ahead != null ? Number(job.jobs_ahead) : null;
+    const depth = job.queue_depth != null ? Number(job.queue_depth) : null;
+    const wait = job.estimated_wait_seconds != null ? Number(job.estimated_wait_seconds) : null;
+
+    if (
+      job.status === "queued" &&
+      pos !== null &&
+      !isNaN(pos) &&
+      ahead !== null &&
+      !isNaN(ahead) &&
+      depth !== null &&
+      !isNaN(depth) &&
+      wait !== null &&
+      !isNaN(wait)
+    ) {
+      setLastQueueMetrics({
+        position: pos,
+        jobsAhead: ahead,
+        queueDepth: depth,
+        estimatedWaitSeconds: wait,
       });
-    };
+    }
+
+    // Handle terminal states
+    if (job.status === "completed") {
+      if (job.audio_path) {
+        setAudioUrl(resolveAudioUrl(job.audio_path));
+        setAudioDuration(job.audio_duration);
+        setIsCachedResult(job.is_cached);
+      }
+      setIsGenerating(false);
+      if (pollingIntervalRef.current) clearInterval(pollingIntervalRef.current);
+    } else if (job.status === "failed") {
+      handleGenerationError(job.error_message ?? t("playground.generateError"));
+      if (pollingIntervalRef.current) clearInterval(pollingIntervalRef.current);
+    } else if (job.status === "rate_limited") {
+      handleRateLimitError(3600);
+      if (pollingIntervalRef.current) clearInterval(pollingIntervalRef.current);
+    }
+  }
+
+  // Helper: Cleanup SSE connection
+  function cleanupSSE(es: EventSource) {
+    es.close();
+    eventSourceRef.current = null;
   }
 
   // ---------------------------------------------------------------------------
@@ -1100,6 +1176,204 @@ export default function PlaygroundContent() {
             </div>
           </section>
         )}
+
+        {/* Queue Status Card */}
+        {(() => {
+          // Get queue data directly from currentJob
+          const currentPos =
+            currentJob?.queue_position != null ? Number(currentJob.queue_position) : null;
+          const currentAhead =
+            currentJob?.jobs_ahead != null ? Number(currentJob.jobs_ahead) : null;
+          const currentDepth =
+            currentJob?.queue_depth != null ? Number(currentJob.queue_depth) : null;
+          const currentWait =
+            currentJob?.estimated_wait_seconds != null
+              ? Number(currentJob.estimated_wait_seconds)
+              : null;
+
+          const hasCurrentMetrics =
+            currentPos !== null &&
+            !isNaN(currentPos) &&
+            currentAhead !== null &&
+            !isNaN(currentAhead) &&
+            currentDepth !== null &&
+            !isNaN(currentDepth) &&
+            currentWait !== null &&
+            !isNaN(currentWait);
+
+          const queueData = hasCurrentMetrics
+            ? {
+                position: currentPos,
+                jobsAhead: currentAhead,
+                queueDepth: currentDepth,
+                estimatedWaitSeconds: currentWait,
+              }
+            : lastQueueMetrics
+              ? {
+                  position: lastQueueMetrics.position,
+                  jobsAhead: lastQueueMetrics.jobsAhead,
+                  queueDepth: lastQueueMetrics.queueDepth,
+                  estimatedWaitSeconds: lastQueueMetrics.estimatedWaitSeconds,
+                }
+              : null;
+
+          // Show card when queued, even without metrics yet (SSE will populate them)
+          const shouldShow = isGenerating && generationStatus === "queued";
+
+          console.log("🔍 Queue Card Render Debug:", {
+            isGenerating,
+            generationStatus,
+            hasCurrentJob: !!currentJob,
+            currentJobQueuePosition: currentJob?.queue_position,
+            currentJobHasAllQueueFields: hasCurrentMetrics,
+            queueData,
+            lastQueueMetrics,
+            shouldShow,
+          });
+
+          if (!shouldShow) return null;
+
+          // Show loading state if we don't have queue data yet
+          if (!queueData) {
+            return (
+              <div className="animate-fade-in-up">
+                <div className="glass-panel rounded-3xl shadow-lg border border-blue-500/20 dark:border-blue-500/30 p-5 sm:p-6 bg-blue-50/50 dark:bg-blue-950/20 backdrop-blur-sm">
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-3">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-500/10">
+                        <svg
+                          className="h-5 w-5 text-blue-500 animate-spin"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                          />
+                        </svg>
+                      </div>
+                      <div>
+                        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                          {t("playground.queue.title")}
+                        </h3>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">
+                          {t("playground.status.queued")}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="h-2 w-2 rounded-full bg-blue-500 animate-pulse" />
+                      <span className="text-xs text-gray-600 dark:text-gray-400">
+                        Loading queue information...
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            );
+          }
+
+          return (
+            <div className="animate-fade-in-up">
+              <div className="glass-panel rounded-3xl shadow-lg border border-blue-500/20 dark:border-blue-500/30 p-5 sm:p-6 bg-blue-50/50 dark:bg-blue-950/20 backdrop-blur-sm">
+                <div className="space-y-4">
+                  {/* Header */}
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-500/10">
+                      <svg
+                        className="h-5 w-5 text-blue-500"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                        />
+                      </svg>
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                        {t("playground.queue.title")}
+                      </h3>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                        {queueData.position === 1
+                          ? t("playground.queue.nextInLine")
+                          : t("playground.queue.inProgress")}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Queue Metrics */}
+                  <div className="grid grid-cols-2 gap-4">
+                    {/* Position */}
+                    <div className="space-y-1">
+                      <div className="flex items-center gap-1.5 text-xs text-gray-600 dark:text-gray-400">
+                        <svg
+                          className="h-3.5 w-3.5"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+                          />
+                        </svg>
+                        <span>{t("playground.queue.position")}</span>
+                      </div>
+                      <div className="flex items-baseline gap-2">
+                        <span className="text-2xl font-bold text-blue-500">
+                          {queueData.position}
+                        </span>
+                        <span className="text-sm text-gray-600 dark:text-gray-400">
+                          / {queueData.queueDepth}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Jobs Ahead */}
+                    <div className="space-y-1">
+                      <div className="text-xs text-gray-600 dark:text-gray-400">
+                        {t("playground.queue.jobsAhead")}
+                      </div>
+                      <div className="text-2xl font-bold text-gray-900 dark:text-white">
+                        {queueData.jobsAhead}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Estimated Wait Time */}
+                  <div className="pt-3 border-t border-blue-500/10">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-gray-600 dark:text-gray-400">
+                        {t("playground.queue.estimatedWait")}
+                      </span>
+                      <span className="text-sm font-semibold bg-blue-500/10 border border-blue-500/20 text-blue-600 dark:text-blue-400 px-3 py-1 rounded-full">
+                        {formatWaitTime(queueData.estimatedWaitSeconds)}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Live Update Indicator */}
+                  <div className="flex items-center gap-2 pt-2">
+                    <div className="h-2 w-2 rounded-full bg-blue-500 animate-pulse" />
+                    <span className="text-xs text-gray-600 dark:text-gray-400">
+                      {t("playground.queue.updatesAutomatically")}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          );
+        })()}
 
         {/* Alerts (Error / Warning / Status) */}
         {emptyTextWarning && (
