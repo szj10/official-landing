@@ -97,19 +97,11 @@ export function QueueStatusCard({ lastQueueMetrics }: QueueStatusCardProps) {
           <div className="grid grid-cols-2 gap-4">
             {/* Position */}
             <div className="space-y-1">
-              <div className="flex items-center gap-1.5 text-xs text-gray-600 dark:text-gray-400">
-                <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
-                  />
-                </svg>
-                <span>{t("playground.queue.position")}</span>
+              <div className="text-xs text-gray-600 dark:text-gray-400">
+                {t("playground.queue.position")}
               </div>
-              <div className="flex items-baseline gap-2">
-                <span className="text-2xl font-bold text-blue-500">
+              <div className="flex items-baseline gap-1">
+                <span className="text-2xl font-bold text-gray-900 dark:text-white">
                   {lastQueueMetrics.position}
                 </span>
                 <span className="text-sm text-gray-600 dark:text-gray-400">
@@ -118,35 +110,30 @@ export function QueueStatusCard({ lastQueueMetrics }: QueueStatusCardProps) {
               </div>
             </div>
 
-            {/* Jobs Ahead */}
+            {/* Estimated Wait Time */}
             <div className="space-y-1">
               <div className="text-xs text-gray-600 dark:text-gray-400">
-                {t("playground.queue.jobsAhead")}
-              </div>
-              <div className="text-2xl font-bold text-gray-900 dark:text-white">
-                {lastQueueMetrics.jobsAhead}
-              </div>
-            </div>
-          </div>
-
-          {/* Estimated Wait Time */}
-          <div className="pt-3 border-t border-blue-500/10">
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-gray-600 dark:text-gray-400">
                 {t("playground.queue.estimatedWait")}
-              </span>
-              <span className="text-sm font-semibold bg-blue-500/10 border border-blue-500/20 text-blue-600 dark:text-blue-400 px-3 py-1 rounded-full">
-                {formatWaitTime(lastQueueMetrics.estimatedWaitSeconds)}
-              </span>
+              </div>
+              <div className="flex items-baseline gap-1">
+                <span className="text-2xl font-bold text-gray-900 dark:text-white">
+                  {(() => {
+                    const seconds = lastQueueMetrics.estimatedWaitSeconds;
+                    if (seconds < 60) return `~${seconds}`;
+                    if (seconds < 3600) return `~${Math.round(seconds / 60)}`;
+                    return `~${Math.round(seconds / 3600)}`;
+                  })()}
+                </span>
+                <span className="text-sm text-gray-600 dark:text-gray-400">
+                  {(() => {
+                    const seconds = lastQueueMetrics.estimatedWaitSeconds;
+                    if (seconds < 60) return "s";
+                    if (seconds < 3600) return "m";
+                    return "h";
+                  })()}
+                </span>
+              </div>
             </div>
-          </div>
-
-          {/* Live Update Indicator */}
-          <div className="flex items-center gap-2 pt-2">
-            <div className="h-2 w-2 rounded-full bg-blue-500 animate-pulse" />
-            <span className="text-xs text-gray-600 dark:text-gray-400">
-              {t("playground.queue.updatesAutomatically")}
-            </span>
           </div>
         </div>
       </div>
