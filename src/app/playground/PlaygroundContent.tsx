@@ -747,11 +747,11 @@ export default function PlaygroundContent() {
   }
 
   // Helper: Resolve audio URL
-  function resolveAudioUrl(audioPath: string): string {
+  function resolveAudioUrl(audioPath: string, bucket: "storage" | "output" = "output"): string {
     if (audioPath.startsWith("http://") || audioPath.startsWith("https://")) {
       return audioPath;
     }
-    return `/api/v1/playground/audio/${audioPath}`;
+    return `/api/v1/playground/audio/${audioPath}?bucket=${bucket}`;
   }
 
   // Helper: Poll job status
