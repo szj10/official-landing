@@ -685,471 +685,361 @@ export default function PlaygroundContent() {
   // Render
   // ---------------------------------------------------------------------------
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-16 pb-32 sm:pb-32">
       {/* Header */}
-      <div className="text-center mb-12">
-        <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full glass-panel text-xs text-indigo-600 dark:text-indigo-400 font-semibold mb-6 shadow-sm shadow-indigo-500/5">
+      <div className="text-center mb-10">
+        <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full glass-panel text-xs text-indigo-600 dark:text-indigo-400 font-semibold mb-4 shadow-sm">
           <SpeakerIcon className="w-3.5 h-3.5" />
           <span>{t("playground.badge")}</span>
         </div>
-        <h1 className="text-4xl sm:text-5xl font-extrabold text-gray-900 dark:text-white tracking-tight mb-4">
+        <h1 className="text-3xl sm:text-5xl font-extrabold text-gray-900 dark:text-white tracking-tight mb-3">
           {t("playground.title")}
         </h1>
-        <p className="text-lg text-gray-600 dark:text-zinc-400 max-w-2xl mx-auto">
+        <p className="text-base sm:text-lg text-gray-600 dark:text-zinc-400 max-w-2xl mx-auto">
           {t("playground.subtitle")}
         </p>
       </div>
 
-      {/* === Unified Playground Interface === */}
-      <div className="glass-panel rounded-3xl shadow-xl border border-white/20 dark:border-zinc-800/50 overflow-hidden flex flex-col mt-4">
-        {/* Top Section: Split Grid for Input & Voice */}
-        <div className="grid lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-gray-200/50 dark:divide-zinc-800/50">
-          {/* === Text Input Panel === */}
-          <div className="p-8 lg:p-10 bg-white/40 dark:bg-zinc-900/20 flex flex-col h-full">
-            <div>
-              <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
-                <svg
-                  className="w-5 h-5 text-indigo-500"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
+      <div className="space-y-6 sm:space-y-8">
+        {/* Step 1: Input Text */}
+        <section className="glass-panel rounded-3xl shadow-lg border border-white/20 dark:border-zinc-800/50 p-5 sm:p-8">
+          <h2 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+            <span className="w-7 h-7 rounded-full bg-indigo-100 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400 flex items-center justify-center text-sm font-bold">
+              1
+            </span>
+            {t("playground.textSection.title")}
+          </h2>
+
+          {/* Sample text cards */}
+          <div className="mb-4">
+            <label className="block text-xs font-medium text-gray-500 dark:text-zinc-400 mb-2 uppercase tracking-wider">
+              {t("playground.textSection.sampleTexts")}
+            </label>
+            <div className="grid grid-cols-3 gap-2 sm:gap-3">
+              {SAMPLE_TEXTS.map((sample) => (
+                <button
+                  key={sample.id}
+                  onClick={() => handleSampleTextSelect(sample.id)}
+                  className={`relative p-3 rounded-2xl border-2 text-left transition-all ${
+                    selectedSampleText === sample.id
+                      ? "bg-indigo-50 dark:bg-indigo-900/20 border-indigo-500 shadow-md"
+                      : "bg-white dark:bg-zinc-900 border-gray-100 dark:border-zinc-800 hover:border-indigo-200 dark:hover:border-indigo-800 hover:shadow-sm"
+                  }`}
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                  />
-                </svg>
-                {t("playground.textSection.title")}
-              </h2>
-
-              {/* Sample text presets */}
-              <div className="mb-6">
-                <label className="block text-sm font-medium text-gray-700 dark:text-zinc-300 mb-3">
-                  {t("playground.textSection.sampleTexts")}
-                </label>
-                <div className="space-y-2">
-                  {SAMPLE_TEXTS.map((sample) => (
-                    <button
-                      key={sample.id}
-                      onClick={() => handleSampleTextSelect(sample.id)}
-                      className={`w-full text-left px-4 py-3 rounded-xl transition-all duration-200 ${
-                        selectedSampleText === sample.id
-                          ? "bg-indigo-500/10 border-2 border-indigo-500 text-indigo-700 dark:text-indigo-300 font-medium"
-                          : "bg-gray-50 dark:bg-zinc-900 border-2 border-transparent hover:border-gray-200 dark:hover:border-zinc-700 text-gray-700 dark:text-zinc-300"
-                      }`}
-                    >
-                      <div className="text-xs opacity-80 line-clamp-2">{t(sample.textKey)}</div>
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Custom text */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-zinc-300 mb-3">
-                  {t("playground.textSection.customText")}
-                </label>
-                <textarea
-                  value={textInput}
-                  onChange={(e) => {
-                    setTextInput(e.target.value);
-                    setSelectedSampleText(null);
-                  }}
-                  placeholder={t("playground.textSection.placeholder")}
-                  rows={5}
-                  className="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-zinc-900 border-2 border-gray-200 dark:border-zinc-700 focus:border-indigo-500 dark:focus:border-indigo-500 focus:outline-none transition-colors text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-zinc-500 resize-none text-sm"
-                />
-                <div className="mt-2 flex items-center justify-between text-xs text-gray-500 dark:text-zinc-400">
-                  <span>
-                    {textInput.trim().split(/\s+/).filter(Boolean).length}{" "}
-                    {t("playground.textSection.words")} / {textInput.length}{" "}
-                    {t("playground.textSection.characters")}
-                  </span>
-                  <span
-                    className={
-                      textInput.trim().split(/\s+/).filter(Boolean).length > 200
-                        ? "text-red-500 font-semibold"
-                        : ""
-                    }
-                  >
-                    {t("playground.textSection.maxWords")}
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* === Voice Selection Panel === */}
-          <div className="p-8 lg:p-10 bg-gray-50/40 dark:bg-zinc-950/20 flex flex-col h-full">
-            {/* Two-panel accordion: Sample Voices ↔ Custom Voice Recording */}
-            <div className="space-y-2">
-              {/* Sample Voices toggle button — same style as Custom Voice button */}
-              <button
-                onClick={() => setActiveVoicePanel("stock")}
-                className={`w-full flex items-center justify-between p-3.5 rounded-2xl transition-all duration-200 ${
-                  activeVoicePanel === "stock"
-                    ? "bg-purple-500/10 border-2 border-purple-500"
-                    : "bg-gray-50 dark:bg-zinc-900 hover:bg-gray-100 dark:hover:bg-zinc-800 border-2 border-transparent"
-                }`}
-              >
-                <div className="flex items-center gap-3 text-left">
-                  <div className="w-9 h-9 rounded-full bg-gradient-to-br from-purple-500 to-indigo-500 text-white flex items-center justify-center shrink-0 shadow-md">
-                    <SpeakerIcon className="w-4 h-4" />
-                  </div>
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm font-semibold text-gray-900 dark:text-white">
-                        {t("playground.voiceSection.sampleVoices")}
-                      </span>
-                      {activeVoicePanel === "stock" && selectedVoice && !recordedAudioBlob && (
-                        <span className="px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded bg-purple-500 text-white">
-                          Active
-                        </span>
-                      )}
+                  {selectedSampleText === sample.id && (
+                    <div className="absolute top-2 right-2 text-indigo-500">
+                      <CheckIcon className="w-4 h-4" />
                     </div>
-                    <p className="text-xs text-gray-500 dark:text-zinc-400">
-                      {t("playground.previewVoice")}
-                    </p>
-                  </div>
-                </div>
-                <ChevronIcon
-                  className="w-5 h-5 text-gray-400 dark:text-zinc-500"
-                  open={activeVoicePanel === "stock"}
-                />
-              </button>
-
-              {/* Expanded Sample Voices */}
-              {activeVoicePanel === "stock" && (
-                <div className="mt-3 p-4 rounded-2xl bg-gray-50 dark:bg-zinc-900/90 border border-gray-200/80 dark:border-zinc-800 space-y-2">
-                  {PLAYGROUND_VOICES.map((voice) => (
-                    <div
-                      key={voice.id}
-                      onClick={() => {
-                        setSelectedVoice(voice.id);
-                        handleVoicePreview(voice.id);
-                      }}
-                      className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 cursor-pointer ${
-                        selectedVoice === voice.id && !recordedAudioBlob
-                          ? "bg-purple-500/10 border-2 border-purple-500 shadow-sm"
-                          : "bg-white dark:bg-zinc-950/50 border-2 border-transparent hover:border-gray-200 dark:hover:border-zinc-700"
-                      }`}
-                    >
-                      <div
-                        className={`w-10 h-10 rounded-full bg-gradient-to-br ${voice.color} flex items-center justify-center text-white font-bold text-base shrink-0 shadow-md`}
-                      >
-                        {voice.avatar}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 mb-0.5">
-                          <span className="font-semibold text-sm text-gray-900 dark:text-white truncate">
-                            {t(voice.nameKey)}
-                          </span>
-                          <span className="text-xs text-gray-400 dark:text-zinc-500">
-                            {voice.gender === "male" ? t("common.male") : t("common.female")}
-                          </span>
-                        </div>
-                        <div className="text-xs text-gray-400 dark:text-zinc-500 truncate">
-                          {t(voice.previewKey)}
-                        </div>
-                      </div>
-                      <div
-                        className="flex items-center gap-2 shrink-0"
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        <button
-                          onClick={() => handleVoicePreview(voice.id)}
-                          className="w-8 h-8 rounded-full bg-gray-200 dark:bg-zinc-700 hover:bg-gray-300 dark:hover:bg-zinc-600 flex items-center justify-center transition-colors"
-                          title={t("playground.previewVoice")}
-                        >
-                          {playingVoicePreview === voice.id ? (
-                            <StopIcon className="w-3.5 h-3.5 text-gray-700 dark:text-zinc-300" />
-                          ) : (
-                            <PlayIcon className="w-3.5 h-3.5 text-gray-700 dark:text-zinc-300 ml-0.5" />
-                          )}
-                        </button>
-                        <button
-                          onClick={() => {
-                            setSelectedVoice(voice.id);
-                          }}
-                          className={`w-8 h-8 rounded-full flex items-center justify-center transition-all ${
-                            selectedVoice === voice.id && !recordedAudioBlob
-                              ? "bg-purple-500 text-white shadow-sm"
-                              : "bg-gray-200 dark:bg-zinc-700 hover:bg-gray-300 dark:hover:bg-zinc-600 text-gray-700 dark:text-zinc-300"
-                          }`}
-                          title={t("playground.selectVoice")}
-                        >
-                          <CheckIcon className="w-4 h-4" />
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-
-              {/* Custom Voice Recording toggle button */}
-              <button
-                onClick={() => {
-                  setActiveVoicePanel("custom");
-                }}
-                className={`w-full flex items-center justify-between p-3.5 rounded-2xl transition-all duration-200 ${
-                  activeVoicePanel === "custom"
-                    ? "bg-purple-500/10 border-2 border-purple-500"
-                    : "bg-gray-50 dark:bg-zinc-900 hover:bg-gray-100 dark:hover:bg-zinc-800 border-2 border-transparent"
-                }`}
-              >
-                <div className="flex items-center gap-3 text-left">
-                  <div className="w-9 h-9 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 text-white flex items-center justify-center shrink-0 shadow-md">
-                    <MicIcon className="w-4 h-4" />
-                  </div>
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm font-semibold text-gray-900 dark:text-white">
-                        {t("playground.voiceSection.recordCustom")}
-                      </span>
-                      {!selectedVoice && recordedAudioBlob && uploadStatus === "success" && (
-                        <span className="px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded bg-purple-500 text-white">
-                          Active
-                        </span>
-                      )}
-                    </div>
-                    <p className="text-xs text-gray-500 dark:text-zinc-400">
-                      {t("playground.voiceSection.recordCustomSubtitle")}
-                    </p>
-                  </div>
-                </div>
-                <ChevronIcon
-                  className="w-5 h-5 text-gray-400 dark:text-zinc-500"
-                  open={activeVoicePanel === "custom"}
-                />
-              </button>
-
-              {/* Expanded Custom Voice Studio */}
-              {activeVoicePanel === "custom" && (
-                <div className="mt-3 p-4 rounded-2xl bg-gray-50 dark:bg-zinc-900/90 border border-gray-200/80 dark:border-zinc-800 space-y-3">
-                  {/* 10s-15s Reading Prompt Guide Text */}
-                  <div className="p-3.5 rounded-xl bg-indigo-50/70 dark:bg-indigo-950/40 border border-indigo-100 dark:border-indigo-900/60">
-                    <div className="flex items-center gap-1.5 mb-1 text-xs font-semibold text-indigo-700 dark:text-indigo-300">
-                      <svg
-                        className="w-3.5 h-3.5 text-indigo-500"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01.469-1.57m0 0a3 3 0 01-1.469-1.57m0 0L9 7m4.469 4.43a3 3 0 01.469 1.57m0 0a3 3 0 01-1.469 1.57m0 0l.469.43m0 0L15 17"
-                        />
-                      </svg>
-                      <span>{t("playground.voiceSection.promptGuideTitle")}</span>
-                    </div>
-                    <p className="text-xs text-gray-800 dark:text-zinc-200 italic leading-relaxed font-medium">
-                      &quot;{t("playground.voiceSection.promptGuideText")}&quot;
-                    </p>
-                  </div>
-
-                  {/* Recording / Playback Container */}
-                  <div className="rounded-xl border-2 border-dashed border-gray-300 dark:border-zinc-700 p-4 bg-white dark:bg-zinc-950/50">
-                    {recordedAudioBlob ? (
-                      <div className="space-y-3 text-center">
-                        {/* Audio Playback Controls for Recorded Voice */}
-                        {recordedAudioUrl && (
-                          <div className="p-3 rounded-xl bg-gray-50 dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 flex items-center gap-3 text-left">
-                            <button
-                              onClick={toggleRecPlayback}
-                              className="w-9 h-9 rounded-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white flex items-center justify-center shrink-0 shadow-md transition-transform active:scale-95"
-                              title={
-                                isRecPlaying
-                                  ? t("playground.voiceSection.stopRecorded")
-                                  : t("playground.voiceSection.playRecorded")
-                              }
-                            >
-                              {isRecPlaying ? (
-                                <PauseIcon className="w-4 h-4" />
-                              ) : (
-                                <PlayIcon className="w-4 h-4 ml-0.5" />
-                              )}
-                            </button>
-                            <div className="flex-1 min-w-0">
-                              <audio ref={recAudioRef} src={recordedAudioUrl} className="hidden" />
-                              <div className="flex items-center justify-between text-xs font-medium text-gray-700 dark:text-zinc-300 mb-1">
-                                <span>{t("playground.voiceSection.recordedPreview")}</span>
-                                <span className="text-[11px] text-gray-400 font-mono">
-                                  {formatTime(Math.floor(recAudioCurrentTime))} /{" "}
-                                  {formatTime(Math.floor(recAudioDuration || recordingTime))}
-                                </span>
-                              </div>
-                              <div
-                                className="h-1.5 bg-gray-200 dark:bg-zinc-700 rounded-full overflow-hidden cursor-pointer"
-                                onClick={handleRecSeek}
-                              >
-                                <div
-                                  className="h-full bg-gradient-to-r from-indigo-500 to-purple-500 transition-all duration-150"
-                                  style={{ width: `${recAudioProgress}%` }}
-                                />
-                              </div>
-                            </div>
-                          </div>
-                        )}
-
-                        {/* Backend Upload Status */}
-                        {uploadStatus === "uploading" && (
-                          <div className="flex items-center justify-center gap-2 text-xs text-indigo-600 dark:text-indigo-400 font-medium">
-                            <svg className="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
-                              <circle
-                                className="opacity-25"
-                                cx="12"
-                                cy="12"
-                                r="10"
-                                stroke="currentColor"
-                                strokeWidth="4"
-                              />
-                              <path
-                                className="opacity-75"
-                                fill="currentColor"
-                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                              />
-                            </svg>
-                            <span>{t("playground.voiceSection.uploading")}</span>
-                          </div>
-                        )}
-
-                        {uploadStatus === "success" && (
-                          <div className="flex items-center justify-center gap-1.5 text-xs text-emerald-600 dark:text-emerald-400 font-medium">
-                            <CheckIcon className="w-4 h-4" />
-                            <span>{t("playground.voiceSection.uploadSuccess")}</span>
-                          </div>
-                        )}
-
-                        {uploadStatus === "error" && (
-                          <div className="flex items-center justify-center gap-1.5 text-xs text-red-600 dark:text-red-400 font-medium">
-                            <AlertIcon className="w-4 h-4" />
-                            <span>{uploadError ?? t("playground.voiceSection.uploadError")}</span>
-                          </div>
-                        )}
-
-                        {/* Re-record button */}
-                        <button
-                          onClick={() => {
-                            if (recAudioRef.current) recAudioRef.current.pause();
-                            setIsRecPlaying(false);
-                            setRecordedAudioBlob(null);
-                            setRecordedAudioUrl(null);
-                            setRecordingTime(0);
-                            setSelectedVoice("voice1");
-                            setUploadStatus("idle");
-                            setAnonymousVoiceId(null);
-                            setUploadError(null);
-                          }}
-                          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gray-100 dark:bg-zinc-800 hover:bg-gray-200 dark:hover:bg-zinc-700 text-xs font-medium text-gray-700 dark:text-zinc-300 transition-colors"
-                        >
-                          <MicIcon className="w-3.5 h-3.5" />
-                          <span>{t("playground.voiceSection.recordAgain")}</span>
-                        </button>
-                      </div>
-                    ) : (
-                      <div className="text-center py-1">
-                        {isRecording ? (
-                          <>
-                            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-red-500 to-pink-500 flex items-center justify-center mx-auto mb-2 shadow-lg animate-pulse">
-                              <MicIcon className="w-6 h-6 text-white" />
-                            </div>
-                            <p className="text-xs font-bold text-red-600 dark:text-red-400 mb-1">
-                              {t("playground.voiceSection.recording")} {formatTime(recordingTime)}
-                            </p>
-                            <p className="text-[11px] text-gray-500 dark:text-zinc-400 mb-2">
-                              {t("playground.voiceSection.promptGuideTitle")}
-                            </p>
-                            <button
-                              onClick={stopRecording}
-                              className="px-4 py-1.5 rounded-lg bg-red-500 hover:bg-red-600 text-white text-xs font-bold transition-colors shadow-md active:scale-95"
-                            >
-                              {t("playground.voiceSection.stopRecording")}
-                            </button>
-                          </>
-                        ) : (
-                          <>
-                            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center mx-auto mb-2 shadow-md">
-                              <MicIcon className="w-5 h-5 text-white" />
-                            </div>
-                            <p className="text-xs font-medium text-gray-600 dark:text-zinc-400 mb-2">
-                              {t("playground.voiceSection.recordHint")}
-                            </p>
-                            <button
-                              onClick={startRecording}
-                              className="px-4 py-1.5 rounded-lg bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white text-xs font-semibold transition-all shadow-md active:scale-95"
-                            >
-                              {t("playground.voiceSection.startRecording")}
-                            </button>
-                          </>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-
-        {/* === Generation & Preview Section === */}
-        <div className="px-6 py-5 lg:px-10 lg:py-8 border-t border-gray-200/50 dark:border-zinc-800/50 bg-white/60 dark:bg-zinc-900/40">
-          {/* Speed + Generate — compact row on all screens */}
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 mb-5">
-            <h2 className="hidden sm:block text-base font-semibold text-gray-900 dark:text-white">
-              {t("playground.preview.title")}
-            </h2>
-
-            {/* Speed Selector */}
-            <div className="flex items-center gap-2">
-              <span className="text-xs font-medium text-gray-500 dark:text-zinc-400 uppercase tracking-wider">
-                {t("playground.speedSection.title")}
-              </span>
-              <div className="flex items-center bg-gray-100 dark:bg-zinc-800 rounded-full p-0.5 shadow-inner">
-                {(["slow", "normal", "fast"] as const).map((s) => (
-                  <button
-                    key={s}
-                    onClick={() => setSpeed(s)}
-                    className={`px-3 py-1 text-xs font-semibold rounded-full transition-all duration-200 ${
-                      speed === s
-                        ? "bg-white dark:bg-zinc-700 text-indigo-600 dark:text-indigo-400 shadow-sm"
-                        : "text-gray-500 dark:text-zinc-400 hover:text-gray-700 dark:hover:text-zinc-200"
+                  )}
+                  <p
+                    className={`text-xs leading-relaxed line-clamp-4 ${
+                      selectedSampleText === sample.id
+                        ? "text-indigo-700 dark:text-indigo-300"
+                        : "text-gray-600 dark:text-zinc-400"
                     }`}
                   >
-                    {t(`playground.speedSection.${s}`)}
-                  </button>
-                ))}
-              </div>
+                    {t(sample.textKey)}
+                  </p>
+                </button>
+              ))}
             </div>
-
-            {/* Generate Button */}
-            {!(isGenerating || audioUrl) && (
-              <button
-                onClick={handleGenerate}
-                className="w-full sm:w-auto bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 disabled:from-indigo-400 disabled:to-purple-400 dark:disabled:from-indigo-700 dark:disabled:to-purple-700 text-white px-6 py-2.5 rounded-xl transition-all duration-200 font-semibold text-sm shadow-md shadow-indigo-500/20 hover:shadow-indigo-500/35 hover:scale-[1.02] active:scale-[0.98] disabled:cursor-not-allowed flex items-center justify-center gap-2"
-              >
-                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M8 5v14l11-7z" />
-                </svg>
-                <span>{t("playground.preview.generate")}</span>
-              </button>
-            )}
           </div>
 
-          {/* Empty text warning */}
-          {emptyTextWarning && (
-            <div className="mb-4 flex items-center gap-2.5 px-4 py-2.5 rounded-xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 text-amber-700 dark:text-amber-300">
-              <AlertIcon className="w-4 h-4 shrink-0" />
-              <p className="text-xs font-medium flex-1">{t("playground.emptyTextWarning")}</p>
+          {/* Text Area */}
+          <div className="relative">
+            <textarea
+              value={textInput}
+              onChange={(e) => {
+                setTextInput(e.target.value);
+                setSelectedSampleText(null);
+              }}
+              placeholder={t("playground.textSection.placeholder")}
+              rows={5}
+              className="w-full px-4 py-3 rounded-2xl bg-gray-50/50 dark:bg-zinc-900/50 border-2 border-gray-200 dark:border-zinc-700 focus:border-indigo-500 dark:focus:border-indigo-500 focus:outline-none transition-colors text-gray-900 dark:text-white placeholder-gray-400 resize-none text-sm sm:text-base shadow-inner"
+            />
+            {/* Word count with circular progress */}
+            {(() => {
+              const words = textInput.trim().split(/\s+/).filter(Boolean).length;
+              const maxWords = 200;
+              const percentage = Math.min((words / maxWords) * 100, 100);
+              const isOverLimit = words > maxWords;
+              const strokeColor = isOverLimit
+                ? "text-red-500"
+                : percentage > 80
+                  ? "text-amber-500"
+                  : "text-indigo-500";
+
+              return (
+                <div className="absolute bottom-3 right-3 flex items-center gap-2 bg-white/80 dark:bg-zinc-800/80 backdrop-blur-sm px-2.5 py-1.5 rounded-full shadow-sm border border-gray-100 dark:border-zinc-700">
+                  <div className="relative w-5 h-5 flex items-center justify-center">
+                    <svg className="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
+                      <path
+                        className="text-gray-200 dark:text-zinc-600"
+                        strokeWidth="3"
+                        stroke="currentColor"
+                        fill="none"
+                        d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                      />
+                      <path
+                        className={`${strokeColor} transition-all duration-300`}
+                        strokeDasharray={`${percentage}, 100`}
+                        strokeWidth="3"
+                        strokeLinecap="round"
+                        stroke="currentColor"
+                        fill="none"
+                        d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                      />
+                    </svg>
+                  </div>
+                  <span
+                    className={`text-xs font-semibold ${isOverLimit ? "text-red-500" : "text-gray-600 dark:text-zinc-300"}`}
+                  >
+                    {words}/{maxWords}
+                  </span>
+                </div>
+              );
+            })()}
+          </div>
+        </section>
+
+        {/* Step 2: Voice Setting */}
+        <section className="glass-panel rounded-3xl shadow-lg border border-white/20 dark:border-zinc-800/50 p-5 sm:p-8">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+            <h2 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+              <span className="w-7 h-7 rounded-full bg-purple-100 dark:bg-purple-900/50 text-purple-600 dark:text-purple-400 flex items-center justify-center text-sm font-bold">
+                2
+              </span>
+              {t("playground.voiceSection.sampleVoices")}
+            </h2>
+
+            {/* Tabs */}
+            <div className="flex p-1 bg-gray-100 dark:bg-zinc-800/80 rounded-xl">
               <button
-                onClick={() => setEmptyTextWarning(false)}
-                className="text-amber-500 hover:text-amber-700 dark:hover:text-amber-200 transition-colors ml-1"
-                aria-label="Dismiss"
+                onClick={() => setActiveVoicePanel("stock")}
+                className={`flex-1 flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                  activeVoicePanel === "stock"
+                    ? "bg-white dark:bg-zinc-700 text-purple-600 dark:text-purple-400 shadow-sm"
+                    : "text-gray-500 dark:text-zinc-400 hover:text-gray-700 dark:hover:text-zinc-200"
+                }`}
               >
-                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <SpeakerIcon className="w-4 h-4" />
+                <span>{t("playground.voiceSection.sampleVoices")}</span>
+              </button>
+              <button
+                onClick={() => setActiveVoicePanel("custom")}
+                className={`flex-1 flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                  activeVoicePanel === "custom"
+                    ? "bg-white dark:bg-zinc-700 text-indigo-600 dark:text-indigo-400 shadow-sm"
+                    : "text-gray-500 dark:text-zinc-400 hover:text-gray-700 dark:hover:text-zinc-200"
+                }`}
+              >
+                <MicIcon className="w-4 h-4" />
+                <span>{t("playground.voiceSection.recordCustom")}</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Voices Grid */}
+          {activeVoicePanel === "stock" && (
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+              {PLAYGROUND_VOICES.map((voice) => (
+                <div
+                  key={voice.id}
+                  onClick={() => {
+                    setSelectedVoice(voice.id);
+                    handleVoicePreview(voice.id);
+                  }}
+                  className={`group relative p-4 rounded-2xl border-2 cursor-pointer transition-all ${
+                    selectedVoice === voice.id && !recordedAudioBlob
+                      ? "bg-purple-50 dark:bg-purple-900/20 border-purple-500 shadow-md"
+                      : "bg-white dark:bg-zinc-900 border-gray-100 dark:border-zinc-800 hover:border-purple-200 dark:hover:border-purple-800 hover:shadow-sm"
+                  }`}
+                >
+                  {selectedVoice === voice.id && !recordedAudioBlob && (
+                    <div className="absolute top-2 right-2 text-purple-500">
+                      <CheckIcon className="w-5 h-5" />
+                    </div>
+                  )}
+                  <div className="flex flex-col items-center text-center gap-2">
+                    <div
+                      className={`w-14 h-14 rounded-full bg-gradient-to-br ${voice.color} flex items-center justify-center text-white font-bold text-xl shadow-inner relative`}
+                    >
+                      {voice.avatar}
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleVoicePreview(voice.id);
+                        }}
+                        className="absolute -bottom-1 -right-1 w-7 h-7 rounded-full bg-white dark:bg-zinc-800 shadow-md flex items-center justify-center text-gray-700 dark:text-zinc-300 hover:text-purple-600 dark:hover:text-purple-400 hover:scale-110 transition-transform"
+                      >
+                        {playingVoicePreview === voice.id ? (
+                          <StopIcon className="w-3.5 h-3.5" />
+                        ) : (
+                          <PlayIcon className="w-3.5 h-3.5 ml-0.5" />
+                        )}
+                      </button>
+                    </div>
+                    <div>
+                      <h3 className="font-bold text-sm text-gray-900 dark:text-white">
+                        {t(voice.nameKey)}
+                      </h3>
+                      <p className="text-xs text-gray-500 dark:text-zinc-400 capitalize">
+                        {voice.gender === "male" ? t("common.male") : t("common.female")}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Custom Recording */}
+          {activeVoicePanel === "custom" && (
+            <div className="flex flex-col items-center justify-center p-6 sm:p-10 bg-gray-50/50 dark:bg-zinc-900/30 rounded-2xl border-2 border-dashed border-gray-200 dark:border-zinc-700">
+              {recordedAudioBlob ? (
+                <div className="w-full max-w-md space-y-4">
+                  {recordedAudioUrl && (
+                    <div className="p-4 rounded-2xl bg-white dark:bg-zinc-800 shadow-sm border border-gray-100 dark:border-zinc-700">
+                      <div className="flex items-center gap-4">
+                        <button
+                          onClick={toggleRecPlayback}
+                          className="w-12 h-12 rounded-full bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-200 dark:hover:bg-indigo-900/50 flex items-center justify-center transition-colors shrink-0"
+                        >
+                          {isRecPlaying ? (
+                            <PauseIcon className="w-5 h-5" />
+                          ) : (
+                            <PlayIcon className="w-5 h-5 ml-1" />
+                          )}
+                        </button>
+                        <div className="flex-1">
+                          <audio ref={recAudioRef} src={recordedAudioUrl} className="hidden" />
+                          <div className="flex justify-between text-xs font-semibold mb-1.5 text-gray-700 dark:text-zinc-300">
+                            <span>{t("playground.voiceSection.recordedPreview")}</span>
+                            <span className="font-mono text-gray-500">
+                              {formatTime(Math.floor(recAudioCurrentTime))} /{" "}
+                              {formatTime(Math.floor(recAudioDuration || recordingTime))}
+                            </span>
+                          </div>
+                          <div
+                            className="h-2 bg-gray-100 dark:bg-zinc-900 rounded-full cursor-pointer overflow-hidden"
+                            onClick={handleRecSeek}
+                          >
+                            <div
+                              className="h-full bg-indigo-500 rounded-full transition-all duration-100"
+                              style={{ width: `${recAudioProgress}%` }}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Status and Actions */}
+                  <div className="flex items-center justify-between">
+                    <div>
+                      {uploadStatus === "uploading" && (
+                        <div className="flex items-center gap-1.5 text-xs text-indigo-600 font-medium">
+                          <svg className="animate-spin w-3.5 h-3.5" fill="none" viewBox="0 0 24 24">
+                            <circle
+                              className="opacity-25"
+                              cx="12"
+                              cy="12"
+                              r="10"
+                              stroke="currentColor"
+                              strokeWidth="4"
+                            />
+                            <path
+                              className="opacity-75"
+                              fill="currentColor"
+                              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                            />
+                          </svg>
+                          {t("playground.voiceSection.uploading")}
+                        </div>
+                      )}
+                      {uploadStatus === "success" && (
+                        <div className="flex items-center gap-1.5 text-xs text-emerald-600 font-medium">
+                          <CheckIcon className="w-3.5 h-3.5" />
+                          {t("playground.voiceSection.uploadSuccess")}
+                        </div>
+                      )}
+                      {uploadStatus === "error" && (
+                        <div className="flex items-center gap-1.5 text-xs text-red-600 font-medium">
+                          <AlertIcon className="w-3.5 h-3.5" />
+                          {uploadError ?? t("playground.voiceSection.uploadError")}
+                        </div>
+                      )}
+                    </div>
+                    <button
+                      onClick={() => {
+                        if (recAudioRef.current) recAudioRef.current.pause();
+                        setIsRecPlaying(false);
+                        setRecordedAudioBlob(null);
+                        setRecordedAudioUrl(null);
+                        setRecordingTime(0);
+                        setSelectedVoice("voice1");
+                        setUploadStatus("idle");
+                        setAnonymousVoiceId(null);
+                        setUploadError(null);
+                      }}
+                      className="text-xs font-semibold text-gray-500 hover:text-indigo-600 transition-colors"
+                    >
+                      {t("playground.voiceSection.recordAgain")}
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div className="text-center">
+                  <div className="mb-4 text-xs font-medium text-gray-500 dark:text-zinc-400 italic bg-white/50 dark:bg-zinc-800/50 px-4 py-2 rounded-lg max-w-sm mx-auto">
+                    &quot;{t("playground.voiceSection.promptGuideText")}&quot;
+                  </div>
+                  {isRecording ? (
+                    <div className="flex flex-col items-center gap-3">
+                      <button onClick={stopRecording} className="relative group">
+                        <div className="absolute inset-0 bg-red-500 rounded-full animate-ping opacity-75"></div>
+                        <div className="relative w-16 h-16 rounded-full bg-red-500 flex items-center justify-center text-white shadow-xl group-active:scale-95 transition-transform">
+                          <StopIcon className="w-6 h-6" />
+                        </div>
+                      </button>
+                      <span className="font-mono text-red-500 font-bold">
+                        {formatTime(recordingTime)}
+                      </span>
+                    </div>
+                  ) : (
+                    <button
+                      onClick={startRecording}
+                      className="group flex flex-col items-center gap-3"
+                    >
+                      <div className="w-16 h-16 rounded-full bg-indigo-500 flex items-center justify-center text-white shadow-lg group-hover:scale-105 group-active:scale-95 transition-transform">
+                        <MicIcon className="w-7 h-7" />
+                      </div>
+                      <span className="text-sm font-semibold text-indigo-600 dark:text-indigo-400">
+                        {t("playground.voiceSection.startRecording")}
+                      </span>
+                    </button>
+                  )}
+                </div>
+              )}
+            </div>
+          )}
+        </section>
+
+        {/* Output Audio Preview Card */}
+        {audioUrl && (
+          <section className="animate-fade-in-up">
+            <div className="relative bg-gradient-to-br from-indigo-500 to-purple-600 rounded-3xl p-6 sm:p-8 shadow-xl text-white overflow-hidden">
+              <div className="absolute top-0 left-0 w-full h-full opacity-10 mix-blend-overlay"></div>
+
+              <button
+                onClick={() => {
+                  setAudioUrl(null);
+                  setGenerationStatus(null);
+                  if (audioRef.current) audioRef.current.pause();
+                  setIsPlaying(false);
+                }}
+                className="absolute top-4 right-4 w-8 h-8 rounded-full bg-black/20 hover:bg-black/40 flex items-center justify-center transition-colors text-white/80 hover:text-white z-10"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -1158,227 +1048,150 @@ export default function PlaygroundContent() {
                   />
                 </svg>
               </button>
-            </div>
-          )}
 
-          <div className="max-w-3xl mx-auto">
-            {/* Rate limit error */}
-            {generationStatus === "rate_limited" && rateLimitRetryAfter !== null && (
-              <div className="mb-6 flex items-start gap-3 px-4 py-3 rounded-xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 text-amber-700 dark:text-amber-300">
-                <AlertIcon className="w-5 h-5 shrink-0 mt-0.5" />
-                <div>
-                  <p className="text-sm font-semibold">{t("playground.rateLimitTitle")}</p>
-                  <p className="text-xs mt-0.5">
-                    {t("playground.rateLimitMessage")} {formatRetryAfter(rateLimitRetryAfter)}
-                  </p>
-                </div>
-              </div>
-            )}
-
-            {/* Generation error */}
-            {generationStatus === "failed" && errorMessage && (
-              <div className="mb-6 flex items-start gap-3 px-4 py-3 rounded-xl bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300">
-                <AlertIcon className="w-5 h-5 shrink-0 mt-0.5" />
-                <div>
-                  <p className="text-sm font-semibold">{t("playground.errorTitle")}</p>
-                  <p className="text-xs mt-0.5">{errorMessage}</p>
-                </div>
-              </div>
-            )}
-
-            {/* Processing indicator */}
-            {isGenerating &&
-              (generationStatus === "queued" || generationStatus === "processing") && (
-                <div className="mb-6 px-4 py-3 rounded-xl bg-indigo-50 dark:bg-indigo-950/30 border border-indigo-200 dark:border-indigo-800">
-                  <div className="flex items-center gap-3 mb-2">
-                    <div className="flex gap-1">
-                      <span className="w-2 h-2 rounded-full bg-indigo-500 animate-bounce [animation-delay:0ms]" />
-                      <span className="w-2 h-2 rounded-full bg-indigo-500 animate-bounce [animation-delay:150ms]" />
-                      <span className="w-2 h-2 rounded-full bg-indigo-500 animate-bounce [animation-delay:300ms]" />
-                    </div>
-                    <span className="text-sm text-indigo-700 dark:text-indigo-300 font-medium">
-                      {statusLabel()}
-                    </span>
-                  </div>
-                  <div className="h-1 w-full bg-indigo-100 dark:bg-indigo-900 rounded-full overflow-hidden">
-                    <div className="h-full bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full animate-pulse w-3/4" />
-                  </div>
-                </div>
-              )}
-
-            {/* Audio player */}
-            {audioUrl ? (
-              <div className="relative bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-indigo-950/40 dark:to-purple-950/40 rounded-2xl p-6 border border-indigo-100/50 dark:border-indigo-900/50 shadow-sm">
-                {/* Close Button */}
+              <div className="relative z-10 flex flex-col sm:flex-row items-center gap-6">
                 <button
-                  onClick={() => {
-                    setAudioUrl(null);
-                    setGenerationStatus(null);
-                    if (audioRef.current) audioRef.current.pause();
-                    setIsPlaying(false);
-                  }}
-                  className="absolute top-4 right-4 w-8 h-8 rounded-full bg-black/5 hover:bg-black/10 dark:bg-white/10 dark:hover:bg-white/20 flex items-center justify-center transition-colors text-gray-500 hover:text-gray-700 dark:text-zinc-400 dark:hover:text-zinc-200"
-                  aria-label="Close"
+                  onClick={togglePlayback}
+                  className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-white text-indigo-600 flex items-center justify-center shadow-2xl hover:scale-105 active:scale-95 transition-transform shrink-0"
                 >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M6 18L18 6M6 6l12 12"
-                    />
-                  </svg>
+                  {isPlaying ? (
+                    <PauseIcon className="w-8 h-8" />
+                  ) : (
+                    <PlayIcon className="w-8 h-8 ml-1" />
+                  )}
                 </button>
 
-                {/* Cached badge */}
-                {isCachedResult && (
-                  <div className="flex items-center gap-1.5 mb-4">
-                    <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-300 text-xs font-medium">
-                      <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
-                      </svg>
-                      {t("playground.preview.cached")}
+                <div className="flex-1 w-full">
+                  <audio ref={audioRef} src={audioUrl} className="hidden" />
+                  <div className="flex justify-between items-end mb-2">
+                    <span className="font-bold text-lg sm:text-xl">
+                      {isPlaying ? t("playground.preview.playing") : t("playground.preview.ready")}
                     </span>
-                  </div>
-                )}
-
-                <div className="flex items-center gap-4 sm:gap-6">
-                  {/* Play/Pause button */}
-                  <button
-                    onClick={togglePlayback}
-                    className="w-14 h-14 rounded-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white flex items-center justify-center shadow-lg shadow-indigo-500/25 transition-all hover:scale-105 active:scale-95 shrink-0"
-                  >
-                    {isPlaying ? (
-                      <PauseIcon className="w-6 h-6" />
-                    ) : (
-                      <PlayIcon className="w-6 h-6" />
+                    {isCachedResult && (
+                      <span className="text-[10px] font-bold uppercase tracking-wider bg-white/20 px-2 py-0.5 rounded-full">
+                        {t("playground.preview.cached")}
+                      </span>
                     )}
-                  </button>
-
-                  <div className="flex-1 min-w-0">
-                    <audio ref={audioRef} src={audioUrl} className="hidden" />
-
-                    {/* Seekable progress bar */}
-                    <div
-                      className="h-2.5 bg-indigo-100 dark:bg-zinc-800 rounded-full overflow-hidden cursor-pointer shadow-inner"
-                      onClick={handleSeek}
-                    >
-                      <div
-                        className="h-full bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full transition-all duration-300"
-                        style={{ width: `${audioProgress}%` }}
-                      />
-                    </div>
-
-                    <div className="flex items-center justify-between mt-2.5">
-                      <p className="text-xs font-medium text-indigo-700 dark:text-indigo-300">
-                        {formatTime(Math.floor(audioCurrentTime))}
-                        {audioDuration ? ` / ${formatTime(Math.floor(audioDuration))}` : ""}
-                      </p>
-                      <p className="text-xs font-medium text-indigo-600/70 dark:text-indigo-400/70 uppercase tracking-wider">
-                        {isPlaying
-                          ? t("playground.preview.playing")
-                          : t("playground.preview.ready")}
-                      </p>
-                    </div>
                   </div>
 
-                  {/* Download button */}
-                  <button
-                    onClick={handleDownload}
-                    className="w-11 h-11 rounded-full bg-white dark:bg-zinc-800 hover:bg-gray-50 dark:hover:bg-zinc-700 border border-gray-200 dark:border-zinc-700 flex items-center justify-center transition-all shadow-sm hover:shadow shrink-0"
-                    title={t("playground.preview.download")}
+                  <div
+                    className="h-3 bg-black/20 rounded-full cursor-pointer overflow-hidden backdrop-blur-sm shadow-inner"
+                    onClick={handleSeek}
                   >
-                    <DownloadIcon className="w-5 h-5 text-gray-700 dark:text-zinc-300" />
-                  </button>
-                </div>
-              </div>
-            ) : (
-              !isGenerating && (
-                <div className="bg-gray-50/50 dark:bg-zinc-900/50 rounded-2xl p-10 text-center border-2 border-dashed border-gray-200 dark:border-zinc-800">
-                  <svg
-                    className="w-12 h-12 text-gray-300 dark:text-zinc-600 mx-auto mb-3"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={1.5}
-                      d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"
+                    <div
+                      className="h-full bg-white rounded-full transition-all duration-300"
+                      style={{ width: `${audioProgress}%` }}
                     />
-                  </svg>
-                  <p className="text-sm font-medium text-gray-500 dark:text-zinc-400">
-                    {t("playground.preview.noAudio")}
-                  </p>
+                  </div>
+
+                  <div className="flex justify-between mt-2 text-xs sm:text-sm font-medium text-white/80 font-mono">
+                    <span>{formatTime(Math.floor(audioCurrentTime))}</span>
+                    <span>{audioDuration ? formatTime(Math.floor(audioDuration)) : "0:00"}</span>
+                  </div>
                 </div>
-              )
-            )}
-          </div>
-        </div>
-      </div>
-      {/* === Tips Section === */}
-      <div className="mt-12 glass-panel rounded-3xl p-8 shadow-sm">
-        <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6">
-          {t("playground.tips.title")}
-        </h2>
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {[
-            {
-              icon: (
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M13 10V3L4 14h7v7l9-11h-7z"
-                  />
-                </svg>
-              ),
-              title: t("playground.tips.tip1.title"),
-              description: t("playground.tips.tip1.description"),
-            },
-            {
-              icon: (
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"
-                  />
-                </svg>
-              ),
-              title: t("playground.tips.tip2.title"),
-              description: t("playground.tips.tip2.description"),
-            },
-            {
-              icon: (
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A11.962 11.962 0 003 9.7c0 5.592 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.132-2.053-.382-3.016z"
-                  />
-                </svg>
-              ),
-              title: t("playground.tips.tip3.title"),
-              description: t("playground.tips.tip3.description"),
-            },
-          ].map((tip, i) => (
-            <div key={i} className="flex gap-3">
-              <div className="w-10 h-10 rounded-xl bg-indigo-50 dark:bg-indigo-950/30 text-indigo-600 dark:text-indigo-400 flex items-center justify-center shrink-0">
-                {tip.icon}
-              </div>
-              <div>
-                <h3 className="font-semibold text-sm text-gray-900 dark:text-white mb-1">
-                  {tip.title}
-                </h3>
-                <p className="text-xs text-gray-600 dark:text-zinc-400">{tip.description}</p>
+
+                <button
+                  onClick={handleDownload}
+                  className="w-12 h-12 rounded-full bg-white/20 hover:bg-white/30 backdrop-blur-md flex items-center justify-center transition-colors shrink-0 border border-white/30"
+                >
+                  <DownloadIcon className="w-6 h-6" />
+                </button>
               </div>
             </div>
-          ))}
+          </section>
+        )}
+
+        {/* Alerts (Error / Warning / Status) */}
+        {emptyTextWarning && (
+          <div className="flex items-center gap-2.5 px-4 py-3 rounded-xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 text-amber-700 dark:text-amber-300 animate-fade-in-up">
+            <AlertIcon className="w-5 h-5 shrink-0" />
+            <p className="text-sm font-medium flex-1">{t("playground.emptyTextWarning")}</p>
+            <button
+              onClick={() => setEmptyTextWarning(false)}
+              className="text-amber-500 hover:text-amber-700"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+          </div>
+        )}
+
+        {generationStatus === "rate_limited" && rateLimitRetryAfter !== null && (
+          <div className="flex items-start gap-3 px-4 py-3 rounded-xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 text-amber-700 dark:text-amber-300 animate-fade-in-up">
+            <AlertIcon className="w-5 h-5 shrink-0 mt-0.5" />
+            <div>
+              <p className="text-sm font-semibold">{t("playground.rateLimitTitle")}</p>
+              <p className="text-xs mt-0.5">
+                {t("playground.rateLimitMessage")} {formatRetryAfter(rateLimitRetryAfter)}
+              </p>
+            </div>
+          </div>
+        )}
+
+        {generationStatus === "failed" && errorMessage && (
+          <div className="flex items-start gap-3 px-4 py-3 rounded-xl bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 animate-fade-in-up">
+            <AlertIcon className="w-5 h-5 shrink-0 mt-0.5" />
+            <div>
+              <p className="text-sm font-semibold">{t("playground.errorTitle")}</p>
+              <p className="text-xs mt-0.5">{errorMessage}</p>
+            </div>
+          </div>
+        )}
+
+        {isGenerating && (generationStatus === "queued" || generationStatus === "processing") && (
+          <div className="px-6 py-4 rounded-2xl bg-indigo-50 dark:bg-indigo-900/20 border border-indigo-100 dark:border-indigo-800/50 flex flex-col items-center justify-center gap-3 animate-fade-in-up">
+            <div className="flex gap-1.5">
+              <span className="w-2.5 h-2.5 rounded-full bg-indigo-500 animate-bounce [animation-delay:0ms]" />
+              <span className="w-2.5 h-2.5 rounded-full bg-indigo-500 animate-bounce [animation-delay:150ms]" />
+              <span className="w-2.5 h-2.5 rounded-full bg-indigo-500 animate-bounce [animation-delay:300ms]" />
+            </div>
+            <span className="text-sm text-indigo-700 dark:text-indigo-300 font-bold tracking-wide">
+              {statusLabel()}
+            </span>
+          </div>
+        )}
+      </div>
+
+      {/* Sticky Bottom Action Bar (Mobile & Desktop) */}
+      <div className="fixed bottom-0 left-0 right-0 z-50 p-4 sm:p-6 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xl border-t border-gray-200/50 dark:border-zinc-800/50 shadow-[0_-10px_40px_rgba(0,0,0,0.05)]">
+        <div className="max-w-4xl mx-auto flex flex-row items-center justify-between gap-4">
+          {/* Speed Selector */}
+          <div className="flex items-center gap-2">
+            <span className="hidden sm:block text-xs font-bold text-gray-500 dark:text-zinc-400 uppercase tracking-wider">
+              {t("playground.speedSection.title")}
+            </span>
+            <div className="flex items-center bg-gray-100 dark:bg-zinc-800 rounded-full p-1">
+              {(["slow", "normal", "fast"] as const).map((s) => (
+                <button
+                  key={s}
+                  onClick={() => setSpeed(s)}
+                  className={`px-3 py-1.5 text-xs sm:text-sm font-semibold rounded-full transition-colors ${
+                    speed === s
+                      ? "bg-white dark:bg-zinc-700 text-indigo-600 dark:text-indigo-400 shadow-sm"
+                      : "text-gray-500 dark:text-zinc-400 hover:text-gray-700 dark:hover:text-zinc-200"
+                  }`}
+                >
+                  {t(`playground.speedSection.${s}`)}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Generate Button */}
+          <button
+            onClick={handleGenerate}
+            disabled={isGenerating || (!hasSelectedVoice && !hasUploadedRecording)}
+            className="flex-1 sm:flex-none bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 disabled:opacity-50 text-white px-8 py-3 rounded-2xl transition-all font-bold text-sm sm:text-base shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40 active:scale-95 flex items-center justify-center gap-2"
+          >
+            <SpeakerIcon className="w-5 h-5" />
+            <span>{t("playground.preview.generate")}</span>
+          </button>
         </div>
       </div>
     </div>

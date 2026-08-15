@@ -14,7 +14,7 @@
     },
     "voiceSection": {
       "sampleVoices": "Voix Exemples",
-      "recordCustom": "Enregistrez une voix personnalisée",
+      "recordCustom": "Enregistrez une voix",
       "recordCustomSubtitle": "Clonez votre voix avec un enregistrement de 10 secondes",
       "promptGuideTitle": "Guide de lecture (10-15s)",
       "promptGuideText": "Le soleil se lève doucement sur l'océan, illuminant le ciel de teintes dorées pendant qu'une brise légère rafraîchit l'air.",
