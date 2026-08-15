@@ -607,20 +607,18 @@ export default function PlaygroundContent() {
   // ---------------------------------------------------------------------------
   const handleGenerate = async () => {
     const text = textInput.trim();
-    const hasVoice = !!selectedVoice && !recordedAudioBlob;
-    const hasRecording =
-      !!recordedAudioBlob && uploadStatus === "success" && anonymousVoiceId !== null;
 
     if (!text) {
       setEmptyTextWarning(true);
       return;
     }
     setEmptyTextWarning(false);
-    if (!hasVoice && !hasRecording) return;
+    if (!canGenerate) return;
 
-    const voice = hasVoice ? PLAYGROUND_VOICES.find((v) => v.id === selectedVoice) : null;
-    if (hasVoice && !voice) return;
-    const language = hasVoice ? voice!.language : locale;
+    const isStock = activeVoicePanel === "stock";
+    const voice = isStock ? PLAYGROUND_VOICES.find((v) => v.id === selectedVoice) : null;
+    if (isStock && !voice) return;
+    const language = isStock && voice ? voice.language : locale;
 
     // Calculate rate based on speed setting
     const rateMap = { slow: 0.3, normal: 0.5, fast: 0.8 };
@@ -630,7 +628,7 @@ export default function PlaygroundContent() {
     resetGenerationState();
 
     try {
-      const requestBody = hasVoice
+      const requestBody = isStock
         ? { text, voice_id: voice!.backendVoiceId, language, rate }
         : { text, anonymous_voice_id: anonymousVoiceId, language, rate };
 
@@ -704,9 +702,15 @@ export default function PlaygroundContent() {
 
   // Helper: Save completed job to history
   function saveCompletedJob(jobToSave: TTSJobResponse) {
-    const vName = selectedVoice
-      ? t(PLAYGROUND_VOICES.find((v) => v.id === selectedVoice)?.nameKey ?? "")
-      : t("playground.voiceSection.customVoice");
+    const isStock = activeVoicePanel === "stock";
+    const stockVoice = isStock ? PLAYGROUND_VOICES.find((v) => v.id === selectedVoice) : null;
+
+    const vName =
+      isStock && stockVoice
+        ? t(stockVoice.nameKey)
+        : anonymousVoiceId
+          ? `Voice Prompt #${anonymousVoiceId}`
+          : t("playground.voiceSection.customVoice");
 
     const textSnippet = currentText.slice(0, 50) + (currentText.length > 50 ? "..." : "");
 
@@ -901,9 +905,10 @@ export default function PlaygroundContent() {
       ? t(SAMPLE_TEXTS.find((s) => s.id === selectedSampleText)?.textKey ?? "")
       : "");
 
-  const hasSelectedVoice = !!selectedVoice && !recordedAudioBlob;
-  const hasUploadedRecording =
-    !!recordedAudioBlob && uploadStatus === "success" && anonymousVoiceId !== null;
+  const hasValidStockVoice = activeVoicePanel === "stock" && !!selectedVoice;
+  const hasValidCustomVoice =
+    activeVoicePanel === "custom" && uploadStatus === "success" && anonymousVoiceId !== null;
+  const canGenerate = hasValidStockVoice || hasValidCustomVoice;
 
   const statusLabel = () => {
     switch (generationStatus) {
@@ -1088,15 +1093,16 @@ export default function PlaygroundContent() {
                   key={voice.id}
                   onClick={() => {
                     setSelectedVoice(voice.id);
+                    setActiveVoicePanel("stock");
                     handleVoicePreview(voice.id);
                   }}
                   className={`group relative p-4 rounded-2xl border-2 cursor-pointer transition-all ${
-                    selectedVoice === voice.id && !recordedAudioBlob
+                    selectedVoice === voice.id && activeVoicePanel === "stock"
                       ? "bg-purple-50 dark:bg-purple-900/20 border-purple-500 shadow-md"
                       : "bg-white dark:bg-zinc-900 border-gray-100 dark:border-zinc-800 hover:border-purple-200 dark:hover:border-purple-800 hover:shadow-sm"
                   }`}
                 >
-                  {selectedVoice === voice.id && !recordedAudioBlob && (
+                  {selectedVoice === voice.id && activeVoicePanel === "stock" && (
                     <div className="absolute top-2 right-2 text-purple-500">
                       <CheckIcon className="w-5 h-5" />
                     </div>
@@ -1284,11 +1290,13 @@ export default function PlaygroundContent() {
                         <div
                           key={voice.anonymous_voice_id}
                           className={`flex items-center justify-between p-3 rounded-xl border transition-all cursor-pointer ${
-                            anonymousVoiceId === voice.anonymous_voice_id
+                            anonymousVoiceId === voice.anonymous_voice_id &&
+                            activeVoicePanel === "custom"
                               ? "bg-indigo-50 dark:bg-indigo-900/20 border-indigo-500 shadow-sm"
                               : "bg-white dark:bg-zinc-800 border-gray-100 dark:border-zinc-700 hover:border-indigo-300 dark:hover:border-indigo-600"
                           }`}
                           onClick={() => {
+                            setActiveVoicePanel("custom");
                             setAnonymousVoiceId(voice.anonymous_voice_id);
                             setRecordedAudioBlob(null);
                             if (recordedAudioUrl) {
@@ -1713,11 +1721,7 @@ export default function PlaygroundContent() {
           {/* Generate Button */}
           <button
             onClick={handleGenerate}
-            disabled={
-              isGenerating ||
-              uploadStatus === "uploading" ||
-              (!hasSelectedVoice && !hasUploadedRecording)
-            }
+            disabled={isGenerating || uploadStatus === "uploading" || !canGenerate}
             className="flex-1 sm:flex-none bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 disabled:opacity-40 disabled:cursor-not-allowed text-white px-8 py-3 rounded-2xl transition-all font-bold text-sm sm:text-base shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40 active:scale-95 flex items-center justify-center gap-2"
           >
             {uploadStatus === "uploading" ? (
