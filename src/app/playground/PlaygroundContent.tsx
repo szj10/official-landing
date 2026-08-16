@@ -20,7 +20,6 @@ import {
   HistoryVoice,
   HistoryTTSJob,
   SAMPLE_TEXTS,
-  formatTime,
   formatRetryAfter,
 } from "./components/types";
 
@@ -32,7 +31,6 @@ export default function PlaygroundContent() {
 
   // --- Step 1: Text state ---
   const [textInput, setTextInput] = useState("");
-  const [selectedSampleText, setSelectedSampleText] = useState<string | null>(null);
 
   // --- Step 2: Voice state ---
   const [selectedVoice, setSelectedVoice] = useState<string | null>("voice1");
@@ -65,7 +63,6 @@ export default function PlaygroundContent() {
   const [currentJob, setCurrentJob] = useState<TTSJobResponse | null>(null);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const [audioDuration, setAudioDuration] = useState<number | null>(null);
-  const [isCachedResult, setIsCachedResult] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [rateLimitRetryAfter, setRateLimitRetryAfter] = useState<number | null>(null);
   const [emptyTextWarning, setEmptyTextWarning] = useState(false);
@@ -529,7 +526,6 @@ export default function PlaygroundContent() {
     setCurrentJob(null);
     setAudioUrl(null);
     setAudioDuration(null);
-    setIsCachedResult(false);
     setErrorMessage(null);
     setRateLimitRetryAfter(null);
     setIsPlaying(false);
@@ -595,7 +591,6 @@ export default function PlaygroundContent() {
     if (job.status === "completed" && job.audio_path) {
       setAudioUrl(resolveAudioUrl(job.audio_path));
       setAudioDuration(job.audio_duration);
-      setIsCachedResult(job.is_cached);
       setIsGenerating(false);
       setActiveStickyPlayer("tts");
       saveCompletedJob(job);
@@ -676,7 +671,6 @@ export default function PlaygroundContent() {
       if (job.audio_path) {
         setAudioUrl(resolveAudioUrl(job.audio_path));
         setAudioDuration(job.audio_duration);
-        setIsCachedResult(job.is_cached);
         setActiveStickyPlayer("tts");
       }
       setIsGenerating(false);
@@ -751,11 +745,7 @@ export default function PlaygroundContent() {
   // ---------------------------------------------------------------------------
   // Derived state & summaries
   // ---------------------------------------------------------------------------
-  const currentText =
-    textInput ||
-    (selectedSampleText
-      ? t(SAMPLE_TEXTS.find((s) => s.id === selectedSampleText)?.textKey ?? "")
-      : "");
+  const currentText = textInput;
 
   const hasValidStockVoice = activeVoicePanel === "stock" && !!selectedVoice;
   const hasValidCustomVoice =
@@ -763,30 +753,9 @@ export default function PlaygroundContent() {
   const canGenerate = hasValidStockVoice || hasValidCustomVoice;
 
   // Step 1 Summary
-  const textWordsCount = textInput.trim().split(/\s+/).filter(Boolean).length;
-  const step1Summary = textInput.trim()
-    ? `📝 ${textWordsCount} words · "${textInput.slice(0, 24)}${textInput.length > 24 ? "..." : ""}"`
-    : selectedSampleText
-      ? `📝 Sample: ${selectedSampleText}`
-      : "No text entered";
 
   // Step 2 Summary
   const selectedStockVoiceObj = PLAYGROUND_VOICES.find((v) => v.id === selectedVoice);
-  const step2Summary =
-    activeVoicePanel === "stock" && selectedStockVoiceObj
-      ? `🎙 ${t(selectedStockVoiceObj.nameKey)} (${selectedStockVoiceObj.gender === "male" ? t("common.male") : t("common.female")})`
-      : anonymousVoiceId
-        ? `🎙 Custom Voice #${anonymousVoiceId}`
-        : "No voice selected";
-
-  // Step 3 Summary
-  const step3Summary = audioUrl
-    ? `✅ Synthesized (${audioDuration ? formatTime(Math.floor(audioDuration)) : "Ready"})`
-    : isGenerating
-      ? "⏳ In Progress..."
-      : canGenerate
-        ? "✨ Ready to Synthesize"
-        : "Browse or Synthesize";
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-16 pb-16">
