@@ -14,7 +14,7 @@
     },
     "voiceSection": {
       "sampleVoices": "サンプル音声",
-      "recordCustom": "録音",
+      "tabCustom": "録音",
       "recordCustomSubtitle": "10秒の音声録音であなたの声をクローン",
       "promptGuideTitle": "音読ガイドテキスト (10〜15秒)",
       "promptGuideText": "朝の光が静かに街を包み込み、爽やかな風が木々の葉を揺らしています。新しい一日の始まりです。",

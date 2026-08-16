@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import { useI18n } from "@/i18n";
 import { PlayIcon, PauseIcon, DownloadIcon } from "./icons";
 import { formatTime } from "./types";
 
@@ -32,8 +31,6 @@ export function StickyPlayerBar({
   onDownload,
   onClose,
 }: StickyPlayerBarProps) {
-  const { t } = useI18n();
-
   if (!isVisible) return null;
 
   return (

@@ -14,7 +14,7 @@
     },
     "voiceSection": {
       "sampleVoices": "샘플 음성",
-      "recordCustom": "녹음하기",
+      "tabCustom": "녹음하기",
       "recordCustomSubtitle": "10초 음성 녹음으로 내 목소리 클로닝",
       "promptGuideTitle": "낭독 안내 텍스트 (10-15초)",
       "promptGuideText": "아침 햇살이 포근하게 세상을 비추고, 시원한 바람이 나뭇잎을 간지럽힙니다. 새로운 하루가 활기차게 시작됩니다.",

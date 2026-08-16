@@ -14,7 +14,7 @@
     },
     "voiceSection": {
       "sampleVoices": "示例语音",
-      "recordCustom": "录制声音",
+      "tabCustom": "录制声音",
       "recordCustomSubtitle": "通过 10 秒语音录制克隆您的声音",
       "promptGuideTitle": "朗读导引文本 (10-15秒)",
       "promptGuideText": "清晨的阳光洒在大地上，清风拂过树梢，鸟儿在枝头欢快地歌唱，新的一天充满了希望与活力。",
