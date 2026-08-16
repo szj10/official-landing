@@ -61,43 +61,7 @@ export function VoiceRecorder({
     <div className="flex flex-col items-center justify-center p-5 sm:p-8 bg-gray-50/50 dark:bg-zinc-900/30 rounded-2xl border-2 border-dashed border-gray-200 dark:border-zinc-700">
       {recordedAudioBlob ? (
         <div className="w-full max-w-md space-y-4">
-          {recordedAudioUrl && (
-            <div className="p-4 rounded-2xl bg-white dark:bg-zinc-800 shadow-sm border border-gray-100 dark:border-zinc-700">
-              <div className="flex items-center gap-4">
-                <button
-                  type="button"
-                  onClick={onToggleRecPlayback}
-                  className="w-12 h-12 rounded-full bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-200 dark:hover:bg-indigo-900/50 flex items-center justify-center transition-colors shrink-0"
-                  aria-label={isRecPlaying ? "Pause" : "Play"}
-                >
-                  {isRecPlaying ? (
-                    <PauseIcon className="w-5 h-5" />
-                  ) : (
-                    <PlayIcon className="w-5 h-5 ml-1" />
-                  )}
-                </button>
-                <div className="flex-1">
-                  <div className="flex justify-between text-xs font-semibold mb-1.5 text-gray-700 dark:text-zinc-300">
-                    <span>{t("playground.voiceSection.recordedPreview")}</span>
-                    <span className="font-mono text-gray-500">
-                      {formatTime(Math.floor(recAudioCurrentTime))} /{" "}
-                      {formatTime(Math.floor(recAudioDuration || recordingTime))}
-                    </span>
-                  </div>
-                  <div
-                    className="h-2 bg-gray-100 dark:bg-zinc-900 rounded-full cursor-pointer overflow-hidden"
-                    onClick={onRecSeek}
-                  >
-                    <div
-                      className="h-full bg-indigo-500 rounded-full transition-all duration-100"
-                      style={{ width: `${recAudioProgress}%` }}
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
+          {/* Removed inline audio player (now handled by StickyPlayerBar) */}{" "}
           {/* Status and Actions */}
           <div className="flex items-center justify-between">
             <div>

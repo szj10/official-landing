@@ -5,16 +5,16 @@ import { useI18n } from "@/i18n";
 import { PLAYGROUND_VOICES } from "./voices.config";
 
 // Sub-components
-import { StepHeader } from "./components/StepHeader";
-import { TextInputStep } from "./components/TextInputStep";
-import { VoiceStep } from "./components/VoiceStep";
-import { SynthesizeStep } from "./components/SynthesizeStep";
-import { BottomActionBar } from "./components/BottomActionBar";
-import { SpeakerIcon } from "./components/icons";
+import { PlaygroundEditorPanel } from "./components/PlaygroundEditorPanel";
+import { VoiceSelectionModal } from "./components/VoiceSelectionModal";
+import { StickyPlayerBar } from "./components/StickyPlayerBar";
+import { QueueStatusCard } from "./components/QueueStatusCard";
+import { AlertBanner } from "./components/AlertBanner";
+import { HistoryJobs } from "./components/HistoryJobs";
+import { SpeakerIcon, SparklesIcon } from "./components/icons";
 
 // Types and constants
 import {
-  WizardStep,
   TTSJobStatus,
   TTSJobResponse,
   HistoryVoice,
@@ -27,8 +27,8 @@ import {
 export default function PlaygroundContent() {
   const { t, locale } = useI18n();
 
-  // --- Active Wizard Step (accordion: only one section open at a time, but no locks) ---
-  const [activeStep, setActiveStep] = useState<WizardStep>("text");
+  const [isVoiceModalOpen, setIsVoiceModalOpen] = useState(false);
+  const [activeStickyPlayer, setActiveStickyPlayer] = useState<"tts" | "rec" | null>(null);
 
   // --- Step 1: Text state ---
   const [textInput, setTextInput] = useState("");
@@ -264,6 +264,7 @@ export default function PlaygroundContent() {
       setIsRecPlaying(false);
     } else {
       stopAllOtherAudio("rec");
+      setActiveStickyPlayer("rec");
       recAudioRef.current
         .play()
         .then(() => setIsRecPlaying(true))
@@ -286,7 +287,6 @@ export default function PlaygroundContent() {
     const sample = SAMPLE_TEXTS.find((s) => s.id === id);
     if (sample) {
       setTextInput(t(sample.textKey));
-      setSelectedSampleText(id);
     }
   };
 
@@ -373,6 +373,7 @@ export default function PlaygroundContent() {
         setTimeout(() => {
           if (recAudioRef.current) {
             stopAllOtherAudio("rec");
+            setActiveStickyPlayer("rec");
             recAudioRef.current.currentTime = 0;
             recAudioRef.current
               .play()
@@ -471,17 +472,13 @@ export default function PlaygroundContent() {
 
     if (!text) {
       setEmptyTextWarning(true);
-      setActiveStep("text");
       return;
     }
     setEmptyTextWarning(false);
 
     if (!canGenerate) {
-      setActiveStep("voice");
       return;
     }
-
-    setActiveStep("synthesize");
 
     const isStock = activeVoicePanel === "stock";
     const voice = isStock ? PLAYGROUND_VOICES.find((v) => v.id === selectedVoice) : null;
@@ -600,6 +597,7 @@ export default function PlaygroundContent() {
       setAudioDuration(job.audio_duration);
       setIsCachedResult(job.is_cached);
       setIsGenerating(false);
+      setActiveStickyPlayer("tts");
       saveCompletedJob(job);
       return;
     }
@@ -679,6 +677,7 @@ export default function PlaygroundContent() {
         setAudioUrl(resolveAudioUrl(job.audio_path));
         setAudioDuration(job.audio_duration);
         setIsCachedResult(job.is_cached);
+        setActiveStickyPlayer("tts");
       }
       setIsGenerating(false);
       saveCompletedJob(job);
@@ -708,6 +707,7 @@ export default function PlaygroundContent() {
         else setAudioUrl(null);
       }
       setTimeout(() => {
+        setActiveStickyPlayer("tts");
         audioRef.current?.play();
         setIsPlaying(true);
       }, 50);
@@ -726,6 +726,7 @@ export default function PlaygroundContent() {
       stopAllOtherAudio("tts");
       setAudioUrl(resolveAudioUrl(path));
       setPlayingHistoryJobId(jobId);
+      setActiveStickyPlayer("tts");
       setIsPlaying(true);
       setTimeout(() => audioRef.current?.play(), 50);
     }
@@ -788,7 +789,7 @@ export default function PlaygroundContent() {
         : "Browse or Synthesize";
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-16 pb-32 sm:pb-32">
+    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-16 pb-16">
       {/* Persistent HTML Audio Elements (prevents playback interruption on step collapse/expand) */}
       {recordedAudioUrl && <audio ref={recAudioRef} src={recordedAudioUrl} className="hidden" />}
       {audioUrl && <audio ref={audioRef} src={audioUrl} className="hidden" />}
@@ -799,154 +800,207 @@ export default function PlaygroundContent() {
           <SpeakerIcon className="w-3.5 h-3.5" />
           <span>{t("playground.badge")}</span>
         </div>
-        <h1 className="text-3xl sm:text-5xl font-extrabold text-gray-900 dark:text-white tracking-tight mb-3">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-gray-900 dark:text-white tracking-tight mb-3">
           {t("playground.title")}
         </h1>
-        <p className="text-base sm:text-lg text-gray-600 dark:text-zinc-400 max-w-2xl mx-auto">
+        <p className="text-sm sm:text-base md:text-lg text-gray-600 dark:text-zinc-400 max-w-2xl mx-auto px-2">
           {t("playground.subtitle")}
         </p>
       </div>
 
-      {/* Accordion / Step-by-Step Sections */}
-      <div className="space-y-4 sm:space-y-5">
-        {/* Step 1: Input Text */}
-        <StepHeader
-          stepNumber={1}
-          title={t("playground.textSection.title")}
-          badgeColorClass="bg-indigo-100 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400"
-          isExpanded={activeStep === "text"}
-          isCompleted={!!textInput.trim()}
-          summary={step1Summary}
-          onClick={() => setActiveStep(activeStep === "text" ? "voice" : "text")}
-        >
-          <TextInputStep
-            textInput={textInput}
-            selectedSampleText={selectedSampleText}
-            onTextChange={(val) => {
-              setTextInput(val);
-              setSelectedSampleText(null);
-            }}
-            onSampleSelect={handleSampleTextSelect}
-            onAdvanceToNext={() => setActiveStep("voice")}
-          />
-        </StepHeader>
+      {/* New Canvas Layout */}
+      <div className="space-y-6 sm:space-y-8">
+        {/* Editor */}
+        <PlaygroundEditorPanel
+          textInput={textInput}
+          onTextChange={(val) => {
+            setTextInput(val);
+          }}
+          onSampleSelect={handleSampleTextSelect}
+        />
 
-        {/* Step 2: Voice Selection / Recording */}
-        <StepHeader
-          stepNumber={2}
-          title={t("playground.voiceSection.sampleVoices")}
-          badgeColorClass="bg-purple-100 dark:bg-purple-900/50 text-purple-600 dark:text-purple-400"
-          isExpanded={activeStep === "voice"}
-          isCompleted={canGenerate}
-          summary={step2Summary}
-          onClick={() => setActiveStep(activeStep === "voice" ? "synthesize" : "voice")}
-        >
-          <VoiceStep
-            activeVoicePanel={activeVoicePanel}
-            selectedVoice={selectedVoice}
-            playingVoicePreview={playingVoicePreview}
-            isRecording={isRecording}
-            recordingTime={recordingTime}
-            recordedAudioBlob={recordedAudioBlob}
-            recordedAudioUrl={recordedAudioUrl}
-            isRecPlaying={isRecPlaying}
-            recAudioProgress={recAudioProgress}
-            recAudioCurrentTime={recAudioCurrentTime}
-            recAudioDuration={recAudioDuration}
-            uploadStatus={uploadStatus}
-            uploadError={uploadError}
-            anonymousVoiceId={anonymousVoiceId}
-            historyVoices={historyVoices}
-            showHistoryVoices={showHistoryVoices}
-            playingHistoryVoiceId={playingHistoryVoiceId}
-            canGenerate={canGenerate}
-            recAudioRef={recAudioRef}
-            onSetActiveVoicePanel={setActiveVoicePanel}
-            onVoiceSelectAndPlay={handleVoiceSelectAndPlay}
-            onStartRecording={startRecording}
-            onStopRecording={stopRecording}
-            onToggleRecPlayback={toggleRecPlayback}
-            onRecSeek={handleRecSeek}
-            onResetRecording={() => {
-              if (recAudioRef.current) recAudioRef.current.pause();
-              setIsRecPlaying(false);
-              setRecordedAudioBlob(null);
-              setRecordedAudioUrl(null);
-              setRecordingTime(0);
-              setSelectedVoice("voice1");
-              setUploadStatus("idle");
-              setAnonymousVoiceId(null);
-              setUploadError(null);
-            }}
-            onToggleShowHistoryVoices={() => setShowHistoryVoices((v) => !v)}
-            onSelectHistoryVoice={(voice) => {
-              setActiveVoicePanel("custom");
-              setAnonymousVoiceId(voice.anonymous_voice_id);
-              setRecordedAudioBlob(null);
-              if (recordedAudioUrl) {
-                URL.revokeObjectURL(recordedAudioUrl);
-                setRecordedAudioUrl(null);
-              }
-              setUploadStatus("success");
-            }}
-            onPlayHistoryVoice={playHistoryVoice}
-            onAdvanceToNext={() => setActiveStep("synthesize")}
-          />
-        </StepHeader>
+        {/* Action Row */}
+        <div className="flex flex-col sm:flex-row items-center gap-4 max-w-lg mx-auto sm:max-w-none">
+          <button
+            onClick={() => setIsVoiceModalOpen(true)}
+            className="w-full sm:w-1/2 flex items-center justify-between px-5 py-3.5 sm:py-4 bg-white dark:bg-zinc-800 border-2 border-gray-200 dark:border-zinc-700 rounded-xl sm:rounded-2xl hover:border-indigo-500 dark:hover:border-indigo-500 transition-colors shadow-sm"
+          >
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-full bg-indigo-100 dark:bg-indigo-900/50 flex items-center justify-center text-indigo-600 dark:text-indigo-400">
+                <SpeakerIcon className="w-4 h-4" />
+              </div>
+              <div className="flex flex-col items-start">
+                <span className="text-xs font-semibold text-gray-500 dark:text-zinc-400 uppercase tracking-wider">
+                  Voice
+                </span>
+                <span className="text-sm font-bold text-gray-900 dark:text-white truncate max-w-[120px] sm:max-w-[160px]">
+                  {selectedStockVoiceObj
+                    ? t(selectedStockVoiceObj.nameKey)
+                    : anonymousVoiceId
+                      ? `Custom #${anonymousVoiceId}`
+                      : "Choose Voice"}
+                </span>
+              </div>
+            </div>
+            <svg
+              className="w-5 h-5 text-gray-400"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
 
-        {/* Step 3: Synthesize TTS */}
-        <StepHeader
-          stepNumber={3}
-          title="Synthesize Speech"
-          badgeColorClass="bg-emerald-100 dark:bg-emerald-900/50 text-emerald-600 dark:text-emerald-400"
-          isExpanded={activeStep === "synthesize"}
-          isCompleted={!!audioUrl}
-          summary={step3Summary}
-          onClick={() => setActiveStep(activeStep === "synthesize" ? "text" : "synthesize")}
-        >
-          <SynthesizeStep
-            isGenerating={isGenerating}
-            generationStatus={generationStatus}
-            audioUrl={audioUrl}
-            audioDuration={audioDuration}
-            isPlaying={isPlaying}
-            audioProgress={audioProgress}
-            audioCurrentTime={audioCurrentTime}
-            isCachedResult={isCachedResult}
-            errorMessage={errorMessage}
-            rateLimitRetryAfter={rateLimitRetryAfter}
+          <button
+            onClick={handleGenerate}
+            disabled={isGenerating || uploadStatus === "uploading" || !canGenerate}
+            className="w-full sm:w-1/2 flex items-center justify-center gap-2 px-5 py-3.5 sm:py-4 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 disabled:opacity-40 disabled:cursor-not-allowed text-white font-bold text-base sm:text-lg rounded-xl sm:rounded-2xl transition-all shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40 active:scale-95"
+          >
+            {isGenerating || uploadStatus === "uploading" ? (
+              <svg className="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24">
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                />
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                />
+              </svg>
+            ) : (
+              <SparklesIcon className="w-5 h-5" />
+            )}
+            {isGenerating
+              ? "Synthesizing..."
+              : uploadStatus === "uploading"
+                ? t("playground.voiceSection.uploading")
+                : t("playground.preview.generate")}
+          </button>
+        </div>
+
+        {/* Inline Alerts & Queue Stats */}
+        <div className="max-w-2xl mx-auto space-y-4">
+          <AlertBanner
             emptyTextWarning={emptyTextWarning}
-            lastQueueMetrics={lastQueueMetrics}
+            onDismissEmptyTextWarning={() => setEmptyTextWarning(false)}
+            generationStatus={generationStatus}
+            rateLimitRetryAfter={rateLimitRetryAfter}
+            errorMessage={errorMessage}
+            isGenerating={isGenerating}
+          />
+          {isGenerating && generationStatus === "queued" && (
+            <QueueStatusCard lastQueueMetrics={lastQueueMetrics} />
+          )}
+        </div>
+
+        {/* Recent Generations list */}
+        <div className="max-w-3xl mx-auto">
+          <HistoryJobs
             historyJobs={historyJobs}
             showHistoryJobs={showHistoryJobs}
             playingHistoryJobId={playingHistoryJobId}
-            audioRef={audioRef}
-            canGenerate={canGenerate}
-            onGenerate={handleGenerate}
-            onTogglePlayback={togglePlayback}
-            onSeek={handleSeek}
-            onDownload={handleDownload}
-            onCloseAudio={() => {
-              setAudioUrl(null);
-              setGenerationStatus(null);
-              if (audioRef.current) audioRef.current.pause();
-              setIsPlaying(false);
-            }}
-            onDismissEmptyTextWarning={() => setEmptyTextWarning(false)}
+            isPlaying={isPlaying}
             onToggleShowHistoryJobs={() => setShowHistoryJobs((v) => !v)}
             onPlayHistoryJob={playHistoryJob}
           />
-        </StepHeader>
+        </div>
       </div>
 
-      {/* Sticky Bottom Action Bar */}
-      <BottomActionBar
-        speed={speed}
-        isGenerating={isGenerating}
+      {/* Voice Selection Modal */}
+      <VoiceSelectionModal
+        isOpen={isVoiceModalOpen}
+        onClose={() => setIsVoiceModalOpen(false)}
+        activeVoicePanel={activeVoicePanel}
+        selectedVoice={selectedVoice}
+        playingVoicePreview={playingVoicePreview}
+        isRecording={isRecording}
+        recordingTime={recordingTime}
+        recordedAudioBlob={recordedAudioBlob}
+        recordedAudioUrl={recordedAudioUrl}
+        isRecPlaying={isRecPlaying}
+        recAudioProgress={recAudioProgress}
+        recAudioCurrentTime={recAudioCurrentTime}
+        recAudioDuration={recAudioDuration}
         uploadStatus={uploadStatus}
+        uploadError={uploadError}
+        anonymousVoiceId={anonymousVoiceId}
+        historyVoices={historyVoices}
+        showHistoryVoices={showHistoryVoices}
+        playingHistoryVoiceId={playingHistoryVoiceId}
         canGenerate={canGenerate}
+        recAudioRef={recAudioRef}
+        onSetActiveVoicePanel={setActiveVoicePanel}
+        onVoiceSelectAndPlay={handleVoiceSelectAndPlay}
+        onStartRecording={startRecording}
+        onStopRecording={stopRecording}
+        onToggleRecPlayback={toggleRecPlayback}
+        onRecSeek={handleRecSeek}
+        onResetRecording={() => {
+          if (recAudioRef.current) recAudioRef.current.pause();
+          setIsRecPlaying(false);
+          setRecordedAudioBlob(null);
+          setRecordedAudioUrl(null);
+          setRecordingTime(0);
+          setSelectedVoice("voice1");
+          setUploadStatus("idle");
+          setAnonymousVoiceId(null);
+          setUploadError(null);
+        }}
+        onToggleShowHistoryVoices={() => setShowHistoryVoices((v) => !v)}
+        onSelectHistoryVoice={(voice) => {
+          setActiveVoicePanel("custom");
+          setAnonymousVoiceId(voice.anonymous_voice_id);
+          setRecordedAudioBlob(null);
+          if (recordedAudioUrl) {
+            URL.revokeObjectURL(recordedAudioUrl);
+            setRecordedAudioUrl(null);
+          }
+          setUploadStatus("success");
+        }}
+        onPlayHistoryVoice={playHistoryVoice}
+        speed={speed}
         onSetSpeed={setSpeed}
-        onGenerate={handleGenerate}
+      />
+
+      {/* Sticky Bottom Player Bar */}
+      <StickyPlayerBar
+        isVisible={
+          (activeStickyPlayer === "tts" && !!audioUrl) ||
+          (activeStickyPlayer === "rec" && !!recordedAudioUrl)
+        }
+        title={activeStickyPlayer === "tts" ? "Synthesized Speech" : "Your Recording"}
+        subtitle={
+          activeStickyPlayer === "tts"
+            ? (currentJob?.voice_name ?? "Ready")
+            : anonymousVoiceId
+              ? `Voice #${anonymousVoiceId}`
+              : "Unsaved Recording"
+        }
+        isPlaying={activeStickyPlayer === "tts" ? isPlaying : isRecPlaying}
+        progress={activeStickyPlayer === "tts" ? audioProgress : recAudioProgress}
+        currentTime={activeStickyPlayer === "tts" ? audioCurrentTime : recAudioCurrentTime}
+        duration={activeStickyPlayer === "tts" ? audioDuration : recAudioDuration}
+        onTogglePlayback={activeStickyPlayer === "tts" ? togglePlayback : toggleRecPlayback}
+        onSeek={activeStickyPlayer === "tts" ? handleSeek : handleRecSeek}
+        onDownload={activeStickyPlayer === "tts" ? handleDownload : undefined}
+        onClose={() => {
+          if (activeStickyPlayer === "tts") {
+            setAudioUrl(null);
+            setGenerationStatus(null);
+            if (audioRef.current) audioRef.current.pause();
+            setIsPlaying(false);
+          } else {
+            if (recAudioRef.current) recAudioRef.current.pause();
+            setIsRecPlaying(false);
+          }
+          setActiveStickyPlayer(null);
+        }}
       />
     </div>
   );
