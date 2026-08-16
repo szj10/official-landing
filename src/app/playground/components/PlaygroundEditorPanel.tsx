@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useI18n } from "@/i18n";
 import { SAMPLE_TEXTS } from "./types";
 import { SparklesIcon, ChevronIcon } from "./icons";
@@ -17,18 +17,11 @@ export function PlaygroundEditorPanel({
   onSampleSelect,
 }: PlaygroundEditorPanelProps) {
   const { t } = useI18n();
-  const [showSamples, setShowSamples] = useState(textInput.trim() === "");
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [pendingSampleId, setPendingSampleId] = useState<string | null>(null);
 
-  // Auto-collapse samples when user starts typing, auto-expand if cleared manually
-  useEffect(() => {
-    if (textInput.trim() !== "") {
-      setShowSamples(false);
-    } else {
-      setShowSamples(true);
-    }
-  }, [textInput]);
+  // Derive showSamples directly from textInput - no need for state or effect
+  const showSamples = textInput.trim() === "";
 
   const words = textInput.trim().split(/\s+/).filter(Boolean).length;
   const maxWords = 200;
@@ -67,23 +60,18 @@ export function PlaygroundEditorPanel({
 
   return (
     <div className="w-full space-y-3 sm:space-y-4">
-      {/* Samples Accordion */}
-      <div className="bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-2xl overflow-hidden shadow-sm">
-        <button
-          type="button"
-          onClick={() => setShowSamples(!showSamples)}
-          className="w-full flex items-center justify-between px-4 sm:px-5 py-3 sm:py-3.5 bg-gray-50 dark:bg-zinc-800/50 hover:bg-gray-100 dark:hover:bg-zinc-800 transition-colors"
-        >
-          <div className="flex items-center gap-2">
-            <SparklesIcon className="w-4 h-4 sm:w-5 sm:h-5 text-indigo-500" />
-            <span className="text-sm font-semibold text-gray-700 dark:text-zinc-200">
-              {t("playground.textSection.sampleTexts")}
-            </span>
+      {/* Samples Section - Auto-shown when textarea is empty */}
+      {showSamples && (
+        <div className="bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-2xl overflow-hidden shadow-sm">
+          <div className="px-4 sm:px-5 py-3 sm:py-3.5 bg-gray-50 dark:bg-zinc-800/50">
+            <div className="flex items-center gap-2">
+              <SparklesIcon className="w-4 h-4 sm:w-5 sm:h-5 text-indigo-500" />
+              <span className="text-sm font-semibold text-gray-700 dark:text-zinc-200">
+                {t("playground.textSection.sampleTexts")}
+              </span>
+            </div>
           </div>
-          <ChevronIcon className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400" open={showSamples} />
-        </button>
 
-        {showSamples && (
           <div className="p-4 sm:p-5 border-t border-gray-200 dark:border-zinc-800 bg-white dark:bg-zinc-900">
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-3">
               {SAMPLE_TEXTS.map((sample) => (
@@ -100,8 +88,8 @@ export function PlaygroundEditorPanel({
               ))}
             </div>
           </div>
-        )}
-      </div>
+        </div>
+      )}
 
       {/* Editor Canvas */}
       <div className="relative shadow-sm">
