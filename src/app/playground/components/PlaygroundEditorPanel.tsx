@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { useI18n } from "@/i18n";
 import { SAMPLE_TEXTS } from "./types";
-import { SparklesIcon, ChevronIcon } from "./icons";
+import { SparklesIcon } from "./icons";
 
 interface PlaygroundEditorPanelProps {
   textInput: string;
