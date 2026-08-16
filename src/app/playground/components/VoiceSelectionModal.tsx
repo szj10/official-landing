@@ -16,25 +16,17 @@ interface VoiceSelectionModalProps {
   isRecording: boolean;
   recordingTime: number;
   recordedAudioBlob: Blob | null;
-  recordedAudioUrl: string | null;
-  isRecPlaying: boolean;
-  recAudioProgress: number;
-  recAudioCurrentTime: number;
-  recAudioDuration: number;
   uploadStatus: "idle" | "uploading" | "success" | "error";
   uploadError: string | null;
   anonymousVoiceId: number | null;
   historyVoices: HistoryVoice[];
   showHistoryVoices: boolean;
   playingHistoryVoiceId: number | null;
-  canGenerate: boolean;
   recAudioRef: React.RefObject<HTMLAudioElement | null>;
   onSetActiveVoicePanel: (panel: "stock" | "custom") => void;
   onVoiceSelectAndPlay: (voiceId: string) => void;
   onStartRecording: () => void;
   onStopRecording: () => void;
-  onToggleRecPlayback: () => void;
-  onRecSeek: (e: React.MouseEvent<HTMLDivElement>) => void;
   onResetRecording: () => void;
   onToggleShowHistoryVoices: () => void;
   onSelectHistoryVoice: (voice: HistoryVoice) => void;
@@ -54,25 +46,17 @@ export function VoiceSelectionModal({
   isRecording,
   recordingTime,
   recordedAudioBlob,
-  recordedAudioUrl,
-  isRecPlaying,
-  recAudioProgress,
-  recAudioCurrentTime,
-  recAudioDuration,
   uploadStatus,
   uploadError,
   anonymousVoiceId,
   historyVoices,
   showHistoryVoices,
   playingHistoryVoiceId,
-  canGenerate,
   recAudioRef,
   onSetActiveVoicePanel,
   onVoiceSelectAndPlay,
   onStartRecording,
   onStopRecording,
-  onToggleRecPlayback,
-  onRecSeek,
   onResetRecording,
   onToggleShowHistoryVoices,
   onSelectHistoryVoice,

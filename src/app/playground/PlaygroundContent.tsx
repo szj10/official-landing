@@ -891,25 +891,17 @@ export default function PlaygroundContent() {
         isRecording={isRecording}
         recordingTime={recordingTime}
         recordedAudioBlob={recordedAudioBlob}
-        recordedAudioUrl={recordedAudioUrl}
-        isRecPlaying={isRecPlaying}
-        recAudioProgress={recAudioProgress}
-        recAudioCurrentTime={recAudioCurrentTime}
-        recAudioDuration={recAudioDuration}
         uploadStatus={uploadStatus}
         uploadError={uploadError}
         anonymousVoiceId={anonymousVoiceId}
         historyVoices={historyVoices}
         showHistoryVoices={showHistoryVoices}
         playingHistoryVoiceId={playingHistoryVoiceId}
-        canGenerate={canGenerate}
         recAudioRef={recAudioRef}
         onSetActiveVoicePanel={setActiveVoicePanel}
         onVoiceSelectAndPlay={handleVoiceSelectAndPlay}
         onStartRecording={startRecording}
         onStopRecording={stopRecording}
-        onToggleRecPlayback={toggleRecPlayback}
-        onRecSeek={handleRecSeek}
         onResetRecording={() => {
           if (recAudioRef.current) recAudioRef.current.pause();
           setIsRecPlaying(false);
