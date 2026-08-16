@@ -27,7 +27,6 @@ interface VoiceSelectionModalProps {
   historyVoices: HistoryVoice[];
   showHistoryVoices: boolean;
   playingHistoryVoiceId: number | null;
-  canGenerate: boolean;
   recAudioRef: React.RefObject<HTMLAudioElement | null>;
   onSetActiveVoicePanel: (panel: "stock" | "custom") => void;
   onVoiceSelectAndPlay: (voiceId: string) => void;
@@ -65,7 +64,6 @@ export function VoiceSelectionModal({
   historyVoices,
   showHistoryVoices,
   playingHistoryVoiceId,
-  canGenerate,
   recAudioRef,
   onSetActiveVoicePanel,
   onVoiceSelectAndPlay,

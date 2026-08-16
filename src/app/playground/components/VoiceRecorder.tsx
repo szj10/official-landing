@@ -2,18 +2,13 @@
 
 import React, { RefObject } from "react";
 import { useI18n } from "@/i18n";
-import { MicIcon, StopIcon, PlayIcon, PauseIcon, CheckIcon, AlertIcon, ChevronIcon } from "./icons";
+import { MicIcon, StopIcon, PlayIcon, CheckIcon, AlertIcon, ChevronIcon } from "./icons";
 import { HistoryVoice, formatTime } from "./types";
 
 interface VoiceRecorderProps {
   isRecording: boolean;
   recordingTime: number;
   recordedAudioBlob: Blob | null;
-  recordedAudioUrl: string | null;
-  isRecPlaying: boolean;
-  recAudioProgress: number;
-  recAudioCurrentTime: number;
-  recAudioDuration: number;
   uploadStatus: "idle" | "uploading" | "success" | "error";
   uploadError: string | null;
   anonymousVoiceId: number | null;
@@ -23,8 +18,6 @@ interface VoiceRecorderProps {
   recAudioRef: RefObject<HTMLAudioElement | null>;
   onStartRecording: () => void;
   onStopRecording: () => void;
-  onToggleRecPlayback: () => void;
-  onRecSeek: (e: React.MouseEvent<HTMLDivElement>) => void;
   onResetRecording: () => void;
   onToggleShowHistoryVoices: () => void;
   onSelectHistoryVoice: (voice: HistoryVoice) => void;
@@ -35,11 +28,6 @@ export function VoiceRecorder({
   isRecording,
   recordingTime,
   recordedAudioBlob,
-  recordedAudioUrl,
-  isRecPlaying,
-  recAudioProgress,
-  recAudioCurrentTime,
-  recAudioDuration,
   uploadStatus,
   uploadError,
   anonymousVoiceId,
@@ -48,8 +36,6 @@ export function VoiceRecorder({
   playingHistoryVoiceId,
   onStartRecording,
   onStopRecording,
-  onToggleRecPlayback,
-  onRecSeek,
   onResetRecording,
   onToggleShowHistoryVoices,
   onSelectHistoryVoice,
