@@ -27,6 +27,7 @@ interface VoiceSelectionModalProps {
   historyVoices: HistoryVoice[];
   showHistoryVoices: boolean;
   playingHistoryVoiceId: number | null;
+  canGenerate: boolean;
   recAudioRef: React.RefObject<HTMLAudioElement | null>;
   onSetActiveVoicePanel: (panel: "stock" | "custom") => void;
   onVoiceSelectAndPlay: (voiceId: string) => void;
@@ -64,6 +65,7 @@ export function VoiceSelectionModal({
   historyVoices,
   showHistoryVoices,
   playingHistoryVoiceId,
+  canGenerate,
   recAudioRef,
   onSetActiveVoicePanel,
   onVoiceSelectAndPlay,
@@ -167,24 +169,18 @@ export function VoiceSelectionModal({
           {activeVoicePanel === "stock" ? (
             <VoiceGrid
               selectedVoice={selectedVoice}
-              playingVoice={playingVoicePreview}
-              onVoiceSelect={(id) => {
+              playingVoicePreview={playingVoicePreview}
+              onVoiceSelectAndPlay={(id) => {
                 onVoiceSelectAndPlay(id);
                 // Auto-close modal after selecting a stock voice
                 setTimeout(() => onClose(), 400);
               }}
-              onVoicePreview={onVoiceSelectAndPlay}
             />
           ) : (
             <VoiceRecorder
               isRecording={isRecording}
               recordingTime={recordingTime}
               recordedAudioBlob={recordedAudioBlob}
-              recordedAudioUrl={recordedAudioUrl}
-              isRecPlaying={isRecPlaying}
-              recAudioProgress={recAudioProgress}
-              recAudioCurrentTime={recAudioCurrentTime}
-              recAudioDuration={recAudioDuration}
               uploadStatus={uploadStatus}
               uploadError={uploadError}
               anonymousVoiceId={anonymousVoiceId}
@@ -194,8 +190,6 @@ export function VoiceSelectionModal({
               recAudioRef={recAudioRef}
               onStartRecording={onStartRecording}
               onStopRecording={onStopRecording}
-              onToggleRecPlayback={onToggleRecPlayback}
-              onRecSeek={onRecSeek}
               onResetRecording={onResetRecording}
               onToggleShowHistoryVoices={onToggleShowHistoryVoices}
               onSelectHistoryVoice={(voice) => {

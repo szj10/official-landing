@@ -977,7 +977,17 @@ export default function PlaygroundContent() {
         title={activeStickyPlayer === "tts" ? "Synthesized Speech" : "Your Recording"}
         subtitle={
           activeStickyPlayer === "tts"
-            ? (currentJob?.voice_name ?? "Ready")
+            ? (() => {
+                const isStock = activeVoicePanel === "stock";
+                const stockVoice = isStock
+                  ? PLAYGROUND_VOICES.find((v) => v.id === selectedVoice)
+                  : null;
+                return isStock && stockVoice
+                  ? t(stockVoice.nameKey)
+                  : anonymousVoiceId
+                    ? `Voice Prompt #${anonymousVoiceId}`
+                    : t("playground.voiceSection.customVoice");
+              })()
             : anonymousVoiceId
               ? `Voice #${anonymousVoiceId}`
               : "Unsaved Recording"
