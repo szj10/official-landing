@@ -66,6 +66,7 @@ export default function PlaygroundContent() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [rateLimitRetryAfter, setRateLimitRetryAfter] = useState<number | null>(null);
   const [emptyTextWarning, setEmptyTextWarning] = useState(false);
+  const [showCompletionCard, setShowCompletionCard] = useState(false);
 
   // Preserved queue metrics
   const [lastQueueMetrics, setLastQueueMetrics] = useState<{
@@ -586,6 +587,7 @@ export default function PlaygroundContent() {
     setIsPlaying(false);
     setAudioProgress(0);
     setLastQueueMetrics(null);
+    setShowCompletionCard(false);
 
     if (eventSourceRef.current) {
       eventSourceRef.current.close();
@@ -729,6 +731,7 @@ export default function PlaygroundContent() {
         setActiveStickyPlayer("tts");
       }
       setIsGenerating(false);
+      setShowCompletionCard(true);
       saveCompletedJob(job);
       if (pollingIntervalRef.current) clearInterval(pollingIntervalRef.current);
     } else if (job.status === "failed") {
@@ -927,9 +930,13 @@ export default function PlaygroundContent() {
             errorMessage={errorMessage}
             isGenerating={isGenerating}
           />
-          {isGenerating && generationStatus === "queued" && (
-            <QueueStatusCard lastQueueMetrics={lastQueueMetrics} />
-          )}
+          {(isGenerating && generationStatus === "queued") || showCompletionCard ? (
+            <QueueStatusCard
+              lastQueueMetrics={lastQueueMetrics}
+              isCompleted={showCompletionCard}
+              onDismiss={() => setShowCompletionCard(false)}
+            />
+          ) : null}
         </div>
 
         {/* Recent Generations list */}

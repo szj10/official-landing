@@ -61,7 +61,10 @@
       "estimatedWait": "预计等待",
       "nextInLine": "您是下一位！",
       "inProgress": "您的任务已排队",
-      "updatesAutomatically": "自动更新"
+      "updatesAutomatically": "自动更新",
+      "completedTitle": "合成完成",
+      "completedMessage": "您的音频已准备就绪！",
+      "dismiss": "关闭"
     },
     "rateLimitTitle": "已达请求上限",
     "rateLimitMessage": "您本小时内的 5 次免费请求已用完，请在以下时间后重试：",

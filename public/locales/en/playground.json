@@ -61,7 +61,10 @@
       "estimatedWait": "Estimated Wait",
       "nextInLine": "You're next in line!",
       "inProgress": "Your job is queued",
-      "updatesAutomatically": "Updates automatically"
+      "updatesAutomatically": "Updates automatically",
+      "completedTitle": "Synthesis Complete",
+      "completedMessage": "Your audio is ready to play!",
+      "dismiss": "Dismiss"
     },
     "rateLimitTitle": "Rate limit reached",
     "rateLimitMessage": "You've used all 5 free requests this hour. Try again in",
