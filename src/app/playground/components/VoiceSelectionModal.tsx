@@ -102,7 +102,7 @@ export function VoiceSelectionModal({
       {/* Modal Content */}
       <div className="relative w-full max-w-2xl bg-white dark:bg-zinc-900 rounded-2xl shadow-2xl flex flex-col max-h-[90vh] overflow-hidden border border-gray-100 dark:border-zinc-800 animate-in fade-in zoom-in-95 duration-200">
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-zinc-800 shrink-0">
+        {/* <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-zinc-800 shrink-0">
           <h2 className="text-xl font-bold text-gray-900 dark:text-white">
             {t("playground.voiceSection.sampleVoices")}
           </h2>
@@ -119,7 +119,7 @@ export function VoiceSelectionModal({
               />
             </svg>
           </button>
-        </div>
+        </div> */}
 
         {/* Scrollable Body */}
         <div className="flex-1 overflow-y-auto p-6 space-y-6 custom-scrollbar">
@@ -134,7 +134,7 @@ export function VoiceSelectionModal({
               }`}
               onClick={() => onSetActiveVoicePanel("stock")}
             >
-              {t("playground.voiceSection.tabStock")}
+              {t("playground.voiceSection.sampleVoices")}
             </button>
             <button
               type="button"
