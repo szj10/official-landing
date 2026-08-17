@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { useI18n } from "@/i18n";
-import { SpeakerIcon, PlayIcon, PauseIcon, ChevronIcon } from "./icons";
+import { ChevronIcon } from "./icons";
 import { HistoryTTSJob } from "./types";
 import { HistoryJobs } from "./HistoryJobs";
 
@@ -18,8 +18,6 @@ interface QueueStatusCardProps {
   /** True while a TTS job is in-flight (queued/processing) */
   isGenerating?: boolean;
   onDismiss?: () => void;
-  /** Legacy – kept for API compat; no longer renders a big CTA button */
-  onPlayNewJob?: () => void;
 
   /* ── History (merged from HistoryJobs) ── */
   historyJobs: HistoryTTSJob[];
@@ -394,7 +392,6 @@ export function QueueStatusCard({
   isCompleted = false,
   isGenerating = false,
   onDismiss,
-  onPlayNewJob,
   historyJobs,
   playingHistoryJobId,
   isPlaying,
@@ -403,15 +400,22 @@ export function QueueStatusCard({
   const [checkVisible, setCheckVisible] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
   const prevGeneratingRef = useRef(false);
+  const prevCompletedRef = useRef(false);
   const [successDismissed, setSuccessDismissed] = useState(false);
 
   /* Animate checkmark when completion first triggers */
   useEffect(() => {
-    if (isCompleted) {
+    if (isCompleted && !prevCompletedRef.current) {
+      prevCompletedRef.current = true;
       setCheckVisible(false);
-      const timer = setTimeout(() => setCheckVisible(true), 150);
-      setSuccessDismissed(false); // Reset dismiss state on new completion
+      setSuccessDismissed(false);
+      const timer = setTimeout(() => {
+        setCheckVisible(true);
+      }, 150);
       return () => clearTimeout(timer);
+    }
+    if (!isCompleted) {
+      prevCompletedRef.current = false;
     }
   }, [isCompleted]);
 
