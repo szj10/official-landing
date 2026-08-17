@@ -154,11 +154,7 @@ export function VoiceSelectionModal({
             <VoiceGrid
               selectedVoice={selectedVoice}
               playingVoicePreview={playingVoicePreview}
-              onVoiceSelectAndPlay={(id) => {
-                onVoiceSelectAndPlay(id);
-                // Auto-close modal after selecting a stock voice
-                setTimeout(() => onClose(), 400);
-              }}
+              onVoiceSelectAndPlay={onVoiceSelectAndPlay}
             />
           ) : (
             <VoiceRecorder
@@ -176,11 +172,7 @@ export function VoiceSelectionModal({
               onStopRecording={onStopRecording}
               onResetRecording={onResetRecording}
               onToggleShowHistoryVoices={onToggleShowHistoryVoices}
-              onSelectHistoryVoice={(voice) => {
-                onSelectHistoryVoice(voice);
-                // Auto-close modal after selecting history voice
-                setTimeout(() => onClose(), 400);
-              }}
+              onSelectHistoryVoice={onSelectHistoryVoice}
               onPlayHistoryVoice={onPlayHistoryVoice}
             />
           )}
@@ -200,7 +192,7 @@ export function VoiceSelectionModal({
                 }`}
                 onClick={() => onSetSpeed("slow")}
               >
-                0.3x
+                {t("playground.speedSection.slow")}
               </button>
               <button
                 type="button"
@@ -211,7 +203,7 @@ export function VoiceSelectionModal({
                 }`}
                 onClick={() => onSetSpeed("normal")}
               >
-                0.5x
+                {t("playground.speedSection.normal")}
               </button>
               <button
                 type="button"
@@ -222,7 +214,7 @@ export function VoiceSelectionModal({
                 }`}
                 onClick={() => onSetSpeed("fast")}
               >
-                0.8x
+                {t("playground.speedSection.fast")}
               </button>
             </div>
           </div>
@@ -234,7 +226,7 @@ export function VoiceSelectionModal({
             onClick={onClose}
             className="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-xl transition-colors shadow-sm"
           >
-            Done
+            Confirm
           </button>
         </div>
       </div>
