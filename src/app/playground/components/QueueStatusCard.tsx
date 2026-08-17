@@ -260,11 +260,13 @@ function SuccessCard({
   historyCount,
   onToggleHistory,
   checkVisible,
+  onDismiss,
 }: {
   showHistory: boolean;
   historyCount: number;
   onToggleHistory: () => void;
   checkVisible: boolean;
+  onDismiss?: () => void;
 }) {
   return (
     <div className="relative overflow-hidden rounded-3xl border border-emerald-500/25 dark:border-emerald-400/20 bg-gradient-to-br from-white via-emerald-50/60 to-teal-50/40 dark:from-zinc-900 dark:via-emerald-950/50 dark:to-teal-950/30 shadow-[0_8px_40px_rgba(16,185,129,0.14)] dark:shadow-[0_8px_40px_rgba(16,185,129,0.08)] backdrop-blur-md p-5 sm:p-6">
@@ -317,6 +319,26 @@ function SuccessCard({
               Now playing in the bar below &#8595;
             </p>
           </div>
+
+          {/* Dismiss button */}
+          {onDismiss && (
+            <button
+              type="button"
+              onClick={onDismiss}
+              className="w-8 h-8 shrink-0 rounded-xl flex items-center justify-center bg-emerald-50/60 dark:bg-emerald-950/40 border border-emerald-200/40 dark:border-emerald-700/30 text-emerald-600/70 dark:text-emerald-400/70 hover:bg-emerald-100 dark:hover:bg-emerald-900/50 hover:text-emerald-700 dark:hover:text-emerald-300 hover:border-emerald-300 dark:hover:border-emerald-600 transition-all duration-200"
+              aria-label="Dismiss"
+            >
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2.5}
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          )}
         </div>
 
         {/* Waveform + history toggle */}
@@ -381,12 +403,14 @@ export function QueueStatusCard({
   const [checkVisible, setCheckVisible] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
   const prevGeneratingRef = useRef(false);
+  const [successDismissed, setSuccessDismissed] = useState(false);
 
   /* Animate checkmark when completion first triggers */
   useEffect(() => {
     if (isCompleted) {
       setCheckVisible(false);
       const timer = setTimeout(() => setCheckVisible(true), 150);
+      setSuccessDismissed(false); // Reset dismiss state on new completion
       return () => clearTimeout(timer);
     }
   }, [isCompleted]);
@@ -400,9 +424,17 @@ export function QueueStatusCard({
   }, [isGenerating]);
 
   const isIdle = !isGenerating && !isCompleted;
+  const showSuccessCard = isCompleted && !successDismissed;
+  const showStandaloneHistory =
+    (isIdle || (isCompleted && successDismissed)) && historyJobs.length > 0;
 
   /* Nothing to render at all */
   if (isIdle && historyJobs.length === 0) return null;
+
+  const handleDismissSuccess = () => {
+    setSuccessDismissed(true);
+    if (onDismiss) onDismiss();
+  };
 
   return (
     <div className="animate-fade-in-up space-y-0">
@@ -430,17 +462,18 @@ export function QueueStatusCard({
       )}
 
       {/* Success card (auto-play by StickyPlayerBar, no Play CTA here) */}
-      {isCompleted && (
+      {showSuccessCard && (
         <SuccessCard
           showHistory={showHistory}
           historyCount={historyJobs.length}
           onToggleHistory={() => setShowHistory((v) => !v)}
           checkVisible={checkVisible}
+          onDismiss={handleDismissSuccess}
         />
       )}
 
       {/* History list – embedded below success card */}
-      {isCompleted && (
+      {showSuccessCard && (
         <HistoryJobs
           historyJobs={historyJobs}
           playingHistoryJobId={playingHistoryJobId}
@@ -452,8 +485,8 @@ export function QueueStatusCard({
         />
       )}
 
-      {/* History list – standalone header in idle state */}
-      {isIdle && (
+      {/* History list – standalone header when idle or success dismissed */}
+      {showStandaloneHistory && (
         <HistoryJobs
           historyJobs={historyJobs}
           playingHistoryJobId={playingHistoryJobId}
