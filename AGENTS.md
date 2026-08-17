@@ -1,15 +1,16 @@
-# Huavoi Project - GEMINI.md
+# Huavoi Project - AGENTS.md
 
-This project is a Next.js (App Router) landing page and pricing application for an AI-powered solutions service.
+This project is a Next.js (App Router) landing page, pricing application, and interactive TTS playground for an AI-powered solutions service.
 
 ## Project Overview
 
-- **Purpose**: SaaS landing page and pricing.
+- **Purpose**: SaaS landing page, pricing, and TTS playground demo.
 - **Framework**: Next.js 16 (App Router)
 - **Language**: TypeScript
 - **Styling**: Tailwind CSS (v4)
 - **Internationalization**: `next-intl`
 - **Theme**: Automatic dark mode support via `next-themes`.
+- **Package Manager**: pnpm (primary), npm compatible
 
 ## Building and Running
 
@@ -31,8 +32,13 @@ This project is a Next.js (App Router) landing page and pricing application for 
 
 ## Key Files
 
-- `src/app/`: Next.js App Router pages (Landing, Pricing).
+- `src/app/`: Next.js App Router pages (Landing, Pricing, Playground, Legal pages).
+- `src/app/playground/`: Interactive TTS playground with voice selection, recording, and synthesis.
 - `src/components/`: Reusable UI components (Header, Footer, etc.).
 - `public/locales/`: Translation files organized by language (en, chs, cht, es, fr, de, ja, ko) with namespace files for different sections.
+- `content/legal/`: Legal pages (Privacy Policy, Terms of Service) in multiple languages.
+- `content/posts/`: Blog posts for the news section.
 - `next.config.ts`: Next.js configuration.
 - `tailwind.config.ts`: Tailwind CSS configuration.
+- `.pnpmfile.cjs`: pnpm hooks for build script allowlisting.
+- `pnpm-workspace.yaml`: pnpm workspace configuration.
