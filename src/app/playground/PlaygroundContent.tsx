@@ -217,6 +217,23 @@ export default function PlaygroundContent() {
     };
   }, [recordedAudioUrl]);
 
+  // Helper to stop all other audio sources when a new one starts
+  const stopAllOtherAudio = (except: "tts" | "rec" | "preview") => {
+    if (except !== "tts") {
+      if (audioRef.current) audioRef.current.pause();
+      setIsPlaying(false);
+    }
+    if (except !== "rec") {
+      if (recAudioRef.current) recAudioRef.current.pause();
+      setIsRecPlaying(false);
+    }
+    if (except !== "preview") {
+      if (voicePreviewRef.current) voicePreviewRef.current.pause();
+      setPlayingVoicePreview(null);
+      setPlayingHistoryVoiceId(null);
+    }
+  };
+
   // Track generated TTS audio progress
   useEffect(() => {
     const audio = audioRef.current;
@@ -262,23 +279,6 @@ export default function PlaygroundContent() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [showCompletionCard]);
-
-  // Helper to stop all other audio sources when a new one starts
-  const stopAllOtherAudio = (except: "tts" | "rec" | "preview") => {
-    if (except !== "tts") {
-      if (audioRef.current) audioRef.current.pause();
-      setIsPlaying(false);
-    }
-    if (except !== "rec") {
-      if (recAudioRef.current) recAudioRef.current.pause();
-      setIsRecPlaying(false);
-    }
-    if (except !== "preview") {
-      if (voicePreviewRef.current) voicePreviewRef.current.pause();
-      setPlayingVoicePreview(null);
-      setPlayingHistoryVoiceId(null);
-    }
-  };
 
   // ---------------------------------------------------------------------------
   // Recorded Audio Controls
@@ -836,14 +836,6 @@ export default function PlaygroundContent() {
     audioRef.current.currentTime = pct * audioRef.current.duration;
   };
 
-  const handleDownload = () => {
-    if (!audioUrl) return;
-    const a = document.createElement("a");
-    a.href = audioUrl;
-    a.download = `huavoi-tts-${Date.now()}.wav`;
-    a.click();
-  };
-
   // ---------------------------------------------------------------------------
   // Derived state & summaries
   // ---------------------------------------------------------------------------
@@ -854,13 +846,21 @@ export default function PlaygroundContent() {
     activeVoicePanel === "custom" && uploadStatus === "success" && anonymousVoiceId !== null;
   const canGenerate = hasValidStockVoice || hasValidCustomVoice;
 
+  const isStickyPlayerVisible =
+    (activeStickyPlayer === "tts" && !!audioUrl) ||
+    (activeStickyPlayer === "rec" && !!recordedAudioUrl);
+
   // Step 1 Summary
 
   // Step 2 Summary
   const selectedStockVoiceObj = PLAYGROUND_VOICES.find((v) => v.id === selectedVoice);
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-16 pb-16">
+    <div
+      className={`max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-16 transition-all duration-300 ${
+        isStickyPlayerVisible ? "pb-32 sm:pb-40" : "pb-16"
+      }`}
+    >
       {/* Persistent HTML Audio Elements (prevents playback interruption on step collapse/expand) */}
       {recordedAudioUrl && <audio ref={recAudioRef} src={recordedAudioUrl} className="hidden" />}
       {audioUrl && <audio ref={audioRef} src={audioUrl} className="hidden" />}
@@ -1037,10 +1037,7 @@ export default function PlaygroundContent() {
 
       {/* Sticky Bottom Player Bar */}
       <StickyPlayerBar
-        isVisible={
-          (activeStickyPlayer === "tts" && !!audioUrl) ||
-          (activeStickyPlayer === "rec" && !!recordedAudioUrl)
-        }
+        isVisible={isStickyPlayerVisible}
         title={activeStickyPlayer === "tts" ? "Synthesized Speech" : "Your Recording"}
         subtitle={
           activeStickyPlayer === "tts"
