@@ -122,8 +122,11 @@ export default function PlaygroundContent() {
             );
             if (res.ok) {
               const data = await res.json();
-              setHistoryVoices(data);
-              localStorage.setItem("playground_voice_ids", JSON.stringify(data));
+              const sortedData = [...data].sort(
+                (a, b) => b.anonymous_voice_id - a.anonymous_voice_id
+              );
+              setHistoryVoices(sortedData);
+              localStorage.setItem("playground_voice_ids", JSON.stringify(sortedData));
             }
           } else {
             localStorage.setItem("playground_voice_ids", "[]");
@@ -518,7 +521,9 @@ export default function PlaygroundContent() {
         expires_at: data.expires_at,
       };
       setHistoryVoices((prev) => {
-        const next = [newVoice, ...prev].slice(0, 50);
+        const next = [newVoice, ...prev]
+          .sort((a, b) => b.anonymous_voice_id - a.anonymous_voice_id)
+          .slice(0, 50);
         localStorage.setItem("playground_voice_ids", JSON.stringify(next));
         return next;
       });
