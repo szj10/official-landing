@@ -99,6 +99,7 @@ export default function PlaygroundContent() {
   const eventSourceRef = useRef<EventSource | null>(null);
   const pollingIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
+  const actionRowRef = useRef<HTMLDivElement | null>(null);
 
   // ---------------------------------------------------------------------------
   // Load History from localStorage / backend
@@ -290,7 +291,7 @@ export default function PlaygroundContent() {
     if (textareaRef.current) {
       const headerOffset = 80; // Adjust this value based on your top navigation bar height
       const elementPosition = textareaRef.current.getBoundingClientRect().top;
-      const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+      const offsetPosition = elementPosition + window.scrollY - headerOffset;
 
       window.scrollTo({
         top: offsetPosition,
@@ -500,6 +501,19 @@ export default function PlaygroundContent() {
   // ---------------------------------------------------------------------------
   // Step 3: Synthesis Generation & Polling
   // ---------------------------------------------------------------------------
+  const scrollToActionRow = () => {
+    if (actionRowRef.current) {
+      const headerOffset = 80; // Adjust this value based on your top navigation bar height
+      const elementPosition = actionRowRef.current.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.scrollY - headerOffset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: "smooth",
+      });
+    }
+  };
+
   const handleGenerate = async () => {
     const text = textInput.trim();
 
@@ -522,6 +536,11 @@ export default function PlaygroundContent() {
     const rate = rateMap[speed];
 
     resetGenerationState();
+
+    // Scroll to Action Row after state reset
+    setTimeout(() => {
+      scrollToActionRow();
+    }, 100);
 
     try {
       const requestBody = isStock
@@ -827,7 +846,10 @@ export default function PlaygroundContent() {
         />
 
         {/* Action Row */}
-        <div className="flex flex-col sm:flex-row items-center gap-4 max-w-lg mx-auto sm:max-w-none">
+        <div
+          ref={actionRowRef}
+          className="flex flex-col sm:flex-row items-center gap-4 max-w-lg mx-auto sm:max-w-none"
+        >
           <button
             onClick={() => setIsVoiceModalOpen(true)}
             className="w-full sm:w-1/2 flex items-center justify-between px-5 py-3.5 sm:py-4 bg-white dark:bg-zinc-800 border-2 border-gray-200 dark:border-zinc-700 rounded-xl sm:rounded-2xl hover:border-indigo-500 dark:hover:border-indigo-500 transition-colors shadow-sm"
