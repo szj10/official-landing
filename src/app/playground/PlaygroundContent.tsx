@@ -196,6 +196,8 @@ export default function PlaygroundContent() {
       setIsRecPlaying(false);
       setRecAudioProgress(0);
       setRecAudioCurrentTime(0);
+      // Auto-dismiss the sticky player when recording finishes
+      setActiveStickyPlayer(null);
     };
     const handleLoadedMetadata = () => {
       if (audio.duration) setRecAudioDuration(audio.duration);
@@ -226,6 +228,8 @@ export default function PlaygroundContent() {
       setIsPlaying(false);
       setAudioProgress(0);
       setAudioCurrentTime(0);
+      // Auto-dismiss the sticky player when TTS audio finishes
+      setActiveStickyPlayer(null);
     };
 
     audio.addEventListener("timeupdate", handleTimeUpdate);
@@ -993,19 +997,6 @@ export default function PlaygroundContent() {
         duration={activeStickyPlayer === "tts" ? audioDuration : recAudioDuration}
         onTogglePlayback={activeStickyPlayer === "tts" ? togglePlayback : toggleRecPlayback}
         onSeek={activeStickyPlayer === "tts" ? handleSeek : handleRecSeek}
-        onDownload={activeStickyPlayer === "tts" ? handleDownload : undefined}
-        onClose={() => {
-          if (activeStickyPlayer === "tts") {
-            setAudioUrl(null);
-            setGenerationStatus(null);
-            if (audioRef.current) audioRef.current.pause();
-            setIsPlaying(false);
-          } else {
-            if (recAudioRef.current) recAudioRef.current.pause();
-            setIsRecPlaying(false);
-          }
-          setActiveStickyPlayer(null);
-        }}
       />
     </div>
   );

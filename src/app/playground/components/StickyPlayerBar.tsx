@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { PlayIcon, PauseIcon, DownloadIcon } from "./icons";
+import { PlayIcon, PauseIcon } from "./icons";
 import { formatTime } from "./types";
 
 interface StickyPlayerBarProps {
@@ -14,8 +14,6 @@ interface StickyPlayerBarProps {
   duration: number | null;
   onTogglePlayback: () => void;
   onSeek: (e: React.MouseEvent<HTMLDivElement>) => void;
-  onDownload?: () => void;
-  onClose: () => void;
 }
 
 export function StickyPlayerBar({
@@ -28,8 +26,6 @@ export function StickyPlayerBar({
   duration,
   onTogglePlayback,
   onSeek,
-  onDownload,
-  onClose,
 }: StickyPlayerBarProps) {
   if (!isVisible) return null;
 
@@ -72,38 +68,6 @@ export function StickyPlayerBar({
               />
               <div className="absolute inset-0 bg-black/5 dark:bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity" />
             </div>
-          </div>
-
-          {/* Actions */}
-          <div className="flex items-center gap-2 shrink-0 self-end sm:self-center mt-2 sm:mt-0">
-            {onDownload && (
-              <button
-                onClick={onDownload}
-                className="p-2 sm:p-2.5 text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 rounded-xl hover:bg-indigo-50 dark:hover:bg-indigo-900/30 transition-colors"
-                title="Download Audio"
-              >
-                <DownloadIcon className="w-5 h-5 sm:w-6 sm:h-6" />
-              </button>
-            )}
-            <button
-              onClick={onClose}
-              className="p-2 sm:p-2.5 text-gray-400 hover:text-red-600 dark:hover:text-red-400 rounded-xl hover:bg-red-50 dark:hover:bg-red-900/30 transition-colors"
-              title="Close Player"
-            >
-              <svg
-                className="w-5 h-5 sm:w-6 sm:h-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-            </button>
           </div>
         </div>
       </div>
