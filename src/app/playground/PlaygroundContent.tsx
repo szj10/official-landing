@@ -87,6 +87,7 @@ export default function PlaygroundContent() {
   const [showHistoryVoices, setShowHistoryVoices] = useState(false);
   const [playingHistoryVoiceId, setPlayingHistoryVoiceId] = useState<number | null>(null);
   const [playingHistoryJobId, setPlayingHistoryJobId] = useState<number | string | null>(null);
+  const [hasScrolledToTextarea, setHasScrolledToTextarea] = useState(false);
 
   // --- Persistent Refs ---
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -97,6 +98,7 @@ export default function PlaygroundContent() {
   const voicePreviewRef = useRef<HTMLAudioElement | null>(null);
   const eventSourceRef = useRef<EventSource | null>(null);
   const pollingIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
 
   // ---------------------------------------------------------------------------
   // Load History from localStorage / backend
@@ -280,10 +282,40 @@ export default function PlaygroundContent() {
   // ---------------------------------------------------------------------------
   // Step 1: Sample text selection
   // ---------------------------------------------------------------------------
+  const scrollToTextarea = () => {
+    if (textareaRef.current) {
+      const headerOffset = 80; // Adjust this value based on your top navigation bar height
+      const elementPosition = textareaRef.current.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: "smooth",
+      });
+    }
+  };
+
+  const handleTextareaFocus = () => {
+    if (!hasScrolledToTextarea) {
+      setHasScrolledToTextarea(true);
+      scrollToTextarea();
+    }
+  };
+
   const handleSampleTextSelect = (id: string) => {
     const sample = SAMPLE_TEXTS.find((s) => s.id === id);
     if (sample) {
       setTextInput(t(sample.textKey));
+      setHasScrolledToTextarea(false); // Reset so it can scroll again if needed
+
+      // Scroll the textarea to the top of the viewport with offset for the header
+      setTimeout(() => {
+        if (textareaRef.current) {
+          scrollToTextarea();
+          // Optional: focus the textarea after scrolling
+          textareaRef.current.focus();
+        }
+      }, 100); // Small delay to ensure the textarea is rendered
     }
   };
 
@@ -781,11 +813,13 @@ export default function PlaygroundContent() {
       <div className="space-y-6 sm:space-y-8">
         {/* Editor */}
         <PlaygroundEditorPanel
+          ref={textareaRef}
           textInput={textInput}
           onTextChange={(val) => {
             setTextInput(val);
           }}
           onSampleSelect={handleSampleTextSelect}
+          onFocus={handleTextareaFocus}
         />
 
         {/* Action Row */}
