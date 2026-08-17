@@ -24,15 +24,16 @@ export function HistoryJobs({
   if (historyJobs.length === 0) return null;
 
   return (
-    <div className="mt-6 pt-5 border-t border-gray-200 dark:border-zinc-700/50">
+    <div className="mt-8">
       <button
         type="button"
         onClick={onToggleShowHistoryJobs}
-        className="w-full flex items-center justify-between px-2 py-1 text-left group select-none"
+        className="w-full flex items-center justify-between p-3 rounded-2xl hover:bg-gray-50/80 dark:hover:bg-zinc-800/40 transition-all duration-300 group select-none relative overflow-hidden"
       >
-        <div className="flex items-center gap-2.5">
-          <div className="w-6 h-6 rounded-full bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 flex items-center justify-center">
-            <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-indigo-500/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out" />
+        <div className="flex items-center gap-3 relative z-10">
+          <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-indigo-900/30 dark:to-purple-900/30 border border-indigo-100/50 dark:border-indigo-500/20 text-indigo-600 dark:text-indigo-400 flex items-center justify-center shadow-sm">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -41,50 +42,64 @@ export function HistoryJobs({
               />
             </svg>
           </div>
-          <span className="text-xs font-semibold text-gray-600 dark:text-zinc-400 uppercase tracking-wider group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
+          <span className="text-sm font-semibold bg-clip-text text-transparent bg-gradient-to-r from-gray-700 to-gray-900 dark:from-gray-300 dark:to-white tracking-wide">
             Recent Synthesized Voices
-            <span className="ml-2 text-[10px] font-medium bg-gray-100 dark:bg-zinc-700 text-gray-500 dark:text-zinc-400 px-1.5 py-0.5 rounded-full">
-              {historyJobs.length}
-            </span>
+          </span>
+          <span className="flex items-center justify-center min-w-[24px] h-6 px-2 text-xs font-bold bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 rounded-full border border-indigo-100 dark:border-indigo-500/20 shadow-[0_0_10px_rgba(99,102,241,0.1)]">
+            {historyJobs.length}
           </span>
         </div>
-        <ChevronIcon className="w-4 h-4 text-gray-400" open={showHistoryJobs} />
+        <div className="w-8 h-8 rounded-full flex items-center justify-center bg-gray-50 dark:bg-zinc-800/50 text-gray-400 group-hover:bg-white dark:group-hover:bg-zinc-700 group-hover:text-indigo-500 group-hover:shadow-sm transition-all duration-300 relative z-10">
+          <ChevronIcon
+            className="w-5 h-5 transition-transform duration-300"
+            open={showHistoryJobs}
+          />
+        </div>
       </button>
 
       {showHistoryJobs && (
-        <div className="mt-3 space-y-2.5 animate-fade-in-up max-h-72 overflow-y-auto pr-1 custom-scrollbar">
+        <div className="mt-4 space-y-3 animate-fade-in-up max-h-[320px] overflow-y-auto pr-2 custom-scrollbar">
           {historyJobs.map((job) => {
             const isPlayingThis = playingHistoryJobId === job.playground_job_id && isPlaying;
 
             return (
               <div
                 key={job.playground_job_id}
-                className="flex items-center gap-3 p-3 rounded-2xl bg-white/70 dark:bg-zinc-800/60 border border-gray-100 dark:border-zinc-700/60 shadow-sm hover:border-indigo-200 dark:hover:border-indigo-800/50 transition-all"
+                className="group relative flex items-center gap-4 p-4 rounded-2xl bg-white/60 dark:bg-zinc-900/40 border border-gray-200/60 dark:border-zinc-800/60 backdrop-blur-xl shadow-sm hover:shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:hover:shadow-[0_8px_30px_rgba(0,0,0,0.2)] hover:border-indigo-200/50 dark:hover:border-indigo-500/30 transition-all duration-300"
               >
+                <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-transparent via-white/40 to-transparent dark:via-white/5 opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-500" />
+
                 <button
                   type="button"
                   onClick={() => onPlayHistoryJob(job.playground_job_id, job.audio_path)}
-                  className="w-10 h-10 rounded-full bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-100 dark:hover:bg-indigo-900/50 flex items-center justify-center transition-colors shrink-0"
+                  className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all duration-300 shrink-0 relative overflow-hidden ${
+                    isPlayingThis
+                      ? "bg-indigo-600 text-white shadow-[0_0_15px_rgba(79,70,229,0.4)]"
+                      : "bg-gradient-to-br from-indigo-50 to-blue-50 dark:from-indigo-900/30 dark:to-blue-900/30 text-indigo-600 dark:text-indigo-400 hover:scale-105 shadow-sm"
+                  }`}
                   aria-label={isPlayingThis ? "Pause" : "Play"}
                 >
+                  {isPlayingThis && (
+                    <div className="absolute inset-0 bg-white/20 animate-pulse pointer-events-none" />
+                  )}
                   {isPlayingThis ? (
-                    <PauseIcon className="w-4 h-4" />
+                    <PauseIcon className="w-5 h-5 relative z-10" />
                   ) : (
-                    <PlayIcon className="w-4 h-4 ml-0.5" />
+                    <PlayIcon className="w-5 h-5 ml-1 relative z-10" />
                   )}
                 </button>
 
-                <div className="flex-1 min-w-0">
-                  <p className="text-xs sm:text-sm font-medium text-gray-900 dark:text-white truncate">
+                <div className="flex-1 min-w-0 relative z-10">
+                  <p className="text-sm font-medium text-gray-800 dark:text-gray-200 line-clamp-1 group-hover:text-indigo-900 dark:group-hover:text-white transition-colors duration-300">
                     {job.text}
                   </p>
-                  <div className="flex items-center gap-2.5 mt-0.5 text-[11px] text-gray-500 dark:text-zinc-400">
-                    <span className="flex items-center gap-1 font-medium text-gray-700 dark:text-zinc-300">
-                      <SpeakerIcon className="w-3 h-3 text-indigo-500" />
+                  <div className="flex items-center gap-3 mt-1.5 text-xs text-gray-500 dark:text-zinc-400">
+                    <span className="flex items-center gap-1.5 font-medium px-2 py-0.5 rounded-md bg-gray-100/80 dark:bg-zinc-800/80 border border-gray-200/50 dark:border-zinc-700/50 text-gray-600 dark:text-gray-300">
+                      <SpeakerIcon className="w-3.5 h-3.5 text-indigo-500" />
                       {job.voice_name}
                     </span>
-                    <span>•</span>
-                    <span>
+                    <span className="w-1 h-1 rounded-full bg-gray-300 dark:bg-zinc-700" />
+                    <span className="text-gray-400 dark:text-zinc-500">
                       {new Date(job.created_at).toLocaleTimeString(undefined, {
                         hour: "2-digit",
                         minute: "2-digit",
