@@ -837,15 +837,19 @@ export default function PlaygroundContent() {
                 <SpeakerIcon className="w-4 h-4" />
               </div>
               <div className="flex flex-col items-start">
-                <span className="text-xs font-semibold text-gray-500 dark:text-zinc-400 uppercase tracking-wider">
-                  Voice
-                </span>
                 <span className="text-sm font-bold text-gray-900 dark:text-white truncate max-w-[120px] sm:max-w-[160px]">
                   {selectedStockVoiceObj
                     ? t(selectedStockVoiceObj.nameKey)
                     : anonymousVoiceId
                       ? `Custom #${anonymousVoiceId}`
                       : "Choose Voice"}
+                </span>
+                <span className="text-xs text-gray-500 dark:text-zinc-500">
+                  {speed === "slow"
+                    ? t("playground.speedSection.slow")
+                    : speed === "normal"
+                      ? t("playground.speedSection.normal")
+                      : t("playground.speedSection.fast")}
                 </span>
               </div>
             </div>
