@@ -17,7 +17,7 @@
       "tabCustom": "錄製聲音",
       "recordCustomSubtitle": "透過 10 秒語音錄製複製您的聲音",
       "promptGuideTitle": "朗讀導引文字 (10-15秒)",
-      "promptGuideText": "清晨的陽光灑在大地上，微風拂過樹梢，鳥兒在枝頭歡快地歌唱，新的一天充滿了希望與活力。",
+      "promptGuideText": "清晨的陽光灑在大地上，微風拂過樹梢。",
       "recordHint": "點擊麥克風按鈕，並大聲朗讀上方範例文字。",
       "startRecording": "開始錄製",
       "stopRecording": "停止錄製",

@@ -35,7 +35,7 @@ export default function PlaygroundContent() {
   // --- Step 2: Voice state ---
   const [selectedVoice, setSelectedVoice] = useState<string | null>("voice1");
   const [playingVoicePreview, setPlayingVoicePreview] = useState<string | null>(null);
-  const [activeVoicePanel, setActiveVoicePanel] = useState<"stock" | "custom">("stock");
+  const [activeVoicePanel, setActiveVoicePanel] = useState<"stock" | "custom">("custom");
 
   // --- Step 2: Recording state ---
   const [isRecording, setIsRecording] = useState(false);
@@ -441,7 +441,14 @@ export default function PlaygroundContent() {
       setRecordingTime(0);
 
       recordingIntervalRef.current = setInterval(() => {
-        setRecordingTime((prev) => prev + 1);
+        setRecordingTime((prev) => {
+          const newTime = prev + 1;
+          // Auto-stop at 10 seconds
+          if (newTime >= 10) {
+            stopRecording();
+          }
+          return newTime;
+        });
       }, 1000);
     } catch (error) {
       console.error("Recording error:", error);
