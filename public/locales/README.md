@@ -48,14 +48,14 @@ Each language folder contains the same namespace files as the English folder.
    "title": "中文翻译"
    ```
 
-5. **Save the file** - Changes will be automatically reflected in the app when you restart `npm run dev`
+5. **Save the file** - Changes will be automatically reflected in the app when you restart `pnpm run dev`
 
 ### Translation Guidelines
 
 - **Keep the JSON structure intact** - Only modify the values, not the keys
 - **Maintain placeholders** - If a translation is not ready, keep the `[TRANSLATE: ...]` format
 - **Preserve formatting** - Keep any special characters like `→`, emojis, or HTML-like tags
-- **Test your changes** - Run `npm run dev` to see translations in action
+- **Test your changes** - Run `pnpm run dev` to see translations in action
 - **Consistency** - Use consistent terminology across all namespace files
 
 ## 📝 Namespace Files
