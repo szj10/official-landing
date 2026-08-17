@@ -32,7 +32,7 @@
       "recordedPreview": "Vista Previa de Grabación"
     },
     "speedSection": {
-      "title": "Velocidad de Voz",
+      "speed": "Velocidad de Voz",
       "slow": "Lento",
       "normal": "Normal",
       "fast": "Rápido"

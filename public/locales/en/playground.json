@@ -32,7 +32,7 @@
       "recordedPreview": "Recorded Voice Preview"
     },
     "speedSection": {
-      "title": "Speech Speed",
+      "speed": "Speech Speed",
       "slow": "Slow",
       "normal": "Normal",
       "fast": "Fast"

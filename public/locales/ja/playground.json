@@ -32,7 +32,7 @@
       "recordedPreview": "録音した音声の試聴"
     },
     "speedSection": {
-      "title": "音声速度",
+      "speed": "音声速度",
       "slow": "遅い",
       "normal": "普通",
       "fast": "速い"

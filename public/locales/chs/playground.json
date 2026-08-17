@@ -32,7 +32,7 @@
       "recordedPreview": "录音试听"
     },
     "speedSection": {
-      "title": "语速",
+      "speed": "语速",
       "slow": "慢速",
       "normal": "正常",
       "fast": "快速"

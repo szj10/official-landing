@@ -32,7 +32,7 @@
       "recordedPreview": "Aperçu de l'enregistrement"
     },
     "speedSection": {
-      "title": "Vitesse de Parole",
+      "speed": "Vitesse de Parole",
       "slow": "Lent",
       "normal": "Normal",
       "fast": "Rapide"

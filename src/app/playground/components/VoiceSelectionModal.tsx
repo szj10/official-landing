@@ -188,7 +188,7 @@ export function VoiceSelectionModal({
           {/* Speed Selector */}
           <div className="pt-6 border-t border-gray-100 dark:border-zinc-800">
             <h3 className="text-sm font-semibold text-gray-900 dark:text-zinc-100 mb-3">
-              {t("playground.bottomBar.speed")}
+              {t("playground.speedSection.speed")}
             </h3>
             <div className="flex p-1 bg-gray-100/80 dark:bg-zinc-800/80 rounded-xl shadow-inner w-full max-w-sm">
               <button

@@ -32,7 +32,7 @@
       "recordedPreview": "녹음된 음성 미리듣기"
     },
     "speedSection": {
-      "title": "음성 속도",
+      "speed": "음성 속도",
       "slow": "느리게",
       "normal": "보통",
       "fast": "빠르게"
