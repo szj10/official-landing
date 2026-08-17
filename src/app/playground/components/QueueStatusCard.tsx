@@ -65,8 +65,14 @@ function AnimatedWaveform({ color = "emerald" }: { color?: "emerald" | "indigo" 
 
 function QueueWaitingCard({
   lastQueueMetrics,
+  showHistory,
+  historyCount,
+  onToggleHistory,
 }: {
   lastQueueMetrics: QueueStatusCardProps["lastQueueMetrics"];
+  showHistory: boolean;
+  historyCount: number;
+  onToggleHistory: () => void;
 }) {
   const { t } = useI18n();
   const hasMetrics = !!lastQueueMetrics;
@@ -178,34 +184,67 @@ function QueueWaitingCard({
           </div>
         )}
 
-        {/* Waveform + status dot */}
-        <div className="flex items-center gap-3 px-0.5">
-          {hasMetrics ? (
-            <AnimatedWaveform color="indigo" />
-          ) : (
-            <div className="flex gap-1.5">
-              {[0, 1, 2].map((i) => (
-                <div
-                  key={i}
-                  className="h-2 w-2 rounded-full bg-indigo-400/60"
-                  style={{
-                    animationName: "qscDotBounce",
-                    animationDuration: "1.2s",
-                    animationDelay: `${i * 0.2}s`,
-                    animationTimingFunction: "ease-in-out",
-                    animationIterationCount: "infinite",
-                    animationDirection: "alternate",
-                  }}
-                />
-              ))}
+        {/* Waveform + status dot + history toggle */}
+        <div className="flex items-center justify-between px-0.5">
+          <div className="flex items-center gap-3">
+            {hasMetrics ? (
+              <AnimatedWaveform color="indigo" />
+            ) : (
+              <div className="flex gap-1.5">
+                {[0, 1, 2].map((i) => (
+                  <div
+                    key={i}
+                    className="h-2 w-2 rounded-full bg-indigo-400/60"
+                    style={{
+                      animationName: "qscDotBounce",
+                      animationDuration: "1.2s",
+                      animationDelay: `${i * 0.2}s`,
+                      animationTimingFunction: "ease-in-out",
+                      animationIterationCount: "infinite",
+                      animationDirection: "alternate",
+                    }}
+                  />
+                ))}
+              </div>
+            )}
+            <div className="flex items-center gap-1.5 ml-1">
+              <div className="h-1.5 w-1.5 rounded-full bg-indigo-500 animate-pulse" />
+              <span className="text-xs font-semibold text-indigo-600 dark:text-indigo-400 tracking-wide">
+                {hasMetrics ? "In Queue" : "Loading\u2026"}
+              </span>
             </div>
-          )}
-          <div className="flex items-center gap-1.5 ml-1">
-            <div className="h-1.5 w-1.5 rounded-full bg-indigo-500 animate-pulse" />
-            <span className="text-xs font-semibold text-indigo-600 dark:text-indigo-400 tracking-wide">
-              {hasMetrics ? "In Queue" : "Loading\u2026"}
-            </span>
           </div>
+
+          {historyCount > 0 && (
+            <button
+              type="button"
+              onClick={onToggleHistory}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-indigo-50/80 dark:bg-indigo-950/40 border border-indigo-200/60 dark:border-indigo-700/30 text-indigo-700 dark:text-indigo-400 text-xs font-semibold hover:bg-indigo-100/80 dark:hover:bg-indigo-900/30 transition-all duration-200 group"
+              aria-expanded={showHistory}
+            >
+              <svg
+                className="w-3.5 h-3.5 shrink-0"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+              History
+              <span className="flex h-4 min-w-[16px] items-center justify-center rounded-full bg-indigo-200/80 dark:bg-indigo-700/50 px-1 text-[10px] font-bold leading-none">
+                {historyCount}
+              </span>
+              <ChevronIcon
+                className="w-3.5 h-3.5 transition-transform duration-300"
+                open={showHistory}
+              />
+            </button>
+          )}
         </div>
       </div>
     </div>
@@ -284,12 +323,6 @@ function SuccessCard({
         <div className="flex items-center justify-between px-0.5">
           <div className="flex items-center gap-3">
             <AnimatedWaveform color="emerald" />
-            <div className="flex items-center gap-1.5 ml-1">
-              <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
-              <span className="text-xs font-semibold text-emerald-700 dark:text-emerald-400 tracking-wide">
-                Playing
-              </span>
-            </div>
           </div>
 
           {historyCount > 0 && (
@@ -374,7 +407,27 @@ export function QueueStatusCard({
   return (
     <div className="animate-fade-in-up space-y-0">
       {/* Active queue waiting card */}
-      {isGenerating && !isCompleted && <QueueWaitingCard lastQueueMetrics={lastQueueMetrics} />}
+      {isGenerating && !isCompleted && (
+        <QueueWaitingCard
+          lastQueueMetrics={lastQueueMetrics}
+          showHistory={showHistory}
+          historyCount={historyJobs.length}
+          onToggleHistory={() => setShowHistory((v) => !v)}
+        />
+      )}
+
+      {/* History list – embedded below waiting card */}
+      {isGenerating && !isCompleted && (
+        <HistoryJobs
+          historyJobs={historyJobs}
+          playingHistoryJobId={playingHistoryJobId}
+          isPlaying={isPlaying}
+          onPlayHistoryJob={onPlayHistoryJob}
+          show={showHistory}
+          onToggle={() => setShowHistory((v) => !v)}
+          showHeader={false}
+        />
+      )}
 
       {/* Success card (auto-play by StickyPlayerBar, no Play CTA here) */}
       {isCompleted && (
