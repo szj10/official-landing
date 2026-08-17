@@ -444,8 +444,13 @@ export default function PlaygroundContent() {
         setRecordingTime((prev) => {
           const newTime = prev + 1;
           // Auto-stop at 10 seconds
-          if (newTime >= 10) {
-            stopRecording();
+          if (newTime >= 10 && mediaRecorderRef.current?.state === "recording") {
+            mediaRecorderRef.current.stop();
+            setIsRecording(false);
+            if (recordingIntervalRef.current) {
+              clearInterval(recordingIntervalRef.current);
+              recordingIntervalRef.current = null;
+            }
           }
           return newTime;
         });

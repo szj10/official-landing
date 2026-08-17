@@ -221,14 +221,16 @@ export function VoiceSelectionModal({
         </div>
 
         {/* Footer */}
-        <div className="px-6 py-4 border-t border-gray-100 dark:border-zinc-800 bg-gray-50/50 dark:bg-zinc-900/50 shrink-0 flex justify-end">
-          <button
-            onClick={onClose}
-            className="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-xl transition-colors shadow-sm"
-          >
-            Confirm
-          </button>
-        </div>
+        {(selectedVoice || anonymousVoiceId) && (
+          <div className="px-6 py-4 border-t border-gray-100 dark:border-zinc-800 bg-gray-50/50 dark:bg-zinc-900/50 shrink-0 flex justify-end">
+            <button
+              onClick={onClose}
+              className="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-xl transition-colors shadow-sm"
+            >
+              Confirm
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
