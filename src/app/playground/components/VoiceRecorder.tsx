@@ -163,23 +163,19 @@ export function VoiceRecorder({
                         ? "bg-indigo-50 dark:bg-indigo-900/20 border-indigo-500 shadow-sm"
                         : "bg-white dark:bg-zinc-800 border-gray-100 dark:border-zinc-700 hover:border-indigo-300 dark:hover:border-indigo-600"
                     }`}
-                    onClick={() => onSelectHistoryVoice(voice)}
+                    onClick={() => {
+                      onPlayHistoryVoice(voice.anonymous_voice_id);
+                      onSelectHistoryVoice(voice);
+                    }}
                   >
                     <div className="flex items-center gap-3">
-                      <button
-                        type="button"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          onPlayHistoryVoice(voice.anonymous_voice_id);
-                        }}
-                        className="w-8 h-8 rounded-full bg-indigo-100 dark:bg-indigo-900/40 text-indigo-600 dark:text-indigo-400 flex items-center justify-center hover:bg-indigo-200 dark:hover:bg-indigo-900/60 transition-colors shrink-0"
-                      >
+                      <div className="w-8 h-8 rounded-full bg-indigo-100 dark:bg-indigo-900/40 text-indigo-600 dark:text-indigo-400 flex items-center justify-center shrink-0">
                         {isPlayingThis ? (
                           <StopIcon className="w-4 h-4" />
                         ) : (
                           <PlayIcon className="w-4 h-4 ml-0.5" />
                         )}
-                      </button>
+                      </div>
                       <div className="flex flex-col">
                         <span className="text-sm font-medium text-gray-900 dark:text-white">
                           Voice Prompt #{voice.anonymous_voice_id}
