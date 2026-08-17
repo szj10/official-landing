@@ -10,7 +10,7 @@ import { VoiceSelectionModal } from "./components/VoiceSelectionModal";
 import { StickyPlayerBar } from "./components/StickyPlayerBar";
 import { QueueStatusCard } from "./components/QueueStatusCard";
 import { AlertBanner } from "./components/AlertBanner";
-import { HistoryJobs } from "./components/HistoryJobs";
+
 import { SpeakerIcon, SparklesIcon } from "./components/icons";
 
 // Types and constants
@@ -84,7 +84,6 @@ export default function PlaygroundContent() {
   // --- History state ---
   const [historyVoices, setHistoryVoices] = useState<HistoryVoice[]>([]);
   const [historyJobs, setHistoryJobs] = useState<HistoryTTSJob[]>([]);
-  const [showHistoryJobs, setShowHistoryJobs] = useState(false);
   const [showHistoryVoices, setShowHistoryVoices] = useState(false);
   const [playingHistoryVoiceId, setPlayingHistoryVoiceId] = useState<number | null>(null);
   const [playingHistoryJobId, setPlayingHistoryJobId] = useState<number | string | null>(null);
@@ -241,6 +240,25 @@ export default function PlaygroundContent() {
       audio.removeEventListener("ended", handleEnded);
     };
   }, [audioUrl]);
+
+  // Auto-start StickyPlayerBar playback when a new TTS job completes
+  useEffect(() => {
+    if (showCompletionCard && audioUrl && audioRef.current) {
+      // Give the <audio> element a tick to load the new src
+      const timer = setTimeout(() => {
+        if (!audioRef.current) return;
+        stopAllOtherAudio("tts");
+        setActiveStickyPlayer("tts");
+        audioRef.current.currentTime = 0;
+        audioRef.current
+          .play()
+          .then(() => setIsPlaying(true))
+          .catch((err) => console.warn("Auto-play after TTS completion skipped:", err));
+      }, 150);
+      return () => clearTimeout(timer);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [showCompletionCard]);
 
   // Helper to stop all other audio sources when a new one starts
   const stopAllOtherAudio = (except: "tts" | "rec" | "preview") => {
@@ -930,23 +948,14 @@ export default function PlaygroundContent() {
             errorMessage={errorMessage}
             isGenerating={isGenerating}
           />
-          {(isGenerating && generationStatus === "queued") || showCompletionCard ? (
-            <QueueStatusCard
-              lastQueueMetrics={lastQueueMetrics}
-              isCompleted={showCompletionCard}
-              onDismiss={() => setShowCompletionCard(false)}
-            />
-          ) : null}
-        </div>
-
-        {/* Recent Generations list */}
-        <div className="max-w-3xl mx-auto">
-          <HistoryJobs
+          <QueueStatusCard
+            lastQueueMetrics={lastQueueMetrics}
+            isGenerating={isGenerating && generationStatus === "queued"}
+            isCompleted={showCompletionCard}
+            onDismiss={() => setShowCompletionCard(false)}
             historyJobs={historyJobs}
-            showHistoryJobs={showHistoryJobs}
             playingHistoryJobId={playingHistoryJobId}
             isPlaying={isPlaying}
-            onToggleShowHistoryJobs={() => setShowHistoryJobs((v) => !v)}
             onPlayHistoryJob={playHistoryJob}
           />
         </div>
