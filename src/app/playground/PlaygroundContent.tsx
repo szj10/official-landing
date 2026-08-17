@@ -399,7 +399,16 @@ export default function PlaygroundContent() {
   // ---------------------------------------------------------------------------
   const startRecording = async () => {
     try {
-      stopAllOtherAudio("preview");
+      // Stop ALL audio sources including StickyPlayerBar
+      if (audioRef.current) audioRef.current.pause();
+      setIsPlaying(false);
+      if (recAudioRef.current) recAudioRef.current.pause();
+      setIsRecPlaying(false);
+      if (voicePreviewRef.current) voicePreviewRef.current.pause();
+      setPlayingVoicePreview(null);
+      setPlayingHistoryVoiceId(null);
+      setActiveStickyPlayer(null);
+
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       const mediaRecorder = new MediaRecorder(stream);
       mediaRecorderRef.current = mediaRecorder;
