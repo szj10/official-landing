@@ -1046,6 +1046,18 @@ export default function PlaygroundContent() {
         duration={activeStickyPlayer === "tts" ? audioDuration : recAudioDuration}
         onTogglePlayback={activeStickyPlayer === "tts" ? togglePlayback : toggleRecPlayback}
         onSeek={activeStickyPlayer === "tts" ? handleSeek : handleRecSeek}
+        onClose={() => {
+          // Pause the currently playing audio
+          if (activeStickyPlayer === "tts") {
+            if (audioRef.current) audioRef.current.pause();
+            setIsPlaying(false);
+          } else if (activeStickyPlayer === "rec") {
+            if (recAudioRef.current) recAudioRef.current.pause();
+            setIsRecPlaying(false);
+          }
+          // Hide the sticky player
+          setActiveStickyPlayer(null);
+        }}
       />
     </div>
   );

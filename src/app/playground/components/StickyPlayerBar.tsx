@@ -14,6 +14,7 @@ interface StickyPlayerBarProps {
   duration: number | null;
   onTogglePlayback: () => void;
   onSeek: (e: React.MouseEvent<HTMLDivElement>) => void;
+  onClose?: () => void;
 }
 
 export function StickyPlayerBar({
@@ -26,13 +27,32 @@ export function StickyPlayerBar({
   duration,
   onTogglePlayback,
   onSeek,
+  onClose,
 }: StickyPlayerBarProps) {
   if (!isVisible) return null;
 
   return (
     <div className="fixed bottom-0 left-0 right-0 z-[110] animate-in slide-in-from-bottom-full duration-300">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-4 sm:pb-6 pt-2">
-        <div className="glass-panel bg-white/90 dark:bg-zinc-900/90 shadow-2xl rounded-2xl border border-gray-200 dark:border-zinc-700/80 p-4 sm:p-5 flex flex-col sm:flex-row items-center gap-4 sm:gap-6 backdrop-blur-xl">
+        <div className="glass-panel bg-white/90 dark:bg-zinc-900/90 shadow-2xl rounded-2xl border border-gray-200 dark:border-zinc-700/80 p-4 sm:p-5 flex flex-col sm:flex-row items-center gap-4 sm:gap-6 backdrop-blur-xl relative">
+          {/* Close Button */}
+          {onClose && (
+            <button
+              onClick={onClose}
+              className="absolute top-2 right-2 sm:top-3 sm:right-3 p-1.5 text-gray-400 hover:text-gray-600 dark:hover:text-zinc-200 rounded-full hover:bg-gray-100 dark:hover:bg-zinc-800 transition-colors"
+              aria-label="Close player"
+            >
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+          )}
+
           {/* Play/Pause Button */}
           <button
             onClick={onTogglePlayback}
