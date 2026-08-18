@@ -614,6 +614,7 @@ export default function PlaygroundContent() {
       const formData = new FormData();
       formData.append("file", blob, "recording.webm");
       formData.append("language", locale);
+      formData.append("duration", recordingTime.toString());
 
       const res = await fetch("/api/v1/playground/upload-voice-prompt", {
         method: "POST",
@@ -646,10 +647,8 @@ export default function PlaygroundContent() {
       setAnonymousVoiceId(data.anonymous_voice_id);
       setUploadStatus("success");
 
-      // Use frontend-recorded duration if backend returned fallback value (1.0)
-      // recordingTime is the actual recorded duration from our timer
-      const actualDuration =
-        data.audio_duration === 1.0 && recordingTime > 1 ? recordingTime : data.audio_duration;
+      // Backend now returns accurate duration (or fallback if detection failed)
+      const actualDuration = data.audio_duration;
 
       const newVoice: HistoryVoice = {
         anonymous_voice_id: data.anonymous_voice_id,
