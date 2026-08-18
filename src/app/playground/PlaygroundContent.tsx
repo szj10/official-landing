@@ -480,19 +480,38 @@ export default function PlaygroundContent() {
       setPlayingHistoryVoiceId(null);
     }
 
-    // If this was the selected voice, clear the selection
+    // If this was the selected voice, clear the selection (but stay in custom panel)
     if (anonymousVoiceId === voiceId) {
       setAnonymousVoiceId(null);
       setUploadStatus("idle");
-      // Switch back to stock voice panel
-      setActiveVoicePanel("stock");
-      setSelectedVoice("voice1");
+      // DO NOT switch panels - stay in "Record Voice" tab
     }
 
     // Remove from state and localStorage
     setHistoryVoices((prev) => {
       const next = prev.filter((v) => v.anonymous_voice_id !== voiceId);
       localStorage.setItem("playground_voice_ids", JSON.stringify(next));
+      return next;
+    });
+  };
+
+  const deleteHistoryJob = (jobId: string | number) => {
+    // Stop playback if this job is currently playing
+    if (playingHistoryJobId === jobId) {
+      audioRef.current?.pause();
+      setIsPlaying(false);
+      setPlayingHistoryJobId(null);
+
+      // Restore current job audio if available
+      if (currentJob?.audio_path) {
+        setAudioUrl(resolveAudioUrl(currentJob.audio_path));
+      }
+    }
+
+    // Remove from state and localStorage
+    setHistoryJobs((prev) => {
+      const next = prev.filter((j) => j.playground_job_id !== jobId);
+      localStorage.setItem("playground_tts_jobs", JSON.stringify(next));
       return next;
     });
   };
@@ -627,9 +646,14 @@ export default function PlaygroundContent() {
       setAnonymousVoiceId(data.anonymous_voice_id);
       setUploadStatus("success");
 
+      // Use frontend-recorded duration if backend returned fallback value (1.0)
+      // recordingTime is the actual recorded duration from our timer
+      const actualDuration =
+        data.audio_duration === 1.0 && recordingTime > 1 ? recordingTime : data.audio_duration;
+
       const newVoice: HistoryVoice = {
         anonymous_voice_id: data.anonymous_voice_id,
-        audio_duration: data.audio_duration,
+        audio_duration: actualDuration,
         expires_at: data.expires_at,
         created_at: new Date().toISOString(),
       };
@@ -1157,6 +1181,7 @@ export default function PlaygroundContent() {
             playingHistoryJobId={playingHistoryJobId}
             isPlaying={isPlaying}
             onPlayHistoryJob={playHistoryJob}
+            onDeleteHistoryJob={deleteHistoryJob}
           />
         </div>
       </div>

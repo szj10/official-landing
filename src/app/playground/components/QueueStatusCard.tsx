@@ -24,6 +24,7 @@ interface QueueStatusCardProps {
   playingHistoryJobId: number | string | null;
   isPlaying: boolean;
   onPlayHistoryJob: (jobId: string | number, path: string | null) => void;
+  onDeleteHistoryJob?: (jobId: string | number) => void;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -396,6 +397,7 @@ export function QueueStatusCard({
   playingHistoryJobId,
   isPlaying,
   onPlayHistoryJob,
+  onDeleteHistoryJob,
 }: QueueStatusCardProps) {
   const [checkVisible, setCheckVisible] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
@@ -459,6 +461,7 @@ export function QueueStatusCard({
           playingHistoryJobId={playingHistoryJobId}
           isPlaying={isPlaying}
           onPlayHistoryJob={onPlayHistoryJob}
+          onDeleteHistoryJob={onDeleteHistoryJob}
           show={showHistory}
           onToggle={() => setShowHistory((v) => !v)}
           showHeader={false}
@@ -483,6 +486,7 @@ export function QueueStatusCard({
           playingHistoryJobId={playingHistoryJobId}
           isPlaying={isPlaying}
           onPlayHistoryJob={onPlayHistoryJob}
+          onDeleteHistoryJob={onDeleteHistoryJob}
           show={showHistory}
           onToggle={() => setShowHistory((v) => !v)}
           showHeader={false}
@@ -496,6 +500,7 @@ export function QueueStatusCard({
           playingHistoryJobId={playingHistoryJobId}
           isPlaying={isPlaying}
           onPlayHistoryJob={onPlayHistoryJob}
+          onDeleteHistoryJob={onDeleteHistoryJob}
           show={showHistory}
           onToggle={() => setShowHistory((v) => !v)}
           showHeader={true}
