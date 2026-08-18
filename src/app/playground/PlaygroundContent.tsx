@@ -473,6 +473,30 @@ export default function PlaygroundContent() {
     setPlayingHistoryVoiceId(voiceId);
   };
 
+  const deleteHistoryVoice = (voiceId: number) => {
+    // Stop playback if this voice is currently playing
+    if (playingHistoryVoiceId === voiceId) {
+      voicePreviewRef.current?.pause();
+      setPlayingHistoryVoiceId(null);
+    }
+
+    // If this was the selected voice, clear the selection
+    if (anonymousVoiceId === voiceId) {
+      setAnonymousVoiceId(null);
+      setUploadStatus("idle");
+      // Switch back to stock voice panel
+      setActiveVoicePanel("stock");
+      setSelectedVoice("voice1");
+    }
+
+    // Remove from state and localStorage
+    setHistoryVoices((prev) => {
+      const next = prev.filter((v) => v.anonymous_voice_id !== voiceId);
+      localStorage.setItem("playground_voice_ids", JSON.stringify(next));
+      return next;
+    });
+  };
+
   // ---------------------------------------------------------------------------
   // Step 2: Microphone recording
   // ---------------------------------------------------------------------------
@@ -1181,6 +1205,7 @@ export default function PlaygroundContent() {
           setUploadStatus("success");
         }}
         onPlayHistoryVoice={playHistoryVoice}
+        onDeleteHistoryVoice={deleteHistoryVoice}
         speed={speed}
         onSetSpeed={setSpeed}
       />
