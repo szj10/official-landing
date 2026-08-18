@@ -31,6 +31,7 @@ interface VoiceSelectionModalProps {
   onToggleShowHistoryVoices: () => void;
   onSelectHistoryVoice: (voice: HistoryVoice) => void;
   onPlayHistoryVoice: (voiceId: number) => void;
+  onDeleteHistoryVoice?: (voiceId: number) => void;
 
   // Speed Selector Props
   speed: "slow" | "normal" | "fast";
@@ -61,6 +62,7 @@ export function VoiceSelectionModal({
   onToggleShowHistoryVoices,
   onSelectHistoryVoice,
   onPlayHistoryVoice,
+  onDeleteHistoryVoice,
   speed,
   onSetSpeed,
 }: VoiceSelectionModalProps) {
@@ -174,6 +176,7 @@ export function VoiceSelectionModal({
               onToggleShowHistoryVoices={onToggleShowHistoryVoices}
               onSelectHistoryVoice={onSelectHistoryVoice}
               onPlayHistoryVoice={onPlayHistoryVoice}
+              onDeleteHistoryVoice={onDeleteHistoryVoice}
             />
           )}
 

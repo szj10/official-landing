@@ -22,6 +22,7 @@ interface VoiceRecorderProps {
   onToggleShowHistoryVoices: () => void;
   onSelectHistoryVoice: (voice: HistoryVoice) => void;
   onPlayHistoryVoice: (voiceId: number) => void;
+  onDeleteHistoryVoice?: (voiceId: number) => void;
 }
 
 export function VoiceRecorder({
@@ -40,6 +41,7 @@ export function VoiceRecorder({
   onToggleShowHistoryVoices,
   onSelectHistoryVoice,
   onPlayHistoryVoice,
+  onDeleteHistoryVoice,
 }: VoiceRecorderProps) {
   const { t } = useI18n();
 
@@ -158,17 +160,19 @@ export function VoiceRecorder({
                 return (
                   <div
                     key={voice.anonymous_voice_id}
-                    className={`flex items-center justify-between p-3 rounded-xl border transition-all cursor-pointer ${
+                    className={`flex items-center justify-between p-3 rounded-xl border transition-all ${
                       isSelected
                         ? "bg-indigo-50 dark:bg-indigo-900/20 border-indigo-500 shadow-sm"
                         : "bg-white dark:bg-zinc-800 border-gray-100 dark:border-zinc-700 hover:border-indigo-300 dark:hover:border-indigo-600"
                     }`}
-                    onClick={() => {
-                      onPlayHistoryVoice(voice.anonymous_voice_id);
-                      onSelectHistoryVoice(voice);
-                    }}
                   >
-                    <div className="flex items-center gap-3">
+                    <div
+                      className="flex items-center gap-3 flex-1 cursor-pointer"
+                      onClick={() => {
+                        onPlayHistoryVoice(voice.anonymous_voice_id);
+                        onSelectHistoryVoice(voice);
+                      }}
+                    >
                       <div className="w-8 h-8 rounded-full bg-indigo-100 dark:bg-indigo-900/40 text-indigo-600 dark:text-indigo-400 flex items-center justify-center shrink-0">
                         {isPlayingThis ? (
                           <StopIcon className="w-4 h-4" />
@@ -181,16 +185,51 @@ export function VoiceRecorder({
                           Voice Prompt #{voice.anonymous_voice_id}
                         </span>
                         <span className="text-xs text-gray-500">
-                          {voice.audio_duration ? formatTime(voice.audio_duration) : "0:00"}
+                          {voice.audio_duration
+                            ? `${formatTime(Math.round(voice.audio_duration))}`
+                            : "0:00"}
                           {voice.created_at && ` • ${formatRelativeTime(voice.created_at)}`}
                         </span>
                       </div>
                     </div>
-                    {isSelected && (
-                      <div className="text-indigo-600 dark:text-indigo-400 mr-2">
-                        <CheckIcon className="w-5 h-5" />
-                      </div>
-                    )}
+                    <div className="flex items-center gap-2">
+                      {isSelected && (
+                        <div className="text-indigo-600 dark:text-indigo-400">
+                          <CheckIcon className="w-5 h-5" />
+                        </div>
+                      )}
+                      {onDeleteHistoryVoice && (
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            if (
+                              confirm(
+                                `Are you sure you want to delete Voice Prompt #${voice.anonymous_voice_id}?`
+                              )
+                            ) {
+                              onDeleteHistoryVoice(voice.anonymous_voice_id);
+                            }
+                          }}
+                          className="w-7 h-7 rounded-lg flex items-center justify-center text-gray-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+                          aria-label="Delete recording"
+                        >
+                          <svg
+                            className="w-4 h-4"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                            />
+                          </svg>
+                        </button>
+                      )}
+                    </div>
                   </div>
                 );
               })}
