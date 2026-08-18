@@ -89,6 +89,7 @@
     "selectVoice": "Select voice",
     "microphoneError": "Unable to access microphone. Please check permissions.",
     "generateError": "Failed to generate audio. Please try again.",
-    "emptyTextWarning": "Please enter some text before generating audio."
+    "emptyTextWarning": "Please enter some text before generating audio.",
+    "textTooLong": "Text exceeds character limit. Please shorten your text."
   }
 }

@@ -23,6 +23,9 @@ import {
   formatRetryAfter,
 } from "./components/types";
 
+// Get max length from environment variable or use default
+const MAX_TTS_TEXT_LENGTH = parseInt(process.env.NEXT_PUBLIC_MAX_TTS_TEXT_LENGTH || "600", 10);
+
 export default function PlaygroundContent() {
   const { t, locale } = useI18n();
 
@@ -567,6 +570,14 @@ export default function PlaygroundContent() {
       return;
     }
     setEmptyTextWarning(false);
+
+    // Enforce character limit
+    if (text.length > MAX_TTS_TEXT_LENGTH) {
+      setErrorMessage(
+        t("playground.textTooLong") || `Text exceeds ${MAX_TTS_TEXT_LENGTH} character limit`
+      );
+      return;
+    }
 
     if (!canGenerate) {
       return;

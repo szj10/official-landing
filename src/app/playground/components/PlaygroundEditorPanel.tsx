@@ -5,6 +5,9 @@ import { useI18n } from "@/i18n";
 import { SAMPLE_TEXTS } from "./types";
 import { SparklesIcon } from "./icons";
 
+// Get max length from environment variable or use default
+const MAX_TTS_TEXT_LENGTH = parseInt(process.env.NEXT_PUBLIC_MAX_TTS_TEXT_LENGTH || "600", 10);
+
 interface PlaygroundEditorPanelProps {
   textInput: string;
   onTextChange: (text: string) => void;
@@ -21,10 +24,10 @@ export const PlaygroundEditorPanel = forwardRef<HTMLTextAreaElement, PlaygroundE
     // Derive showSamples directly from textInput - no need for state or effect
     const showSamples = textInput.trim() === "";
 
-    const words = textInput.trim().split(/\s+/).filter(Boolean).length;
-    const maxWords = 200;
-    const percentage = Math.min((words / maxWords) * 100, 100);
-    const isOverLimit = words > maxWords;
+    const charCount = textInput.length;
+    const maxChars = MAX_TTS_TEXT_LENGTH;
+    const percentage = Math.min((charCount / maxChars) * 100, 100);
+    const isOverLimit = charCount > maxChars;
     const strokeColor = isOverLimit
       ? "text-red-500"
       : percentage > 80
@@ -98,6 +101,7 @@ export const PlaygroundEditorPanel = forwardRef<HTMLTextAreaElement, PlaygroundE
             onFocus={onFocus}
             placeholder={t("playground.textSection.placeholder")}
             rows={8}
+            maxLength={MAX_TTS_TEXT_LENGTH}
             className="w-full px-4 sm:px-5 py-4 pb-14 rounded-2xl bg-white dark:bg-zinc-900 border-2 border-gray-200 dark:border-zinc-700 focus:border-indigo-500 dark:focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all text-gray-900 dark:text-white placeholder-gray-400 text-base sm:text-lg resize-y min-h-[200px]"
           />
 
@@ -128,7 +132,7 @@ export const PlaygroundEditorPanel = forwardRef<HTMLTextAreaElement, PlaygroundE
                 isOverLimit ? "text-red-500" : "text-gray-600 dark:text-zinc-300"
               }`}
             >
-              {words}/{maxWords}
+              {charCount}/{maxChars}
             </span>
           </div>
         </div>
