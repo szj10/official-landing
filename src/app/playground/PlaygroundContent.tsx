@@ -172,13 +172,33 @@ export default function PlaygroundContent() {
         }
 
         // 🔄 Resume pending job if page was refreshed during generation
-        const pendingJobId = localStorage.getItem("playground_pending_job");
-        if (pendingJobId) {
-          console.log(`🔄 Resuming pending job ${pendingJobId} after page refresh...`);
+        const pendingJobData = localStorage.getItem("playground_pending_job");
+        if (pendingJobData) {
           try {
+            const parsed = JSON.parse(pendingJobData);
+            const pendingJobId = parsed.job_id || parsed; // Support old format (plain job_id string)
+
+            console.log(`🔄 Resuming pending job ${pendingJobId} after page refresh...`);
+
             const res = await fetch(`/api/v1/playground/tts/${pendingJobId}`);
             if (res.ok) {
               const job: TTSJobResponse = await res.json();
+
+              // Restore input text and voice selection
+              if (typeof parsed === "object" && parsed.text) {
+                setTextInput(parsed.text);
+
+                if (parsed.active_panel) {
+                  setActiveVoicePanel(parsed.active_panel);
+                }
+
+                if (parsed.active_panel === "stock" && parsed.selected_voice) {
+                  setSelectedVoice(parsed.selected_voice);
+                } else if (parsed.active_panel === "custom" && parsed.anonymous_voice_id) {
+                  setAnonymousVoiceId(parsed.anonymous_voice_id);
+                  setUploadStatus("success");
+                }
+              }
 
               // Only resume if job is still in progress
               if (job.status === "queued" || job.status === "processing") {
@@ -197,7 +217,15 @@ export default function PlaygroundContent() {
                 setAudioUrl(resolveAudioUrl(job.audio_path));
                 setAudioDuration(job.audio_duration);
                 setShowCompletionCard(true);
-                saveCompletedJob(job);
+
+                // Pass context to saveCompletedJob for proper voice name display
+                const contextOverride = {
+                  textInput: parsed.text,
+                  activeVoicePanel: parsed.active_panel,
+                  anonymousVoiceId: parsed.anonymous_voice_id,
+                  selectedVoice: parsed.selected_voice,
+                };
+                saveCompletedJob(job, contextOverride);
 
                 // Clear pending status
                 localStorage.removeItem("playground_pending_job");
@@ -214,7 +242,7 @@ export default function PlaygroundContent() {
               console.log(`❌ Job ${pendingJobId} not found on backend`);
             }
           } catch (err) {
-            console.error(`Failed to resume job ${pendingJobId}:`, err);
+            console.error(`Failed to resume job:`, err);
             localStorage.removeItem("playground_pending_job");
           }
         }
@@ -579,6 +607,7 @@ export default function PlaygroundContent() {
         anonymous_voice_id: data.anonymous_voice_id,
         audio_duration: data.audio_duration,
         expires_at: data.expires_at,
+        created_at: new Date().toISOString(),
       };
       setHistoryVoices((prev) => {
         const next = [newVoice, ...prev]
@@ -672,7 +701,7 @@ export default function PlaygroundContent() {
       }
 
       const job: TTSJobResponse = await res.json();
-      handleJobResponse(job);
+      handleJobResponse(job, text);
     } catch (err) {
       console.error("Generate error:", err);
       handleGenerationError(t("playground.generateError"));
@@ -714,18 +743,35 @@ export default function PlaygroundContent() {
     setIsGenerating(false);
   }
 
-  function saveCompletedJob(jobToSave: TTSJobResponse) {
-    const isStock = activeVoicePanel === "stock";
-    const stockVoice = isStock ? PLAYGROUND_VOICES.find((v) => v.id === selectedVoice) : null;
+  function saveCompletedJob(
+    jobToSave: TTSJobResponse,
+    contextOverride?: {
+      textInput?: string;
+      activeVoicePanel?: "stock" | "custom";
+      anonymousVoiceId?: number | null;
+      selectedVoice?: string | null;
+    }
+  ) {
+    // Use context override if provided (e.g., from resumed job), otherwise use current state
+    const ctx = contextOverride || {
+      textInput: currentText,
+      activeVoicePanel,
+      anonymousVoiceId,
+      selectedVoice,
+    };
+
+    const isStock = ctx.activeVoicePanel === "stock";
+    const stockVoice = isStock ? PLAYGROUND_VOICES.find((v) => v.id === ctx.selectedVoice) : null;
 
     const vName =
       isStock && stockVoice
         ? t(stockVoice.nameKey)
-        : anonymousVoiceId
-          ? `Voice Prompt #${anonymousVoiceId}`
+        : ctx.anonymousVoiceId
+          ? `Voice Prompt #${ctx.anonymousVoiceId}`
           : t("playground.voiceSection.customVoice");
 
-    const textSnippet = currentText.slice(0, 50) + (currentText.length > 50 ? "..." : "");
+    const textToUse = ctx.textInput || currentText;
+    const textSnippet = textToUse.slice(0, 50) + (textToUse.length > 50 ? "..." : "");
 
     const newJob: HistoryTTSJob = {
       playground_job_id: jobToSave.job_id,
@@ -744,7 +790,7 @@ export default function PlaygroundContent() {
     });
   }
 
-  function handleJobResponse(job: TTSJobResponse) {
+  function handleJobResponse(job: TTSJobResponse, inputText?: string) {
     setCurrentJob(job);
     setGenerationStatus(job.status);
 
@@ -760,8 +806,15 @@ export default function PlaygroundContent() {
       return;
     }
 
-    // Store job ID for resumption after page refresh
-    localStorage.setItem("playground_pending_job", job.job_id.toString());
+    // Store job ID + context for resumption after page refresh
+    const pendingJobData = {
+      job_id: job.job_id,
+      text: inputText || textInput,
+      anonymous_voice_id: anonymousVoiceId,
+      active_panel: activeVoicePanel,
+      selected_voice: selectedVoice,
+    };
+    localStorage.setItem("playground_pending_job", JSON.stringify(pendingJobData));
 
     pollJobStatus(job.job_id);
   }
@@ -841,7 +894,27 @@ export default function PlaygroundContent() {
       }
       setIsGenerating(false);
       setShowCompletionCard(true);
-      saveCompletedJob(job);
+
+      // Retrieve context from localStorage if job was resumed after refresh
+      const pendingJobData = localStorage.getItem("playground_pending_job");
+      let contextOverride;
+      if (pendingJobData) {
+        try {
+          const parsed = JSON.parse(pendingJobData);
+          if (typeof parsed === "object" && parsed.text) {
+            contextOverride = {
+              textInput: parsed.text,
+              activeVoicePanel: parsed.active_panel,
+              anonymousVoiceId: parsed.anonymous_voice_id,
+              selectedVoice: parsed.selected_voice,
+            };
+          }
+        } catch (e) {
+          console.warn("Failed to parse pending job context:", e);
+        }
+      }
+
+      saveCompletedJob(job, contextOverride);
 
       // Clear pending job from localStorage
       localStorage.removeItem("playground_pending_job");
