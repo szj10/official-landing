@@ -105,7 +105,7 @@ export default function PlaygroundContent() {
   const actionRowRef = useRef<HTMLDivElement | null>(null);
 
   // ---------------------------------------------------------------------------
-  // Load History from localStorage / backend
+  // Load History from localStorage / backend + Resume pending jobs
   // ---------------------------------------------------------------------------
   useEffect(() => {
     const loadHistory = async () => {
@@ -168,6 +168,54 @@ export default function PlaygroundContent() {
             }
           } else {
             localStorage.setItem("playground_tts_jobs", "[]");
+          }
+        }
+
+        // 🔄 Resume pending job if page was refreshed during generation
+        const pendingJobId = localStorage.getItem("playground_pending_job");
+        if (pendingJobId) {
+          console.log(`🔄 Resuming pending job ${pendingJobId} after page refresh...`);
+          try {
+            const res = await fetch(`/api/v1/playground/tts/${pendingJobId}`);
+            if (res.ok) {
+              const job: TTSJobResponse = await res.json();
+
+              // Only resume if job is still in progress
+              if (job.status === "queued" || job.status === "processing") {
+                setCurrentJob(job);
+                setGenerationStatus(job.status);
+                setIsGenerating(true);
+
+                // Resume polling
+                pollJobStatus(parseInt(pendingJobId));
+
+                console.log(`✅ Resumed polling for job ${pendingJobId} (status: ${job.status})`);
+              } else if (job.status === "completed" && job.audio_path) {
+                // Job completed while user was away
+                setCurrentJob(job);
+                setGenerationStatus(job.status);
+                setAudioUrl(resolveAudioUrl(job.audio_path));
+                setAudioDuration(job.audio_duration);
+                setShowCompletionCard(true);
+                saveCompletedJob(job);
+
+                // Clear pending status
+                localStorage.removeItem("playground_pending_job");
+
+                console.log(`✅ Job ${pendingJobId} completed while away`);
+              } else {
+                // Job failed or rate limited - clear pending status
+                localStorage.removeItem("playground_pending_job");
+                console.log(`❌ Job ${pendingJobId} failed with status: ${job.status}`);
+              }
+            } else {
+              // Job not found - clear pending status
+              localStorage.removeItem("playground_pending_job");
+              console.log(`❌ Job ${pendingJobId} not found on backend`);
+            }
+          } catch (err) {
+            console.error(`Failed to resume job ${pendingJobId}:`, err);
+            localStorage.removeItem("playground_pending_job");
           }
         }
       } catch (err) {
@@ -706,8 +754,14 @@ export default function PlaygroundContent() {
       setIsGenerating(false);
       setActiveStickyPlayer("tts");
       saveCompletedJob(job);
+
+      // Clear pending job status
+      localStorage.removeItem("playground_pending_job");
       return;
     }
+
+    // Store job ID for resumption after page refresh
+    localStorage.setItem("playground_pending_job", job.job_id.toString());
 
     pollJobStatus(job.job_id);
   }
@@ -788,12 +842,24 @@ export default function PlaygroundContent() {
       setIsGenerating(false);
       setShowCompletionCard(true);
       saveCompletedJob(job);
+
+      // Clear pending job from localStorage
+      localStorage.removeItem("playground_pending_job");
+
       if (pollingIntervalRef.current) clearInterval(pollingIntervalRef.current);
     } else if (job.status === "failed") {
       handleGenerationError(job.error_message ?? t("playground.generateError"));
+
+      // Clear pending job from localStorage
+      localStorage.removeItem("playground_pending_job");
+
       if (pollingIntervalRef.current) clearInterval(pollingIntervalRef.current);
     } else if (job.status === "rate_limited") {
       handleRateLimitError(3600);
+
+      // Clear pending job from localStorage
+      localStorage.removeItem("playground_pending_job");
+
       if (pollingIntervalRef.current) clearInterval(pollingIntervalRef.current);
     }
   }
