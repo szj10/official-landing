@@ -1,7 +1,7 @@
 "use client";
 
 import { SpeakerIcon, PlayIcon, PauseIcon, ChevronIcon } from "./icons";
-import { HistoryTTSJob } from "./types";
+import { HistoryTTSJob, formatRelativeTime } from "./types";
 
 interface HistoryJobsProps {
   historyJobs: HistoryTTSJob[];
@@ -102,10 +102,7 @@ export function HistoryJobs({
                     </span>
                     <span className="w-1 h-1 rounded-full bg-gray-300 dark:bg-zinc-700" />
                     <span className="text-gray-400 dark:text-zinc-500">
-                      {new Date(job.created_at).toLocaleTimeString(undefined, {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      })}
+                      {formatRelativeTime(job.created_at)}
                     </span>
                   </div>
                 </div>

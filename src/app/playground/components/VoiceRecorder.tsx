@@ -3,7 +3,7 @@
 import React, { RefObject } from "react";
 import { useI18n } from "@/i18n";
 import { MicIcon, StopIcon, PlayIcon, CheckIcon, AlertIcon, ChevronIcon } from "./icons";
-import { HistoryVoice, formatTime } from "./types";
+import { HistoryVoice, formatTime, formatRelativeTime } from "./types";
 
 interface VoiceRecorderProps {
   isRecording: boolean;
@@ -182,6 +182,7 @@ export function VoiceRecorder({
                         </span>
                         <span className="text-xs text-gray-500">
                           {voice.audio_duration ? formatTime(voice.audio_duration) : "0:00"}
+                          {voice.created_at && ` • ${formatRelativeTime(voice.created_at)}`}
                         </span>
                       </div>
                     </div>
