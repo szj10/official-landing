@@ -25,6 +25,7 @@ interface VoiceSelectionModalProps {
   showHistoryVoices: boolean;
   playingHistoryVoiceId: number | null;
   recAudioRef: React.RefObject<HTMLAudioElement | null>;
+  recordedDuration?: number; // Duration in seconds
   onSetActiveVoicePanel: (panel: "stock" | "custom") => void;
   onVoiceSelectAndPlay: (voiceId: string) => void;
   onStartRecording: () => void;
@@ -56,6 +57,7 @@ export function VoiceSelectionModal({
   showHistoryVoices,
   playingHistoryVoiceId,
   recAudioRef,
+  recordedDuration,
   onSetActiveVoicePanel,
   onVoiceSelectAndPlay,
   onStartRecording,
@@ -226,6 +228,7 @@ export function VoiceSelectionModal({
                   showHistoryVoices={showHistoryVoices}
                   playingHistoryVoiceId={playingHistoryVoiceId}
                   recAudioRef={recAudioRef}
+                  recordedDuration={recordedDuration}
                   onStartRecording={onStartRecording}
                   onStopRecording={onStopRecording}
                   onResetRecording={onResetRecording}

@@ -1203,6 +1203,7 @@ export default function PlaygroundContent() {
         showHistoryVoices={showHistoryVoices}
         playingHistoryVoiceId={playingHistoryVoiceId}
         recAudioRef={recAudioRef}
+        recordedDuration={recordingTime}
         onSetActiveVoicePanel={setActiveVoicePanel}
         onVoiceSelectAndPlay={handleVoiceSelectAndPlay}
         onStartRecording={startRecording}

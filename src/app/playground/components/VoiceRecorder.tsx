@@ -2,7 +2,15 @@
 
 import React, { useState, RefObject } from "react";
 import { useI18n } from "@/i18n";
-import { MicIcon, StopIcon, PlayIcon, CheckIcon, AlertIcon, SpeakerIcon } from "./icons";
+import {
+  MicIcon,
+  StopIcon,
+  PlayIcon,
+  CheckIcon,
+  AlertIcon,
+  SpeakerIcon,
+  RestartIcon,
+} from "./icons";
 import { HistoryVoice, formatTime, formatRelativeTime } from "./types";
 
 export interface VoiceRecorderProps {
@@ -16,6 +24,7 @@ export interface VoiceRecorderProps {
   showHistoryVoices?: boolean;
   playingHistoryVoiceId: number | null;
   recAudioRef?: RefObject<HTMLAudioElement | null>;
+  recordedDuration?: number; // Duration in seconds
   onStartRecording: () => void;
   onStopRecording: () => void;
   onResetRecording: () => void;
@@ -37,6 +46,7 @@ export function VoiceRecorder({
   anonymousVoiceId,
   historyVoices,
   playingHistoryVoiceId,
+  recordedDuration,
   onStartRecording,
   onStopRecording,
   onResetRecording,
@@ -49,6 +59,7 @@ export function VoiceRecorder({
 }: VoiceRecorderProps) {
   const { t } = useI18n();
   const [copiedScript, setCopiedScript] = useState(false);
+  const [isPlayingRecording, setIsPlayingRecording] = useState(false);
 
   const promptText = t("playground.voiceSection.promptGuideText");
 
@@ -178,11 +189,21 @@ export function VoiceRecorder({
           </div>
 
           {anonymousVoiceId && (
-            <div className="text-xs text-gray-500 dark:text-zinc-400">
-              Active Voice ID:{" "}
-              <span className="font-mono font-bold text-gray-800 dark:text-zinc-200">
-                #{anonymousVoiceId}
-              </span>
+            <div className="space-y-2">
+              <div className="text-xs text-gray-500 dark:text-zinc-400">
+                Active Voice ID:{" "}
+                <span className="font-mono font-bold text-gray-800 dark:text-zinc-200">
+                  #{anonymousVoiceId}
+                </span>
+              </div>
+              {(recordedDuration || recordingTime > 0) && (
+                <div className="text-xs text-gray-500 dark:text-zinc-400">
+                  Duration:{" "}
+                  <span className="font-mono font-bold text-gray-800 dark:text-zinc-200">
+                    {formatTime(recordedDuration || recordingTime)}
+                  </span>
+                </div>
+              )}
             </div>
           )}
 
@@ -218,6 +239,7 @@ export function VoiceRecorder({
             <button
               type="button"
               onClick={() => {
+                setIsPlayingRecording(true);
                 // Play the recorded audio
                 const audioUrl = anonymousVoiceId
                   ? `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/voices/anonymous/${anonymousVoiceId}/audio`
@@ -227,20 +249,29 @@ export function VoiceRecorder({
 
                 if (audioUrl) {
                   const audio = new Audio(audioUrl);
-                  audio.play();
+                  audio.onended = () => setIsPlayingRecording(false);
+                  audio.play().catch(() => {
+                    // If playback fails, still reset the playing state
+                    setIsPlayingRecording(false);
+                  });
                 }
               }}
-              className="px-3.5 py-1.5 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-900/50 rounded-lg text-xs font-semibold transition-colors flex items-center gap-1.5"
+              className={`w-10 h-10 rounded-lg flex items-center justify-center transition-colors ${
+                isPlayingRecording
+                  ? "bg-emerald-600 text-white shadow-sm"
+                  : "bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-900/50"
+              }`}
+              aria-label="Play recording"
             >
-              <PlayIcon className="w-3.5 h-3.5" />
-              
+              <PlayIcon className="w-5 h-5" />
             </button>
             <button
               type="button"
               onClick={onResetRecording}
-              className="px-3.5 py-1.5 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-100 dark:hover:bg-indigo-900/50 rounded-lg text-xs font-semibold transition-colors"
+              className="w-10 h-10 rounded-lg flex items-center justify-center bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-100 dark:hover:bg-indigo-900/50 transition-colors"
+              aria-label="Record again"
             >
-              {t("playground.voiceSection.recordAgain")}
+              <RestartIcon className="w-5 h-5" />
             </button>
           </div>
         </div>
