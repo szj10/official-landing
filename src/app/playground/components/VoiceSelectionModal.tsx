@@ -6,6 +6,8 @@ import { VoiceGrid } from "./VoiceGrid";
 import { VoiceRecorder } from "./VoiceRecorder";
 import { HistoryVoice } from "./types";
 
+type VoiceTab = "sample" | "record" | "history";
+
 interface VoiceSelectionModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -67,6 +69,7 @@ export function VoiceSelectionModal({
   onSetSpeed,
 }: VoiceSelectionModalProps) {
   const { t } = useI18n();
+  const [activeTab, setActiveTab] = React.useState<VoiceTab>("sample");
 
   // Handle escape key to close
   useEffect(() => {
@@ -105,58 +108,58 @@ export function VoiceSelectionModal({
       <div className="relative w-full max-w-2xl bg-white dark:bg-zinc-900 rounded-2xl shadow-2xl flex flex-col max-h-[90vh] overflow-hidden border border-gray-100 dark:border-zinc-800 animate-in fade-in zoom-in-95 duration-200">
         {/* Scrollable Body */}
         <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4 sm:space-y-6 custom-scrollbar">
-          {/* Header Panel Switch Tabs */}
-          <div className="flex p-1 bg-gray-100/80 dark:bg-zinc-800/80 rounded-xl shadow-inner w-full max-w-sm mx-auto sm:mx-0">
+          {/* 3-Tab Navigation */}
+          <div className="flex p-1 bg-gray-100/80 dark:bg-zinc-800/80 rounded-xl shadow-inner w-full max-w-lg mx-auto">
             <button
               type="button"
               className={`flex-1 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold rounded-lg transition-all ${
-                activeVoicePanel === "stock"
+                activeTab === "sample"
                   ? "bg-white dark:bg-zinc-700 text-indigo-600 dark:text-indigo-400 shadow-sm"
                   : "text-gray-500 hover:text-gray-900 dark:hover:text-zinc-200"
               }`}
-              onClick={() => onSetActiveVoicePanel("stock")}
+              onClick={() => setActiveTab("sample")}
             >
-              {t("playground.voiceSection.sampleVoices")}
+              {t("playground.voiceSection.sampleVoices") || "Sample Voices"}
             </button>
             <button
               type="button"
               className={`flex-1 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold rounded-lg transition-all ${
-                activeVoicePanel === "custom"
+                activeTab === "record"
                   ? "bg-white dark:bg-zinc-700 text-indigo-600 dark:text-indigo-400 shadow-sm"
                   : "text-gray-500 hover:text-gray-900 dark:hover:text-zinc-200"
               }`}
-              onClick={() => onSetActiveVoicePanel("custom")}
+              onClick={() => setActiveTab("record")}
             >
-              {t("playground.voiceSection.tabCustom")}
+              {t("playground.voiceSection.startRecording") || "Record Voice"}
+            </button>
+            <button
+              type="button"
+              className={`flex-1 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold rounded-lg transition-all relative ${
+                activeTab === "history"
+                  ? "bg-white dark:bg-zinc-700 text-indigo-600 dark:text-indigo-400 shadow-sm"
+                  : "text-gray-500 hover:text-gray-900 dark:hover:text-zinc-200"
+              }`}
+              onClick={() => setActiveTab("history")}
+            >
+              {t("playground.voiceSection.savedPrompts") || "History"}
+              {historyVoices.length > 0 && (
+                <span className="ml-1.5 inline-flex items-center justify-center px-1.5 py-0.5 text-[10px] font-bold rounded-full bg-indigo-100 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400">
+                  {historyVoices.length}
+                </span>
+              )}
             </button>
           </div>
 
-          {/* Voice Panels */}
-          {/* Voice Panels */}
-          {activeVoicePanel === "stock" ? (
-            <div className="space-y-4">
-              {/* Quick Navigation Link to Custom Voice */}
-              <div className="w-full flex items-center justify-between px-3.5 py-2 bg-gradient-to-r from-purple-50/80 to-indigo-50/80 dark:from-purple-950/40 dark:to-indigo-950/40 border border-purple-100 dark:border-purple-900/40 rounded-xl text-xs shadow-xs animate-fade-in">
-                <span className="text-purple-900 dark:text-purple-200 font-medium flex items-center gap-1.5 text-[11px] sm:text-xs">
-                  <span className="inline-block w-2 h-2 rounded-full bg-purple-500 animate-pulse shrink-0" />
-                  Want to clone your own voice?
-                </span>
-                <button
-                  type="button"
-                  onClick={() => onSetActiveVoicePanel("custom")}
-                  className="inline-flex items-center gap-1 font-semibold text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 transition-colors shrink-0 text-[11px] sm:text-xs group"
-                >
-                  Custom Voice Tab
-                  <span className="group-hover:translate-x-0.5 transition-transform">&rarr;</span>
-                </button>
-              </div>
-              <VoiceGrid
-                selectedVoice={selectedVoice}
-                playingVoicePreview={playingVoicePreview}
-                onVoiceSelectAndPlay={onVoiceSelectAndPlay}
-              />
-            </div>
-          ) : (
+          {/* Tab Content */}
+          {activeTab === "sample" && (
+            <VoiceGrid
+              selectedVoice={selectedVoice}
+              playingVoicePreview={playingVoicePreview}
+              onVoiceSelectAndPlay={onVoiceSelectAndPlay}
+            />
+          )}
+
+          {activeTab === "record" && (
             <VoiceRecorder
               isRecording={isRecording}
               recordingTime={recordingTime}
@@ -175,13 +178,78 @@ export function VoiceSelectionModal({
               onSelectHistoryVoice={onSelectHistoryVoice}
               onPlayHistoryVoice={onPlayHistoryVoice}
               onDeleteHistoryVoice={onDeleteHistoryVoice}
-              onSelectSampleVoiceTab={() => onSetActiveVoicePanel("stock")}
-              onExpandHistoryTab={() => {
-                // This function will expand the history accordion when called
-                // We need to trigger the accordion to open to the history section
-                // The actual implementation is in VoiceRecorder component
-              }}
+              onSelectSampleVoiceTab={() => setActiveTab("sample")}
+              onExpandHistoryTab={() => setActiveTab("history")}
             />
+          )}
+
+          {activeTab === "history" && (
+            <div className="space-y-2">
+              {historyVoices.length === 0 ? (
+                <div className="text-center py-12">
+                  <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gray-100 dark:bg-zinc-800 flex items-center justify-center">
+                    <svg
+                      className="w-8 h-8 text-gray-400 dark:text-zinc-600"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+                      />
+                    </svg>
+                  </div>
+                  <p className="text-sm font-medium text-gray-700 dark:text-zinc-300 mb-1">
+                    {t("playground.voiceSection.noHistory") || "No saved voice recordings yet"}
+                  </p>
+                  <p className="text-xs text-gray-500 dark:text-zinc-400 mb-4">
+                    {t("playground.voiceSection.recordFirstPrompt") ||
+                      "Record your first voice prompt to get started"}
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => setActiveTab("record")}
+                    className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-lg transition-colors"
+                  >
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01.469-1.57m0 0a3 3 0 01-1.469-1.57m0 0L9 7m4.469 4.43a3 3 0 01.469 1.57m0 0a3 3 0 01-1.469 1.57m0 0l.469.43m0 0L15 17"
+                      />
+                    </svg>
+                    Record Voice
+                  </button>
+                </div>
+              ) : (
+                <VoiceRecorder
+                  isRecording={false}
+                  recordingTime={0}
+                  recordedAudioBlob={null}
+                  uploadStatus="idle"
+                  uploadError={null}
+                  anonymousVoiceId={anonymousVoiceId}
+                  historyVoices={historyVoices}
+                  showHistoryVoices={true}
+                  playingHistoryVoiceId={playingHistoryVoiceId}
+                  recAudioRef={recAudioRef}
+                  onStartRecording={() => setActiveTab("record")}
+                  onStopRecording={() => {}}
+                  onResetRecording={() => {}}
+                  onToggleShowHistoryVoices={onToggleShowHistoryVoices}
+                  onSelectHistoryVoice={onSelectHistoryVoice}
+                  onPlayHistoryVoice={onPlayHistoryVoice}
+                  onDeleteHistoryVoice={onDeleteHistoryVoice}
+                  onSelectSampleVoiceTab={() => setActiveTab("sample")}
+                  onExpandHistoryTab={() => setActiveTab("history")}
+                  historyOnlyMode={true}
+                />
+              )}
+            </div>
           )}
         </div>
 
