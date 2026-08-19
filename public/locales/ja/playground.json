@@ -2,7 +2,6 @@
   "playground": {
     "badge": "今すぐ試す",
     "title": "TTS プレイグラウンド",
-    "subtitle": "AI搭載のテキスト読み上げ技術を体験。テキストを入力し、音声を選択して、魔法を聞いてみましょう。",
     "textSection": {
       "title": "テキスト入力",
       "sampleTexts": "サンプルテキスト",

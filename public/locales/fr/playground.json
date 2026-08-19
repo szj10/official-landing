@@ -2,7 +2,6 @@
   "playground": {
     "badge": "Essayez Maintenant",
     "title": "Espace TTS",
-    "subtitle": "Découvrez notre technologie de synthèse vocale alimentée par l'IA. Entrez votre texte, choisissez une voix et écoutez la magie.",
     "textSection": {
       "title": "Saisie de Texte",
       "sampleTexts": "Exemples de Textes",

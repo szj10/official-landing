@@ -2,7 +2,6 @@
   "playground": {
     "badge": "立即体验",
     "title": "TTS 体验中心",
-    "subtitle": "体验我们 AI 驱动的文本转语音技术。输入文本，选择语音，聆听奇迹发生。",
     "textSection": {
       "title": "文本输入",
       "sampleTexts": "示例文本",

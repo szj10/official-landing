@@ -1072,9 +1072,6 @@ export default function PlaygroundContent() {
         <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-gray-900 dark:text-white tracking-tight mb-3">
           {t("playground.title")}
         </h1>
-        <p className="text-sm sm:text-base md:text-lg text-gray-600 dark:text-zinc-400 max-w-2xl mx-auto px-2">
-          {t("playground.subtitle")}
-        </p>
       </div>
 
       {/* New Canvas Layout */}

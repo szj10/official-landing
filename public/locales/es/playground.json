@@ -2,7 +2,6 @@
   "playground": {
     "badge": "Pruébalo Ahora",
     "title": "Zona de Pruebas TTS",
-    "subtitle": "Experimenta nuestra tecnología de texto a voz impulsada por IA. Ingresa tu texto, elige una voz y escucha la magia.",
     "textSection": {
       "title": "Entrada de Texto",
       "sampleTexts": "Textos de Ejemplo",

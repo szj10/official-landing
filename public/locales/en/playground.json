@@ -2,7 +2,6 @@
   "playground": {
     "badge": "Try It Now",
     "title": "TTS Playground",
-    "subtitle": "Experience our AI-powered text-to-speech technology. Enter your text, choose a voice, and hear the magic happen.",
     "textSection": {
       "title": "Text Input",
       "sampleTexts": "Sample Texts",

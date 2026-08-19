@@ -2,7 +2,6 @@
   "playground": {
     "badge": "지금 체험",
     "title": "TTS 체험관",
-    "subtitle": "AI 기반 텍스트 음성 변환 기술을 경험하세요. 텍스트를 입력하고, 음성을 선택하고, 마법을 들어보세요.",
     "textSection": {
       "title": "텍스트 입력",
       "sampleTexts": "샘플 텍스트",
