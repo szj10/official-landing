@@ -101,6 +101,7 @@ export default function PlaygroundContent() {
   const voicePreviewRef = useRef<HTMLAudioElement | null>(null);
   const eventSourceRef = useRef<EventSource | null>(null);
   const pollingIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const editorRef = useRef<{ focusTextarea: () => void }>(null);
 
   // ---------------------------------------------------------------------------
   // Load History from localStorage / backend + Resume pending jobs
@@ -390,6 +391,10 @@ export default function PlaygroundContent() {
     const sample = SAMPLE_TEXTS.find((s) => s.id === id);
     if (sample) {
       setTextInput(t(sample.textKey));
+      // Focus textarea and move cursor to end after text is set
+      setTimeout(() => {
+        editorRef.current?.focusTextarea();
+      }, 0);
     }
   };
 
@@ -1027,6 +1032,7 @@ export default function PlaygroundContent() {
       <div className="space-y-6 sm:space-y-8">
         {/* Editor */}
         <PlaygroundEditorPanel
+          ref={editorRef}
           textInput={textInput}
           onTextChange={setTextInput}
           onSampleSelect={handleSampleTextSelect}

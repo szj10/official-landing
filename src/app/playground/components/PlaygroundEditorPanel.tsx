@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef, useImperativeHandle, forwardRef } from "react";
 import { useI18n } from "@/i18n";
 import { SAMPLE_TEXTS } from "./types";
 import { SparklesIcon } from "./icons";
@@ -14,11 +14,26 @@ interface PlaygroundEditorPanelProps {
   onSampleSelect: (text: string) => void;
 }
 
-export function PlaygroundEditorPanel({
-  textInput,
-  onTextChange,
-  onSampleSelect,
-}: PlaygroundEditorPanelProps) {
+export interface PlaygroundEditorPanelRef {
+  focusTextarea: () => void;
+}
+
+export const PlaygroundEditorPanel = forwardRef<
+  PlaygroundEditorPanelRef,
+  PlaygroundEditorPanelProps
+>(function PlaygroundEditorPanel({ textInput, onTextChange, onSampleSelect }, ref) {
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  useImperativeHandle(ref, () => ({
+    focusTextarea: () => {
+      if (textareaRef.current) {
+        textareaRef.current.focus();
+        // Move cursor to the end
+        const length = textareaRef.current.value.length;
+        textareaRef.current.setSelectionRange(length, length);
+      }
+    },
+  }));
   const { t } = useI18n();
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [pendingSampleId, setPendingSampleId] = useState<string | null>(null);
@@ -97,6 +112,7 @@ export function PlaygroundEditorPanel({
       {/* Editor Canvas */}
       <div className="relative shadow-sm">
         <textarea
+          ref={textareaRef}
           value={textInput}
           onChange={(e) => onTextChange(e.target.value)}
           placeholder={t("playground.textSection.placeholder")}
@@ -193,4 +209,4 @@ export function PlaygroundEditorPanel({
       )}
     </div>
   );
-}
+});
