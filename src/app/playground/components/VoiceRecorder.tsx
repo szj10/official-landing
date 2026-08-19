@@ -2,7 +2,7 @@
 
 import React, { useState, RefObject } from "react";
 import { useI18n } from "@/i18n";
-import { MicIcon, StopIcon, PlayIcon, CheckIcon, AlertIcon, ChevronIcon } from "./icons";
+import { MicIcon, StopIcon, PlayIcon, CheckIcon, AlertIcon, ChevronIcon, SpeakerIcon } from "./icons";
 import { HistoryVoice, formatTime, formatRelativeTime } from "./types";
 
 export interface VoiceRecorderProps {
@@ -24,6 +24,7 @@ export interface VoiceRecorderProps {
   onPlayHistoryVoice: (voiceId: number) => void;
   onDeleteHistoryVoice?: (voiceId: number) => void;
   onSelectSampleVoiceTab?: () => void;
+  onExpandHistoryTab?: () => void;
 }
 
 type AccordionSection = "record" | "history";
@@ -46,6 +47,7 @@ export function VoiceRecorder({
   onPlayHistoryVoice,
   onDeleteHistoryVoice,
   onSelectSampleVoiceTab,
+  onExpandHistoryTab,
 }: VoiceRecorderProps) {
   const { t } = useI18n();
   const [copiedScript, setCopiedScript] = useState(false);
@@ -65,27 +67,16 @@ export function VoiceRecorder({
     );
   };
 
+  const handleExpandHistoryTab = () => {
+    setOpenSection("history");
+    if (onExpandHistoryTab) {
+      onExpandHistoryTab();
+    }
+  };
+
   return (
     <div className="flex flex-col items-center w-full space-y-4">
-      {/* 1. Quick Navigation Link to Sample Voices */}
-      {onSelectSampleVoiceTab && (
-        <div className="w-full flex items-center justify-between px-3.5 py-2 bg-gradient-to-r from-indigo-50/80 to-purple-50/80 dark:from-indigo-950/40 dark:to-purple-950/40 border border-indigo-100 dark:border-indigo-900/40 rounded-xl text-xs shadow-xs">
-          <span className="text-indigo-900 dark:text-indigo-200 font-medium flex items-center gap-1.5 text-[11px] sm:text-xs">
-            <span className="inline-block w-2 h-2 rounded-full bg-indigo-500 animate-pulse shrink-0" />
-            Prefer pre-recorded voices?
-          </span>
-          <button
-            type="button"
-            onClick={onSelectSampleVoiceTab}
-            className="inline-flex items-center gap-1 font-semibold text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 transition-colors shrink-0 text-[11px] sm:text-xs group"
-          >
-            Sample Voice Tab
-            <span className="group-hover:translate-x-0.5 transition-transform">&rarr;</span>
-          </button>
-        </div>
-      )}
-
-      {/* 2. Accordion */}
+      {/* Accordion */}
       <div className="w-full rounded-2xl border border-gray-200/80 dark:border-zinc-800 overflow-hidden divide-y divide-gray-200/80 dark:divide-zinc-800">
         {/* Panel A: Recording Console */}
         <div>
@@ -229,17 +220,75 @@ export function VoiceRecorder({
                     </div>
                   ) : (
                     <div className="flex flex-col items-center gap-2 py-1">
-                      <button
-                        type="button"
-                        onClick={onStartRecording}
-                        className="group relative focus:outline-none"
-                      >
-                        <div className="absolute -inset-1 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full blur opacity-30 group-hover:opacity-75 transition duration-300" />
-                        <div className="relative w-16 h-16 rounded-full bg-gradient-to-tr from-indigo-600 to-purple-600 flex items-center justify-center text-white shadow-md shadow-indigo-500/30 group-hover:scale-105 group-active:scale-95 transition-transform">
-                          <MicIcon className="w-7 h-7" />
-                        </div>
-                      </button>
-                      <span className="text-xs sm:text-sm font-semibold text-gray-700 dark:text-zinc-200">
+                      {/* Navigation buttons row with centered mic */}
+                      <div className="flex items-center justify-center gap-8 w-full max-w-sm">
+                        {/* Left button: Switch to Sample Voices */}
+                        {onSelectSampleVoiceTab && (
+                          <button
+                            type="button"
+                            onClick={onSelectSampleVoiceTab}
+                            className="flex flex-col items-center gap-1 group focus:outline-none transition-all"
+                            title={
+                              t("playground.voiceSection.switchToSampleVoices") || "Sample Voices"
+                            }
+                          >
+                            <div className="w-12 h-12 rounded-full bg-gradient-to-tr from-blue-500 to-cyan-500 flex items-center justify-center text-white shadow-sm group-hover:shadow-md group-hover:scale-105 group-active:scale-95 transition-transform">
+                              <SpeakerIcon className="w-6 h-6" />
+                            </div>
+                            <span className="text-[10px] font-medium text-gray-600 dark:text-zinc-400 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                              Samples
+                            </span>
+                          </button>
+                        )}
+
+                        {/* Center button: Record Voice (main action) */}
+                        <button
+                          type="button"
+                          onClick={onStartRecording}
+                          className="group relative focus:outline-none"
+                        >
+                          <div className="absolute -inset-1 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full blur opacity-30 group-hover:opacity-75 transition duration-300" />
+                          <div className="relative w-16 h-16 rounded-full bg-gradient-to-tr from-indigo-600 to-purple-600 flex items-center justify-center text-white shadow-md shadow-indigo-500/30 group-hover:scale-105 group-active:scale-95 transition-transform">
+                            <MicIcon className="w-7 h-7" />
+                          </div>
+                        </button>
+
+                        {/* Right button: Expand History Tab */}
+                        {historyVoices.length > 0 && onExpandHistoryTab && (
+                          <button
+                            type="button"
+                            onClick={handleExpandHistoryTab}
+                            className="flex flex-col items-center gap-1 group focus:outline-none transition-all"
+                            title={t("playground.voiceSection.viewSavedPrompts") || "Saved Prompts"}
+                          >
+                            <div className="relative w-12 h-12 rounded-full bg-gradient-to-tr from-purple-500 to-pink-500 flex items-center justify-center text-white shadow-sm group-hover:shadow-md group-hover:scale-105 group-active:scale-95 transition-transform">
+                              <svg
+                                className="w-6 h-6"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+                                />
+                              </svg>
+                              {historyVoices.length > 0 && (
+                                <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center">
+                                  {historyVoices.length}
+                                </span>
+                              )}
+                            </div>
+                            <span className="text-[10px] font-medium text-gray-600 dark:text-zinc-400 group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">
+                              History
+                            </span>
+                          </button>
+                        )}
+                      </div>
+
+                      <span className="text-xs sm:text-sm font-semibold text-gray-700 dark:text-zinc-200 mt-1">
                         {t("playground.voiceSection.startRecording")}
                       </span>
                     </div>

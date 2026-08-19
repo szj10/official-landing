@@ -176,6 +176,11 @@ export function VoiceSelectionModal({
               onPlayHistoryVoice={onPlayHistoryVoice}
               onDeleteHistoryVoice={onDeleteHistoryVoice}
               onSelectSampleVoiceTab={() => onSetActiveVoicePanel("stock")}
+              onExpandHistoryTab={() => {
+                // This function will expand the history accordion when called
+                // We need to trigger the accordion to open to the history section
+                // The actual implementation is in VoiceRecorder component
+              }}
             />
           )}
         </div>
