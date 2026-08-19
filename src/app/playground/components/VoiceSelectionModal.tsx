@@ -152,11 +152,30 @@ export function VoiceSelectionModal({
 
           {/* Tab Content */}
           {activeTab === "sample" && (
-            <VoiceGrid
-              selectedVoice={selectedVoice}
-              playingVoicePreview={playingVoicePreview}
-              onVoiceSelectAndPlay={onVoiceSelectAndPlay}
-            />
+            <>
+              {/* Quick Navigation Banner - Navigate to History */}
+              {historyVoices.length > 0 && (
+                <div className="w-full flex items-center justify-between px-3.5 py-2 bg-gradient-to-r from-indigo-50/80 to-purple-50/80 dark:from-indigo-950/40 dark:to-purple-950/40 border border-indigo-100 dark:border-indigo-900/40 rounded-xl text-xs shadow-xs">
+                  <span className="text-indigo-900 dark:text-indigo-200 font-medium flex items-center gap-1.5 text-[11px] sm:text-xs">
+                    <span className="inline-block w-2 h-2 rounded-full bg-indigo-500 animate-pulse shrink-0" />
+                    Prefer your recorded voices?
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => setActiveTab("history")}
+                    className="inline-flex items-center gap-1 font-semibold text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 transition-colors shrink-0 text-[11px] sm:text-xs group"
+                  >
+                    History Tab
+                    <span className="group-hover:translate-x-0.5 transition-transform">&rarr;</span>
+                  </button>
+                </div>
+              )}
+              <VoiceGrid
+                selectedVoice={selectedVoice}
+                playingVoicePreview={playingVoicePreview}
+                onVoiceSelectAndPlay={onVoiceSelectAndPlay}
+              />
+            </>
           )}
 
           {activeTab === "record" && (
@@ -185,6 +204,22 @@ export function VoiceSelectionModal({
 
           {activeTab === "history" && (
             <div className="space-y-2">
+              {/* Quick Navigation Banner - Navigate to Sample Voices */}
+              <div className="w-full flex items-center justify-between px-3.5 py-2 bg-gradient-to-r from-indigo-50/80 to-purple-50/80 dark:from-indigo-950/40 dark:to-purple-950/40 border border-indigo-100 dark:border-indigo-900/40 rounded-xl text-xs shadow-xs">
+                <span className="text-indigo-900 dark:text-indigo-200 font-medium flex items-center gap-1.5 text-[11px] sm:text-xs">
+                  <span className="inline-block w-2 h-2 rounded-full bg-indigo-500 animate-pulse shrink-0" />
+                  Prefer pre-recorded voices?
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setActiveTab("sample")}
+                  className="inline-flex items-center gap-1 font-semibold text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 transition-colors shrink-0 text-[11px] sm:text-xs group"
+                >
+                  Sample Voice Tab
+                  <span className="group-hover:translate-x-0.5 transition-transform">&rarr;</span>
+                </button>
+              </div>
+
               {historyVoices.length === 0 ? (
                 <div className="text-center py-12">
                   <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gray-100 dark:bg-zinc-800 flex items-center justify-center">
