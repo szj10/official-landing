@@ -24,6 +24,7 @@ interface VoiceSelectionModalProps {
   historyVoices: HistoryVoice[];
   showHistoryVoices: boolean;
   playingHistoryVoiceId: number | null;
+  isRecPlaying: boolean;
   recAudioRef: React.RefObject<HTMLAudioElement | null>;
   recordedDuration?: number; // Duration in seconds
   onSetActiveVoicePanel: (panel: "stock" | "custom") => void;
@@ -34,6 +35,7 @@ interface VoiceSelectionModalProps {
   onToggleShowHistoryVoices: () => void;
   onSelectHistoryVoice: (voice: HistoryVoice) => void;
   onPlayHistoryVoice: (voiceId: number) => void;
+  onToggleRecordingPlayback: () => void;
   onDeleteHistoryVoice?: (voiceId: number) => void;
 
   // Speed Selector Props
@@ -56,6 +58,7 @@ export function VoiceSelectionModal({
   historyVoices,
   showHistoryVoices,
   playingHistoryVoiceId,
+  isRecPlaying,
   recAudioRef,
   recordedDuration,
   onSetActiveVoicePanel,
@@ -66,6 +69,7 @@ export function VoiceSelectionModal({
   onToggleShowHistoryVoices,
   onSelectHistoryVoice,
   onPlayHistoryVoice,
+  onToggleRecordingPlayback,
   onDeleteHistoryVoice,
   speed,
   onSetSpeed,
@@ -227,6 +231,7 @@ export function VoiceSelectionModal({
                   historyVoices={historyVoices}
                   showHistoryVoices={showHistoryVoices}
                   playingHistoryVoiceId={playingHistoryVoiceId}
+                  isPlayingRecording={isRecPlaying}
                   recAudioRef={recAudioRef}
                   recordedDuration={recordedDuration}
                   onStartRecording={onStartRecording}
@@ -235,6 +240,7 @@ export function VoiceSelectionModal({
                   onToggleShowHistoryVoices={onToggleShowHistoryVoices}
                   onSelectHistoryVoice={onSelectHistoryVoice}
                   onPlayHistoryVoice={onPlayHistoryVoice}
+                  onToggleRecordingPlayback={onToggleRecordingPlayback}
                   onDeleteHistoryVoice={onDeleteHistoryVoice}
                   onSelectSampleVoiceTab={() => setActiveTab("sample")}
                   onExpandHistoryTab={() => setActiveTab("history")}
@@ -317,6 +323,7 @@ export function VoiceSelectionModal({
                       historyVoices={historyVoices}
                       showHistoryVoices={true}
                       playingHistoryVoiceId={playingHistoryVoiceId}
+                      isPlayingRecording={isRecPlaying}
                       recAudioRef={recAudioRef}
                       onStartRecording={() => setActiveTab("record")}
                       onStopRecording={() => {}}
@@ -324,6 +331,7 @@ export function VoiceSelectionModal({
                       onToggleShowHistoryVoices={onToggleShowHistoryVoices}
                       onSelectHistoryVoice={onSelectHistoryVoice}
                       onPlayHistoryVoice={onPlayHistoryVoice}
+                      onToggleRecordingPlayback={onToggleRecordingPlayback}
                       onDeleteHistoryVoice={onDeleteHistoryVoice}
                       onSelectSampleVoiceTab={() => setActiveTab("sample")}
                       onExpandHistoryTab={() => setActiveTab("history")}

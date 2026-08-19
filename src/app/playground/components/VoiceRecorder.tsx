@@ -23,6 +23,7 @@ export interface VoiceRecorderProps {
   historyVoices: HistoryVoice[];
   showHistoryVoices?: boolean;
   playingHistoryVoiceId: number | null;
+  isPlayingRecording?: boolean;
   recAudioRef?: RefObject<HTMLAudioElement | null>;
   recordedDuration?: number; // Duration in seconds
   onStartRecording: () => void;
@@ -31,6 +32,7 @@ export interface VoiceRecorderProps {
   onToggleShowHistoryVoices?: () => void;
   onSelectHistoryVoice: (voice: HistoryVoice) => void;
   onPlayHistoryVoice: (voiceId: number) => void;
+  onToggleRecordingPlayback?: () => void;
   onDeleteHistoryVoice?: (voiceId: number) => void;
   onSelectSampleVoiceTab?: () => void;
   onExpandHistoryTab?: () => void;
@@ -52,6 +54,7 @@ export function VoiceRecorder({
   onResetRecording,
   onSelectHistoryVoice,
   onPlayHistoryVoice,
+  onToggleRecordingPlayback,
   onDeleteHistoryVoice,
   onSelectSampleVoiceTab,
   onExpandHistoryTab,
@@ -200,7 +203,7 @@ export function VoiceRecorder({
                 <div className="text-xs text-gray-500 dark:text-zinc-400">
                   Duration:{" "}
                   <span className="font-mono font-bold text-gray-800 dark:text-zinc-200">
-                    {formatTime(recordedDuration || recordingTime)}
+                    {Math.round(recordedDuration || recordingTime)}s
                   </span>
                 </div>
               )}
@@ -239,21 +242,8 @@ export function VoiceRecorder({
             <button
               type="button"
               onClick={() => {
-                setIsPlayingRecording(true);
-                // Play the recorded audio
-                const audioUrl = anonymousVoiceId
-                  ? `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/voices/anonymous/${anonymousVoiceId}/audio`
-                  : recordedAudioBlob
-                    ? URL.createObjectURL(recordedAudioBlob)
-                    : null;
-
-                if (audioUrl) {
-                  const audio = new Audio(audioUrl);
-                  audio.onended = () => setIsPlayingRecording(false);
-                  audio.play().catch(() => {
-                    // If playback fails, still reset the playing state
-                    setIsPlayingRecording(false);
-                  });
+                if (onToggleRecordingPlayback) {
+                  onToggleRecordingPlayback();
                 }
               }}
               className={`w-10 h-10 rounded-lg flex items-center justify-center transition-colors ${
@@ -271,7 +261,7 @@ export function VoiceRecorder({
               className="w-10 h-10 rounded-lg flex items-center justify-center bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-100 dark:hover:bg-indigo-900/50 transition-colors"
               aria-label="Record again"
             >
-              <RestartIcon className="w-5 h-5" />
+              <RestartIcon className="w-6 h-6" />
             </button>
           </div>
         </div>

@@ -1202,6 +1202,7 @@ export default function PlaygroundContent() {
         historyVoices={historyVoices}
         showHistoryVoices={showHistoryVoices}
         playingHistoryVoiceId={playingHistoryVoiceId}
+        isRecPlaying={isRecPlaying}
         recAudioRef={recAudioRef}
         recordedDuration={recordingTime}
         onSetActiveVoicePanel={setActiveVoicePanel}
@@ -1232,6 +1233,7 @@ export default function PlaygroundContent() {
           setUploadStatus("success");
         }}
         onPlayHistoryVoice={playHistoryVoice}
+        onToggleRecordingPlayback={toggleRecPlayback}
         onDeleteHistoryVoice={deleteHistoryVoice}
         speed={speed}
         onSetSpeed={setSpeed}
