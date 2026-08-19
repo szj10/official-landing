@@ -98,6 +98,7 @@ export default function PlaygroundContent() {
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
   const recordingIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const recordingTimeRef = useRef<number>(0); // Track actual recording time
   const voicePreviewRef = useRef<HTMLAudioElement | null>(null);
   const eventSourceRef = useRef<EventSource | null>(null);
   const pollingIntervalRef = useRef<NodeJS.Timeout | null>(null);
@@ -555,7 +556,8 @@ export default function PlaygroundContent() {
 
         stream.getTracks().forEach((track) => track.stop());
 
-        await uploadRecordingToBackend(audioBlob);
+        // Use ref value which is always up-to-date
+        await uploadRecordingToBackend(audioBlob, recordingTimeRef.current);
 
         setTimeout(() => {
           if (recAudioRef.current) {
@@ -573,10 +575,12 @@ export default function PlaygroundContent() {
       mediaRecorder.start();
       setIsRecording(true);
       setRecordingTime(0);
+      recordingTimeRef.current = 0; // Reset ref
 
       recordingIntervalRef.current = setInterval(() => {
         setRecordingTime((prev) => {
           const newTime = prev + 1;
+          recordingTimeRef.current = newTime; // Keep ref in sync
           // Auto-stop at 10 seconds
           if (newTime >= 10 && mediaRecorderRef.current?.state === "recording") {
             mediaRecorderRef.current.stop();
@@ -605,16 +609,18 @@ export default function PlaygroundContent() {
     }
   };
 
-  const uploadRecordingToBackend = async (blob: Blob) => {
+  const uploadRecordingToBackend = async (blob: Blob, durationSeconds: number) => {
     setUploadStatus("uploading");
     setUploadError(null);
     setAnonymousVoiceId(null);
+
+    console.log(`📤 Uploading recording: ${durationSeconds}s, ${blob.size} bytes`);
 
     try {
       const formData = new FormData();
       formData.append("file", blob, "recording.webm");
       formData.append("language", locale);
-      formData.append("duration", recordingTime.toString());
+      formData.append("duration", durationSeconds.toString());
 
       const res = await fetch("/api/v1/playground/upload-voice-prompt", {
         method: "POST",
@@ -1212,6 +1218,7 @@ export default function PlaygroundContent() {
           setRecordedAudioBlob(null);
           setRecordedAudioUrl(null);
           setRecordingTime(0);
+          recordingTimeRef.current = 0; // Reset ref as well
           setSelectedVoice("voice1");
           setUploadStatus("idle");
           setAnonymousVoiceId(null);
