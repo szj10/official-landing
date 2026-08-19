@@ -37,6 +37,7 @@ interface VoiceSelectionModalProps {
   onPlayHistoryVoice: (voiceId: number) => void;
   onToggleRecordingPlayback: () => void;
   onDeleteHistoryVoice?: (voiceId: number) => void;
+  onClearSampleVoice?: () => void;
 
   // Speed Selector Props
   speed: "slow" | "normal" | "fast";
@@ -71,11 +72,35 @@ export function VoiceSelectionModal({
   onPlayHistoryVoice,
   onToggleRecordingPlayback,
   onDeleteHistoryVoice,
+  onClearSampleVoice,
   speed,
   onSetSpeed,
 }: VoiceSelectionModalProps) {
   const { t } = useI18n();
-  const [activeTab, setActiveTab] = React.useState<VoiceTab>("sample");
+
+  // Compute initial tab based on voice selection state
+  const getInitialTab = (): VoiceTab => {
+    if (anonymousVoiceId && activeVoicePanel === "custom") {
+      return recordedAudioBlob ? "record" : "history";
+    }
+    if (selectedVoice && activeVoicePanel === "stock") {
+      return "sample";
+    }
+    return "sample"; // default
+  };
+
+  const [activeTab, setActiveTab] = React.useState<VoiceTab>(getInitialTab);
+
+  // Handle tab change - clear voice selections when switching tabs
+  const handleTabChange = (newTab: VoiceTab) => {
+    if (activeTab === newTab) return; // No-op if same tab
+
+    // Clear all selections when changing tabs
+    if (onClearSampleVoice) {
+      onClearSampleVoice();
+    }
+    setActiveTab(newTab);
+  };
 
   // Handle escape key to close
   useEffect(() => {
@@ -123,7 +148,7 @@ export function VoiceSelectionModal({
                   ? "bg-white dark:bg-zinc-700 text-indigo-600 dark:text-indigo-400 shadow-sm"
                   : "text-gray-500 hover:text-gray-900 dark:hover:text-zinc-200"
               }`}
-              onClick={() => setActiveTab("sample")}
+              onClick={() => handleTabChange("sample")}
             >
               {t("playground.voiceSection.sampleVoices") || "Sample Voices"}
             </button>
@@ -134,7 +159,7 @@ export function VoiceSelectionModal({
                   ? "bg-white dark:bg-zinc-700 text-indigo-600 dark:text-indigo-400 shadow-sm"
                   : "text-gray-500 hover:text-gray-900 dark:hover:text-zinc-200"
               }`}
-              onClick={() => setActiveTab("record")}
+              onClick={() => handleTabChange("record")}
             >
               {t("playground.voiceSection.startRecording") || "Record Voice"}
             </button>
@@ -146,7 +171,7 @@ export function VoiceSelectionModal({
                     ? "bg-white dark:bg-zinc-700 text-indigo-600 dark:text-indigo-400 shadow-sm"
                     : "text-gray-500 hover:text-gray-900 dark:hover:text-zinc-200"
                 }`}
-                onClick={() => setActiveTab("history")}
+                onClick={() => handleTabChange("history")}
               >
                 {t("playground.voiceSection.savedPrompts") || "History"}
                 <span className="ml-1.5 inline-flex items-center justify-center px-1.5 py-0.5 text-[10px] font-bold rounded-full bg-indigo-100 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400">
@@ -168,7 +193,7 @@ export function VoiceSelectionModal({
                   </span>
                   <button
                     type="button"
-                    onClick={() => setActiveTab("record")}
+                    onClick={() => handleTabChange("record")}
                     className="inline-flex items-center gap-1 font-semibold text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 transition-colors shrink-0 text-[11px] sm:text-xs group"
                   >
                     Recording Tab
@@ -194,7 +219,7 @@ export function VoiceSelectionModal({
                     </span>
                     <button
                       type="button"
-                      onClick={() => setActiveTab("history")}
+                      onClick={() => handleTabChange("history")}
                       className="inline-flex items-center gap-1 font-semibold text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 transition-colors shrink-0 text-[11px] sm:text-xs group"
                     >
                       History Tab
@@ -211,7 +236,7 @@ export function VoiceSelectionModal({
                     </span>
                     <button
                       type="button"
-                      onClick={() => setActiveTab("sample")}
+                      onClick={() => handleTabChange("sample")}
                       className="inline-flex items-center gap-1 font-semibold text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 transition-colors shrink-0 text-[11px] sm:text-xs group"
                     >
                       Sample Voice Tab
@@ -242,8 +267,8 @@ export function VoiceSelectionModal({
                   onPlayHistoryVoice={onPlayHistoryVoice}
                   onToggleRecordingPlayback={onToggleRecordingPlayback}
                   onDeleteHistoryVoice={onDeleteHistoryVoice}
-                  onSelectSampleVoiceTab={() => setActiveTab("sample")}
-                  onExpandHistoryTab={() => setActiveTab("history")}
+                  onSelectSampleVoiceTab={() => handleTabChange("sample")}
+                  onExpandHistoryTab={() => handleTabChange("history")}
                 />
               </>
             )}
@@ -293,7 +318,7 @@ export function VoiceSelectionModal({
                       </p>
                       <button
                         type="button"
-                        onClick={() => setActiveTab("record")}
+                        onClick={() => handleTabChange("record")}
                         className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-lg transition-colors"
                       >
                         <svg
@@ -325,7 +350,7 @@ export function VoiceSelectionModal({
                       playingHistoryVoiceId={playingHistoryVoiceId}
                       isPlayingRecording={isRecPlaying}
                       recAudioRef={recAudioRef}
-                      onStartRecording={() => setActiveTab("record")}
+                      onStartRecording={() => handleTabChange("record")}
                       onStopRecording={() => {}}
                       onResetRecording={() => {}}
                       onToggleShowHistoryVoices={onToggleShowHistoryVoices}
@@ -333,8 +358,8 @@ export function VoiceSelectionModal({
                       onPlayHistoryVoice={onPlayHistoryVoice}
                       onToggleRecordingPlayback={onToggleRecordingPlayback}
                       onDeleteHistoryVoice={onDeleteHistoryVoice}
-                      onSelectSampleVoiceTab={() => setActiveTab("sample")}
-                      onExpandHistoryTab={() => setActiveTab("history")}
+                      onSelectSampleVoiceTab={() => handleTabChange("sample")}
+                      onExpandHistoryTab={() => handleTabChange("history")}
                       historyOnlyMode={true}
                     />
                   )}
@@ -383,11 +408,19 @@ export function VoiceSelectionModal({
             </button>
           </div>
 
-          {/* Confirm Button - Only show when a voice is selected and not during recording/uploading */}
+          {/* Confirm Button - Only show when a voice is actually selected */}
           {(() => {
-            const hasSelection = selectedVoice || anonymousVoiceId;
+            // Sample voice selected in "sample" tab
+            const hasSampleVoice =
+              activeTab === "sample" && selectedVoice && activeVoicePanel === "stock";
+
+            // Custom voice: either uploaded with ID, or currently in "record" tab with recorded blob ready
+            const hasCustomVoice =
+              (activeTab === "record" && anonymousVoiceId && uploadStatus === "success") ||
+              (activeTab === "history" && anonymousVoiceId);
+
             const isProcessing = isRecording || uploadStatus === "uploading";
-            const shouldShow = hasSelection && !isProcessing;
+            const shouldShow = (hasSampleVoice || hasCustomVoice) && !isProcessing;
 
             return shouldShow ? (
               <button

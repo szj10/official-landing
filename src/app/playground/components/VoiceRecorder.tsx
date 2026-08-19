@@ -58,11 +58,11 @@ export function VoiceRecorder({
   onDeleteHistoryVoice,
   onSelectSampleVoiceTab,
   onExpandHistoryTab,
+  isPlayingRecording = false,
   historyOnlyMode = false,
 }: VoiceRecorderProps) {
   const { t } = useI18n();
   const [copiedScript, setCopiedScript] = useState(false);
-  const [isPlayingRecording, setIsPlayingRecording] = useState(false);
 
   const promptText = t("playground.voiceSection.promptGuideText");
 

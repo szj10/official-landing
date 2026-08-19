@@ -1235,6 +1235,31 @@ export default function PlaygroundContent() {
         onPlayHistoryVoice={playHistoryVoice}
         onToggleRecordingPlayback={toggleRecPlayback}
         onDeleteHistoryVoice={deleteHistoryVoice}
+        onClearSampleVoice={() => {
+          // Clear sample voice selection
+          setSelectedVoice(null);
+
+          // Clear custom voice selection
+          setAnonymousVoiceId(null);
+          setRecordedAudioBlob(null);
+          if (recordedAudioUrl) {
+            URL.revokeObjectURL(recordedAudioUrl);
+            setRecordedAudioUrl(null);
+          }
+          setUploadStatus("idle");
+          setUploadError(null);
+
+          // Stop any playing audio
+          if (voicePreviewRef.current) {
+            voicePreviewRef.current.pause();
+            setPlayingVoicePreview(null);
+          }
+          if (recAudioRef.current) {
+            recAudioRef.current.pause();
+            setIsRecPlaying(false);
+          }
+          setPlayingHistoryVoiceId(null);
+        }}
         speed={speed}
         onSetSpeed={setSpeed}
       />
