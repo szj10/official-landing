@@ -90,7 +90,6 @@ export default function PlaygroundContent() {
   const [showHistoryVoices, setShowHistoryVoices] = useState(false);
   const [playingHistoryVoiceId, setPlayingHistoryVoiceId] = useState<number | null>(null);
   const [playingHistoryJobId, setPlayingHistoryJobId] = useState<number | string | null>(null);
-  const [hasScrolledToTextarea, setHasScrolledToTextarea] = useState(false);
 
   // --- Persistent Refs ---
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -389,42 +388,28 @@ export default function PlaygroundContent() {
   // ---------------------------------------------------------------------------
   // Step 1: Sample text selection
   // ---------------------------------------------------------------------------
-  const scrollToTextarea = () => {
-    if (textareaRef.current) {
-      const headerOffset = 80; // Adjust this value based on your top navigation bar height
-      const elementPosition = textareaRef.current.getBoundingClientRect().top;
-      const offsetPosition = elementPosition + window.scrollY - headerOffset;
-
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: "smooth",
-      });
-    }
-  };
-
   const handleTextareaChange = (newText: string) => {
     setTextInput(newText);
-    // Scroll when user starts typing (if not already scrolled)
-    if (!hasScrolledToTextarea && newText.trim().length > 0) {
-      setHasScrolledToTextarea(true);
-      scrollToTextarea();
-    }
   };
 
   const handleSampleTextSelect = (id: string) => {
     const sample = SAMPLE_TEXTS.find((s) => s.id === id);
     if (sample) {
       setTextInput(t(sample.textKey));
-      setHasScrolledToTextarea(false); // Reset so it can scroll again if needed
 
-      // Scroll the textarea to the top of the viewport with offset for the header
+      // Scroll to action row after selecting sample text
       setTimeout(() => {
-        if (textareaRef.current) {
-          scrollToTextarea();
-          // Optional: focus the textarea after scrolling
-          textareaRef.current.focus();
+        if (actionRowRef.current) {
+          const headerOffset = 80;
+          const elementPosition = actionRowRef.current.getBoundingClientRect().top;
+          const offsetPosition = elementPosition + window.scrollY - headerOffset;
+
+          window.scrollTo({
+            top: offsetPosition,
+            behavior: "smooth",
+          });
         }
-      }, 100); // Small delay to ensure the textarea is rendered
+      }, 100);
     }
   };
 
