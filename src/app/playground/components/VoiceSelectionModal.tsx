@@ -107,7 +107,7 @@ export function VoiceSelectionModal({
       {/* Modal Content */}
       <div className="relative w-full max-w-2xl bg-white dark:bg-zinc-900 rounded-2xl shadow-2xl flex flex-col max-h-[85vh] overflow-hidden border border-gray-100 dark:border-zinc-800 animate-in fade-in zoom-in-95 duration-200">
         {/* Scrollable Body */}
-        <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4 sm:space-y-6 custom-scrollbar pb-20 sm:pb-24">
+        <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4 sm:space-y-6 custom-scrollbar">
           {/* 3-Tab Navigation */}
           <div className="flex p-1 bg-gray-100/80 dark:bg-zinc-800/80 rounded-xl shadow-inner w-full max-w-lg mx-auto">
             <button
@@ -240,7 +240,7 @@ export function VoiceSelectionModal({
             )}
 
             {activeTab === "history" && (
-              <div className="space-y-0 h-full flex flex-col overflow-hidden">
+              <div className="h-full flex flex-col overflow-hidden gap-2">
                 {/* Quick Navigation Banner - Navigate to Sample Voices */}
                 <div className="w-full flex items-center justify-between px-3.5 py-2 bg-gradient-to-r from-indigo-50/80 to-purple-50/80 dark:from-indigo-950/40 dark:to-purple-950/40 border border-indigo-100 dark:border-indigo-900/40 rounded-xl text-xs shadow-xs shrink-0">
                   <span className="text-indigo-900 dark:text-indigo-200 font-medium flex items-center gap-1.5 text-[11px] sm:text-xs">

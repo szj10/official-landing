@@ -67,7 +67,7 @@ export function VoiceRecorder({
   // If in history-only mode, just render the history list
   if (historyOnlyMode) {
     return (
-      <div className="space-y-2 max-h-96 overflow-y-auto custom-scrollbar">
+      <div className="space-y-2 h-full overflow-y-auto custom-scrollbar">
         {historyVoices.map((voice) => {
           const isSelected = anonymousVoiceId === voice.anonymous_voice_id;
           const isPlayingThis = playingHistoryVoiceId === voice.anonymous_voice_id;
