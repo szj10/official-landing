@@ -100,9 +100,11 @@ export const PlaygroundEditorPanel = forwardRef<HTMLTextAreaElement, PlaygroundE
             onChange={(e) => onTextChange(e.target.value)}
             onFocus={onFocus}
             placeholder={t("playground.textSection.placeholder")}
-            rows={8}
+            rows={showSamples ? 2 : 6}
             maxLength={MAX_TTS_TEXT_LENGTH}
-            className="w-full px-4 sm:px-5 py-4 pb-14 rounded-2xl bg-white dark:bg-zinc-900 border-2 border-gray-200 dark:border-zinc-700 focus:border-indigo-500 dark:focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all text-gray-900 dark:text-white placeholder-gray-400 text-base sm:text-lg resize-y min-h-[200px]"
+            className={`w-full px-4 sm:px-5 py-4 pb-14 rounded-2xl bg-white dark:bg-zinc-900 border-2 border-gray-200 dark:border-zinc-700 focus:border-indigo-500 dark:focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all text-gray-900 dark:text-white placeholder-gray-400 text-base sm:text-lg resize-y ${
+              showSamples ? "min-h-[80px]" : "min-h-[160px]"
+            }`}
           />
 
           {/* Word count with circular progress */}
