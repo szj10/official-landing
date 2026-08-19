@@ -92,10 +92,16 @@ export function VoiceRecorder({
           <button
             type="button"
             onClick={() => toggleSection("record")}
-            className="w-full flex items-center justify-between px-4 py-3 bg-gray-50/80 dark:bg-zinc-900/50 hover:bg-gray-100/80 dark:hover:bg-zinc-800/60 transition-colors text-left"
+            className={`w-full flex items-center justify-between px-4 py-3 transition-all text-left border-l-4 ${
+              openSection === "record"
+                ? "bg-indigo-50/70 dark:bg-indigo-950/20 border-indigo-500 text-indigo-900 dark:text-indigo-200"
+                : "bg-gray-50/80 dark:bg-zinc-900/50 border-transparent hover:bg-indigo-50/40 dark:hover:bg-indigo-950/10 text-gray-700 dark:text-zinc-300"
+            }`}
           >
-            <span className="flex items-center gap-2 text-xs font-semibold text-gray-700 dark:text-zinc-200 uppercase tracking-wider">
-              <MicIcon className="w-3.5 h-3.5 text-indigo-500" />
+            <span className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider">
+              <MicIcon
+                className={`w-3.5 h-3.5 ${openSection === "record" ? "text-indigo-500" : "text-gray-400"}`}
+              />
               {t("playground.voiceSection.startRecording") || "Record Voice"}
               {(recordedAudioBlob || uploadStatus === "success") && (
                 <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-100 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400">
@@ -250,11 +256,21 @@ export function VoiceRecorder({
             <button
               type="button"
               onClick={() => toggleSection("history")}
-              className="w-full flex items-center justify-between px-4 py-3 bg-gray-50/80 dark:bg-zinc-900/50 hover:bg-gray-100/80 dark:hover:bg-zinc-800/60 transition-colors text-left"
+              className={`w-full flex items-center justify-between px-4 py-3 transition-all text-left border-l-4 ${
+                openSection === "history"
+                  ? "bg-purple-50/70 dark:bg-purple-950/20 border-purple-500 text-purple-900 dark:text-purple-200"
+                  : "bg-gray-50/80 dark:bg-zinc-900/50 border-transparent hover:bg-purple-50/40 dark:hover:bg-purple-950/10 text-gray-700 dark:text-zinc-300"
+              }`}
             >
-              <span className="flex items-center gap-2 text-xs font-semibold text-gray-700 dark:text-zinc-200 uppercase tracking-wider">
+              <span className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider">
                 Saved Voice Prompts
-                <span className="text-[10px] font-bold bg-indigo-100 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400 px-2 py-0.5 rounded-full">
+                <span
+                  className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
+                    openSection === "history"
+                      ? "bg-purple-100 dark:bg-purple-950 text-purple-600 dark:text-purple-400"
+                      : "bg-gray-200/80 dark:bg-zinc-800 text-gray-600 dark:text-zinc-400"
+                  }`}
+                >
                   {historyVoices.length}
                 </span>
               </span>

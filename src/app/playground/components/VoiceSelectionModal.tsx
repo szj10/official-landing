@@ -132,12 +132,30 @@ export function VoiceSelectionModal({
           </div>
 
           {/* Voice Panels */}
+          {/* Voice Panels */}
           {activeVoicePanel === "stock" ? (
-            <VoiceGrid
-              selectedVoice={selectedVoice}
-              playingVoicePreview={playingVoicePreview}
-              onVoiceSelectAndPlay={onVoiceSelectAndPlay}
-            />
+            <div className="space-y-4">
+              {/* Quick Navigation Link to Custom Voice */}
+              <div className="w-full flex items-center justify-between px-3.5 py-2 bg-gradient-to-r from-purple-50/80 to-indigo-50/80 dark:from-purple-950/40 dark:to-indigo-950/40 border border-purple-100 dark:border-purple-900/40 rounded-xl text-xs shadow-xs animate-fade-in">
+                <span className="text-purple-900 dark:text-purple-200 font-medium flex items-center gap-1.5 text-[11px] sm:text-xs">
+                  <span className="inline-block w-2 h-2 rounded-full bg-purple-500 animate-pulse shrink-0" />
+                  Want to clone your own voice?
+                </span>
+                <button
+                  type="button"
+                  onClick={() => onSetActiveVoicePanel("custom")}
+                  className="inline-flex items-center gap-1 font-semibold text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 transition-colors shrink-0 text-[11px] sm:text-xs group"
+                >
+                  Custom Voice Tab
+                  <span className="group-hover:translate-x-0.5 transition-transform">&rarr;</span>
+                </button>
+              </div>
+              <VoiceGrid
+                selectedVoice={selectedVoice}
+                playingVoicePreview={playingVoicePreview}
+                onVoiceSelectAndPlay={onVoiceSelectAndPlay}
+              />
+            </div>
           ) : (
             <VoiceRecorder
               isRecording={isRecording}
@@ -163,53 +181,48 @@ export function VoiceSelectionModal({
         </div>
 
         {/* Footer with Speed Controls and Confirm Button */}
-        <div className="px-4 py-3 sm:px-6 sm:py-3.5 border-t border-gray-100 dark:border-zinc-800 bg-gray-50/70 dark:bg-zinc-900/80 shrink-0 flex flex-col sm:flex-row items-center justify-between gap-3">
+        <div className="px-4 py-3 sm:px-6 sm:py-3.5 border-t border-gray-100 dark:border-zinc-800 bg-gray-50/70 dark:bg-zinc-900/80 shrink-0 flex flex-row items-center justify-between gap-3">
           {/* Speed Selector */}
-          <div className="flex items-center justify-between sm:justify-start gap-2 w-full sm:w-auto">
-            <span className="text-xs font-semibold text-gray-700 dark:text-zinc-300 shrink-0">
-              {t("playground.speedSection.speed")}:
-            </span>
-            <div className="flex p-0.5 bg-gray-200/80 dark:bg-zinc-800 rounded-lg">
-              <button
-                type="button"
-                className={`px-2.5 py-1 text-xs font-semibold rounded-md transition-all ${
-                  speed === "slow"
-                    ? "bg-white dark:bg-zinc-700 text-indigo-600 dark:text-indigo-400 shadow-xs"
-                    : "text-gray-500 hover:text-gray-900 dark:text-zinc-400 dark:hover:text-zinc-200"
-                }`}
-                onClick={() => onSetSpeed("slow")}
-              >
-                {t("playground.speedSection.slow")}
-              </button>
-              <button
-                type="button"
-                className={`px-2.5 py-1 text-xs font-semibold rounded-md transition-all ${
-                  speed === "normal"
-                    ? "bg-white dark:bg-zinc-700 text-indigo-600 dark:text-indigo-400 shadow-xs"
-                    : "text-gray-500 hover:text-gray-900 dark:text-zinc-400 dark:hover:text-zinc-200"
-                }`}
-                onClick={() => onSetSpeed("normal")}
-              >
-                {t("playground.speedSection.normal")}
-              </button>
-              <button
-                type="button"
-                className={`px-2.5 py-1 text-xs font-semibold rounded-md transition-all ${
-                  speed === "fast"
-                    ? "bg-white dark:bg-zinc-700 text-indigo-600 dark:text-indigo-400 shadow-xs"
-                    : "text-gray-500 hover:text-gray-900 dark:text-zinc-400 dark:hover:text-zinc-200"
-                }`}
-                onClick={() => onSetSpeed("fast")}
-              >
-                {t("playground.speedSection.fast")}
-              </button>
-            </div>
+          <div className="flex p-0.5 bg-gray-200/80 dark:bg-zinc-800 rounded-lg shrink-0">
+            <button
+              type="button"
+              className={`px-3 py-1 text-xs font-semibold rounded-md transition-all ${
+                speed === "slow"
+                  ? "bg-white dark:bg-zinc-700 text-indigo-600 dark:text-indigo-400 shadow-xs"
+                  : "text-gray-500 hover:text-gray-900 dark:text-zinc-400 dark:hover:text-zinc-200"
+              }`}
+              onClick={() => onSetSpeed("slow")}
+            >
+              0.7x
+            </button>
+            <button
+              type="button"
+              className={`px-3 py-1 text-xs font-semibold rounded-md transition-all ${
+                speed === "normal"
+                  ? "bg-white dark:bg-zinc-700 text-indigo-600 dark:text-indigo-400 shadow-xs"
+                  : "text-gray-500 hover:text-gray-900 dark:text-zinc-400 dark:hover:text-zinc-200"
+              }`}
+              onClick={() => onSetSpeed("normal")}
+            >
+              1.0x
+            </button>
+            <button
+              type="button"
+              className={`px-3 py-1 text-xs font-semibold rounded-md transition-all ${
+                speed === "fast"
+                  ? "bg-white dark:bg-zinc-700 text-indigo-600 dark:text-indigo-400 shadow-xs"
+                  : "text-gray-500 hover:text-gray-900 dark:text-zinc-400 dark:hover:text-zinc-200"
+              }`}
+              onClick={() => onSetSpeed("fast")}
+            >
+              1.3x
+            </button>
           </div>
 
           {/* Confirm Button */}
           <button
             onClick={onClose}
-            className="w-full sm:w-auto px-6 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs sm:text-sm font-semibold rounded-xl transition-colors shadow-sm shrink-0"
+            className="px-5 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs sm:text-sm font-semibold rounded-xl transition-colors shadow-sm shrink-0"
           >
             Confirm
           </button>
