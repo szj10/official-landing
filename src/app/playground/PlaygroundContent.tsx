@@ -101,8 +101,6 @@ export default function PlaygroundContent() {
   const voicePreviewRef = useRef<HTMLAudioElement | null>(null);
   const eventSourceRef = useRef<EventSource | null>(null);
   const pollingIntervalRef = useRef<NodeJS.Timeout | null>(null);
-  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
-  const actionRowRef = useRef<HTMLDivElement | null>(null);
 
   // ---------------------------------------------------------------------------
   // Load History from localStorage / backend + Resume pending jobs
@@ -386,30 +384,12 @@ export default function PlaygroundContent() {
   };
 
   // ---------------------------------------------------------------------------
-  // Step 1: Sample text selection
+  // Step 1: Text input
   // ---------------------------------------------------------------------------
-  const handleTextareaChange = (newText: string) => {
-    setTextInput(newText);
-  };
-
   const handleSampleTextSelect = (id: string) => {
     const sample = SAMPLE_TEXTS.find((s) => s.id === id);
     if (sample) {
       setTextInput(t(sample.textKey));
-
-      // Scroll to action row after selecting sample text
-      setTimeout(() => {
-        if (actionRowRef.current) {
-          const headerOffset = 80;
-          const elementPosition = actionRowRef.current.getBoundingClientRect().top;
-          const offsetPosition = elementPosition + window.scrollY - headerOffset;
-
-          window.scrollTo({
-            top: offsetPosition,
-            behavior: "smooth",
-          });
-        }
-      }, 100);
     }
   };
 
@@ -661,19 +641,6 @@ export default function PlaygroundContent() {
   // ---------------------------------------------------------------------------
   // Step 3: Synthesis Generation & Polling
   // ---------------------------------------------------------------------------
-  const scrollToActionRow = () => {
-    if (actionRowRef.current) {
-      const headerOffset = 80; // Adjust this value based on your top navigation bar height
-      const elementPosition = actionRowRef.current.getBoundingClientRect().top;
-      const offsetPosition = elementPosition + window.scrollY - headerOffset;
-
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: "smooth",
-      });
-    }
-  };
-
   const handleGenerate = async () => {
     const text = textInput.trim();
 
@@ -704,11 +671,6 @@ export default function PlaygroundContent() {
     const rate = rateMap[speed];
 
     resetGenerationState();
-
-    // Scroll to Action Row after state reset
-    setTimeout(() => {
-      scrollToActionRow();
-    }, 100);
 
     try {
       const requestBody = isStock
@@ -1065,17 +1027,13 @@ export default function PlaygroundContent() {
       <div className="space-y-6 sm:space-y-8">
         {/* Editor */}
         <PlaygroundEditorPanel
-          ref={textareaRef}
           textInput={textInput}
-          onTextChange={handleTextareaChange}
+          onTextChange={setTextInput}
           onSampleSelect={handleSampleTextSelect}
         />
 
         {/* Action Row */}
-        <div
-          ref={actionRowRef}
-          className="flex flex-col sm:flex-row items-center gap-4 max-w-lg mx-auto sm:max-w-none"
-        >
+        <div className="flex flex-col sm:flex-row items-center gap-4 max-w-lg mx-auto sm:max-w-none">
           <button
             onClick={() => setIsVoiceModalOpen(true)}
             className="w-full sm:w-1/2 flex items-center justify-between px-5 py-3.5 sm:py-4 bg-white dark:bg-zinc-800 border-2 border-gray-200 dark:border-zinc-700 rounded-xl sm:rounded-2xl hover:border-indigo-500 dark:hover:border-indigo-500 transition-colors shadow-sm"
