@@ -214,7 +214,27 @@ export function VoiceRecorder({
             </div>
           )}
 
-          <div className="pt-2 border-t border-gray-100 dark:border-zinc-700/60 flex justify-center">
+          <div className="pt-2 border-t border-gray-100 dark:border-zinc-700/60 flex justify-center gap-2">
+            <button
+              type="button"
+              onClick={() => {
+                // Play the recorded audio
+                const audioUrl = anonymousVoiceId
+                  ? `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/voices/anonymous/${anonymousVoiceId}/audio`
+                  : recordedAudioBlob
+                    ? URL.createObjectURL(recordedAudioBlob)
+                    : null;
+
+                if (audioUrl) {
+                  const audio = new Audio(audioUrl);
+                  audio.play();
+                }
+              }}
+              className="px-3.5 py-1.5 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-900/50 rounded-lg text-xs font-semibold transition-colors flex items-center gap-1.5"
+            >
+              <PlayIcon className="w-3.5 h-3.5" />
+              
+            </button>
             <button
               type="button"
               onClick={onResetRecording}

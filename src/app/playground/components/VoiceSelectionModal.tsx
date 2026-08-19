@@ -132,22 +132,22 @@ export function VoiceSelectionModal({
             >
               {t("playground.voiceSection.startRecording") || "Record Voice"}
             </button>
-            <button
-              type="button"
-              className={`flex-1 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold rounded-lg transition-all relative ${
-                activeTab === "history"
-                  ? "bg-white dark:bg-zinc-700 text-indigo-600 dark:text-indigo-400 shadow-sm"
-                  : "text-gray-500 hover:text-gray-900 dark:hover:text-zinc-200"
-              }`}
-              onClick={() => setActiveTab("history")}
-            >
-              {t("playground.voiceSection.savedPrompts") || "History"}
-              {historyVoices.length > 0 && (
+            {historyVoices.length > 0 && (
+              <button
+                type="button"
+                className={`flex-1 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold rounded-lg transition-all relative ${
+                  activeTab === "history"
+                    ? "bg-white dark:bg-zinc-700 text-indigo-600 dark:text-indigo-400 shadow-sm"
+                    : "text-gray-500 hover:text-gray-900 dark:hover:text-zinc-200"
+                }`}
+                onClick={() => setActiveTab("history")}
+              >
+                {t("playground.voiceSection.savedPrompts") || "History"}
                 <span className="ml-1.5 inline-flex items-center justify-center px-1.5 py-0.5 text-[10px] font-bold rounded-full bg-indigo-100 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400">
                   {historyVoices.length}
                 </span>
-              )}
-            </button>
+              </button>
+            )}
           </div>
 
           {/* Tab Content - Fixed height container for consistent sizing */}
@@ -372,13 +372,21 @@ export function VoiceSelectionModal({
             </button>
           </div>
 
-          {/* Confirm Button */}
-          <button
-            onClick={onClose}
-            className="px-5 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs sm:text-sm font-semibold rounded-xl transition-colors shadow-sm shrink-0"
-          >
-            Confirm
-          </button>
+          {/* Confirm Button - Only show when a voice is selected and not during recording/uploading */}
+          {(() => {
+            const hasSelection = selectedVoice || anonymousVoiceId;
+            const isProcessing = isRecording || uploadStatus === "uploading";
+            const shouldShow = hasSelection && !isProcessing;
+
+            return shouldShow ? (
+              <button
+                onClick={onClose}
+                className="px-5 py-3 bg-indigo-600 hover:bg-indigo-700 text-white text-xs sm:text-sm font-semibold rounded-xl transition-colors shadow-sm shrink-0"
+              >
+                Confirm
+              </button>
+            ) : null;
+          })()}
         </div>
       </div>
     </div>
