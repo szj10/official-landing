@@ -12,11 +12,10 @@ interface PlaygroundEditorPanelProps {
   textInput: string;
   onTextChange: (text: string) => void;
   onSampleSelect: (text: string) => void;
-  onFocus?: () => void;
 }
 
 export const PlaygroundEditorPanel = forwardRef<HTMLTextAreaElement, PlaygroundEditorPanelProps>(
-  function PlaygroundEditorPanel({ textInput, onTextChange, onSampleSelect, onFocus }, ref) {
+  function PlaygroundEditorPanel({ textInput, onTextChange, onSampleSelect }, ref) {
     const { t } = useI18n();
     const [showConfirmModal, setShowConfirmModal] = useState(false);
     const [pendingSampleId, setPendingSampleId] = useState<string | null>(null);
@@ -98,7 +97,6 @@ export const PlaygroundEditorPanel = forwardRef<HTMLTextAreaElement, PlaygroundE
             ref={ref}
             value={textInput}
             onChange={(e) => onTextChange(e.target.value)}
-            onFocus={onFocus}
             placeholder={t("playground.textSection.placeholder")}
             rows={showSamples ? 2 : 6}
             maxLength={MAX_TTS_TEXT_LENGTH}

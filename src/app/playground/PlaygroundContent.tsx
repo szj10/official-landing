@@ -402,8 +402,10 @@ export default function PlaygroundContent() {
     }
   };
 
-  const handleTextareaFocus = () => {
-    if (!hasScrolledToTextarea) {
+  const handleTextareaChange = (newText: string) => {
+    setTextInput(newText);
+    // Scroll when user starts typing (if not already scrolled)
+    if (!hasScrolledToTextarea && newText.trim().length > 0) {
       setHasScrolledToTextarea(true);
       scrollToTextarea();
     }
@@ -1080,11 +1082,8 @@ export default function PlaygroundContent() {
         <PlaygroundEditorPanel
           ref={textareaRef}
           textInput={textInput}
-          onTextChange={(val) => {
-            setTextInput(val);
-          }}
+          onTextChange={handleTextareaChange}
           onSampleSelect={handleSampleTextSelect}
-          onFocus={handleTextareaFocus}
         />
 
         {/* Action Row */}
