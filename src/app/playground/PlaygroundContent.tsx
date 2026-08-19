@@ -98,7 +98,7 @@ export default function PlaygroundContent() {
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
   const recordingIntervalRef = useRef<NodeJS.Timeout | null>(null);
-  const recordingTimeRef = useRef<number>(0); // Track actual recording time
+  const recordingTimeRef = useRef<number>(0); // Always in sync with state
   const voicePreviewRef = useRef<HTMLAudioElement | null>(null);
   const eventSourceRef = useRef<EventSource | null>(null);
   const pollingIntervalRef = useRef<NodeJS.Timeout | null>(null);
@@ -556,7 +556,7 @@ export default function PlaygroundContent() {
 
         stream.getTracks().forEach((track) => track.stop());
 
-        // Use ref value which is always up-to-date
+        // Send recording with accurate duration from ref
         await uploadRecordingToBackend(audioBlob, recordingTimeRef.current);
 
         setTimeout(() => {
@@ -575,7 +575,7 @@ export default function PlaygroundContent() {
       mediaRecorder.start();
       setIsRecording(true);
       setRecordingTime(0);
-      recordingTimeRef.current = 0; // Reset ref
+      recordingTimeRef.current = 0;
 
       recordingIntervalRef.current = setInterval(() => {
         setRecordingTime((prev) => {
@@ -614,8 +614,6 @@ export default function PlaygroundContent() {
     setUploadError(null);
     setAnonymousVoiceId(null);
 
-    console.log(`📤 Uploading recording: ${durationSeconds}s, ${blob.size} bytes`);
-
     try {
       const formData = new FormData();
       formData.append("file", blob, "recording.webm");
@@ -653,12 +651,9 @@ export default function PlaygroundContent() {
       setAnonymousVoiceId(data.anonymous_voice_id);
       setUploadStatus("success");
 
-      // Backend now returns accurate duration (or fallback if detection failed)
-      const actualDuration = data.audio_duration;
-
       const newVoice: HistoryVoice = {
         anonymous_voice_id: data.anonymous_voice_id,
-        audio_duration: actualDuration,
+        audio_duration: data.audio_duration,
         expires_at: data.expires_at,
         created_at: new Date().toISOString(),
       };
@@ -1218,7 +1213,7 @@ export default function PlaygroundContent() {
           setRecordedAudioBlob(null);
           setRecordedAudioUrl(null);
           setRecordingTime(0);
-          recordingTimeRef.current = 0; // Reset ref as well
+          recordingTimeRef.current = 0;
           setSelectedVoice("voice1");
           setUploadStatus("idle");
           setAnonymousVoiceId(null);
