@@ -29,7 +29,8 @@
       "uploadRateLimit": "Límite de subida alcanzado. Inténtalo de nuevo en {time}.",
       "playRecorded": "Reproducir Grabación",
       "stopRecorded": "Detener Reproducción",
-      "recordedPreview": "Vista Previa de Grabación"
+      "recordedPreview": "Vista Previa de Grabación",
+      "savedPrompts": "En caché"
     },
     "speedSection": {
       "speed": "Velocidad de Voz",

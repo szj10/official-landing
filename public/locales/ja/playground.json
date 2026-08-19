@@ -29,7 +29,8 @@
       "uploadRateLimit": "アップロード制限に達しました。{time} 後にもう一度お試しください。",
       "playRecorded": "録音を再生",
       "stopRecorded": "再生を停止",
-      "recordedPreview": "録音した音声の試聴"
+      "recordedPreview": "録音した音声の試聴",
+      "savedPrompts": "キャッシュ済み"
     },
     "speedSection": {
       "speed": "音声速度",

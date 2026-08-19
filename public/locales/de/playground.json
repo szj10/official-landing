@@ -29,7 +29,8 @@
       "uploadRateLimit": "Limit erreicht. Bitte versuchen Sie es in {time} erneut.",
       "playRecorded": "Aufnahme abspielen",
       "stopRecorded": "Wiedergabe stoppen",
-      "recordedPreview": "Vorschau der Aufnahme"
+      "recordedPreview": "Vorschau der Aufnahme",
+      "savedPrompts": "Gespeichert"
     },
     "speedSection": {
       "speed": "Sprechgeschwindigkeit",

@@ -29,7 +29,8 @@
       "uploadRateLimit": "已达上传上限，请在 {time} 后重试。",
       "playRecorded": "播放录音",
       "stopRecorded": "停止播放",
-      "recordedPreview": "录音试听"
+      "recordedPreview": "录音试听",
+      "savedPrompts": "已缓存"
     },
     "speedSection": {
       "speed": "语速",

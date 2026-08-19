@@ -29,7 +29,8 @@
       "uploadRateLimit": "Limite de téléversement atteinte. Veuillez réessayer dans {time}.",
       "playRecorded": "Lire l'enregistrement",
       "stopRecorded": "Arrêter la lecture",
-      "recordedPreview": "Aperçu de l'enregistrement"
+      "recordedPreview": "Aperçu de l'enregistrement",
+      "savedPrompts": "Mis en cache"
     },
     "speedSection": {
       "speed": "Vitesse de Parole",

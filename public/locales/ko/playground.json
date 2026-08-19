@@ -29,7 +29,8 @@
       "uploadRateLimit": "업로드 한도에 도달했습니다. {time} 후에 다시 시도해 주세요.",
       "playRecorded": "녹음 듣기",
       "stopRecorded": "재생 중지",
-      "recordedPreview": "녹음된 음성 미리듣기"
+      "recordedPreview": "녹음된 음성 미리듣기",
+      "savedPrompts": "캐시됨"
     },
     "speedSection": {
       "speed": "음성 속도",

@@ -29,7 +29,8 @@
       "uploadRateLimit": "Upload limit reached. Please try again in {time}.",
       "playRecorded": "Play Recording",
       "stopRecorded": "Stop Playback",
-      "recordedPreview": "Recorded Voice Preview"
+      "recordedPreview": "Recorded Voice Preview",
+      "savedPrompts": "Saved"
     },
     "speedSection": {
       "speed": "Speech Speed",
