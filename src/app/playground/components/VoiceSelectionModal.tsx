@@ -105,9 +105,9 @@ export function VoiceSelectionModal({
       />
 
       {/* Modal Content */}
-      <div className="relative w-full max-w-2xl bg-white dark:bg-zinc-900 rounded-2xl shadow-2xl flex flex-col max-h-[90vh] overflow-hidden border border-gray-100 dark:border-zinc-800 animate-in fade-in zoom-in-95 duration-200">
+      <div className="relative w-full max-w-2xl bg-white dark:bg-zinc-900 rounded-2xl shadow-2xl flex flex-col max-h-[85vh] overflow-hidden border border-gray-100 dark:border-zinc-800 animate-in fade-in zoom-in-95 duration-200">
         {/* Scrollable Body */}
-        <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4 sm:space-y-6 custom-scrollbar">
+        <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4 sm:space-y-6 custom-scrollbar pb-20 sm:pb-24">
           {/* 3-Tab Navigation */}
           <div className="flex p-1 bg-gray-100/80 dark:bg-zinc-800/80 rounded-xl shadow-inner w-full max-w-lg mx-auto">
             <button
@@ -150,142 +150,174 @@ export function VoiceSelectionModal({
             </button>
           </div>
 
-          {/* Tab Content */}
-          {activeTab === "sample" && (
-            <>
-              {/* Quick Navigation Banner - Navigate to History */}
-              {historyVoices.length > 0 && (
-                <div className="w-full flex items-center justify-between px-3.5 py-2 bg-gradient-to-r from-indigo-50/80 to-purple-50/80 dark:from-indigo-950/40 dark:to-purple-950/40 border border-indigo-100 dark:border-indigo-900/40 rounded-xl text-xs shadow-xs">
-                  <span className="text-indigo-900 dark:text-indigo-200 font-medium flex items-center gap-1.5 text-[11px] sm:text-xs">
-                    <span className="inline-block w-2 h-2 rounded-full bg-indigo-500 animate-pulse shrink-0" />
-                    Prefer your recorded voices?
-                  </span>
-                  <button
-                    type="button"
-                    onClick={() => setActiveTab("history")}
-                    className="inline-flex items-center gap-1 font-semibold text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 transition-colors shrink-0 text-[11px] sm:text-xs group"
-                  >
-                    History Tab
-                    <span className="group-hover:translate-x-0.5 transition-transform">&rarr;</span>
-                  </button>
-                </div>
-              )}
-              <VoiceGrid
-                selectedVoice={selectedVoice}
-                playingVoicePreview={playingVoicePreview}
-                onVoiceSelectAndPlay={onVoiceSelectAndPlay}
-              />
-            </>
-          )}
-
-          {activeTab === "record" && (
-            <VoiceRecorder
-              isRecording={isRecording}
-              recordingTime={recordingTime}
-              recordedAudioBlob={recordedAudioBlob}
-              uploadStatus={uploadStatus}
-              uploadError={uploadError}
-              anonymousVoiceId={anonymousVoiceId}
-              historyVoices={historyVoices}
-              showHistoryVoices={showHistoryVoices}
-              playingHistoryVoiceId={playingHistoryVoiceId}
-              recAudioRef={recAudioRef}
-              onStartRecording={onStartRecording}
-              onStopRecording={onStopRecording}
-              onResetRecording={onResetRecording}
-              onToggleShowHistoryVoices={onToggleShowHistoryVoices}
-              onSelectHistoryVoice={onSelectHistoryVoice}
-              onPlayHistoryVoice={onPlayHistoryVoice}
-              onDeleteHistoryVoice={onDeleteHistoryVoice}
-              onSelectSampleVoiceTab={() => setActiveTab("sample")}
-              onExpandHistoryTab={() => setActiveTab("history")}
-            />
-          )}
-
-          {activeTab === "history" && (
-            <div className="space-y-2">
-              {/* Quick Navigation Banner - Navigate to Sample Voices */}
-              <div className="w-full flex items-center justify-between px-3.5 py-2 bg-gradient-to-r from-indigo-50/80 to-purple-50/80 dark:from-indigo-950/40 dark:to-purple-950/40 border border-indigo-100 dark:border-indigo-900/40 rounded-xl text-xs shadow-xs">
-                <span className="text-indigo-900 dark:text-indigo-200 font-medium flex items-center gap-1.5 text-[11px] sm:text-xs">
-                  <span className="inline-block w-2 h-2 rounded-full bg-indigo-500 animate-pulse shrink-0" />
-                  Prefer pre-recorded voices?
-                </span>
-                <button
-                  type="button"
-                  onClick={() => setActiveTab("sample")}
-                  className="inline-flex items-center gap-1 font-semibold text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 transition-colors shrink-0 text-[11px] sm:text-xs group"
-                >
-                  Sample Voice Tab
-                  <span className="group-hover:translate-x-0.5 transition-transform">&rarr;</span>
-                </button>
-              </div>
-
-              {historyVoices.length === 0 ? (
-                <div className="text-center py-12">
-                  <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gray-100 dark:bg-zinc-800 flex items-center justify-center">
-                    <svg
-                      className="w-8 h-8 text-gray-400 dark:text-zinc-600"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
+          {/* Tab Content - Fixed height container for consistent sizing */}
+          <div className="h-[280px] sm:h-[320px] flex flex-col">
+            {activeTab === "sample" && (
+              <>
+                {/* Quick Navigation Banner - Navigate to History */}
+                {historyVoices.length > 0 && (
+                  <div className="w-full flex items-center justify-between px-3.5 py-2 bg-gradient-to-r from-indigo-50/80 to-purple-50/80 dark:from-indigo-950/40 dark:to-purple-950/40 border border-indigo-100 dark:border-indigo-900/40 rounded-xl text-xs shadow-xs mb-4">
+                    <span className="text-indigo-900 dark:text-indigo-200 font-medium flex items-center gap-1.5 text-[11px] sm:text-xs">
+                      <span className="inline-block w-2 h-2 rounded-full bg-indigo-500 animate-pulse shrink-0" />
+                      Prefer your recorded voices?
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => setActiveTab("record")}
+                      className="inline-flex items-center gap-1 font-semibold text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 transition-colors shrink-0 text-[11px] sm:text-xs group"
                     >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
-                      />
-                    </svg>
+                      Recording Tab
+                      <span className="group-hover:translate-x-0.5 transition-transform">
+                        &rarr;
+                      </span>
+                    </button>
                   </div>
-                  <p className="text-sm font-medium text-gray-700 dark:text-zinc-300 mb-1">
-                    {t("playground.voiceSection.noHistory") || "No saved voice recordings yet"}
-                  </p>
-                  <p className="text-xs text-gray-500 dark:text-zinc-400 mb-4">
-                    {t("playground.voiceSection.recordFirstPrompt") ||
-                      "Record your first voice prompt to get started"}
-                  </p>
-                  <button
-                    type="button"
-                    onClick={() => setActiveTab("record")}
-                    className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-lg transition-colors"
-                  >
-                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01.469-1.57m0 0a3 3 0 01-1.469-1.57m0 0L9 7m4.469 4.43a3 3 0 01.469 1.57m0 0a3 3 0 01-1.469 1.57m0 0l.469.43m0 0L15 17"
-                      />
-                    </svg>
-                    Record Voice
-                  </button>
-                </div>
-              ) : (
+                )}
+                <VoiceGrid
+                  selectedVoice={selectedVoice}
+                  playingVoicePreview={playingVoicePreview}
+                  onVoiceSelectAndPlay={onVoiceSelectAndPlay}
+                />
+              </>
+            )}
+
+            {activeTab === "record" && (
+              <>
+                {/* Quick Navigation Banner - Navigate to History */}
+                {historyVoices.length > 0 && (
+                  <div className="w-full flex items-center justify-between px-3.5 py-2 bg-gradient-to-r from-indigo-50/80 to-purple-50/80 dark:from-indigo-950/40 dark:to-purple-950/40 border border-indigo-100 dark:border-indigo-900/40 rounded-xl text-xs shadow-xs mb-4">
+                    <span className="text-indigo-900 dark:text-indigo-200 font-medium flex items-center gap-1.5 text-[11px] sm:text-xs">
+                      <span className="inline-block w-2 h-2 rounded-full bg-indigo-500 animate-pulse shrink-0" />
+                      Find previously recorded voices?
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => setActiveTab("history")}
+                      className="inline-flex items-center gap-1 font-semibold text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 transition-colors shrink-0 text-[11px] sm:text-xs group"
+                    >
+                      History Tab
+                      <span className="group-hover:translate-x-0.5 transition-transform">
+                        &rarr;
+                      </span>
+                    </button>
+                  </div>
+                )}
                 <VoiceRecorder
-                  isRecording={false}
-                  recordingTime={0}
-                  recordedAudioBlob={null}
-                  uploadStatus="idle"
-                  uploadError={null}
+                  isRecording={isRecording}
+                  recordingTime={recordingTime}
+                  recordedAudioBlob={recordedAudioBlob}
+                  uploadStatus={uploadStatus}
+                  uploadError={uploadError}
                   anonymousVoiceId={anonymousVoiceId}
                   historyVoices={historyVoices}
-                  showHistoryVoices={true}
+                  showHistoryVoices={showHistoryVoices}
                   playingHistoryVoiceId={playingHistoryVoiceId}
                   recAudioRef={recAudioRef}
-                  onStartRecording={() => setActiveTab("record")}
-                  onStopRecording={() => {}}
-                  onResetRecording={() => {}}
+                  onStartRecording={onStartRecording}
+                  onStopRecording={onStopRecording}
+                  onResetRecording={onResetRecording}
                   onToggleShowHistoryVoices={onToggleShowHistoryVoices}
                   onSelectHistoryVoice={onSelectHistoryVoice}
                   onPlayHistoryVoice={onPlayHistoryVoice}
                   onDeleteHistoryVoice={onDeleteHistoryVoice}
                   onSelectSampleVoiceTab={() => setActiveTab("sample")}
                   onExpandHistoryTab={() => setActiveTab("history")}
-                  historyOnlyMode={true}
                 />
-              )}
-            </div>
-          )}
+              </>
+            )}
+
+            {activeTab === "history" && (
+              <div className="space-y-0 h-full flex flex-col overflow-hidden">
+                {/* Quick Navigation Banner - Navigate to Sample Voices */}
+                <div className="w-full flex items-center justify-between px-3.5 py-2 bg-gradient-to-r from-indigo-50/80 to-purple-50/80 dark:from-indigo-950/40 dark:to-purple-950/40 border border-indigo-100 dark:border-indigo-900/40 rounded-xl text-xs shadow-xs shrink-0">
+                  <span className="text-indigo-900 dark:text-indigo-200 font-medium flex items-center gap-1.5 text-[11px] sm:text-xs">
+                    <span className="inline-block w-2 h-2 rounded-full bg-indigo-500 animate-pulse shrink-0" />
+                    Prefer pre-recorded voices?
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => setActiveTab("sample")}
+                    className="inline-flex items-center gap-1 font-semibold text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 transition-colors shrink-0 text-[11px] sm:text-xs group"
+                  >
+                    Sample Voice Tab
+                    <span className="group-hover:translate-x-0.5 transition-transform">&rarr;</span>
+                  </button>
+                </div>
+
+                <div className="flex-1 overflow-y-auto">
+                  {historyVoices.length === 0 ? (
+                    <div className="text-center py-8">
+                      <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gray-100 dark:bg-zinc-800 flex items-center justify-center">
+                        <svg
+                          className="w-8 h-8 text-gray-400 dark:text-zinc-600"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+                          />
+                        </svg>
+                      </div>
+                      <p className="text-sm font-medium text-gray-700 dark:text-zinc-300 mb-1">
+                        {t("playground.voiceSection.noHistory") || "No saved voice recordings yet"}
+                      </p>
+                      <p className="text-xs text-gray-500 dark:text-zinc-400 mb-4">
+                        {t("playground.voiceSection.recordFirstPrompt") ||
+                          "Record your first voice prompt to get started"}
+                      </p>
+                      <button
+                        type="button"
+                        onClick={() => setActiveTab("record")}
+                        className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-lg transition-colors"
+                      >
+                        <svg
+                          className="w-4 h-4"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01.469-1.57m0 0a3 3 0 01-1.469-1.57m0 0L9 7m4.469 4.43a3 3 0 01.469 1.57m0 0a3 3 0 01-1.469 1.57m0 0l.469.43m0 0L15 17"
+                          />
+                        </svg>
+                        Record Voice
+                      </button>
+                    </div>
+                  ) : (
+                    <VoiceRecorder
+                      isRecording={false}
+                      recordingTime={0}
+                      recordedAudioBlob={null}
+                      uploadStatus="idle"
+                      uploadError={null}
+                      anonymousVoiceId={anonymousVoiceId}
+                      historyVoices={historyVoices}
+                      showHistoryVoices={true}
+                      playingHistoryVoiceId={playingHistoryVoiceId}
+                      recAudioRef={recAudioRef}
+                      onStartRecording={() => setActiveTab("record")}
+                      onStopRecording={() => {}}
+                      onResetRecording={() => {}}
+                      onToggleShowHistoryVoices={onToggleShowHistoryVoices}
+                      onSelectHistoryVoice={onSelectHistoryVoice}
+                      onPlayHistoryVoice={onPlayHistoryVoice}
+                      onDeleteHistoryVoice={onDeleteHistoryVoice}
+                      onSelectSampleVoiceTab={() => setActiveTab("sample")}
+                      onExpandHistoryTab={() => setActiveTab("history")}
+                      historyOnlyMode={true}
+                    />
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Footer with Speed Controls and Confirm Button */}
