@@ -222,7 +222,7 @@ export default function PricingPage() {
                   </div>
 
                   <Link
-                    href="/"
+                    href={process.env.NEXT_PUBLIC_SIGNUP_URL || "/"}
                     onClick={(e) => {
                       if (plan.isEnterprise) {
                         e.preventDefault();
@@ -380,7 +380,7 @@ export default function PricingPage() {
                   </p>
                 </div>
                 <Link
-                  href="/"
+                  href="/about"
                   className="w-full sm:w-auto inline-block bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-750 hover:to-purple-750 text-white text-xs font-semibold px-6 py-3 rounded-xl transition-all shadow-md active:scale-95 text-center"
                 >
                   {t("pricing.customSolution.cta")}
@@ -397,7 +397,7 @@ export default function PricingPage() {
                   </p>
                 </div>
                 <Link
-                  href="/"
+                  href={process.env.NEXT_PUBLIC_SIGNUP_URL || "/"}
                   className="w-full sm:w-auto inline-block bg-gray-900 dark:bg-zinc-800 hover:bg-gray-800 dark:hover:bg-zinc-700 text-white text-xs font-semibold px-6 py-3 rounded-xl transition-all active:scale-95 text-center"
                 >
                   {t("pricing.freeTrial.cta")}

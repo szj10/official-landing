@@ -130,7 +130,7 @@ export default function PostPageContent({
               {t("news.post.startCreating")}
             </p>
             <Link
-              href="/"
+              href={process.env.NEXT_PUBLIC_SIGNUP_URL || "/"}
               className="inline-flex items-center gap-2 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white px-6 py-3 rounded-xl transition-all duration-200 font-semibold text-sm shadow-md shadow-indigo-500/20 active:scale-95"
             >
               {t("news.post.getStartedFree")}
