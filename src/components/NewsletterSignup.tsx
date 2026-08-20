@@ -133,7 +133,7 @@ export default function NewsletterSignup({ compact = false }: NewsletterSignupPr
   // Full version for footer
   return (
     <div className="lg:col-span-2">
-      <h3 className="text-white font-semibold text-sm mb-2 tracking-wide">
+      <h3 className="text-zinc-900 dark:text-white font-semibold text-sm mb-2 tracking-wide">
         {t("footer.stayUpdated")}
       </h3>
       <p className="text-xs text-zinc-500 mb-4 leading-relaxed">{t("footer.stayUpdatedDesc")}</p>

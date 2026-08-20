@@ -124,7 +124,7 @@ export default function Footer() {
   const [showWechatQR, setShowWechatQR] = useState(false);
 
   return (
-    <footer className="relative overflow-hidden bg-white dark:bg-zinc-950 border-t border-zinc-200 dark:border-zinc-900/80 text-zinc-600 dark:text-zinc-400">
+    <footer className="relative overflow-hidden bg-zinc-200/80 dark:bg-zinc-800/80 border-t border-zinc-200 dark:border-zinc-900/80 text-zinc-600 dark:text-zinc-400">
       {/* Ambient glow blobs */}
       <div className="pointer-events-none absolute top-0 left-1/4 w-[500px] h-[300px] bg-indigo-600/6 rounded-full blur-[120px]" />
       <div className="pointer-events-none absolute bottom-0 right-1/4 w-[400px] h-[300px] bg-purple-600/6 rounded-full blur-[100px]" />
@@ -133,7 +133,7 @@ export default function Footer() {
         {/* Glass panel wrapper */}
         <div className="glass-panel rounded-3xl px-4 sm:px-6 shadow-lg shadow-zinc-200/50 dark:shadow-zinc-900/10">
           {/* ── Top section ─────────────────────────────────────────────────────── */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-12 py-16 border-b border-zinc-200 dark:border-zinc-900/80">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-12 py-12 border-b border-zinc-200 dark:border-zinc-900/80">
             {/* Brand col */}
             <div className="lg:col-span-2 flex flex-col gap-6">
               {/* Logo */}
