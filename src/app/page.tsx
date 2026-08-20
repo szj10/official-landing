@@ -153,7 +153,7 @@ export default function Home() {
               {/* CTAs */}
               <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
                 <Link
-                  href="/"
+                  href={process.env.NEXT_PUBLIC_SIGNUP_URL || "/"}
                   className="w-full sm:w-auto bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white px-8 py-3.5 rounded-full transition-all duration-200 font-semibold shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/35 hover:-translate-y-0.5 active:translate-y-0 text-sm"
                 >
                   {t("common.getStartedFree")}
@@ -243,7 +243,7 @@ export default function Home() {
                   </p>
                 </div>
                 <Link
-                  href="/"
+                  href="/news/ai-revolutionizing-video"
                   className="text-xs font-semibold text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 inline-flex items-center gap-1 group-hover:translate-x-1 transition-transform"
                 >
                   {t("common.learnMore")}
@@ -271,7 +271,7 @@ export default function Home() {
                   </p>
                 </div>
                 <Link
-                  href="/"
+                  href="/news/guide-script-writing"
                   className="text-xs font-semibold text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 inline-flex items-center gap-1 group-hover:translate-x-1 transition-transform"
                 >
                   {t("common.learnMore")}
@@ -299,7 +299,7 @@ export default function Home() {
                   </p>
                 </div>
                 <Link
-                  href="/"
+                  href="/news/case-study-engagement"
                   className="text-xs font-semibold text-pink-600 dark:text-pink-400 hover:text-pink-700 dark:hover:text-pink-300 inline-flex items-center gap-1 group-hover:translate-x-1 transition-transform"
                 >
                   {t("common.learnMore")}
@@ -365,7 +365,7 @@ export default function Home() {
               <p className="text-base text-indigo-200 mb-10 leading-relaxed">{t("cta.subtitle")}</p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
                 <Link
-                  href="/"
+                  href={process.env.NEXT_PUBLIC_SIGNUP_URL || "/"}
                   className="w-full sm:w-auto bg-white text-indigo-950 hover:bg-zinc-150 px-8 py-3.5 rounded-full transition-all duration-200 font-semibold shadow-lg text-sm active:scale-95"
                 >
                   {t("common.startFreeTrial")}
