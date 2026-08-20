@@ -131,7 +131,7 @@ export default function Footer() {
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* ── Top section ─────────────────────────────────────────────────────── */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-12 py-16 border-b border-zinc-900/80">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-12 py-16 border-b border-zinc-900/80 px-4 sm:px-6">
           {/* Brand col */}
           <div className="lg:col-span-2 flex flex-col gap-6">
             {/* Logo */}
