@@ -254,6 +254,8 @@ export default function Header() {
 
                 <Link
                   href={process.env.NEXT_PUBLIC_SIGNUP_URL || "/"}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-4 py-1.5 rounded-full hover:from-indigo-700 hover:to-purple-700 transition-all duration-200 shadow-md shadow-indigo-500/10 hover:shadow-indigo-500/25 active:scale-95 font-medium text-xs"
                 >
                   {t("common.getStarted")}
@@ -484,6 +486,8 @@ export default function Header() {
         <div className="shrink-0 px-5 py-5 border-t border-gray-100 dark:border-gray-800">
           <Link
             href={process.env.NEXT_PUBLIC_SIGNUP_URL || "/"}
+            target="_blank"
+            rel="noopener noreferrer"
             onClick={closeDrawer}
             className="flex items-center justify-center gap-2 w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold px-5 py-3.5 rounded-xl transition-all duration-200 shadow-lg shadow-blue-500/20 hover:shadow-blue-500/30 hover:-translate-y-0.5 active:translate-y-0"
           >

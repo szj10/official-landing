@@ -223,6 +223,8 @@ export default function PricingPage() {
 
                   <Link
                     href={process.env.NEXT_PUBLIC_SIGNUP_URL || "/"}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     onClick={(e) => {
                       if (plan.isEnterprise) {
                         e.preventDefault();
@@ -398,6 +400,8 @@ export default function PricingPage() {
                 </div>
                 <Link
                   href={process.env.NEXT_PUBLIC_SIGNUP_URL || "/"}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="w-full sm:w-auto inline-block bg-gray-900 dark:bg-zinc-800 hover:bg-gray-800 dark:hover:bg-zinc-700 text-white text-xs font-semibold px-6 py-3 rounded-xl transition-all active:scale-95 text-center"
                 >
                   {t("pricing.freeTrial.cta")}

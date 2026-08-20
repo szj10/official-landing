@@ -154,6 +154,8 @@ export default function Home() {
               <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
                 <Link
                   href={process.env.NEXT_PUBLIC_SIGNUP_URL || "/"}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="w-full sm:w-auto bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white px-8 py-3.5 rounded-full transition-all duration-200 font-semibold shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/35 hover:-translate-y-0.5 active:translate-y-0 text-sm"
                 >
                   {t("common.getStartedFree")}
@@ -366,6 +368,8 @@ export default function Home() {
               <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
                 <Link
                   href={process.env.NEXT_PUBLIC_SIGNUP_URL || "/"}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="w-full sm:w-auto bg-white text-indigo-950 hover:bg-zinc-150 px-8 py-3.5 rounded-full transition-all duration-200 font-semibold shadow-lg text-sm active:scale-95"
                 >
                   {t("common.startFreeTrial")}
