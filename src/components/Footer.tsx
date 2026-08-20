@@ -124,7 +124,7 @@ export default function Footer() {
   const [showWechatQR, setShowWechatQR] = useState(false);
 
   return (
-    <footer className="relative overflow-hidden bg-zinc-200/80 dark:bg-zinc-800/80 border-t border-zinc-200 dark:border-zinc-900/80 text-zinc-600 dark:text-zinc-400">
+    <footer className="relative overflow-hidden bg-zinc-150/80 dark:bg-zinc-820/80 border-t border-zinc-200 dark:border-zinc-900/80 text-zinc-600 dark:text-zinc-400">
       {/* Ambient glow blobs */}
       <div className="pointer-events-none absolute top-0 left-1/4 w-[500px] h-[300px] bg-indigo-600/6 rounded-full blur-[120px]" />
       <div className="pointer-events-none absolute bottom-0 right-1/4 w-[400px] h-[300px] bg-purple-600/6 rounded-full blur-[100px]" />
