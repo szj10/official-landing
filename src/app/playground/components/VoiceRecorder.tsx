@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, RefObject } from "react";
+import React, { RefObject } from "react";
 import { useI18n } from "@/i18n";
 import {
   MicIcon,
@@ -62,15 +62,8 @@ export function VoiceRecorder({
   historyOnlyMode = false,
 }: VoiceRecorderProps) {
   const { t } = useI18n();
-  const [copiedScript, setCopiedScript] = useState(false);
 
   const promptText = t("playground.voiceSection.promptGuideText");
-
-  const handleCopyScript = () => {
-    navigator.clipboard.writeText(promptText);
-    setCopiedScript(true);
-    setTimeout(() => setCopiedScript(false), 2000);
-  };
 
   const handleExpandHistoryTab = () => {
     if (onExpandHistoryTab) {
@@ -274,13 +267,7 @@ export function VoiceRecorder({
               <span>
                 {t("playground.voiceSection.promptGuideTitle") || "Reading Script (4-10s)"}
               </span>
-              <button
-                type="button"
-                onClick={handleCopyScript}
-                className="text-gray-400 hover:text-indigo-500 transition-colors text-[10px] normal-case"
-              >
-                {copiedScript ? "Copied!" : "Copy script"}
-              </button>
+              {/* copy button removed */}
             </div>
             <p className="text-xs sm:text-sm font-medium text-gray-800 dark:text-zinc-200 italic leading-relaxed">
               &quot;{promptText}&quot;

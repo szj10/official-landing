@@ -161,7 +161,7 @@ export default function Home() {
                   {t("common.getStartedFree")}
                 </Link>
                 <Link
-                  href="/"
+                  href="/playground"
                   className="w-full sm:w-auto glass-panel text-gray-700 dark:text-zinc-300 px-8 py-3.5 rounded-full hover:bg-gray-100/50 dark:hover:bg-zinc-800/40 transition-all duration-200 font-semibold text-sm active:scale-95"
                 >
                   {t("common.watchDemo")}
