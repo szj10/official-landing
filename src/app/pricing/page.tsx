@@ -382,7 +382,7 @@ export default function PricingPage() {
                   </p>
                 </div>
                 <Link
-                  href="/about"
+                  href="/about#connect-with-us"
                   className="w-full sm:w-auto inline-block bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-750 hover:to-purple-750 text-white text-xs font-semibold px-6 py-3 rounded-xl transition-all shadow-md active:scale-95 text-center"
                 >
                   {t("pricing.customSolution.cta")}
