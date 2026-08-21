@@ -154,7 +154,7 @@ function QueueWaitingCard({
                   {waitLabel.unit}
                 </span>
               </span>
-              <span className="text-[10px] font-medium text-gray-400 dark:text-zinc-500 mt-0.5 uppercase tracking-wider">
+              <span className="text-[10px] font-medium text-gray-400 dark:text-zinc-400 mt-0.5 uppercase tracking-wider">
                 {t("playground.queue.estimatedWait")}
               </span>
             </div>
@@ -168,7 +168,7 @@ function QueueWaitingCard({
               <span className="font-medium text-gray-500 dark:text-zinc-400">
                 {t("playground.queue.position")}&nbsp;
                 <span className="font-bold text-gray-800 dark:text-gray-200">{pos}</span>
-                <span className="text-gray-400 dark:text-zinc-600"> / {depth}</span>
+                <span className="text-gray-400 dark:text-zinc-400"> / {depth}</span>
               </span>
               <span className="font-semibold text-indigo-600 dark:text-indigo-400">
                 {progressPct}%

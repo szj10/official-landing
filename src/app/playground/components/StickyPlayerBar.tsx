@@ -37,7 +37,7 @@ export function StickyPlayerBar({
   return (
     <div className="fixed bottom-0 left-0 right-0 z-[110] animate-in slide-in-from-bottom-full duration-300">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-4 sm:pb-6 pt-2">
-        <div className="glass-panel bg-white/90 dark:bg-zinc-900/90 shadow-2xl rounded-2xl border border-gray-200 dark:border-zinc-700/80 p-4 sm:p-5 flex flex-col sm:flex-row items-center gap-4 sm:gap-6 backdrop-blur-xl relative">
+        <div className="glass-panel shadow-2xl rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row items-center gap-4 sm:gap-6 relative">
           {/* Close Button */}
           {onClose && (
             <button
@@ -76,7 +76,7 @@ export function StickyPlayerBar({
                   <p className="text-xs text-gray-500 dark:text-zinc-400 truncate">{subtitle}</p>
                 )}
               </div>
-              <div className="text-xs font-mono font-medium text-gray-500 shrink-0">
+              <div className="text-xs font-mono font-medium text-gray-500 dark:text-zinc-400 shrink-0">
                 {formatTime(Math.floor(currentTime))} / {formatTime(Math.floor(duration || 0))}
               </div>
             </div>

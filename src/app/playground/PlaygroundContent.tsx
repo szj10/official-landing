@@ -1042,7 +1042,7 @@ export default function PlaygroundContent() {
         <div className="flex flex-col sm:flex-row items-center gap-4 max-w-lg mx-auto sm:max-w-none">
           <button
             onClick={() => setIsVoiceModalOpen(true)}
-            className="w-full sm:w-1/2 flex items-center justify-between px-5 py-3.5 sm:py-4 bg-white dark:bg-zinc-800 border-2 border-gray-200 dark:border-zinc-700 rounded-xl sm:rounded-2xl hover:border-indigo-500 dark:hover:border-indigo-500 transition-colors shadow-sm"
+            className="w-full sm:w-1/2 flex items-center justify-between px-5 py-3.5 sm:py-4 glass-panel border-2 border-gray-200 dark:border-zinc-700 rounded-xl sm:rounded-2xl hover:border-indigo-500 dark:hover:border-indigo-500 transition-colors shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
           >
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 rounded-full bg-indigo-100 dark:bg-indigo-900/50 flex items-center justify-center text-indigo-600 dark:text-indigo-400">
@@ -1056,7 +1056,7 @@ export default function PlaygroundContent() {
                       ? t("playground.voicePromptLabel").replace("{id}", String(anonymousVoiceId))
                       : t("playground.chooseVoice")}
                 </span>
-                <span className="text-xs text-gray-500 dark:text-zinc-500">
+                <span className="text-xs text-gray-500 dark:text-zinc-400">
                   {speed === "slow"
                     ? t("playground.speedSection.slow")
                     : speed === "normal"
@@ -1066,7 +1066,7 @@ export default function PlaygroundContent() {
               </div>
             </div>
             <svg
-              className="w-5 h-5 text-gray-400"
+              className="w-5 h-5 text-gray-400 dark:text-zinc-400"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -1078,7 +1078,7 @@ export default function PlaygroundContent() {
           <button
             onClick={handleGenerate}
             disabled={isGenerating || uploadStatus === "uploading" || !canGenerate}
-            className="w-full sm:w-1/2 flex items-center justify-center gap-2 px-5 py-3.5 sm:py-4 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 disabled:opacity-40 disabled:cursor-not-allowed text-white font-bold text-base sm:text-lg rounded-xl sm:rounded-2xl transition-all shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40 active:scale-95"
+            className="w-full sm:w-1/2 flex items-center justify-center gap-2 px-5 py-3.5 sm:py-4 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 disabled:opacity-40 disabled:cursor-not-allowed text-white font-bold text-base sm:text-lg rounded-xl sm:rounded-2xl transition-all shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
           >
             {isGenerating || uploadStatus === "uploading" ? (
               <svg className="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24">

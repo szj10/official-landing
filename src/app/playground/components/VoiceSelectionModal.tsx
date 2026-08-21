@@ -136,7 +136,7 @@ export function VoiceSelectionModal({
       />
 
       {/* Modal Content */}
-      <div className="relative w-full max-w-2xl bg-white dark:bg-zinc-900 rounded-2xl shadow-2xl flex flex-col max-h-[85vh] overflow-hidden border border-gray-100 dark:border-zinc-800 animate-in fade-in zoom-in-95 duration-200">
+      <div className="relative w-full max-w-2xl glass-panel rounded-2xl shadow-2xl flex flex-col max-h-[85vh] overflow-hidden animate-in fade-in zoom-in-95 duration-200">
         {/* Scrollable Body */}
         <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4 sm:space-y-6 custom-scrollbar">
           {/* 3-Tab Navigation */}
@@ -146,7 +146,7 @@ export function VoiceSelectionModal({
               className={`flex-1 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold rounded-lg transition-all ${
                 activeTab === "sample"
                   ? "bg-white dark:bg-zinc-700 text-indigo-600 dark:text-indigo-400 shadow-sm"
-                  : "text-gray-500 hover:text-gray-900 dark:hover:text-zinc-200"
+                  : "text-gray-500 dark:text-zinc-400 hover:text-gray-900 dark:hover:text-zinc-200"
               }`}
               onClick={() => handleTabChange("sample")}
             >
@@ -157,7 +157,7 @@ export function VoiceSelectionModal({
               className={`flex-1 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold rounded-lg transition-all ${
                 activeTab === "record"
                   ? "bg-white dark:bg-zinc-700 text-indigo-600 dark:text-indigo-400 shadow-sm"
-                  : "text-gray-500 hover:text-gray-900 dark:hover:text-zinc-200"
+                  : "text-gray-500 dark:text-zinc-400 hover:text-gray-900 dark:hover:text-zinc-200"
               }`}
               onClick={() => handleTabChange("record")}
             >
@@ -169,7 +169,7 @@ export function VoiceSelectionModal({
                 className={`flex-1 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold rounded-lg transition-all relative ${
                   activeTab === "history"
                     ? "bg-white dark:bg-zinc-700 text-indigo-600 dark:text-indigo-400 shadow-sm"
-                    : "text-gray-500 hover:text-gray-900 dark:hover:text-zinc-200"
+                    : "text-gray-500 dark:text-zinc-400 hover:text-gray-900 dark:hover:text-zinc-200"
                 }`}
                 onClick={() => handleTabChange("history")}
               >
@@ -296,7 +296,7 @@ export function VoiceSelectionModal({
                     <div className="text-center py-8">
                       <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gray-100 dark:bg-zinc-800 flex items-center justify-center">
                         <svg
-                          className="w-8 h-8 text-gray-400 dark:text-zinc-600"
+                          className="w-8 h-8 text-gray-400 dark:text-zinc-400"
                           fill="none"
                           viewBox="0 0 24 24"
                           stroke="currentColor"

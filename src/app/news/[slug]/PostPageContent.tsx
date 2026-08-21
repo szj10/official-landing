@@ -53,7 +53,7 @@ export default function PostPageContent({
             <span className="px-3 py-1 rounded-full bg-indigo-500/10 dark:bg-indigo-950/30 text-indigo-600 dark:text-indigo-400 text-xs font-semibold">
               {category}
             </span>
-            <span className="text-sm text-gray-500 dark:text-zinc-500">{readTime}</span>
+            <span className="text-sm text-gray-500 dark:text-zinc-400">{readTime}</span>
             {trending && (
               <span className="px-3 py-1 rounded-full bg-gradient-to-r from-orange-500 to-red-500 text-white text-xs font-bold">
                 {t("news.trending")}
@@ -153,7 +153,7 @@ export default function PostPageContent({
                 href={`/news/${prevPost.slug}`}
                 className="glass-panel rounded-xl p-6 hover:shadow-lg transition-all duration-200 group"
               >
-                <div className="text-xs text-gray-500 dark:text-zinc-500 mb-2">
+                <div className="text-xs text-gray-500 dark:text-zinc-400 mb-2">
                   {t("news.post.previousPost")}
                 </div>
                 <div className="text-sm font-semibold text-gray-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
@@ -166,7 +166,7 @@ export default function PostPageContent({
                 href={`/news/${nextPost.slug}`}
                 className="glass-panel rounded-xl p-6 hover:shadow-lg transition-all duration-200 group text-right"
               >
-                <div className="text-xs text-gray-500 dark:text-zinc-500 mb-2">
+                <div className="text-xs text-gray-500 dark:text-zinc-400 mb-2">
                   {t("news.post.nextPost")}
                 </div>
                 <div className="text-sm font-semibold text-gray-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">

@@ -31,7 +31,7 @@ export function VoiceGrid({
             className={`group relative p-3.5 sm:p-4 rounded-2xl border-2 cursor-pointer transition-all ${
               isSelected
                 ? "bg-purple-50 dark:bg-purple-900/20 border-purple-500 shadow-md scale-[1.01]"
-                : "bg-white dark:bg-zinc-900 border-gray-100 dark:border-zinc-800 hover:border-purple-200 dark:hover:border-purple-800 hover:shadow-sm"
+                : "glass-panel border-gray-100 dark:border-zinc-800 hover:border-purple-200 dark:hover:border-purple-800 hover:shadow-sm"
             }`}
           >
             {isSelected && (

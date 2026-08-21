@@ -79,7 +79,7 @@ export default function LegalContent({ type }: { type: "terms" | "privacy" }) {
           <h1 className="text-4xl sm:text-5xl font-extrabold text-gray-900 dark:text-white mb-4 tracking-tight">
             {data.title}
           </h1>
-          <p className="text-sm text-gray-500 dark:text-zinc-500">
+          <p className="text-sm text-gray-500 dark:text-zinc-400">
             {t("legal.lastUpdated")}: {data.lastUpdated}
           </p>
         </div>

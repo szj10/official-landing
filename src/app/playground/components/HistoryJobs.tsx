@@ -36,7 +36,7 @@ export function HistoryJobs({
         <button
           type="button"
           onClick={onToggle}
-          className="w-full flex items-center justify-between p-4 rounded-2xl bg-white/40 dark:bg-zinc-900/40 border border-gray-200/50 dark:border-zinc-800/50 backdrop-blur-md shadow-sm hover:shadow-md hover:bg-white/60 dark:hover:bg-zinc-800/60 transition-all duration-300 group select-none relative overflow-hidden"
+          className="w-full flex items-center justify-between p-4 rounded-2xl glass-panel shadow-sm hover:shadow-md transition-all duration-300 group select-none relative overflow-hidden"
         >
           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-indigo-500/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out" />
           <div className="flex items-center gap-3.5 relative z-10">
@@ -75,7 +75,7 @@ export function HistoryJobs({
             return (
               <div
                 key={job.playground_job_id}
-                className="group relative flex items-center gap-4 p-3.5 rounded-2xl bg-white/60 dark:bg-zinc-900/40 border border-gray-200/60 dark:border-zinc-800/60 backdrop-blur-xl shadow-sm hover:shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:hover:shadow-[0_8px_30px_rgba(0,0,0,0.2)] hover:border-indigo-200/50 dark:hover:border-indigo-500/30 transition-all duration-300"
+                className="group relative flex items-center gap-4 p-3.5 rounded-2xl glass-panel shadow-sm hover:shadow-md hover:border-indigo-200/50 dark:hover:border-indigo-500/30 transition-all duration-300"
               >
                 <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-transparent via-white/40 to-transparent dark:via-white/5 opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-500" />
 
@@ -113,7 +113,7 @@ export function HistoryJobs({
                       {job.voice_name}
                     </span>
                     <span className="w-1 h-1 rounded-full bg-gray-300 dark:bg-zinc-700" />
-                    <span className="text-gray-400 dark:text-zinc-500">
+                    <span className="text-gray-400 dark:text-zinc-400">
                       {formatRelativeTime(job.created_at, t)}
                     </span>
                   </div>

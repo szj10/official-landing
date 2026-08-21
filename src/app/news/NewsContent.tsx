@@ -120,7 +120,7 @@ export default function NewsContent({ posts }: { posts: PostMetadata[] }) {
                       <span className="px-2.5 py-1 rounded-full bg-indigo-500/10 dark:bg-indigo-950/30 text-indigo-600 dark:text-indigo-400 text-[10px] font-semibold">
                         {post.category}
                       </span>
-                      <span className="text-xs text-gray-500 dark:text-zinc-500">
+                      <span className="text-xs text-gray-500 dark:text-zinc-400">
                         {post.readTime}
                       </span>
                     </div>
@@ -136,9 +136,9 @@ export default function NewsContent({ posts }: { posts: PostMetadata[] }) {
 
                   <div className="flex items-center justify-between pt-4 border-t border-gray-100 dark:border-zinc-800">
                     <div className="flex items-center gap-2">
-                      <span className="text-xs text-gray-500 dark:text-zinc-500">{post.date}</span>
-                      <span className="text-xs text-gray-400 dark:text-zinc-600">•</span>
-                      <span className="text-xs text-gray-500 dark:text-zinc-500">
+                      <span className="text-xs text-gray-500 dark:text-zinc-400">{post.date}</span>
+                      <span className="text-xs text-gray-400 dark:text-zinc-400">•</span>
+                      <span className="text-xs text-gray-500 dark:text-zinc-400">
                         {post.author}
                       </span>
                     </div>
@@ -185,7 +185,7 @@ export default function NewsContent({ posts }: { posts: PostMetadata[] }) {
         </div>
       </section>
 
-      <section className="py-16 bg-white/10 dark:bg-zinc-950/10 backdrop-blur-sm border-t border-gray-200/40 dark:border-zinc-900/40">
+      <section className="py-16 bg-white/10 dark:bg-zinc-950/10 backdrop-blur-sm border-t border-gray-200/40 dark:border-zinc-800/80">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="glass-panel rounded-3xl p-8 flex flex-col items-center justify-center text-center">
@@ -248,7 +248,7 @@ export default function NewsContent({ posts }: { posts: PostMetadata[] }) {
         </div>
       </section>
 
-      <section className="py-20 bg-white/5 dark:bg-zinc-950/5 backdrop-blur-sm border-t border-gray-200/40 dark:border-zinc-900/40">
+      <section className="py-20 bg-white/5 dark:bg-zinc-950/5 backdrop-blur-sm border-t border-gray-200/40 dark:border-zinc-800/80">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <NewsletterSignup compact={true} />
         </div>

@@ -189,7 +189,7 @@ export default function Home() {
         </section>
 
         {/* ─── Client Logos Section ────────────────────────────────────────── */}
-        <section className="py-16 bg-white/20 dark:bg-zinc-950/20 backdrop-blur-sm border-y border-gray-200/40 dark:border-zinc-900/40">
+        <section className="py-16 bg-white/20 dark:bg-zinc-950/20 backdrop-blur-sm border-y border-gray-200/40 dark:border-zinc-800/80">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-10">
               <p className="text-zinc-500 dark:text-zinc-400 text-xs font-semibold uppercase tracking-widest">
@@ -337,13 +337,13 @@ export default function Home() {
                   className="glass-panel rounded-3xl p-6 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between"
                 >
                   <div>
-                    <div className="w-10 h-10 rounded-xl bg-gray-100 dark:bg-zinc-900 flex items-center justify-center mb-4">
+                    <div className="w-10 h-10 rounded-xl bg-gray-100 dark:bg-zinc-800 flex items-center justify-center mb-4">
                       <feature.Icon />
                     </div>
                     <h3 className="text-base font-bold text-gray-900 dark:text-white mb-2">
                       {t(`features.${feature.key}.title`)}
                     </h3>
-                    <p className="text-xs text-gray-650 dark:text-zinc-400 leading-relaxed">
+                    <p className="text-xs text-gray-600 dark:text-zinc-400 leading-relaxed">
                       {t(`features.${feature.key}.description`)}
                     </p>
                   </div>
@@ -370,7 +370,7 @@ export default function Home() {
                   href={process.env.NEXT_PUBLIC_SIGNUP_URL || "/"}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full sm:w-auto bg-white text-indigo-950 hover:bg-zinc-150 px-8 py-3.5 rounded-full transition-all duration-200 font-semibold shadow-lg text-sm active:scale-95"
+                  className="w-full sm:w-auto bg-white text-indigo-950 hover:bg-zinc-100 px-8 py-3.5 rounded-full transition-all duration-200 font-semibold shadow-lg text-sm active:scale-95"
                 >
                   {t("common.startFreeTrial")}
                 </Link>
@@ -404,7 +404,7 @@ export default function Home() {
                     {t(`faq.${q}.question`)}
                     <span className="flex-shrink-0 ml-4 w-5 h-5 rounded-full bg-gray-100 dark:bg-zinc-800 flex items-center justify-center group-open:bg-indigo-500/10 group-open:text-indigo-500 transition-colors">
                       <svg
-                        className="w-3.5 h-3.5 text-gray-550 dark:text-zinc-450 group-open:rotate-180 group-open:text-indigo-500 transition-transform duration-200"
+                        className="w-3.5 h-3.5 text-gray-500 dark:text-zinc-400 group-open:rotate-180 group-open:text-indigo-500 transition-transform duration-200"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -418,7 +418,7 @@ export default function Home() {
                       </svg>
                     </span>
                   </summary>
-                  <p className="mt-4 text-xs text-gray-600 dark:text-zinc-400 leading-relaxed border-t border-gray-100 dark:border-zinc-850 pt-4">
+                  <p className="mt-4 text-xs text-gray-600 dark:text-zinc-400 leading-relaxed border-t border-gray-100 dark:border-zinc-800 pt-4">
                     {t(`faq.${q}.answer`)}
                   </p>
                 </details>

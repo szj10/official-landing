@@ -120,7 +120,7 @@ export default function PricingPage() {
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-gray-900 dark:text-white mb-6 tracking-tight">
                 {t("pricing.title")}
               </h1>
-              <p className="text-lg text-gray-650 dark:text-zinc-400 max-w-2xl mx-auto mb-10 leading-relaxed">
+              <p className="text-lg text-gray-600 dark:text-zinc-400 max-w-2xl mx-auto mb-10 leading-relaxed">
                 {t("pricing.subtitle")}
               </p>
 
@@ -213,7 +213,7 @@ export default function PricingPage() {
                       {plan.features.map((feature, j) => (
                         <li key={j} className="flex items-start">
                           <CheckIcon className="w-4 h-4 text-indigo-500 dark:text-indigo-400 mr-2.5 flex-shrink-0 mt-0.5" />
-                          <span className="text-xs text-gray-650 dark:text-zinc-350 leading-tight">
+                          <span className="text-xs text-gray-600 dark:text-zinc-400 leading-tight">
                             {feature}
                           </span>
                         </li>
@@ -233,8 +233,8 @@ export default function PricingPage() {
                     }}
                     className={`block w-full text-center py-3 rounded-xl text-xs font-semibold transition-all duration-200 ${
                       plan.popular
-                        ? "bg-gradient-to-r from-indigo-600 to-purple-600 text-white hover:from-indigo-700 hover:to-purple-700 shadow-md shadow-indigo-500/20 active:scale-98"
-                        : "bg-gray-100 hover:bg-gray-200 dark:bg-zinc-850 dark:hover:bg-zinc-800 text-gray-900 dark:text-white active:scale-98"
+                        ? "bg-gradient-to-r from-indigo-600 to-purple-600 text-white hover:from-indigo-700 hover:to-purple-700 shadow-md shadow-indigo-500/20 active:scale-95"
+                        : "bg-gray-100 hover:bg-gray-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-gray-900 dark:text-white active:scale-95"
                     }`}
                   >
                     {plan.cta}
@@ -246,7 +246,7 @@ export default function PricingPage() {
         </section>
 
         {/* ─── Compare Plans Section ─────────────────────────────────────── */}
-        <section className="py-20 bg-white/10 dark:bg-zinc-950/10 backdrop-blur-sm border-t border-gray-200/40 dark:border-zinc-900/40">
+        <section className="py-20 bg-white/10 dark:bg-zinc-950/10 backdrop-blur-sm border-t border-gray-200/40 dark:border-zinc-800/80">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
               <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-gray-900 dark:text-white mb-4">
@@ -343,21 +343,21 @@ export default function PricingPage() {
                   ].map((row, i) => (
                     <tr
                       key={i}
-                      className="border-b border-gray-100 dark:border-zinc-900 hover:bg-gray-50/30 dark:hover:bg-zinc-900/10 transition-colors"
+                      className="border-b border-gray-100 dark:border-zinc-800/80 hover:bg-gray-50/30 dark:hover:bg-zinc-900/10 transition-colors"
                     >
                       <td className="py-4.5 px-6 text-xs font-semibold text-gray-950 dark:text-white">
                         {row.feature}
                       </td>
-                      <td className="py-4.5 px-6 text-center text-xs text-gray-650 dark:text-zinc-400">
+                      <td className="py-4.5 px-6 text-center text-xs text-gray-600 dark:text-zinc-400">
                         {row.starter}
                       </td>
-                      <td className="py-4.5 px-6 text-center text-xs text-gray-650 dark:text-zinc-400 font-semibold">
+                      <td className="py-4.5 px-6 text-center text-xs text-gray-600 dark:text-zinc-400 font-semibold">
                         {row.pro}
                       </td>
-                      <td className="py-4.5 px-6 text-center text-xs text-gray-655 dark:text-zinc-400">
+                      <td className="py-4.5 px-6 text-center text-xs text-gray-600 dark:text-zinc-400">
                         {row.business}
                       </td>
-                      <td className="py-4.5 px-6 text-center text-xs text-gray-655 dark:text-zinc-400">
+                      <td className="py-4.5 px-6 text-center text-xs text-gray-600 dark:text-zinc-400">
                         {row.enterprise}
                       </td>
                     </tr>
@@ -383,7 +383,7 @@ export default function PricingPage() {
                 </div>
                 <Link
                   href="/about#connect-with-us"
-                  className="w-full sm:w-auto inline-block bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-750 hover:to-purple-750 text-white text-xs font-semibold px-6 py-3 rounded-xl transition-all shadow-md active:scale-95 text-center"
+                  className="w-full sm:w-auto inline-block bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white text-xs font-semibold px-6 py-3 rounded-xl transition-all shadow-md active:scale-95 text-center"
                 >
                   {t("pricing.customSolution.cta")}
                 </Link>
@@ -412,7 +412,7 @@ export default function PricingPage() {
         </section>
 
         {/* ─── FAQs ──────────────────────────────────────────────────────── */}
-        <section className="py-20 border-t border-gray-200/40 dark:border-zinc-900/40">
+        <section className="py-20 border-t border-gray-200/40 dark:border-zinc-800/80">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
               <h2 className="text-3xl sm:text-4xl font-extrabold text-gray-900 dark:text-white mb-4">
@@ -451,7 +451,7 @@ export default function PricingPage() {
                     {faq.q}
                     <span className="flex-shrink-0 ml-4 w-5 h-5 rounded-full bg-gray-100 dark:bg-zinc-800 flex items-center justify-center group-open:bg-indigo-500/10 group-open:text-indigo-500 transition-colors">
                       <svg
-                        className="w-3.5 h-3.5 text-gray-550 dark:text-zinc-450 group-open:rotate-180 group-open:text-indigo-500 transition-transform duration-200"
+                        className="w-3.5 h-3.5 text-gray-500 dark:text-zinc-400 group-open:rotate-180 group-open:text-indigo-500 transition-transform duration-200"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -465,7 +465,7 @@ export default function PricingPage() {
                       </svg>
                     </span>
                   </summary>
-                  <p className="mt-4 text-xs text-gray-600 dark:text-zinc-400 leading-relaxed border-t border-gray-100 dark:border-zinc-850 pt-4">
+                  <p className="mt-4 text-xs text-gray-600 dark:text-zinc-400 leading-relaxed border-t border-gray-100 dark:border-zinc-800 pt-4">
                     {faq.a}
                   </p>
                 </details>

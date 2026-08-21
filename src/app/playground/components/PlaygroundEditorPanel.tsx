@@ -46,9 +46,9 @@ export const PlaygroundEditorPanel = forwardRef<
   const percentage = Math.min((charCount / maxChars) * 100, 100);
   const isOverLimit = charCount > maxChars;
   const strokeColor = isOverLimit
-    ? "text-red-500"
+    ? "text-red-600 dark:text-red-400"
     : percentage > 80
-      ? "text-amber-500"
+      ? "text-amber-500 dark:text-amber-400"
       : "text-indigo-500";
 
   const handleSampleClick = (id: string) => {
@@ -80,8 +80,8 @@ export const PlaygroundEditorPanel = forwardRef<
     <div className="w-full space-y-3 sm:space-y-4">
       {/* Samples Section - Auto-shown when textarea is empty */}
       {showSamples && (
-        <div className="bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-2xl overflow-hidden shadow-sm">
-          <div className="px-4 sm:px-5 py-3 sm:py-3.5 bg-gray-50 dark:bg-zinc-800/50">
+        <div className="glass-panel rounded-2xl overflow-hidden shadow-sm">
+          <div className="px-4 sm:px-5 py-3 sm:py-3.5 bg-gray-50/80 dark:bg-zinc-800/50">
             <div className="flex items-center gap-2">
               <SparklesIcon className="w-4 h-4 sm:w-5 sm:h-5 text-indigo-500" />
               <span className="text-sm font-semibold text-gray-700 dark:text-zinc-200">
@@ -90,7 +90,7 @@ export const PlaygroundEditorPanel = forwardRef<
             </div>
           </div>
 
-          <div className="p-4 sm:p-5 border-t border-gray-200 dark:border-zinc-800 bg-white dark:bg-zinc-900">
+          <div className="p-4 sm:p-5 border-t border-gray-200 dark:border-zinc-800">
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-3">
               {SAMPLE_TEXTS.map((sample) => (
                 <button
@@ -118,7 +118,7 @@ export const PlaygroundEditorPanel = forwardRef<
           placeholder={t("playground.textSection.placeholder")}
           rows={showSamples ? 2 : 6}
           maxLength={MAX_TTS_TEXT_LENGTH}
-          className={`w-full px-4 sm:px-5 py-4 pb-14 rounded-2xl bg-white dark:bg-zinc-900 border-2 border-gray-200 dark:border-zinc-700 focus:border-indigo-500 dark:focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all text-gray-900 dark:text-white placeholder-gray-400 text-base sm:text-lg resize-y ${
+          className={`w-full px-4 sm:px-5 py-4 pb-14 rounded-2xl glass-panel border-2 border-gray-200 dark:border-zinc-700 focus:border-indigo-500 dark:focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-zinc-500 text-base sm:text-lg resize-y ${
             showSamples ? "min-h-[80px]" : "min-h-[160px]"
           }`}
         />
@@ -148,7 +148,7 @@ export const PlaygroundEditorPanel = forwardRef<
           <div className="relative w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center">
             <svg className="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
               <path
-                className="text-gray-200 dark:text-zinc-600"
+                className="text-gray-200 dark:text-zinc-700"
                 strokeWidth="3"
                 stroke="currentColor"
                 fill="none"
@@ -167,7 +167,7 @@ export const PlaygroundEditorPanel = forwardRef<
           </div>
           <span
             className={`text-xs sm:text-sm font-semibold ${
-              isOverLimit ? "text-red-500" : "text-gray-600 dark:text-zinc-300"
+              isOverLimit ? "text-red-600 dark:text-red-400" : "text-gray-600 dark:text-zinc-300"
             }`}
           >
             {charCount}/{maxChars}
@@ -178,7 +178,7 @@ export const PlaygroundEditorPanel = forwardRef<
       {/* Confirmation Modal */}
       {showConfirmModal && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-gray-900/40 dark:bg-black/60 backdrop-blur-sm">
-          <div className="bg-white dark:bg-zinc-900 rounded-2xl shadow-xl w-full max-w-sm overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+          <div className="glass-panel rounded-2xl shadow-xl w-full max-w-sm overflow-hidden animate-in fade-in zoom-in-95 duration-200">
             <div className="p-5 sm:p-6">
               <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">
                 {t("playground.textSection.replaceTitle")}

@@ -182,7 +182,7 @@ export default function Header() {
                       {currentLang.flag}
                     </span>
                     <svg
-                      className={`w-3.5 h-3.5 text-gray-400 dark:text-gray-500 transition-transform duration-250 ${
+                      className={`w-3.5 h-3.5 text-gray-400 dark:text-gray-400 transition-transform duration-250 ${
                         languageDropdownOpen
                           ? "rotate-180 text-indigo-600 dark:text-indigo-400"
                           : ""
@@ -219,7 +219,7 @@ export default function Header() {
                           className={`flex items-center space-x-2 px-2.5 py-1.5 rounded-lg transition-all duration-150 text-left ${
                             locale === code
                               ? "bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 font-semibold"
-                              : "text-gray-700 dark:text-gray-300 hover:bg-gray-100/70 dark:hover:bg-gray-850/50"
+                              : "text-gray-700 dark:text-gray-300 hover:bg-gray-100/70 dark:hover:bg-gray-800/50"
                           }`}
                         >
                           <span
@@ -311,7 +311,7 @@ export default function Header() {
         {/* Drawer header */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100 dark:border-gray-800 shrink-0">
           <Link href="/" className="flex items-center space-x-2" onClick={closeDrawer}>
-            <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
+            <div className="w-8 h-8 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-lg flex items-center justify-center">
               <span className="text-white font-bold text-sm">H</span>
             </div>
             <span className="text-xl font-bold text-gray-900 dark:text-white">Huavoi</span>
@@ -386,12 +386,12 @@ export default function Header() {
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-xs text-gray-400 dark:text-gray-500">
+                  <span className="text-xs text-gray-400 dark:text-gray-400">
                     {Object.keys(localeNames).length} {t("header.languages")}
                   </span>
                   <svg
-                    className={`w-4 h-4 text-gray-400 dark:text-gray-500 transition-transform duration-200 ${
-                      mobileLangOpen ? "rotate-180 text-blue-600" : ""
+                    className={`w-4 h-4 text-gray-400 dark:text-gray-400 transition-transform duration-200 ${
+                      mobileLangOpen ? "rotate-180 text-indigo-600" : ""
                     }`}
                     fill="none"
                     stroke="currentColor"
@@ -425,7 +425,7 @@ export default function Header() {
                         }}
                         className={`flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-150 ${
                           locale === code
-                            ? "bg-white dark:bg-gray-800 text-blue-600 dark:text-blue-400 shadow-sm ring-1 ring-gray-200 dark:ring-gray-700 font-semibold"
+                            ? "bg-white dark:bg-gray-800 text-indigo-600 dark:text-indigo-400 shadow-sm ring-1 ring-gray-200 dark:ring-gray-700 font-semibold"
                             : "text-gray-600 dark:text-gray-400 hover:bg-white/60 dark:hover:bg-gray-800/60"
                         }`}
                       >
@@ -436,7 +436,7 @@ export default function Header() {
                         </span>
                         <span className="truncate text-xs">{lang.name}</span>
                         {locale === code && (
-                          <CheckIcon className="w-3.5 h-3.5 text-blue-600 ml-auto shrink-0" />
+                          <CheckIcon className="w-3.5 h-3.5 text-indigo-600 ml-auto shrink-0" />
                         )}
                       </button>
                     ))}
@@ -455,16 +455,16 @@ export default function Header() {
                 >
                   <div className="flex items-center gap-2.5">
                     {theme === "dark" ? (
-                      <SunIcon className="w-4.5 h-4.5 text-blue-600" />
+                      <SunIcon className="w-4.5 h-4.5 text-indigo-600" />
                     ) : (
-                      <MoonIcon className="w-4.5 h-4.5 text-blue-600" />
+                      <MoonIcon className="w-4.5 h-4.5 text-indigo-600" />
                     )}
                     <span className="text-xs">
                       {theme === "dark" ? t("header.light") : t("header.dark")}
                     </span>
                   </div>
                   <svg
-                    className="w-4 h-4 text-gray-400 dark:text-gray-500"
+                    className="w-4 h-4 text-gray-400 dark:text-gray-400"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -489,7 +489,7 @@ export default function Header() {
             target="_blank"
             rel="noopener noreferrer"
             onClick={closeDrawer}
-            className="flex items-center justify-center gap-2 w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold px-5 py-3.5 rounded-xl transition-all duration-200 shadow-lg shadow-blue-500/20 hover:shadow-blue-500/30 hover:-translate-y-0.5 active:translate-y-0"
+            className="flex items-center justify-center gap-2 w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-semibold px-5 py-3.5 rounded-xl transition-all duration-200 shadow-lg shadow-indigo-500/20 hover:shadow-indigo-500/30 hover:-translate-y-0.5 active:translate-y-0"
           >
             {t("common.getStarted")}
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

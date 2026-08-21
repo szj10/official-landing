@@ -94,7 +94,7 @@ export function VoiceRecorder({
               className={`flex items-center justify-between p-3 rounded-xl border transition-all cursor-pointer ${
                 isSelected
                   ? "bg-indigo-50/90 dark:bg-indigo-950/40 border-indigo-500 dark:border-indigo-500 shadow-xs ring-1 ring-indigo-500/20"
-                  : "bg-white dark:bg-zinc-800/80 border-gray-200/80 dark:border-zinc-700/60 hover:border-indigo-300 dark:hover:border-indigo-600"
+                  : "glass-panel border-gray-200/80 dark:border-zinc-700/60 hover:border-indigo-300 dark:hover:border-indigo-600"
               }`}
             >
               <div className="flex items-center gap-3 flex-1 min-w-0">
@@ -162,7 +162,7 @@ export function VoiceRecorder({
                         onDeleteHistoryVoice(voice.anonymous_voice_id);
                       }
                     }}
-                    className="w-7 h-7 rounded-lg flex items-center justify-center text-gray-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/40 transition-colors"
+                    className="w-7 h-7 rounded-lg flex items-center justify-center text-gray-400 dark:text-zinc-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/40 transition-colors"
                     aria-label={t("playground.voiceSection.deleteRecording")}
                   >
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -187,7 +187,7 @@ export function VoiceRecorder({
     <div className="flex flex-col items-center w-full space-y-4">
       {recordedAudioBlob || uploadStatus === "success" ? (
         /* Active Captured Recording Card */
-        <div className="w-full max-w-md bg-white dark:bg-zinc-800 rounded-xl p-4 border border-indigo-100 dark:border-indigo-900/50 shadow-xs space-y-3 text-center">
+        <div className="w-full max-w-md glass-panel rounded-xl p-4 border border-indigo-100 dark:border-indigo-900/50 shadow-xs space-y-3 text-center">
           <div className="inline-flex items-center gap-2 px-3 py-1 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 rounded-full text-xs font-semibold">
             <CheckIcon className="w-4 h-4" />
             {uploadStatus === "success"
@@ -215,7 +215,7 @@ export function VoiceRecorder({
           )}
 
           {uploadStatus === "uploading" && (
-            <div className="flex items-center justify-center gap-2 text-xs text-indigo-600 font-medium py-1">
+            <div className="flex items-center justify-center gap-2 text-xs text-indigo-600 dark:text-indigo-400 font-medium py-1">
               <svg className="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
                 <circle
                   className="opacity-25"
@@ -236,7 +236,7 @@ export function VoiceRecorder({
           )}
 
           {uploadStatus === "error" && (
-            <div className="flex items-center justify-center gap-1.5 text-xs text-red-600 font-medium py-1">
+            <div className="flex items-center justify-center gap-1.5 text-xs text-red-600 dark:text-red-400 font-medium py-1">
               <AlertIcon className="w-4 h-4" />
               {uploadError ?? t("playground.voiceSection.uploadError")}
             </div>
@@ -273,7 +273,7 @@ export function VoiceRecorder({
         /* Recording Console */
         <div className="w-full max-w-md flex flex-col items-center space-y-4">
           {/* Reading Script Card */}
-          <div className="w-full bg-white dark:bg-zinc-800/90 rounded-xl p-3.5 border border-gray-200/80 dark:border-zinc-700/70 shadow-xs relative group">
+          <div className="w-full glass-panel rounded-xl p-3.5 border border-gray-200/80 dark:border-zinc-700/70 shadow-xs relative group">
             <div className="flex items-center justify-between text-[10px] sm:text-[11px] font-semibold text-gray-500 dark:text-zinc-400 uppercase tracking-wider mb-1.5">
               <span>{t("playground.voiceSection.promptGuideTitle")}</span>
               {/* copy button removed */}
@@ -301,7 +301,7 @@ export function VoiceRecorder({
               <button
                 type="button"
                 onClick={onStopRecording}
-                className="relative group focus:outline-none"
+                className="relative group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
               >
                 <div className="absolute inset-0 bg-red-500 rounded-full animate-ping opacity-75" />
                 <div className="relative w-16 h-16 rounded-full bg-gradient-to-tr from-red-600 to-rose-500 flex items-center justify-center text-white shadow-lg shadow-red-500/40 group-active:scale-95 transition-transform">
@@ -325,7 +325,7 @@ export function VoiceRecorder({
                   <button
                     type="button"
                     onClick={onSelectSampleVoiceTab}
-                    className="flex flex-col items-center gap-1.5 group focus:outline-none transition-all"
+                    className="flex flex-col items-center gap-1.5 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 transition-all"
                     title={t("playground.voiceSection.switchToSampleVoices")}
                   >
                     <div className="w-12 h-12 rounded-full bg-gradient-to-tr from-blue-500 to-cyan-500 flex items-center justify-center text-white shadow-sm group-hover:shadow-md group-hover:scale-105 group-active:scale-95 transition-transform">
@@ -342,7 +342,7 @@ export function VoiceRecorder({
                   <button
                     type="button"
                     onClick={onStartRecording}
-                    className="group relative focus:outline-none"
+                    className="group relative focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
                   >
                     <div className="absolute -inset-1 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full blur opacity-30 group-hover:opacity-75 transition duration-300" />
                     <div className="relative w-16 h-16 rounded-full bg-gradient-to-tr from-indigo-600 to-purple-600 flex items-center justify-center text-white shadow-md shadow-indigo-500/30 group-hover:scale-105 group-active:scale-95 transition-transform">
@@ -359,7 +359,7 @@ export function VoiceRecorder({
                   <button
                     type="button"
                     onClick={handleExpandHistoryTab}
-                    className="flex flex-col items-center gap-1.5 group focus:outline-none transition-all"
+                    className="flex flex-col items-center gap-1.5 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 transition-all"
                     title={t("playground.voiceSection.viewSavedPrompts")}
                   >
                     <div className="relative w-12 h-12 rounded-full bg-gradient-to-tr from-purple-500 to-pink-500 flex items-center justify-center text-white shadow-sm group-hover:shadow-md group-hover:scale-105 group-active:scale-95 transition-transform">

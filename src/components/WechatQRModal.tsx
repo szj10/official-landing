@@ -49,7 +49,7 @@ export default function WechatQRModal({ isOpen, onClose }: WechatQRModalProps) {
               height={180}
               className="w-full h-full"
             />
-            <kbd className="absolute -top-2 -right-2 px-1.5 py-0.5 text-xs rounded bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 font-mono shadow-sm border border-gray-200 dark:border-gray-700">
+            <kbd className="absolute -top-2 -right-2 px-1.5 py-0.5 text-xs rounded bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 font-mono shadow-sm border border-zinc-200 dark:border-zinc-700">
               Esc
             </kbd>
           </div>

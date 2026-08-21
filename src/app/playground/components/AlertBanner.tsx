@@ -53,7 +53,7 @@ export function AlertBanner({
           <button
             type="button"
             onClick={onDismissEmptyTextWarning}
-            className="text-amber-500 hover:text-amber-700 p-1"
+            className="text-amber-600 dark:text-amber-400 hover:text-amber-800 dark:hover:text-amber-300 p-1"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
