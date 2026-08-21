@@ -22,6 +22,7 @@
       "uploading": "녹음 업로드 중...",
       "uploadSuccess": "녹음 업로드 완료!",
       "uploadError": "녹음 업로드에 실패했습니다. 다시 시도해 주세요.",
+      "uploadRetry": "다시 업로드",
       "uploadRateLimit": "업로드 한도에 도달했습니다. {time} 후에 다시 시도해 주세요.",
       "playRecorded": "녹음 듣기",
       "customVoice": "내 녹음",

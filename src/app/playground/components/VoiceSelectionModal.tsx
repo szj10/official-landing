@@ -20,6 +20,8 @@ interface VoiceSelectionModalProps {
   recordedAudioBlob: Blob | null;
   uploadStatus: "idle" | "uploading" | "success" | "error";
   uploadError: string | null;
+  /** Re-upload last Blob on non-429 failure; omit for rate-limit errors. */
+  onRetryUpload?: () => void;
   anonymousVoiceId: number | null;
   historyVoices: HistoryVoice[];
   showHistoryVoices: boolean;
@@ -55,6 +57,7 @@ export function VoiceSelectionModal({
   recordedAudioBlob,
   uploadStatus,
   uploadError,
+  onRetryUpload,
   anonymousVoiceId,
   historyVoices,
   showHistoryVoices,
@@ -252,6 +255,7 @@ export function VoiceSelectionModal({
                   recordedAudioBlob={recordedAudioBlob}
                   uploadStatus={uploadStatus}
                   uploadError={uploadError}
+                  onRetryUpload={onRetryUpload}
                   anonymousVoiceId={anonymousVoiceId}
                   historyVoices={historyVoices}
                   showHistoryVoices={showHistoryVoices}

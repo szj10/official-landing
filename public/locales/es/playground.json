@@ -22,6 +22,7 @@
       "uploading": "Subiendo grabación...",
       "uploadSuccess": "¡Grabación subida con éxito!",
       "uploadError": "Error al subir la grabación. Inténtalo de nuevo.",
+      "uploadRetry": "Reintentar subida",
       "uploadRateLimit": "Límite de subida alcanzado. Inténtalo de nuevo en {time}.",
       "playRecorded": "Reproducir grabación",
       "customVoice": "Grabación personalizada",

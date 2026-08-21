@@ -22,6 +22,7 @@
       "uploading": "Aufnahme wird hochgeladen...",
       "uploadSuccess": "Aufnahme erfolgreich hochgeladen!",
       "uploadError": "Hochladen der Aufnahme fehlgeschlagen. Bitte versuchen Sie es erneut.",
+      "uploadRetry": "Erneut hochladen",
       "uploadRateLimit": "Limit erreicht. Bitte versuchen Sie es in {time} erneut.",
       "playRecorded": "Aufnahme abspielen",
       "customVoice": "Eigene Aufnahme",

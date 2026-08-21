@@ -22,6 +22,7 @@
       "uploading": "正在上傳錄音...",
       "uploadSuccess": "錄音上傳成功！",
       "uploadError": "上傳錄音失敗，請重試。",
+      "uploadRetry": "重新上傳",
       "uploadRateLimit": "已達上傳上限，請在 {time} 後重試。",
       "playRecorded": "播放錄音",
       "customVoice": "自訂錄音",

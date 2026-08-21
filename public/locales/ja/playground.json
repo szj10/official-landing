@@ -22,6 +22,7 @@
       "uploading": "録音をアップロード中...",
       "uploadSuccess": "録音のアップロードが完了しました！",
       "uploadError": "録音のアップロードに失敗しました。もう一度お試しください。",
+      "uploadRetry": "再アップロード",
       "uploadRateLimit": "アップロード制限に達しました。{time} 後にもう一度お試しください。",
       "playRecorded": "録音を再生",
       "customVoice": "カスタム録音",

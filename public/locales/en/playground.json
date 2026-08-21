@@ -22,6 +22,7 @@
       "uploading": "Uploading recording...",
       "uploadSuccess": "Recording uploaded successfully!",
       "uploadError": "Failed to upload recording. Please try again.",
+      "uploadRetry": "Retry upload",
       "uploadRateLimit": "Upload limit reached. Please try again in {time}.",
       "playRecorded": "Play Recording",
       "customVoice": "Custom Recording",

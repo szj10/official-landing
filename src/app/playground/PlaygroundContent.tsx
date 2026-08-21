@@ -51,6 +51,8 @@ export default function PlaygroundContent() {
   );
   const [anonymousVoiceId, setAnonymousVoiceId] = useState<number | null>(null);
   const [uploadError, setUploadError] = useState<string | null>(null);
+  /** Non-429 upload failures can retry with the same Blob; rate limits cannot. */
+  const [uploadCanRetry, setUploadCanRetry] = useState(false);
 
   // --- Step 2: Recorded voice playback ---
   const [recordedAudioUrl, setRecordedAudioUrl] = useState<string | null>(null);
@@ -102,6 +104,8 @@ export default function PlaygroundContent() {
   const audioChunksRef = useRef<Blob[]>([]);
   const recordingIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const recordingTimeRef = useRef<number>(0); // Always in sync with state
+  /** Duration sent with the last upload attempt (for retry without re-record). */
+  const lastUploadDurationRef = useRef<number>(0);
   const voicePreviewRef = useRef<HTMLAudioElement | null>(null);
   const pollingIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const pollFailureCountRef = useRef(0);
@@ -585,8 +589,10 @@ export default function PlaygroundContent() {
   };
 
   const uploadRecordingToBackend = async (blob: Blob, durationSeconds: number) => {
+    lastUploadDurationRef.current = durationSeconds;
     setUploadStatus("uploading");
     setUploadError(null);
+    setUploadCanRetry(false);
     setAnonymousVoiceId(null);
 
     try {
@@ -604,6 +610,7 @@ export default function PlaygroundContent() {
         const body = await res.json().catch(() => ({}));
         const retryAfter: number = body?.detail?.retry_after ?? 3600;
         setUploadStatus("error");
+        setUploadCanRetry(false);
         setUploadError(
           t("playground.voiceSection.uploadRateLimit").replace(
             "{time}",
@@ -618,6 +625,7 @@ export default function PlaygroundContent() {
         const detail =
           typeof body?.detail === "string" ? body.detail : t("playground.voiceSection.uploadError");
         setUploadStatus("error");
+        setUploadCanRetry(true);
         setUploadError(detail);
         return;
       }
@@ -625,6 +633,7 @@ export default function PlaygroundContent() {
       const data = await res.json();
       setAnonymousVoiceId(data.anonymous_voice_id);
       setUploadStatus("success");
+      setUploadCanRetry(false);
 
       const newVoice: HistoryVoice = {
         anonymous_voice_id: data.anonymous_voice_id,
@@ -642,8 +651,15 @@ export default function PlaygroundContent() {
     } catch (err) {
       console.error("Upload error:", err);
       setUploadStatus("error");
+      setUploadCanRetry(true);
       setUploadError(t("playground.voiceSection.uploadError"));
     }
+  };
+
+  const retryUpload = () => {
+    if (!recordedAudioBlob || !uploadCanRetry) return;
+    const duration = lastUploadDurationRef.current || recordingTimeRef.current;
+    void uploadRecordingToBackend(recordedAudioBlob, duration);
   };
 
   // ---------------------------------------------------------------------------
@@ -1189,6 +1205,7 @@ export default function PlaygroundContent() {
         recordedAudioBlob={recordedAudioBlob}
         uploadStatus={uploadStatus}
         uploadError={uploadError}
+        onRetryUpload={uploadCanRetry && recordedAudioBlob ? retryUpload : undefined}
         anonymousVoiceId={anonymousVoiceId}
         historyVoices={historyVoices}
         showHistoryVoices={showHistoryVoices}
@@ -1207,10 +1224,12 @@ export default function PlaygroundContent() {
           setRecordedAudioUrl(null);
           setRecordingTime(0);
           recordingTimeRef.current = 0;
+          lastUploadDurationRef.current = 0;
           setSelectedVoice("voice1");
           setUploadStatus("idle");
           setAnonymousVoiceId(null);
           setUploadError(null);
+          setUploadCanRetry(false);
         }}
         onToggleShowHistoryVoices={() => setShowHistoryVoices((v) => !v)}
         onSelectHistoryVoice={(voice) => {
@@ -1222,6 +1241,8 @@ export default function PlaygroundContent() {
             setRecordedAudioUrl(null);
           }
           setUploadStatus("success");
+          setUploadError(null);
+          setUploadCanRetry(false);
         }}
         onPlayHistoryVoice={playHistoryVoice}
         onToggleRecordingPlayback={toggleRecPlayback}

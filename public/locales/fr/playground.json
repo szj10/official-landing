@@ -22,6 +22,7 @@
       "uploading": "Téléversement de l'enregistrement...",
       "uploadSuccess": "Enregistrement téléversé avec succès !",
       "uploadError": "Échec du téléversement de l'enregistrement. Veuillez réessayer.",
+      "uploadRetry": "Réessayer le téléversement",
       "uploadRateLimit": "Limite de téléversement atteinte. Veuillez réessayer dans {time}.",
       "playRecorded": "Lire l'enregistrement",
       "customVoice": "Enregistrement personnalisé",

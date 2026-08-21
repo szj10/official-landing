@@ -19,6 +19,8 @@ export interface VoiceRecorderProps {
   recordedAudioBlob: Blob | null;
   uploadStatus: "idle" | "uploading" | "success" | "error";
   uploadError: string | null;
+  /** Re-upload last Blob without re-recording (non-429 failures only). */
+  onRetryUpload?: () => void;
   anonymousVoiceId: number | null;
   historyVoices: HistoryVoice[];
   showHistoryVoices?: boolean;
@@ -45,6 +47,7 @@ export function VoiceRecorder({
   recordedAudioBlob,
   uploadStatus,
   uploadError,
+  onRetryUpload,
   anonymousVoiceId,
   historyVoices,
   playingHistoryVoiceId,
@@ -236,9 +239,22 @@ export function VoiceRecorder({
           )}
 
           {uploadStatus === "error" && (
-            <div className="flex items-center justify-center gap-1.5 text-xs text-red-600 dark:text-red-400 font-medium py-1">
-              <AlertIcon className="w-4 h-4" />
-              {uploadError ?? t("playground.voiceSection.uploadError")}
+            <div className="flex flex-col items-center gap-2 py-1">
+              <div className="flex items-center justify-center gap-1.5 text-xs text-red-600 dark:text-red-400 font-medium">
+                <AlertIcon className="w-4 h-4 shrink-0" />
+                <span className="text-left">
+                  {uploadError ?? t("playground.voiceSection.uploadError")}
+                </span>
+              </div>
+              {onRetryUpload && (
+                <button
+                  type="button"
+                  onClick={onRetryUpload}
+                  className="text-xs font-semibold text-indigo-600 dark:text-indigo-400 underline underline-offset-2 hover:no-underline"
+                >
+                  {t("playground.voiceSection.uploadRetry")}
+                </button>
+              )}
             </div>
           )}
 
