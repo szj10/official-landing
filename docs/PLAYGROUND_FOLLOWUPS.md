@@ -1,7 +1,7 @@
 # Playground Follow-ups
 
 Analysis and TODO backlog for the public TTS playground in `official-landing`.  
-Scope: **remaining** issues only (as of 2026-08-22). Already-resolved items (char-limit validation, queue metrics UI, duration reject-on-fail, explicit audio bucket, GET/SSE `audio_duration` parity, rate-limit banners, dark mode / mobile layout) are intentionally omitted.
+Scope: **remaining** issues only (as of 2026-08-22). Already-resolved items (char-limit validation, queue metrics UI, duration reject-on-fail, explicit audio bucket, GET/SSE `audio_duration` parity, rate-limit banners, dark mode / mobile layout, dead `eventSourceRef`, `currentText` alias) are intentionally omitted.
 
 Primary surface:
 
@@ -50,25 +50,17 @@ History playback uses a similar `setTimeout(..., 50)`. On slow networks or cold 
 - `uploadRecordingToBackend`: single POST; failure sets `uploadError` with no retry control (beyond the user re-recording / re-triggering upload).
 - `fetchJobStatus`: non-OK (except 429) returns quietly; network errors only `console.error`. No backoff, no user-visible “polling failed / retry” path while `isGenerating` stays true or stuck.
 
-### 5. Dead SSE leftover
-
-`eventSourceRef` is declared and cleaned up on unmount, but nothing opens an `EventSource`. Dead code from an older stream-based design; polling is the live path.
-
-### 6. History hydrate keeps stale local jobs
+### 5. History hydrate keeps stale local jobs
 
 On load, local TTS IDs are filtered by `expires_at`, then merged with `/history/tts`. Jobs missing from the backend are **kept** if local `audio_path !== null`. Pending-job 404 clears storage but only logs — no banner. Users can see history entries that no longer resolve to playable audio.
 
-### 7. Sticky seek bar accessibility
+### 6. Sticky seek bar accessibility
 
 `StickyPlayerBar` has `aria-label` on play/pause/close. The progress track is a clickable `div` only (`onSeek` mouse click). Missing: `role="slider"`, keyboard handlers (Space/Enter play-pause already on button; arrows for seek), `tabIndex`, `aria-valuenow` / `aria-valuemin` / `aria-valuemax`.
 
-### 8. Voice modal still a prop hub
+### 7. Voice modal still a prop hub
 
 `VoiceGrid` and `VoiceRecorder` are extracted, but `VoiceSelectionModal` still accepts ~30 props and owns tab chrome + speed. Hard to unit-test tab rules without mounting the full playground tree. See also `docs/VOICE_TAB_FLOW.md`.
-
-### 9. Minor: `currentText` alias
-
-`const currentText = textInput` exists only for `saveCompletedJob` defaults. Resume path already passes `contextOverride`. Harmless but confusing; prefer an explicit parameter or drop the alias.
 
 ---
 
@@ -93,9 +85,6 @@ On load, local TTS IDs are filtered by `expires_at`, then merged with `/history/
 - [ ] **Purge stale history on hydrate**  
       Drop local jobs whose IDs are absent from the history API response (or whose audio URL 404s). On pending-job not found, show a short banner in addition to clearing `playground_pending_job`.
 
-- [ ] **Remove `eventSourceRef`**  
-      Delete unused SSE ref and related cleanup.
-
 - [ ] **Simplify playback identity state** (optional refactor)  
       Derive or consolidate `playingHistoryJobId` / `playingHistoryVoiceId` so stop/switch paths cannot leave mismatched UI highlights.
 
@@ -106,9 +95,6 @@ On load, local TTS IDs are filtered by `expires_at`, then merged with `/history/
 
 - [ ] **Thin `VoiceSelectionModal`**  
       Colocate tab state closer to children, or introduce a small context for voice-session state so the modal is layout + confirm only.
-
-- [ ] **Drop `currentText` alias**  
-      Pass `textInput` explicitly into `saveCompletedJob`.
 
 - [ ] **Analytics (optional)**  
       Track generate success / failure / rate-limit / upload failure if product wants funnel metrics.
@@ -140,3 +126,5 @@ Do **not** reopen these as landing bugs (already handled):
 - `audio_duration` on job GET (and SSE payloads where used)
 - Rate-limit user messaging (`AlertBanner`)
 - Dark mode / responsive sticky layout
+- Dead `eventSourceRef` SSE leftover (removed; polling only)
+- `currentText` alias (removed; `saveCompletedJob` uses `textInput` directly)

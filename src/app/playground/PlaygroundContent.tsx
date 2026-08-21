@@ -99,7 +99,6 @@ export default function PlaygroundContent() {
   const recordingIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const recordingTimeRef = useRef<number>(0); // Always in sync with state
   const voicePreviewRef = useRef<HTMLAudioElement | null>(null);
-  const eventSourceRef = useRef<EventSource | null>(null);
   const pollingIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const editorRef = useRef<{ focusTextarea: () => void }>(null);
 
@@ -256,7 +255,6 @@ export default function PlaygroundContent() {
   useEffect(() => {
     return () => {
       if (recordingIntervalRef.current) clearInterval(recordingIntervalRef.current);
-      if (eventSourceRef.current) eventSourceRef.current.close();
       if (pollingIntervalRef.current) clearInterval(pollingIntervalRef.current);
       if (recordedAudioUrl) URL.revokeObjectURL(recordedAudioUrl);
     };
@@ -723,10 +721,6 @@ export default function PlaygroundContent() {
     setLastQueueMetrics(null);
     setShowCompletionCard(false);
 
-    if (eventSourceRef.current) {
-      eventSourceRef.current.close();
-      eventSourceRef.current = null;
-    }
     if (pollingIntervalRef.current) {
       clearInterval(pollingIntervalRef.current);
       pollingIntervalRef.current = null;
@@ -756,7 +750,7 @@ export default function PlaygroundContent() {
   ) {
     // Use context override if provided (e.g., from resumed job), otherwise use current state
     const ctx = contextOverride || {
-      textInput: currentText,
+      textInput,
       activeVoicePanel,
       anonymousVoiceId,
       selectedVoice,
@@ -772,7 +766,7 @@ export default function PlaygroundContent() {
           ? t("playground.voicePromptLabel").replace("{id}", String(ctx.anonymousVoiceId))
           : t("playground.voiceSection.customVoice");
 
-    const textToUse = ctx.textInput || currentText;
+    const textToUse = ctx.textInput || textInput;
     const textSnippet = textToUse.slice(0, 50) + (textToUse.length > 50 ? "..." : "");
 
     const newJob: HistoryTTSJob = {
@@ -991,8 +985,6 @@ export default function PlaygroundContent() {
   // ---------------------------------------------------------------------------
   // Derived state & summaries
   // ---------------------------------------------------------------------------
-  const currentText = textInput;
-
   const hasValidStockVoice = activeVoicePanel === "stock" && !!selectedVoice;
   const hasValidCustomVoice =
     activeVoicePanel === "custom" && uploadStatus === "success" && anonymousVoiceId !== null;
