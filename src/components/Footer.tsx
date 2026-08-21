@@ -124,16 +124,16 @@ export default function Footer() {
   const [showWechatQR, setShowWechatQR] = useState(false);
 
   return (
-    <footer className="relative overflow-hidden bg-zinc-150/80 dark:bg-zinc-820/80 border-t border-zinc-200 dark:border-zinc-900/80 text-zinc-600 dark:text-zinc-400">
+    <footer className="relative overflow-hidden bg-zinc-50/80 dark:bg-zinc-950/80 border-t border-zinc-200 dark:border-zinc-800/80 text-zinc-600 dark:text-zinc-400">
       {/* Ambient glow blobs */}
       <div className="pointer-events-none absolute top-0 left-1/4 w-[500px] h-[300px] bg-indigo-600/6 rounded-full blur-[120px]" />
       <div className="pointer-events-none absolute bottom-0 right-1/4 w-[400px] h-[300px] bg-purple-600/6 rounded-full blur-[100px]" />
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Glass panel wrapper */}
-        <div className="glass-panel rounded-3xl px-4 sm:px-6 shadow-lg shadow-zinc-200/50 dark:shadow-zinc-900/10">
+        <div className="glass-panel rounded-3xl px-4 sm:px-6 shadow-lg shadow-indigo-500/5 dark:shadow-indigo-500/10">
           {/* ── Top section ─────────────────────────────────────────────────────── */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-12 py-12 border-b border-zinc-200 dark:border-zinc-900/80">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-12 py-12 border-b border-zinc-200 dark:border-zinc-800/80">
             {/* Brand col */}
             <div className="lg:col-span-2 flex flex-col gap-6">
               {/* Logo */}
@@ -151,13 +151,14 @@ export default function Footer() {
               {/* Social icons */}
               <div className="flex items-center gap-2">
                 {socialLinks.map(({ name, href, Icon, hoverClass }) => {
+                  const socialClass = `w-8 h-8 rounded-lg border border-zinc-200 dark:border-zinc-800 flex items-center justify-center text-zinc-500 dark:text-zinc-400 hover:bg-zinc-100/80 dark:hover:bg-zinc-800/60 transition-all duration-200 active:scale-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 ${hoverClass}`;
                   if (name === "WeChat") {
                     return (
                       <button
                         key={name}
                         onClick={() => setShowWechatQR(true)}
                         aria-label={name}
-                        className={`w-8 h-8 rounded-lg border border-zinc-200 dark:border-zinc-800 flex items-center justify-center text-zinc-500 transition-all duration-200 active:scale-90 ${hoverClass}`}
+                        className={socialClass}
                       >
                         <Icon className="w-3.5 h-3.5" />
                       </button>
@@ -170,7 +171,7 @@ export default function Footer() {
                       target="_blank"
                       rel="noopener noreferrer"
                       aria-label={name}
-                      className={`w-8 h-8 rounded-lg border border-zinc-200 dark:border-zinc-800 flex items-center justify-center text-zinc-500 transition-all duration-200 active:scale-90 ${hoverClass}`}
+                      className={socialClass}
                     >
                       <Icon className="w-3.5 h-3.5" />
                     </a>
@@ -191,7 +192,7 @@ export default function Footer() {
                       <li key={label}>
                         <Link
                           href={href}
-                          className="text-xs text-zinc-600 dark:text-zinc-500 hover:text-indigo-500 dark:hover:text-indigo-400 transition-colors duration-150"
+                          className="text-xs text-zinc-600 dark:text-zinc-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 rounded-sm"
                         >
                           {label}
                         </Link>
@@ -207,7 +208,7 @@ export default function Footer() {
           </div>
 
           {/* ── Bottom bar ──────────────────────────────────────────────────────── */}
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 py-6 text-[11px] text-zinc-500 dark:text-zinc-600">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 py-6 text-[11px] text-zinc-500 dark:text-zinc-400">
             <p>
               © {new Date().getFullYear()} Huavoi, Inc. {t("footer.copyright")}
             </p>
@@ -220,7 +221,7 @@ export default function Footer() {
                 <Link
                   key={item.label}
                   href={item.href}
-                  className="hover:text-zinc-900 dark:hover:text-zinc-400 transition-colors duration-150"
+                  className="hover:text-zinc-900 dark:hover:text-zinc-200 transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 rounded-sm"
                 >
                   {item.label}
                 </Link>

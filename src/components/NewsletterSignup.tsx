@@ -86,7 +86,7 @@ export default function NewsletterSignup({ compact = false }: NewsletterSignupPr
         {status === "success" ? (
           <div className="flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 mx-auto w-fit">
             <svg
-              className="w-5 h-5 text-emerald-400 shrink-0"
+              className="w-5 h-5 text-emerald-700 dark:text-emerald-400 shrink-0"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -98,7 +98,9 @@ export default function NewsletterSignup({ compact = false }: NewsletterSignupPr
                 d="M5 13l4 4L19 7"
               />
             </svg>
-            <span className="text-sm text-emerald-400 font-medium">{t("footer.subscribed")}</span>
+            <span className="text-sm text-emerald-700 dark:text-emerald-400 font-medium">
+              {t("footer.subscribed")}
+            </span>
           </div>
         ) : (
           <form
@@ -125,7 +127,9 @@ export default function NewsletterSignup({ compact = false }: NewsletterSignupPr
             </button>
           </form>
         )}
-        {status === "error" && <p className="text-sm text-red-400 mt-3">{errorMessage}</p>}
+        {status === "error" && (
+          <p className="text-sm text-red-600 dark:text-red-400 mt-3">{errorMessage}</p>
+        )}
       </div>
     );
   }
@@ -136,19 +140,23 @@ export default function NewsletterSignup({ compact = false }: NewsletterSignupPr
       <h3 className="text-zinc-900 dark:text-white font-semibold text-sm mb-2 tracking-wide">
         {t("footer.stayUpdated")}
       </h3>
-      <p className="text-xs text-zinc-500 mb-4 leading-relaxed">{t("footer.stayUpdatedDesc")}</p>
+      <p className="text-xs text-zinc-500 dark:text-zinc-400 mb-4 leading-relaxed">
+        {t("footer.stayUpdatedDesc")}
+      </p>
 
       {status === "success" ? (
         <div className="flex items-center gap-2 px-3 py-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
           <svg
-            className="w-4 h-4 text-emerald-400 shrink-0"
+            className="w-4 h-4 text-emerald-700 dark:text-emerald-400 shrink-0"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
           >
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
           </svg>
-          <span className="text-xs text-emerald-400 font-medium">{t("footer.subscribed")}</span>
+          <span className="text-xs text-emerald-700 dark:text-emerald-400 font-medium">
+            {t("footer.subscribed")}
+          </span>
         </div>
       ) : (
         <form onSubmit={handleSubscribe} className="flex flex-col gap-2">
@@ -161,17 +169,19 @@ export default function NewsletterSignup({ compact = false }: NewsletterSignupPr
             }}
             placeholder={t("footer.emailPlaceholder")}
             disabled={status === "loading"}
-            className={`bg-zinc-900 border rounded-xl px-3 py-2.5 text-xs text-white placeholder-zinc-600 focus:outline-none transition-colors disabled:opacity-60 ${
+            className={`glass-panel rounded-xl px-3 py-2.5 text-xs text-zinc-900 dark:text-white placeholder-zinc-500 dark:placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-colors disabled:opacity-60 ${
               status === "error"
-                ? "border-red-500/60 focus:border-red-500"
-                : "border-zinc-800 focus:border-indigo-500"
+                ? "border-red-500/60 focus:border-red-500 focus:ring-red-500"
+                : "border-zinc-200 dark:border-zinc-700"
             }`}
           />
-          {status === "error" && <p className="text-[10px] text-red-400 px-1">{errorMessage}</p>}
+          {status === "error" && (
+            <p className="text-[10px] text-red-600 dark:text-red-400 px-1">{errorMessage}</p>
+          )}
           <button
             type="submit"
             disabled={status === "loading"}
-            className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 disabled:opacity-60 text-white rounded-xl px-4 py-2.5 text-xs font-semibold transition-all duration-200 active:scale-95 shadow-md shadow-indigo-500/20"
+            className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 disabled:opacity-60 text-white rounded-xl px-4 py-2.5 text-xs font-semibold transition-all duration-200 active:scale-95 shadow-md shadow-indigo-500/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2"
           >
             {status === "loading" ? t("footer.subscribing") : t("footer.subscribe")}
           </button>
