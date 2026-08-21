@@ -29,7 +29,8 @@
       "playRecorded": "Reproducir Grabación",
       "stopRecorded": "Detener Reproducción",
       "recordedPreview": "Vista Previa de Grabación",
-      "savedPrompts": "En caché"
+      "savedPrompts": "En caché",
+      "customVoice": "Voz personalizada"
     },
     "speedSection": {
       "speed": "Velocidad de Voz",
@@ -41,6 +42,7 @@
       "title": "Vista Previa",
       "generate": "Generar Audio",
       "generating": "Generando...",
+      "synthesizing": "Sintetizando...",
       "playing": "Reproduciendo audio...",
       "ready": "Listo para reproducir",
       "noAudio": "Selecciona texto y voz, luego haz clic en Generar para crear audio",
@@ -75,6 +77,12 @@
     },
     "previewVoice": "Vista previa de voz",
     "selectVoice": "Seleccionar voz",
+    "chooseVoice": "Elegir voz",
+    "voicePromptLabel": "Grabación #{id}",
+    "voiceLabel": "Voz #{id}",
+    "unsavedRecording": "Grabación sin guardar",
+    "synthesizedSpeech": "Voz sintetizada",
+    "yourRecording": "Tu grabación",
     "microphoneError": "No se puede acceder al micrófono. Por favor verifica los permisos.",
     "generateError": "Error al generar el audio. Por favor inténtalo de nuevo.",
     "emptyTextWarning": "Por favor, introduce texto antes de generar el audio."

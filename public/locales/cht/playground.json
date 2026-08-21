@@ -29,7 +29,8 @@
       "playRecorded": "播放錄音",
       "stopRecorded": "停止播放",
       "recordedPreview": "錄音試聽",
-      "savedPrompts": "已快取"
+      "savedPrompts": "已快取",
+      "customVoice": "自訂語音"
     },
     "speedSection": {
       "speed": "語速",
@@ -41,6 +42,7 @@
       "title": "預覽",
       "generate": "生成音訊",
       "generating": "生成中...",
+      "synthesizing": "合成中...",
       "playing": "正在播放音訊...",
       "ready": "準備播放",
       "noAudio": "選擇文字和語音，然後點擊生成以創建音訊",
@@ -75,6 +77,12 @@
     },
     "previewVoice": "試聽語音",
     "selectVoice": "選擇語音",
+    "chooseVoice": "選擇語音",
+    "voicePromptLabel": "錄音 #{id}",
+    "voiceLabel": "語音 #{id}",
+    "unsavedRecording": "未儲存的錄音",
+    "synthesizedSpeech": "合成語音",
+    "yourRecording": "您的錄音",
     "microphoneError": "無法存取麥克風，請檢查權限設定。",
     "generateError": "音訊生成失敗，請重試。",
     "emptyTextWarning": "請先輸入文字再生成音訊。"

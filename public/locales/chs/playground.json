@@ -29,7 +29,8 @@
       "playRecorded": "播放录音",
       "stopRecorded": "停止播放",
       "recordedPreview": "录音试听",
-      "savedPrompts": "已缓存"
+      "savedPrompts": "已缓存",
+      "customVoice": "自定义语音"
     },
     "speedSection": {
       "speed": "语速",
@@ -41,6 +42,7 @@
       "title": "预览",
       "generate": "生成音频",
       "generating": "生成中...",
+      "synthesizing": "合成中...",
       "playing": "正在播放音频...",
       "ready": "准备播放",
       "noAudio": "选择文本和语音，然后点击生成以创建音频",
@@ -87,6 +89,12 @@
     },
     "previewVoice": "试听语音",
     "selectVoice": "选择语音",
+    "chooseVoice": "选择语音",
+    "voicePromptLabel": "录音 #{id}",
+    "voiceLabel": "语音 #{id}",
+    "unsavedRecording": "未保存的录音",
+    "synthesizedSpeech": "合成语音",
+    "yourRecording": "您的录音",
     "microphoneError": "无法访问麦克风，请检查权限设置。",
     "generateError": "音频生成失败，请重试。",
     "emptyTextWarning": "请先输入文字再生成音频。",

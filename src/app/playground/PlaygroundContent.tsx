@@ -769,7 +769,7 @@ export default function PlaygroundContent() {
       isStock && stockVoice
         ? t(stockVoice.nameKey)
         : ctx.anonymousVoiceId
-          ? `Voice Prompt #${ctx.anonymousVoiceId}`
+          ? t("playground.voicePromptLabel").replace("{id}", String(ctx.anonymousVoiceId))
           : t("playground.voiceSection.customVoice");
 
     const textToUse = ctx.textInput || currentText;
@@ -1053,8 +1053,8 @@ export default function PlaygroundContent() {
                   {selectedStockVoiceObj
                     ? t(selectedStockVoiceObj.nameKey)
                     : anonymousVoiceId
-                      ? `Custom #${anonymousVoiceId}`
-                      : "Choose Voice"}
+                      ? t("playground.voicePromptLabel").replace("{id}", String(anonymousVoiceId))
+                      : t("playground.chooseVoice")}
                 </span>
                 <span className="text-xs text-gray-500 dark:text-zinc-500">
                   {speed === "slow"
@@ -1100,7 +1100,7 @@ export default function PlaygroundContent() {
               <SparklesIcon className="w-5 h-5" />
             )}
             {isGenerating
-              ? "Synthesizing..."
+              ? t("playground.preview.synthesizing")
               : uploadStatus === "uploading"
                 ? t("playground.voiceSection.uploading")
                 : t("playground.preview.generate")}
@@ -1212,7 +1212,11 @@ export default function PlaygroundContent() {
       {/* Sticky Bottom Player Bar */}
       <StickyPlayerBar
         isVisible={isStickyPlayerVisible}
-        title={activeStickyPlayer === "tts" ? "Synthesized Speech" : "Your Recording"}
+        title={
+          activeStickyPlayer === "tts"
+            ? t("playground.synthesizedSpeech")
+            : t("playground.yourRecording")
+        }
         subtitle={
           activeStickyPlayer === "tts"
             ? (() => {
@@ -1223,12 +1227,12 @@ export default function PlaygroundContent() {
                 return isStock && stockVoice
                   ? t(stockVoice.nameKey)
                   : anonymousVoiceId
-                    ? `Voice Prompt #${anonymousVoiceId}`
+                    ? t("playground.voicePromptLabel").replace("{id}", String(anonymousVoiceId))
                     : t("playground.voiceSection.customVoice");
               })()
             : anonymousVoiceId
-              ? `Voice #${anonymousVoiceId}`
-              : "Unsaved Recording"
+              ? t("playground.voiceLabel").replace("{id}", String(anonymousVoiceId))
+              : t("playground.unsavedRecording")
         }
         isPlaying={activeStickyPlayer === "tts" ? isPlaying : isRecPlaying}
         progress={activeStickyPlayer === "tts" ? audioProgress : recAudioProgress}

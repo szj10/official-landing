@@ -29,7 +29,8 @@
       "playRecorded": "録音を再生",
       "stopRecorded": "再生を停止",
       "recordedPreview": "録音した音声の試聴",
-      "savedPrompts": "キャッシュ済み"
+      "savedPrompts": "キャッシュ済み",
+      "customVoice": "カスタム音声"
     },
     "speedSection": {
       "speed": "音声速度",
@@ -41,6 +42,7 @@
       "title": "プレビュー",
       "generate": "音声を生成",
       "generating": "生成中...",
+      "synthesizing": "合成中...",
       "playing": "再生中...",
       "ready": "再生可能",
       "noAudio": "テキストと音声を選択し、生成をクリックして音声を作成",
@@ -75,6 +77,12 @@
     },
     "previewVoice": "音声プレビュー",
     "selectVoice": "音声を選択",
+    "chooseVoice": "音声を選択",
+    "voicePromptLabel": "録音 #{id}",
+    "voiceLabel": "音声 #{id}",
+    "unsavedRecording": "未保存の録音",
+    "synthesizedSpeech": "合成音声",
+    "yourRecording": "あなたの録音",
     "microphoneError": "マイクにアクセスできません。権限を確認してください。",
     "generateError": "音声の生成に失敗しました。もう一度お試しください。",
     "emptyTextWarning": "音声を生成する前にテキストを入力してください。"

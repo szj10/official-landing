@@ -29,7 +29,8 @@
       "playRecorded": "Aufnahme abspielen",
       "stopRecorded": "Wiedergabe stoppen",
       "recordedPreview": "Vorschau der Aufnahme",
-      "savedPrompts": "Gespeichert"
+      "savedPrompts": "Gespeichert",
+      "customVoice": "Benutzerdefinierte Stimme"
     },
     "speedSection": {
       "speed": "Sprechgeschwindigkeit",
@@ -41,6 +42,7 @@
       "title": "Vorschau",
       "generate": "Audio generieren",
       "generating": "Generiere...",
+      "synthesizing": "Synthetisiere...",
       "playing": "Audio wird abgespielt...",
       "ready": "Bereit zur Wiedergabe",
       "noAudio": "Text und Stimme auswählen, dann auf Generieren klicken",
@@ -75,6 +77,12 @@
     },
     "previewVoice": "Stimme vorhören",
     "selectVoice": "Stimme auswählen",
+    "chooseVoice": "Stimme wählen",
+    "voicePromptLabel": "Aufnahme #{id}",
+    "voiceLabel": "Stimme #{id}",
+    "unsavedRecording": "Ungespeicherte Aufnahme",
+    "synthesizedSpeech": "Synthetisierte Sprache",
+    "yourRecording": "Ihre Aufnahme",
     "microphoneError": "Mikrofon nicht zugänglich. Bitte Berechtigungen prüfen.",
     "generateError": "Audio-Generierung fehlgeschlagen. Bitte erneut versuchen.",
     "emptyTextWarning": "Bitte gib Text ein, bevor du Audio generierst."

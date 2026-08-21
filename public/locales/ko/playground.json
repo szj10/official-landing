@@ -29,7 +29,8 @@
       "playRecorded": "녹음 듣기",
       "stopRecorded": "재생 중지",
       "recordedPreview": "녹음된 음성 미리듣기",
-      "savedPrompts": "캐시됨"
+      "savedPrompts": "캐시됨",
+      "customVoice": "사용자 지정 음성"
     },
     "speedSection": {
       "speed": "음성 속도",
@@ -41,6 +42,7 @@
       "title": "미리보기",
       "generate": "오디오 생성",
       "generating": "생성 중...",
+      "synthesizing": "합성 중...",
       "playing": "오디오 재생 중...",
       "ready": "재생 준비",
       "noAudio": "텍스트와 음성을 선택한 후 생성 버튼을 클릭하세요",
@@ -75,6 +77,12 @@
     },
     "previewVoice": "음성 미리듣기",
     "selectVoice": "음성 선택",
+    "chooseVoice": "음성 선택",
+    "voicePromptLabel": "녹음 #{id}",
+    "voiceLabel": "음성 #{id}",
+    "unsavedRecording": "저장되지 않은 녹음",
+    "synthesizedSpeech": "합성 음성",
+    "yourRecording": "내 녹음",
     "microphoneError": "마이크에 접근할 수 없습니다. 권한을 확인해주세요.",
     "generateError": "오디오 생성에 실패했습니다. 다시 시도해주세요.",
     "emptyTextWarning": "오디오를 생성하기 전에 텍스트를 입력해 주세요."

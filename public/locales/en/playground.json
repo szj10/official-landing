@@ -29,7 +29,8 @@
       "playRecorded": "Play Recording",
       "stopRecorded": "Stop Playback",
       "recordedPreview": "Recorded Voice Preview",
-      "savedPrompts": "Saved"
+      "savedPrompts": "Saved",
+      "customVoice": "Custom Voice"
     },
     "speedSection": {
       "speed": "Speech Speed",
@@ -41,6 +42,7 @@
       "title": "Preview",
       "generate": "Generate Audio",
       "generating": "Generating...",
+      "synthesizing": "Synthesizing...",
       "playing": "Playing audio...",
       "ready": "Ready to play",
       "noAudio": "Select text and voice, then click Generate to create audio",
@@ -87,6 +89,12 @@
     },
     "previewVoice": "Preview voice",
     "selectVoice": "Select voice",
+    "chooseVoice": "Choose Voice",
+    "voicePromptLabel": "Recording #{id}",
+    "voiceLabel": "Voice #{id}",
+    "unsavedRecording": "Unsaved Recording",
+    "synthesizedSpeech": "Synthesized Speech",
+    "yourRecording": "Your Recording",
     "microphoneError": "Unable to access microphone. Please check permissions.",
     "generateError": "Failed to generate audio. Please try again.",
     "emptyTextWarning": "Please enter some text before generating audio.",
