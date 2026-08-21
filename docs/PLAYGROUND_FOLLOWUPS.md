@@ -48,7 +48,7 @@ History playback uses a similar `setTimeout(..., 50)`. On slow networks or cold 
 ### 4. Upload / poll error recovery is thin
 
 - `uploadRecordingToBackend`: single POST; failure sets `uploadError` with no retry control (beyond the user re-recording / re-triggering upload).
-- `fetchJobStatus`: non-OK (except 429) returns quietly; network errors only `console.error`. No backoff, no user-visible “polling failed / retry” path while `isGenerating` stays true or stuck.
+- ~~`fetchJobStatus`: non-OK (except 429) returns quietly; network errors only `console.error`. No backoff, no user-visible “polling failed / retry” path while `isGenerating` stays true or stuck.~~ **Done:** after 5 consecutive poll failures (or immediate on 404), stop polling and show a connection-error banner with Retry.
 
 ### 5. History hydrate keeps stale local jobs
 
@@ -74,7 +74,7 @@ On load, local TTS IDs are filtered by `expires_at`, then merged with `/history/
 - [ ] **Upload retry UX**  
       On non-429 upload failure, offer retry that reuses the last `Blob` + duration (no re-record). Keep rate-limit path as-is.
 
-- [ ] **Polling failure visibility**  
+- [x] **Polling failure visibility**  
       After N consecutive poll failures, surface an error (or “connection issue — retry”) and stop the interval; optional exponential backoff instead of fixed 1s forever.
 
 ### P2 — Correctness & cleanup

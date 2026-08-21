@@ -12,6 +12,8 @@ interface AlertBannerProps {
   rateLimitRetryAfter: number | null;
   errorMessage: string | null;
   isGenerating: boolean;
+  /** When set, failed banner is a recoverable connection/poll issue with Retry. */
+  onRetryConnection?: (() => void) | null;
 }
 
 export function AlertBanner({
@@ -21,6 +23,7 @@ export function AlertBanner({
   rateLimitRetryAfter,
   errorMessage,
   isGenerating,
+  onRetryConnection = null,
 }: AlertBannerProps) {
   const { t } = useI18n();
 
@@ -40,6 +43,8 @@ export function AlertBanner({
         return "";
     }
   };
+
+  const isConnectionError = generationStatus === "failed" && !!errorMessage && !!onRetryConnection;
 
   return (
     <div className="space-y-3">
@@ -80,13 +85,26 @@ export function AlertBanner({
         </div>
       )}
 
-      {/* Generation Error Alert */}
+      {/* Generation / connection error */}
       {generationStatus === "failed" && errorMessage && (
         <div className="flex items-start gap-3 px-4 py-3.5 rounded-2xl bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 animate-fade-in-up">
           <AlertIcon className="w-5 h-5 shrink-0 mt-0.5" />
-          <div>
-            <p className="text-sm font-semibold">{t("playground.errorTitle")}</p>
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-semibold">
+              {isConnectionError
+                ? t("playground.connectionErrorTitle")
+                : t("playground.errorTitle")}
+            </p>
             <p className="text-xs mt-0.5">{errorMessage}</p>
+            {isConnectionError && onRetryConnection && (
+              <button
+                type="button"
+                onClick={onRetryConnection}
+                className="mt-2.5 text-xs font-semibold underline underline-offset-2 hover:no-underline"
+              >
+                {t("playground.connectionErrorRetry")}
+              </button>
+            )}
           </div>
         </div>
       )}

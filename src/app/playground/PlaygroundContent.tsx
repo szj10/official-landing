@@ -25,6 +25,8 @@ import {
 
 // Get max length from environment variable or use default
 const MAX_TTS_TEXT_LENGTH = parseInt(process.env.NEXT_PUBLIC_MAX_TTS_TEXT_LENGTH || "600", 10);
+/** Stop polling and surface a retry banner after this many consecutive network/HTTP failures. */
+const MAX_CONSECUTIVE_POLL_FAILURES = 5;
 
 export default function PlaygroundContent() {
   const { t, locale } = useI18n();
@@ -68,6 +70,8 @@ export default function PlaygroundContent() {
   const [audioDuration, setAudioDuration] = useState<number | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [rateLimitRetryAfter, setRateLimitRetryAfter] = useState<number | null>(null);
+  /** When set, failed status is a recoverable poll/connection issue for this job. */
+  const [pollRetryJobId, setPollRetryJobId] = useState<string | number | null>(null);
   const [emptyTextWarning, setEmptyTextWarning] = useState(false);
   const [showCompletionCard, setShowCompletionCard] = useState(false);
 
@@ -100,6 +104,7 @@ export default function PlaygroundContent() {
   const recordingTimeRef = useRef<number>(0); // Always in sync with state
   const voicePreviewRef = useRef<HTMLAudioElement | null>(null);
   const pollingIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const pollFailureCountRef = useRef(0);
   const editorRef = useRef<{ focusTextarea: () => void }>(null);
 
   // ---------------------------------------------------------------------------
@@ -716,27 +721,63 @@ export default function PlaygroundContent() {
     setAudioDuration(null);
     setErrorMessage(null);
     setRateLimitRetryAfter(null);
+    setPollRetryJobId(null);
+    pollFailureCountRef.current = 0;
     setIsPlaying(false);
     setAudioProgress(0);
     setLastQueueMetrics(null);
     setShowCompletionCard(false);
 
-    if (pollingIntervalRef.current) {
-      clearInterval(pollingIntervalRef.current);
-      pollingIntervalRef.current = null;
-    }
+    stopPolling();
   }
 
   function handleRateLimitError(retryAfter: number) {
+    setPollRetryJobId(null);
+    pollFailureCountRef.current = 0;
     setRateLimitRetryAfter(retryAfter);
     setGenerationStatus("rate_limited");
     setIsGenerating(false);
   }
 
   function handleGenerationError(message: string) {
+    setPollRetryJobId(null);
+    pollFailureCountRef.current = 0;
     setErrorMessage(message);
     setGenerationStatus("failed");
     setIsGenerating(false);
+  }
+
+  function stopPolling() {
+    if (pollingIntervalRef.current) {
+      clearInterval(pollingIntervalRef.current);
+      pollingIntervalRef.current = null;
+    }
+  }
+
+  /** After N consecutive poll failures, stop the interval and offer retry (keeps pending job). */
+  function handleConsecutivePollFailure(jobId: string | number) {
+    pollFailureCountRef.current += 1;
+    if (pollFailureCountRef.current < MAX_CONSECUTIVE_POLL_FAILURES) return;
+
+    stopPolling();
+    setPollRetryJobId(jobId);
+    setErrorMessage(t("playground.connectionErrorMessage"));
+    setGenerationStatus("failed");
+    setIsGenerating(false);
+  }
+
+  function retryPollConnection() {
+    if (pollRetryJobId == null) return;
+    const jobId = pollRetryJobId;
+    setPollRetryJobId(null);
+    setErrorMessage(null);
+    setIsGenerating(true);
+    setGenerationStatus(
+      currentJob?.status === "queued" || currentJob?.status === "processing"
+        ? currentJob.status
+        : "processing"
+    );
+    pollJobStatus(jobId);
   }
 
   function saveCompletedJob(
@@ -823,9 +864,9 @@ export default function PlaygroundContent() {
   }
 
   function pollJobStatus(jobId: string | number) {
-    if (pollingIntervalRef.current) {
-      clearInterval(pollingIntervalRef.current);
-    }
+    stopPolling();
+    pollFailureCountRef.current = 0;
+    setPollRetryJobId(null);
 
     fetchJobStatus(jobId);
 
@@ -839,22 +880,34 @@ export default function PlaygroundContent() {
       const res = await fetch(`/api/v1/playground/tts/${jobId}`);
       if (!res.ok) {
         if (res.status === 429) {
-          const body = await res.json();
+          const body = await res.json().catch(() => ({}));
           handleRateLimitError(body?.detail?.retry_after ?? 3600);
-          if (pollingIntervalRef.current) clearInterval(pollingIntervalRef.current);
+          stopPolling();
           return;
         }
+        // Job gone — not recoverable by retrying poll
+        if (res.status === 404) {
+          stopPolling();
+          localStorage.removeItem("playground_pending_job");
+          handleGenerationError(t("playground.jobNotFoundError"));
+          return;
+        }
+        console.warn(`Polling HTTP ${res.status} for job ${jobId}`);
+        handleConsecutivePollFailure(jobId);
         return;
       }
 
+      pollFailureCountRef.current = 0;
       const job: TTSJobResponse = await res.json();
       handleJobUpdate(job);
     } catch (e) {
       console.error("Polling error:", e);
+      handleConsecutivePollFailure(jobId);
     }
   }
 
   function handleJobUpdate(job: TTSJobResponse) {
+    setPollRetryJobId(null);
     setCurrentJob(job);
     setGenerationStatus(job.status);
 
@@ -915,21 +968,21 @@ export default function PlaygroundContent() {
       // Clear pending job from localStorage
       localStorage.removeItem("playground_pending_job");
 
-      if (pollingIntervalRef.current) clearInterval(pollingIntervalRef.current);
+      stopPolling();
     } else if (job.status === "failed") {
       handleGenerationError(job.error_message ?? t("playground.generateError"));
 
       // Clear pending job from localStorage
       localStorage.removeItem("playground_pending_job");
 
-      if (pollingIntervalRef.current) clearInterval(pollingIntervalRef.current);
+      stopPolling();
     } else if (job.status === "rate_limited") {
       handleRateLimitError(3600);
 
       // Clear pending job from localStorage
       localStorage.removeItem("playground_pending_job");
 
-      if (pollingIntervalRef.current) clearInterval(pollingIntervalRef.current);
+      stopPolling();
     }
   }
 
@@ -1108,6 +1161,7 @@ export default function PlaygroundContent() {
             rateLimitRetryAfter={rateLimitRetryAfter}
             errorMessage={errorMessage}
             isGenerating={isGenerating}
+            onRetryConnection={pollRetryJobId != null ? retryPollConnection : null}
           />
           <QueueStatusCard
             lastQueueMetrics={lastQueueMetrics}
