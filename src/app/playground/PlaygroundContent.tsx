@@ -1231,7 +1231,7 @@ export default function PlaygroundContent() {
                     : t("playground.voiceSection.customVoice");
               })()
             : anonymousVoiceId
-              ? t("playground.voiceLabel").replace("{id}", String(anonymousVoiceId))
+              ? t("playground.voicePromptLabel").replace("{id}", String(anonymousVoiceId))
               : t("playground.unsavedRecording")
         }
         isPlaying={activeStickyPlayer === "tts" ? isPlaying : isRecPlaying}
