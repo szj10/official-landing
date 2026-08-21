@@ -82,7 +82,7 @@ export function VoiceRecorder({
           const durationStr = voice.audio_duration
             ? formatTime(Math.round(voice.audio_duration))
             : "0:10";
-          const relativeTimeStr = voice.created_at ? formatRelativeTime(voice.created_at) : "";
+          const relativeTimeStr = voice.created_at ? formatRelativeTime(voice.created_at, t) : "";
 
           return (
             <div
@@ -109,7 +109,11 @@ export function VoiceRecorder({
                       ? "bg-indigo-600 text-white shadow-sm shadow-indigo-500/30"
                       : "bg-indigo-100 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-200 dark:hover:bg-indigo-900"
                   }`}
-                  aria-label={isPlayingThis ? "Stop preview" : "Play preview"}
+                  aria-label={
+                    isPlayingThis
+                      ? t("playground.voiceSection.stopPreview")
+                      : t("playground.voiceSection.playPreview")
+                  }
                 >
                   {isPlayingThis ? (
                     <StopIcon className="w-3.5 h-3.5" />
@@ -120,10 +124,14 @@ export function VoiceRecorder({
 
                 <div className="flex flex-col min-w-0">
                   <span className="text-xs sm:text-sm font-semibold text-gray-900 dark:text-white truncate">
-                    {durationStr} Recording {relativeTimeStr ? `• ${relativeTimeStr}` : ""}
+                    {t("playground.voiceSection.recordingListItem").replace(
+                      "{duration}",
+                      durationStr
+                    )}
+                    {relativeTimeStr ? ` • ${relativeTimeStr}` : ""}
                   </span>
                   <span className="text-[11px] text-gray-500 dark:text-zinc-400">
-                    Voice ID:{" "}
+                    {t("playground.voiceSection.voiceId")}{" "}
                     <span className="font-mono font-medium text-gray-700 dark:text-zinc-300">
                       #{voice.anonymous_voice_id}
                     </span>
@@ -135,7 +143,7 @@ export function VoiceRecorder({
                 {isSelected && (
                   <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] sm:text-[11px] font-semibold bg-indigo-600 text-white shadow-xs">
                     <CheckIcon className="w-3 h-3" />
-                    Selected
+                    {t("playground.voiceSection.selected")}
                   </span>
                 )}
                 {onDeleteHistoryVoice && (
@@ -145,14 +153,17 @@ export function VoiceRecorder({
                       e.stopPropagation();
                       if (
                         confirm(
-                          `Are you sure you want to delete Voice #${voice.anonymous_voice_id}?`
+                          t("playground.voiceSection.deleteConfirm").replace(
+                            "{id}",
+                            String(voice.anonymous_voice_id)
+                          )
                         )
                       ) {
                         onDeleteHistoryVoice(voice.anonymous_voice_id);
                       }
                     }}
                     className="w-7 h-7 rounded-lg flex items-center justify-center text-gray-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/40 transition-colors"
-                    aria-label="Delete recording"
+                    aria-label={t("playground.voiceSection.deleteRecording")}
                   >
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path
@@ -181,20 +192,20 @@ export function VoiceRecorder({
             <CheckIcon className="w-4 h-4" />
             {uploadStatus === "success"
               ? t("playground.voiceSection.uploadSuccess")
-              : "Recording Captured"}
+              : t("playground.voiceSection.recordingCaptured")}
           </div>
 
           {anonymousVoiceId && (
             <div className="space-y-2">
               <div className="text-xs text-gray-500 dark:text-zinc-400">
-                Active Voice ID:{" "}
+                {t("playground.voiceSection.activeVoiceId")}{" "}
                 <span className="font-mono font-bold text-gray-800 dark:text-zinc-200">
                   #{anonymousVoiceId}
                 </span>
               </div>
               {(recordedDuration || recordingTime > 0) && (
                 <div className="text-xs text-gray-500 dark:text-zinc-400">
-                  Duration:{" "}
+                  {t("playground.voiceSection.duration")}{" "}
                   <span className="font-mono font-bold text-gray-800 dark:text-zinc-200">
                     {Math.round(recordedDuration || recordingTime)}s
                   </span>
@@ -244,7 +255,7 @@ export function VoiceRecorder({
                   ? "bg-emerald-600 text-white shadow-sm"
                   : "bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-900/50"
               }`}
-              aria-label="Play recording"
+              aria-label={t("playground.voiceSection.playRecorded")}
             >
               <PlayIcon className="w-5 h-5" />
             </button>
@@ -252,7 +263,7 @@ export function VoiceRecorder({
               type="button"
               onClick={onResetRecording}
               className="w-10 h-10 rounded-lg flex items-center justify-center bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-100 dark:hover:bg-indigo-900/50 transition-colors"
-              aria-label="Record again"
+              aria-label={t("playground.voiceSection.recordAgain")}
             >
               <RestartIcon className="w-6 h-6" />
             </button>
@@ -264,9 +275,7 @@ export function VoiceRecorder({
           {/* Reading Script Card */}
           <div className="w-full bg-white dark:bg-zinc-800/90 rounded-xl p-3.5 border border-gray-200/80 dark:border-zinc-700/70 shadow-xs relative group">
             <div className="flex items-center justify-between text-[10px] sm:text-[11px] font-semibold text-gray-500 dark:text-zinc-400 uppercase tracking-wider mb-1.5">
-              <span>
-                {t("playground.voiceSection.promptGuideTitle") || "Reading Script (4-10s)"}
-              </span>
+              <span>{t("playground.voiceSection.promptGuideTitle")}</span>
               {/* copy button removed */}
             </div>
             <p className="text-xs sm:text-sm font-medium text-gray-800 dark:text-zinc-200 italic leading-relaxed">
@@ -317,13 +326,13 @@ export function VoiceRecorder({
                     type="button"
                     onClick={onSelectSampleVoiceTab}
                     className="flex flex-col items-center gap-1.5 group focus:outline-none transition-all"
-                    title={t("playground.voiceSection.switchToSampleVoices") || "Sample Voices"}
+                    title={t("playground.voiceSection.switchToSampleVoices")}
                   >
                     <div className="w-12 h-12 rounded-full bg-gradient-to-tr from-blue-500 to-cyan-500 flex items-center justify-center text-white shadow-sm group-hover:shadow-md group-hover:scale-105 group-active:scale-95 transition-transform">
                       <SpeakerIcon className="w-6 h-6" />
                     </div>
                     <span className="text-[10px] font-medium text-gray-600 dark:text-zinc-400 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
-                      Samples
+                      {t("playground.voiceSection.samples")}
                     </span>
                   </button>
                 )}
@@ -351,7 +360,7 @@ export function VoiceRecorder({
                     type="button"
                     onClick={handleExpandHistoryTab}
                     className="flex flex-col items-center gap-1.5 group focus:outline-none transition-all"
-                    title={t("playground.voiceSection.viewSavedPrompts") || "Saved Prompts"}
+                    title={t("playground.voiceSection.viewSavedPrompts")}
                   >
                     <div className="relative w-12 h-12 rounded-full bg-gradient-to-tr from-purple-500 to-pink-500 flex items-center justify-center text-white shadow-sm group-hover:shadow-md group-hover:scale-105 group-active:scale-95 transition-transform">
                       <svg
@@ -374,7 +383,7 @@ export function VoiceRecorder({
                       )}
                     </div>
                     <span className="text-[10px] font-medium text-gray-600 dark:text-zinc-400 group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">
-                      History
+                      {t("playground.voiceSection.history")}
                     </span>
                   </button>
                 )}

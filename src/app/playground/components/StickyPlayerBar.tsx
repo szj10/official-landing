@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { useI18n } from "@/i18n";
 import { PlayIcon, PauseIcon } from "./icons";
 import { formatTime } from "./types";
 
@@ -29,6 +30,8 @@ export function StickyPlayerBar({
   onSeek,
   onClose,
 }: StickyPlayerBarProps) {
+  const { t } = useI18n();
+
   if (!isVisible) return null;
 
   return (
@@ -40,7 +43,7 @@ export function StickyPlayerBar({
             <button
               onClick={onClose}
               className="absolute top-2 right-2 sm:top-3 sm:right-3 p-1.5 text-gray-400 hover:text-gray-600 dark:hover:text-zinc-200 rounded-full hover:bg-gray-100 dark:hover:bg-zinc-800 transition-colors"
-              aria-label="Close player"
+              aria-label={t("playground.player.close")}
             >
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path
@@ -57,7 +60,7 @@ export function StickyPlayerBar({
           <button
             onClick={onTogglePlayback}
             className="w-12 h-12 sm:w-14 sm:h-14 shrink-0 rounded-full bg-indigo-600 hover:bg-indigo-700 text-white flex items-center justify-center shadow-lg shadow-indigo-600/20 transition-all hover:scale-105 active:scale-95"
-            aria-label={isPlaying ? "Pause" : "Play"}
+            aria-label={isPlaying ? t("playground.player.pause") : t("playground.player.play")}
           >
             {isPlaying ? <PauseIcon className="w-6 h-6" /> : <PlayIcon className="w-6 h-6 ml-1" />}
           </button>

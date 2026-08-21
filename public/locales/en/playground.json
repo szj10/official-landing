@@ -3,51 +3,60 @@
     "badge": "Try It Now",
     "title": "TTS Playground",
     "textSection": {
-      "title": "Text Input",
       "sampleTexts": "Sample Texts",
-      "customText": "Or enter your own text",
       "placeholder": "Enter the text you want to convert to speech...",
-      "characters": "chars",
-      "words": "words",
-      "maxWords": "Max 200 words"
+      "clearText": "Clear text",
+      "replaceTitle": "Replace existing text?",
+      "replaceMessage": "Applying this sample will replace the text you currently have in the editor. Are you sure?",
+      "cancel": "Cancel",
+      "replaceConfirm": "Replace Text"
     },
     "voiceSection": {
       "sampleVoices": "Sample Voices",
       "tabCustom": "Record Voice",
-      "recordCustomSubtitle": "Clone your voice with a 10s audio recording",
       "promptGuideTitle": "Reading Prompt (4-8s)",
       "promptGuideText": "The sun rises over the ocean, painting the sky with golden light.",
       "recordHint": "Click the microphone button and read the prompt text aloud.",
       "startRecording": "Start Recording",
-      "stopRecording": "Stop Recording",
-      "recording": "Recording...",
       "recordAgain": "Record Again",
       "uploading": "Uploading voice sample...",
       "uploadSuccess": "Voice sample uploaded successfully!",
       "uploadError": "Failed to upload voice sample. Please try again.",
       "uploadRateLimit": "Upload limit reached. Please try again in {time}.",
       "playRecorded": "Play Recording",
-      "stopRecorded": "Stop Playback",
-      "recordedPreview": "Recorded Voice Preview",
-      "savedPrompts": "Saved",
-      "customVoice": "Custom Voice"
+      "customVoice": "Custom Voice",
+      "noHistory": "No saved voice recordings yet",
+      "recordFirstPrompt": "Record your first voice prompt to get started",
+      "switchToSampleVoices": "Sample Voices",
+      "viewSavedPrompts": "Saved Prompts",
+      "samples": "Samples",
+      "history": "History",
+      "recordingCaptured": "Recording Captured",
+      "activeVoiceId": "Active Voice ID:",
+      "voiceId": "Voice ID:",
+      "duration": "Duration:",
+      "selected": "Selected",
+      "deleteConfirm": "Are you sure you want to delete Voice #{id}?",
+      "recordingListItem": "{duration} Recording",
+      "preferRecordedVoices": "Prefer your recorded voices?",
+      "recordingTab": "Recording Tab",
+      "findPreviousVoices": "Find previously recorded voices?",
+      "historyTab": "History Tab",
+      "preferSampleVoices": "Prefer pre-recorded voices?",
+      "sampleVoiceTab": "Sample Voice Tab",
+      "confirm": "Confirm",
+      "playPreview": "Play preview",
+      "stopPreview": "Stop preview",
+      "deleteRecording": "Delete recording"
     },
     "speedSection": {
-      "speed": "Speech Speed",
       "slow": "Slow",
       "normal": "Normal",
       "fast": "Fast"
     },
     "preview": {
-      "title": "Preview",
       "generate": "Generate Audio",
-      "generating": "Generating...",
-      "synthesizing": "Synthesizing...",
-      "playing": "Playing audio...",
-      "ready": "Ready to play",
-      "noAudio": "Select text and voice, then click Generate to create audio",
-      "cached": "Cached result",
-      "download": "Download audio"
+      "synthesizing": "Synthesizing..."
     },
     "status": {
       "queued": "Job queued — waiting for processing...",
@@ -59,36 +68,19 @@
     "queue": {
       "title": "Queue Status",
       "position": "Position",
-      "jobsAhead": "Jobs Ahead",
       "estimatedWait": "Estimated Wait",
       "nextInLine": "You're next in line!",
       "inProgress": "Your job is queued",
-      "updatesAutomatically": "Updates automatically",
       "completedTitle": "Synthesis Complete",
-      "completedMessage": "Your audio is ready to play!",
-      "dismiss": "Dismiss"
+      "dismiss": "Dismiss",
+      "inQueue": "In Queue",
+      "loading": "Loading…",
+      "history": "History",
+      "nowPlayingBelow": "Now playing in the bar below ↓"
     },
     "rateLimitTitle": "Rate limit reached",
     "rateLimitMessage": "You've used all 5 free requests this hour. Try again in",
     "errorTitle": "Generation failed",
-    "streamError": "Lost connection to the server. Please try again.",
-    "tips": {
-      "title": "Tips for Best Results",
-      "tip1": {
-        "title": "Clear Text",
-        "description": "Use proper punctuation and spacing for natural-sounding speech"
-      },
-      "tip2": {
-        "title": "Match Voice to Content",
-        "description": "Choose a voice that fits your content's tone and audience"
-      },
-      "tip3": {
-        "title": "Test Different Options",
-        "description": "Try multiple voices and texts to find the perfect combination"
-      }
-    },
-    "previewVoice": "Preview voice",
-    "selectVoice": "Select voice",
     "chooseVoice": "Choose Voice",
     "voicePromptLabel": "Recording #{id}",
     "voiceLabel": "Voice #{id}",
@@ -98,6 +90,26 @@
     "microphoneError": "Unable to access microphone. Please check permissions.",
     "generateError": "Failed to generate audio. Please try again.",
     "emptyTextWarning": "Please enter some text before generating audio.",
-    "textTooLong": "Text exceeds character limit. Please shorten your text."
+    "textTooLong": "Text exceeds character limit. Please shorten your text.",
+    "historySection": {
+      "recentTitle": "Recent Synthesized Voices",
+      "voicesAvailable": "{count} voices available",
+      "voiceAvailable": "{count} voice available",
+      "deleteConfirm": "Are you sure you want to delete this synthesized voice?\n\n\"{text}\"",
+      "deleteAria": "Delete synthesized voice",
+      "play": "Play",
+      "pause": "Pause"
+    },
+    "player": {
+      "close": "Close player",
+      "play": "Play",
+      "pause": "Pause"
+    },
+    "relativeTime": {
+      "justNow": "just now",
+      "minutesAgo": "{n}m ago",
+      "hoursAgo": "{n}h ago",
+      "daysAgo": "{n}d ago"
+    }
   }
 }

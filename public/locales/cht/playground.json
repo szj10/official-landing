@@ -3,51 +3,60 @@
     "badge": "立即體驗",
     "title": "TTS 體驗中心",
     "textSection": {
-      "title": "文字輸入",
       "sampleTexts": "範例文字",
-      "customText": "或輸入您自己的文字",
       "placeholder": "輸入您想轉換為語音的文字...",
-      "characters": "字元",
-      "words": "詞",
-      "maxWords": "最多 200 詞"
+      "clearText": "清除文字",
+      "replaceTitle": "取代現有文字？",
+      "replaceMessage": "套用此範例會取代編輯器中目前的文字。確定繼續嗎？",
+      "cancel": "取消",
+      "replaceConfirm": "取代文字"
     },
     "voiceSection": {
       "sampleVoices": "範例語音",
       "tabCustom": "錄製聲音",
-      "recordCustomSubtitle": "透過 10 秒語音錄製複製您的聲音",
       "promptGuideTitle": "朗讀導引文字 (10-15秒)",
       "promptGuideText": "清晨的陽光灑在大地上，微風拂過樹梢。",
       "recordHint": "點擊麥克風按鈕，並大聲朗讀上方範例文字。",
       "startRecording": "開始錄製",
-      "stopRecording": "停止錄製",
-      "recording": "正在錄製...",
       "recordAgain": "重新錄製",
       "uploading": "正在上傳語音樣本...",
       "uploadSuccess": "語音樣本上傳成功！",
       "uploadError": "上傳語音樣本失敗，請重試。",
       "uploadRateLimit": "已達上傳上限，請在 {time} 後重試。",
       "playRecorded": "播放錄音",
-      "stopRecorded": "停止播放",
-      "recordedPreview": "錄音試聽",
-      "savedPrompts": "已快取",
-      "customVoice": "自訂語音"
+      "customVoice": "自訂語音",
+      "noHistory": "尚無已儲存的錄音",
+      "recordFirstPrompt": "錄製您的第一個語音樣本以開始使用",
+      "switchToSampleVoices": "範例語音",
+      "viewSavedPrompts": "已儲存的錄音",
+      "samples": "範例",
+      "history": "歷史",
+      "recordingCaptured": "錄音已擷取",
+      "activeVoiceId": "目前語音 ID：",
+      "voiceId": "語音 ID：",
+      "duration": "時長：",
+      "selected": "已選取",
+      "deleteConfirm": "確定要刪除語音 #{id} 嗎？",
+      "recordingListItem": "{duration} 錄音",
+      "preferRecordedVoices": "想使用您錄製的聲音？",
+      "recordingTab": "錄製頁",
+      "findPreviousVoices": "尋找先前錄製的聲音？",
+      "historyTab": "歷史頁",
+      "preferSampleVoices": "想使用預錄語音？",
+      "sampleVoiceTab": "範例語音頁",
+      "confirm": "確認",
+      "playPreview": "播放預覽",
+      "stopPreview": "停止預覽",
+      "deleteRecording": "刪除錄音"
     },
     "speedSection": {
-      "speed": "語速",
       "slow": "慢速",
       "normal": "正常",
       "fast": "快速"
     },
     "preview": {
-      "title": "預覽",
       "generate": "生成音訊",
-      "generating": "生成中...",
-      "synthesizing": "合成中...",
-      "playing": "正在播放音訊...",
-      "ready": "準備播放",
-      "noAudio": "選擇文字和語音，然後點擊生成以創建音訊",
-      "cached": "已快取結果",
-      "download": "下載音訊"
+      "synthesizing": "合成中..."
     },
     "status": {
       "queued": "任務排隊中，等待處理...",
@@ -59,24 +68,6 @@
     "rateLimitTitle": "已達請求上限",
     "rateLimitMessage": "您本小時內的 5 次免費請求已用完，請在以下時間後重試：",
     "errorTitle": "生成失敗",
-    "streamError": "與伺服器連接中斷，請重試。",
-    "tips": {
-      "title": "最佳實踐提示",
-      "tip1": {
-        "title": "清晰的文字",
-        "description": "使用正確的標點符號和間距以獲得自然的語音效果"
-      },
-      "tip2": {
-        "title": "匹配語音與內容",
-        "description": "選擇適合您內容語調和受眾的語音"
-      },
-      "tip3": {
-        "title": "嘗試不同選項",
-        "description": "嘗試多種語音和文字以找到完美組合"
-      }
-    },
-    "previewVoice": "試聽語音",
-    "selectVoice": "選擇語音",
     "chooseVoice": "選擇語音",
     "voicePromptLabel": "錄音 #{id}",
     "voiceLabel": "語音 #{id}",
@@ -85,6 +76,40 @@
     "yourRecording": "您的錄音",
     "microphoneError": "無法存取麥克風，請檢查權限設定。",
     "generateError": "音訊生成失敗，請重試。",
-    "emptyTextWarning": "請先輸入文字再生成音訊。"
+    "emptyTextWarning": "請先輸入文字再生成音訊。",
+    "textTooLong": "文字超出字元限制，請縮短文字。",
+    "queue": {
+      "title": "佇列狀態",
+      "position": "排隊位置",
+      "estimatedWait": "預計等待",
+      "nextInLine": "您是下一位！",
+      "inProgress": "您的任務已排隊",
+      "completedTitle": "合成完成",
+      "dismiss": "關閉",
+      "inQueue": "排隊中",
+      "loading": "載入中…",
+      "history": "歷史",
+      "nowPlayingBelow": "正在下方播放列播放 ↓"
+    },
+    "historySection": {
+      "recentTitle": "最近合成的語音",
+      "voicesAvailable": "共 {count} 條可用",
+      "voiceAvailable": "共 {count} 條可用",
+      "deleteConfirm": "確定要刪除這條合成語音嗎？\n\n\"{text}\"",
+      "deleteAria": "刪除合成語音",
+      "play": "播放",
+      "pause": "暫停"
+    },
+    "player": {
+      "close": "關閉播放器",
+      "play": "播放",
+      "pause": "暫停"
+    },
+    "relativeTime": {
+      "justNow": "剛剛",
+      "minutesAgo": "{n} 分鐘前",
+      "hoursAgo": "{n} 小時前",
+      "daysAgo": "{n} 天前"
+    }
   }
 }

@@ -68,7 +68,7 @@ export function formatRetryAfter(seconds: number) {
   return `${seconds}s`;
 }
 
-export function formatRelativeTime(dateString: string): string {
+export function formatRelativeTime(dateString: string, t?: (key: string) => string): string {
   const now = new Date();
   const date = new Date(dateString);
   const diffMs = now.getTime() - date.getTime();
@@ -77,9 +77,17 @@ export function formatRelativeTime(dateString: string): string {
   const diffHours = Math.floor(diffMinutes / 60);
   const diffDays = Math.floor(diffHours / 24);
 
-  if (diffSeconds < 60) return "just now";
-  if (diffMinutes < 60) return `${diffMinutes}m ago`;
-  if (diffHours < 24) return `${diffHours}h ago`;
-  if (diffDays < 7) return `${diffDays}d ago`;
+  const tr = (key: string, fallback: string) => (t ? t(key) : fallback);
+
+  if (diffSeconds < 60) return tr("playground.relativeTime.justNow", "just now");
+  if (diffMinutes < 60) {
+    return tr("playground.relativeTime.minutesAgo", "{n}m ago").replace("{n}", String(diffMinutes));
+  }
+  if (diffHours < 24) {
+    return tr("playground.relativeTime.hoursAgo", "{n}h ago").replace("{n}", String(diffHours));
+  }
+  if (diffDays < 7) {
+    return tr("playground.relativeTime.daysAgo", "{n}d ago").replace("{n}", String(diffDays));
+  }
   return date.toLocaleDateString();
 }

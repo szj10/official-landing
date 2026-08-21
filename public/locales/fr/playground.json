@@ -3,51 +3,60 @@
     "badge": "Essayez Maintenant",
     "title": "Espace TTS",
     "textSection": {
-      "title": "Saisie de Texte",
       "sampleTexts": "Exemples de Textes",
-      "customText": "Ou entrez votre propre texte",
       "placeholder": "Entrez le texte à convertir en parole...",
-      "characters": "caractères",
-      "words": "mots",
-      "maxWords": "Max. 200 mots"
+      "clearText": "Effacer le texte",
+      "replaceTitle": "Remplacer le texte existant ?",
+      "replaceMessage": "L'application de cet exemple remplacera le texte actuel de l'éditeur. Continuer ?",
+      "cancel": "Annuler",
+      "replaceConfirm": "Remplacer le texte"
     },
     "voiceSection": {
       "sampleVoices": "Voix Exemples",
       "tabCustom": "Enregistrez une voix",
-      "recordCustomSubtitle": "Clonez votre voix avec un enregistrement de 10 secondes",
       "promptGuideTitle": "Guide de lecture (4-8s)",
       "promptGuideText": "Le soleil se lève sur l'océan, illuminant le ciel.",
       "recordHint": "Cliquez sur le microphone et lisez le texte ci-dessus à haute voix.",
       "startRecording": "Démarrer l'enregistrement",
-      "stopRecording": "Arrêter l'enregistrement",
-      "recording": "Enregistrement en cours...",
       "recordAgain": "Réenregistrer",
       "uploading": "Téléversement de l'échantillon vocal...",
       "uploadSuccess": "Échantillon vocal téléversé avec succès !",
       "uploadError": "Échec du téléversement. Veuillez réessayer.",
       "uploadRateLimit": "Limite de téléversement atteinte. Veuillez réessayer dans {time}.",
       "playRecorded": "Lire l'enregistrement",
-      "stopRecorded": "Arrêter la lecture",
-      "recordedPreview": "Aperçu de l'enregistrement",
-      "savedPrompts": "Mis en cache",
-      "customVoice": "Voix personnalisée"
+      "customVoice": "Voix personnalisée",
+      "noHistory": "Aucun enregistrement sauvegardé pour le moment",
+      "recordFirstPrompt": "Enregistrez votre premier échantillon vocal pour commencer",
+      "switchToSampleVoices": "Voix exemples",
+      "viewSavedPrompts": "Enregistrements sauvegardés",
+      "samples": "Exemples",
+      "history": "Historique",
+      "recordingCaptured": "Enregistrement capturé",
+      "activeVoiceId": "ID de voix active :",
+      "voiceId": "ID de voix :",
+      "duration": "Durée :",
+      "selected": "Sélectionné",
+      "deleteConfirm": "Voulez-vous vraiment supprimer la Voix #{id} ?",
+      "recordingListItem": "Enregistrement {duration}",
+      "preferRecordedVoices": "Vous préférez vos voix enregistrées ?",
+      "recordingTab": "Onglet Enregistrement",
+      "findPreviousVoices": "Retrouver des voix déjà enregistrées ?",
+      "historyTab": "Onglet Historique",
+      "preferSampleVoices": "Vous préférez des voix préenregistrées ?",
+      "sampleVoiceTab": "Onglet Voix exemples",
+      "confirm": "Confirmer",
+      "playPreview": "Lire l'aperçu",
+      "stopPreview": "Arrêter l'aperçu",
+      "deleteRecording": "Supprimer l'enregistrement"
     },
     "speedSection": {
-      "speed": "Vitesse de Parole",
       "slow": "Lent",
       "normal": "Normal",
       "fast": "Rapide"
     },
     "preview": {
-      "title": "Aperçu",
       "generate": "Générer l'audio",
-      "generating": "Génération en cours...",
-      "synthesizing": "Synthèse en cours...",
-      "playing": "Lecture audio en cours...",
-      "ready": "Prêt à lire",
-      "noAudio": "Sélectionnez un texte et une voix, puis cliquez sur Générer",
-      "cached": "Résultat en cache",
-      "download": "Télécharger l'audio"
+      "synthesizing": "Synthèse en cours..."
     },
     "status": {
       "queued": "Tâche en attente...",
@@ -59,24 +68,6 @@
     "rateLimitTitle": "Limite de requêtes atteinte",
     "rateLimitMessage": "Vous avez utilisé vos 5 requêtes gratuites cette heure. Réessayez dans :",
     "errorTitle": "Échec de la génération",
-    "streamError": "Connexion au serveur perdue. Veuillez réessayer.",
-    "tips": {
-      "title": "Conseils pour de meilleurs résultats",
-      "tip1": {
-        "title": "Texte clair",
-        "description": "Utilisez une ponctuation et des espaces corrects pour une parole naturelle"
-      },
-      "tip2": {
-        "title": "Adaptez la voix au contenu",
-        "description": "Choisissez une voix qui correspond au ton et au public de votre contenu"
-      },
-      "tip3": {
-        "title": "Testez différentes options",
-        "description": "Essayez plusieurs voix et textes pour trouver la combinaison parfaite"
-      }
-    },
-    "previewVoice": "Aperçu de la voix",
-    "selectVoice": "Sélectionner la voix",
     "chooseVoice": "Choisir une voix",
     "voicePromptLabel": "Enregistrement #{id}",
     "voiceLabel": "Voix #{id}",
@@ -85,6 +76,40 @@
     "yourRecording": "Votre enregistrement",
     "microphoneError": "Impossible d'accéder au microphone. Veuillez vérifier les permissions.",
     "generateError": "Échec de la génération audio. Veuillez réessayer.",
-    "emptyTextWarning": "Veuillez saisir du texte avant de générer l'audio."
+    "emptyTextWarning": "Veuillez saisir du texte avant de générer l'audio.",
+    "textTooLong": "Le texte dépasse la limite de caractères. Veuillez le raccourcir.",
+    "queue": {
+      "title": "État de la file",
+      "position": "Position",
+      "estimatedWait": "Attente estimée",
+      "nextInLine": "Vous êtes le suivant !",
+      "inProgress": "Votre tâche est en file",
+      "completedTitle": "Synthèse terminée",
+      "dismiss": "Fermer",
+      "inQueue": "En file",
+      "loading": "Chargement…",
+      "history": "Historique",
+      "nowPlayingBelow": "Lecture en cours dans la barre ci-dessous ↓"
+    },
+    "historySection": {
+      "recentTitle": "Voix synthétisées récentes",
+      "voicesAvailable": "{count} voix disponibles",
+      "voiceAvailable": "{count} voix disponible",
+      "deleteConfirm": "Voulez-vous vraiment supprimer cette voix synthétisée ?\n\n\"{text}\"",
+      "deleteAria": "Supprimer la voix synthétisée",
+      "play": "Lecture",
+      "pause": "Pause"
+    },
+    "player": {
+      "close": "Fermer le lecteur",
+      "play": "Lecture",
+      "pause": "Pause"
+    },
+    "relativeTime": {
+      "justNow": "à l'instant",
+      "minutesAgo": "il y a {n} min",
+      "hoursAgo": "il y a {n} h",
+      "daysAgo": "il y a {n} j"
+    }
   }
 }

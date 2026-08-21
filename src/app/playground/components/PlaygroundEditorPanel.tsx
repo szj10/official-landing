@@ -129,7 +129,7 @@ export const PlaygroundEditorPanel = forwardRef<
             type="button"
             onClick={() => onTextChange("")}
             className="absolute top-4 right-4 p-2 rounded-lg bg-gray-100 dark:bg-zinc-800 hover:bg-gray-200 dark:hover:bg-zinc-700 text-gray-500 dark:text-zinc-400 hover:text-gray-700 dark:hover:text-zinc-200 transition-all shadow-sm active:scale-95"
-            title="Clear text"
+            title={t("playground.textSection.clearText")}
           >
             <svg
               className="w-4 h-4"
@@ -181,11 +181,10 @@ export const PlaygroundEditorPanel = forwardRef<
           <div className="bg-white dark:bg-zinc-900 rounded-2xl shadow-xl w-full max-w-sm overflow-hidden animate-in fade-in zoom-in-95 duration-200">
             <div className="p-5 sm:p-6">
               <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">
-                Replace existing text?
+                {t("playground.textSection.replaceTitle")}
               </h3>
               <p className="text-sm text-gray-500 dark:text-zinc-400 mb-6">
-                Applying this sample will replace the text you currently have in the editor. Are you
-                sure?
+                {t("playground.textSection.replaceMessage")}
               </p>
               <div className="flex flex-col-reverse sm:flex-row items-center justify-end gap-3 sm:gap-2">
                 <button
@@ -193,14 +192,14 @@ export const PlaygroundEditorPanel = forwardRef<
                   onClick={cancelReplace}
                   className="w-full sm:w-auto px-4 py-2.5 rounded-xl text-sm font-semibold text-gray-600 dark:text-zinc-300 hover:bg-gray-100 dark:hover:bg-zinc-800 transition-colors"
                 >
-                  Cancel
+                  {t("playground.textSection.cancel")}
                 </button>
                 <button
                   type="button"
                   onClick={confirmReplace}
                   className="w-full sm:w-auto px-4 py-2.5 rounded-xl text-sm font-semibold bg-indigo-600 hover:bg-indigo-700 text-white shadow-md shadow-indigo-500/20 transition-all active:scale-95"
                 >
-                  Replace Text
+                  {t("playground.textSection.replaceConfirm")}
                 </button>
               </div>
             </div>

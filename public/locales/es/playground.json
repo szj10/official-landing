@@ -3,51 +3,60 @@
     "badge": "Pruébalo Ahora",
     "title": "Zona de Pruebas TTS",
     "textSection": {
-      "title": "Entrada de Texto",
       "sampleTexts": "Textos de Ejemplo",
-      "customText": "O ingresa tu propio texto",
       "placeholder": "Ingresa el texto que deseas convertir a voz...",
-      "characters": "caracteres",
-      "words": "palabras",
-      "maxWords": "Máx. 200 palabras"
+      "clearText": "Borrar texto",
+      "replaceTitle": "¿Reemplazar el texto existente?",
+      "replaceMessage": "Al aplicar este ejemplo se reemplazará el texto actual del editor. ¿Continuar?",
+      "cancel": "Cancelar",
+      "replaceConfirm": "Reemplazar texto"
     },
     "voiceSection": {
       "sampleVoices": "Voces de Ejemplo",
       "tabCustom": "Graba tu Voz",
-      "recordCustomSubtitle": "Clona tu voz con una grabación de audio de 10 segundos",
       "promptGuideTitle": "Guía de Lectura (4-8s)",
       "promptGuideText": "El sol nace sobre las montañas, iluminando el cielo.",
       "recordHint": "Haz clic en el micrófono y lee el texto de arriba en voz alta.",
       "startRecording": "Iniciar Grabación",
-      "stopRecording": "Detener Grabación",
-      "recording": "Grabando...",
       "recordAgain": "Grabar Nuevamente",
       "uploading": "Subiendo muestra de voz...",
       "uploadSuccess": "¡Muestra de voz subida con éxito!",
       "uploadError": "Error al subir la muestra de voz. Inténtalo de nuevo.",
       "uploadRateLimit": "Límite de subida alcanzado. Inténtalo de nuevo en {time}.",
       "playRecorded": "Reproducir Grabación",
-      "stopRecorded": "Detener Reproducción",
-      "recordedPreview": "Vista Previa de Grabación",
-      "savedPrompts": "En caché",
-      "customVoice": "Voz personalizada"
+      "customVoice": "Voz personalizada",
+      "noHistory": "Aún no hay grabaciones guardadas",
+      "recordFirstPrompt": "Graba tu primera muestra de voz para comenzar",
+      "switchToSampleVoices": "Voces de ejemplo",
+      "viewSavedPrompts": "Grabaciones guardadas",
+      "samples": "Ejemplos",
+      "history": "Historial",
+      "recordingCaptured": "Grabación capturada",
+      "activeVoiceId": "ID de voz activa:",
+      "voiceId": "ID de voz:",
+      "duration": "Duración:",
+      "selected": "Seleccionado",
+      "deleteConfirm": "¿Seguro que quieres eliminar la Voz #{id}?",
+      "recordingListItem": "Grabación {duration}",
+      "preferRecordedVoices": "¿Prefieres tus voces grabadas?",
+      "recordingTab": "Pestaña Grabar",
+      "findPreviousVoices": "¿Buscar voces grabadas antes?",
+      "historyTab": "Pestaña Historial",
+      "preferSampleVoices": "¿Prefieres voces pregrabadas?",
+      "sampleVoiceTab": "Pestaña Voces de ejemplo",
+      "confirm": "Confirmar",
+      "playPreview": "Reproducir vista previa",
+      "stopPreview": "Detener vista previa",
+      "deleteRecording": "Eliminar grabación"
     },
     "speedSection": {
-      "speed": "Velocidad de Voz",
       "slow": "Lento",
       "normal": "Normal",
       "fast": "Rápido"
     },
     "preview": {
-      "title": "Vista Previa",
       "generate": "Generar Audio",
-      "generating": "Generando...",
-      "synthesizing": "Sintetizando...",
-      "playing": "Reproduciendo audio...",
-      "ready": "Listo para reproducir",
-      "noAudio": "Selecciona texto y voz, luego haz clic en Generar para crear audio",
-      "cached": "Resultado en caché",
-      "download": "Descargar audio"
+      "synthesizing": "Sintetizando..."
     },
     "status": {
       "queued": "Trabajo en cola...",
@@ -59,24 +68,6 @@
     "rateLimitTitle": "Límite de solicitudes alcanzado",
     "rateLimitMessage": "Has usado tus 5 solicitudes gratuitas por hora. Vuelve a intentarlo en:",
     "errorTitle": "Generación fallida",
-    "streamError": "Se perdió la conexión con el servidor. Por favor, inténtalo de nuevo.",
-    "tips": {
-      "title": "Consejos para Mejores Resultados",
-      "tip1": {
-        "title": "Texto Claro",
-        "description": "Usa puntuación y espaciado correctos para un habla natural"
-      },
-      "tip2": {
-        "title": "Combina Voz con Contenido",
-        "description": "Elige una voz que se adapte al tono y la audiencia de tu contenido"
-      },
-      "tip3": {
-        "title": "Prueba Diferentes Opciones",
-        "description": "Experimenta con varias voces y textos para encontrar la combinación perfecta"
-      }
-    },
-    "previewVoice": "Vista previa de voz",
-    "selectVoice": "Seleccionar voz",
     "chooseVoice": "Elegir voz",
     "voicePromptLabel": "Grabación #{id}",
     "voiceLabel": "Voz #{id}",
@@ -85,6 +76,40 @@
     "yourRecording": "Tu grabación",
     "microphoneError": "No se puede acceder al micrófono. Por favor verifica los permisos.",
     "generateError": "Error al generar el audio. Por favor inténtalo de nuevo.",
-    "emptyTextWarning": "Por favor, introduce texto antes de generar el audio."
+    "emptyTextWarning": "Por favor, introduce texto antes de generar el audio.",
+    "textTooLong": "El texto supera el límite de caracteres. Por favor, acórtalo.",
+    "queue": {
+      "title": "Estado de la cola",
+      "position": "Posición",
+      "estimatedWait": "Espera estimada",
+      "nextInLine": "¡Eres el siguiente!",
+      "inProgress": "Tu trabajo está en cola",
+      "completedTitle": "Síntesis completa",
+      "dismiss": "Cerrar",
+      "inQueue": "En cola",
+      "loading": "Cargando…",
+      "history": "Historial",
+      "nowPlayingBelow": "Reproduciendo en la barra inferior ↓"
+    },
+    "historySection": {
+      "recentTitle": "Voces sintetizadas recientes",
+      "voicesAvailable": "{count} voces disponibles",
+      "voiceAvailable": "{count} voz disponible",
+      "deleteConfirm": "¿Seguro que quieres eliminar esta voz sintetizada?\n\n\"{text}\"",
+      "deleteAria": "Eliminar voz sintetizada",
+      "play": "Reproducir",
+      "pause": "Pausar"
+    },
+    "player": {
+      "close": "Cerrar reproductor",
+      "play": "Reproducir",
+      "pause": "Pausar"
+    },
+    "relativeTime": {
+      "justNow": "ahora mismo",
+      "minutesAgo": "hace {n} min",
+      "hoursAgo": "hace {n} h",
+      "daysAgo": "hace {n} d"
+    }
   }
 }

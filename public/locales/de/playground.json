@@ -3,51 +3,60 @@
     "badge": "Jetzt Testen",
     "title": "TTS Spielwiese",
     "textSection": {
-      "title": "Texteingabe",
       "sampleTexts": "Beispieltexte",
-      "customText": "Oder eigenen Text eingeben",
       "placeholder": "Text eingeben, der in Sprache umgewandelt werden soll...",
-      "characters": "Zeichen",
-      "words": "Wörter",
-      "maxWords": "Max. 200 Wörter"
+      "clearText": "Text löschen",
+      "replaceTitle": "Vorhandenen Text ersetzen?",
+      "replaceMessage": "Durch Anwenden dieses Beispiels wird der aktuelle Text im Editor ersetzt. Fortfahren?",
+      "cancel": "Abbrechen",
+      "replaceConfirm": "Text ersetzen"
     },
     "voiceSection": {
       "sampleVoices": "Beispielstimmen",
       "tabCustom": "Stimme aufnehmen",
-      "recordCustomSubtitle": "Klonen Sie Ihre Stimme mit einer 10-Sekunden-Aufnahme",
       "promptGuideTitle": "Leseanleitung (4-8 Sek.)",
       "promptGuideText": "Die Sonne geht über den Bergen auf und taucht den Himmel in goldenes Licht.",
       "recordHint": "Klicken Sie auf das Mikrofon und lesen Sie den obigen Text laut vor.",
       "startRecording": "Aufnahme starten",
-      "stopRecording": "Aufnahme stoppen",
-      "recording": "Aufnahme läuft...",
       "recordAgain": "Erneut aufnehmen",
       "uploading": "Sprachprobe wird hochgeladen...",
       "uploadSuccess": "Sprachprobe erfolgreich hochgeladen!",
       "uploadError": "Fehler beim Hochladen der Sprachprobe. Bitte versuchen Sie es erneut.",
       "uploadRateLimit": "Limit erreicht. Bitte versuchen Sie es in {time} erneut.",
       "playRecorded": "Aufnahme abspielen",
-      "stopRecorded": "Wiedergabe stoppen",
-      "recordedPreview": "Vorschau der Aufnahme",
-      "savedPrompts": "Gespeichert",
-      "customVoice": "Benutzerdefinierte Stimme"
+      "customVoice": "Benutzerdefinierte Stimme",
+      "noHistory": "Noch keine gespeicherten Aufnahmen",
+      "recordFirstPrompt": "Nehmen Sie Ihre erste Sprachprobe auf, um zu beginnen",
+      "switchToSampleVoices": "Beispielstimmen",
+      "viewSavedPrompts": "Gespeicherte Aufnahmen",
+      "samples": "Beispiele",
+      "history": "Verlauf",
+      "recordingCaptured": "Aufnahme erfasst",
+      "activeVoiceId": "Aktive Stimmen-ID:",
+      "voiceId": "Stimmen-ID:",
+      "duration": "Dauer:",
+      "selected": "Ausgewählt",
+      "deleteConfirm": "Möchten Sie Stimme #{id} wirklich löschen?",
+      "recordingListItem": "Aufnahme {duration}",
+      "preferRecordedVoices": "Lieber Ihre aufgenommenen Stimmen?",
+      "recordingTab": "Aufnahme-Tab",
+      "findPreviousVoices": "Frühere Aufnahmen finden?",
+      "historyTab": "Verlauf-Tab",
+      "preferSampleVoices": "Lieber voraufgezeichnete Stimmen?",
+      "sampleVoiceTab": "Beispielstimmen-Tab",
+      "confirm": "Bestätigen",
+      "playPreview": "Vorschau abspielen",
+      "stopPreview": "Vorschau stoppen",
+      "deleteRecording": "Aufnahme löschen"
     },
     "speedSection": {
-      "speed": "Sprechgeschwindigkeit",
       "slow": "Langsam",
       "normal": "Normal",
       "fast": "Schnell"
     },
     "preview": {
-      "title": "Vorschau",
       "generate": "Audio generieren",
-      "generating": "Generiere...",
-      "synthesizing": "Synthetisiere...",
-      "playing": "Audio wird abgespielt...",
-      "ready": "Bereit zur Wiedergabe",
-      "noAudio": "Text und Stimme auswählen, dann auf Generieren klicken",
-      "cached": "Gecachtes Ergebnis",
-      "download": "Audio herunterladen"
+      "synthesizing": "Synthetisiere..."
     },
     "status": {
       "queued": "Job in Warteschlange...",
@@ -59,24 +68,6 @@
     "rateLimitTitle": "Anfragelimit erreicht",
     "rateLimitMessage": "Sie haben Ihre 5 kostenlosen Anfragen pro Stunde aufgebraucht. Erneuter Versuch in:",
     "errorTitle": "Generierung fehlgeschlagen",
-    "streamError": "Verbindung zum Server unterbrochen. Bitte versuchen Sie es erneut.",
-    "tips": {
-      "title": "Tipps für beste Ergebnisse",
-      "tip1": {
-        "title": "Klarer Text",
-        "description": "Verwenden Sie korrekte Satzzeichen und Abstände für natürliche Sprache"
-      },
-      "tip2": {
-        "title": "Stimme zum Inhalt passen",
-        "description": "Wählen Sie eine Stimme, die zum Ton und zur Zielgruppe Ihres Inhalts passt"
-      },
-      "tip3": {
-        "title": "Verschiedene Optionen testen",
-        "description": "Probieren Sie mehrere Stimmen und Texte aus, um die perfekte Kombination zu finden"
-      }
-    },
-    "previewVoice": "Stimme vorhören",
-    "selectVoice": "Stimme auswählen",
     "chooseVoice": "Stimme wählen",
     "voicePromptLabel": "Aufnahme #{id}",
     "voiceLabel": "Stimme #{id}",
@@ -85,6 +76,40 @@
     "yourRecording": "Ihre Aufnahme",
     "microphoneError": "Mikrofon nicht zugänglich. Bitte Berechtigungen prüfen.",
     "generateError": "Audio-Generierung fehlgeschlagen. Bitte erneut versuchen.",
-    "emptyTextWarning": "Bitte gib Text ein, bevor du Audio generierst."
+    "emptyTextWarning": "Bitte gib Text ein, bevor du Audio generierst.",
+    "textTooLong": "Text überschreitet die Zeichenbegrenzung. Bitte kürzen.",
+    "queue": {
+      "title": "Warteschlangenstatus",
+      "position": "Position",
+      "estimatedWait": "Geschätzte Wartezeit",
+      "nextInLine": "Sie sind als Nächstes dran!",
+      "inProgress": "Ihr Job ist in der Warteschlange",
+      "completedTitle": "Synthese abgeschlossen",
+      "dismiss": "Schließen",
+      "inQueue": "In Warteschlange",
+      "loading": "Laden…",
+      "history": "Verlauf",
+      "nowPlayingBelow": "Wird in der Leiste unten abgespielt ↓"
+    },
+    "historySection": {
+      "recentTitle": "Kürzlich synthetisierte Stimmen",
+      "voicesAvailable": "{count} Stimmen verfügbar",
+      "voiceAvailable": "{count} Stimme verfügbar",
+      "deleteConfirm": "Möchten Sie diese synthetisierte Stimme wirklich löschen?\n\n\"{text}\"",
+      "deleteAria": "Synthetisierte Stimme löschen",
+      "play": "Abspielen",
+      "pause": "Pause"
+    },
+    "player": {
+      "close": "Player schließen",
+      "play": "Abspielen",
+      "pause": "Pause"
+    },
+    "relativeTime": {
+      "justNow": "gerade eben",
+      "minutesAgo": "vor {n} Min.",
+      "hoursAgo": "vor {n} Std.",
+      "daysAgo": "vor {n} T."
+    }
   }
 }

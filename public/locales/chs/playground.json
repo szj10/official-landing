@@ -3,51 +3,60 @@
     "badge": "立即体验",
     "title": "TTS 体验中心",
     "textSection": {
-      "title": "文本输入",
       "sampleTexts": "示例文本",
-      "customText": "或输入您自己的文本",
       "placeholder": "输入您想转换为语音的文本...",
-      "characters": "字符",
-      "words": "词",
-      "maxWords": "最多 200 词"
+      "clearText": "清空文本",
+      "replaceTitle": "替换现有文本？",
+      "replaceMessage": "应用此示例将替换编辑器中当前的文本。确定继续吗？",
+      "cancel": "取消",
+      "replaceConfirm": "替换文本"
     },
     "voiceSection": {
       "sampleVoices": "示例语音",
       "tabCustom": "录制声音",
-      "recordCustomSubtitle": "通过 10 秒语音录制克隆您的声音",
       "promptGuideTitle": "朗读导引文本 (10-15秒)",
       "promptGuideText": "清晨的阳光洒在大地上，清风拂过树梢。",
       "recordHint": "点击麦克风按钮，并大声朗读上方示例文本。",
       "startRecording": "开始录制",
-      "stopRecording": "停止录制",
-      "recording": "正在录制...",
       "recordAgain": "重新录制",
       "uploading": "正在上传语音样本...",
       "uploadSuccess": "语音样本上传成功！",
       "uploadError": "上传语音样本失败，请重试。",
       "uploadRateLimit": "已达上传上限，请在 {time} 后重试。",
       "playRecorded": "播放录音",
-      "stopRecorded": "停止播放",
-      "recordedPreview": "录音试听",
-      "savedPrompts": "已缓存",
-      "customVoice": "自定义语音"
+      "customVoice": "自定义语音",
+      "noHistory": "暂无已保存的录音",
+      "recordFirstPrompt": "录制您的第一个语音样本以开始使用",
+      "switchToSampleVoices": "示例语音",
+      "viewSavedPrompts": "已保存的录音",
+      "samples": "示例",
+      "history": "历史",
+      "recordingCaptured": "录音已捕获",
+      "activeVoiceId": "当前语音 ID：",
+      "voiceId": "语音 ID：",
+      "duration": "时长：",
+      "selected": "已选择",
+      "deleteConfirm": "确定要删除语音 #{id} 吗？",
+      "recordingListItem": "{duration} 录音",
+      "preferRecordedVoices": "想使用您录制的声音？",
+      "recordingTab": "录制页",
+      "findPreviousVoices": "查找之前录制的声音？",
+      "historyTab": "历史页",
+      "preferSampleVoices": "想使用预录语音？",
+      "sampleVoiceTab": "示例语音页",
+      "confirm": "确认",
+      "playPreview": "播放预览",
+      "stopPreview": "停止预览",
+      "deleteRecording": "删除录音"
     },
     "speedSection": {
-      "speed": "语速",
       "slow": "慢速",
       "normal": "正常",
       "fast": "快速"
     },
     "preview": {
-      "title": "预览",
       "generate": "生成音频",
-      "generating": "生成中...",
-      "synthesizing": "合成中...",
-      "playing": "正在播放音频...",
-      "ready": "准备播放",
-      "noAudio": "选择文本和语音，然后点击生成以创建音频",
-      "cached": "已缓存结果",
-      "download": "下载音频"
+      "synthesizing": "合成中..."
     },
     "status": {
       "queued": "任务排队中，等待处理...",
@@ -59,36 +68,19 @@
     "queue": {
       "title": "队列状态",
       "position": "排队位置",
-      "jobsAhead": "前面任务数",
       "estimatedWait": "预计等待",
       "nextInLine": "您是下一位！",
       "inProgress": "您的任务已排队",
-      "updatesAutomatically": "自动更新",
       "completedTitle": "合成完成",
-      "completedMessage": "您的音频已准备就绪！",
-      "dismiss": "关闭"
+      "dismiss": "关闭",
+      "inQueue": "排队中",
+      "loading": "加载中…",
+      "history": "历史",
+      "nowPlayingBelow": "正在下方播放条播放 ↓"
     },
     "rateLimitTitle": "已达请求上限",
     "rateLimitMessage": "您本小时内的 5 次免费请求已用完，请在以下时间后重试：",
     "errorTitle": "生成失败",
-    "streamError": "与服务器连接中断，请重试。",
-    "tips": {
-      "title": "最佳实践提示",
-      "tip1": {
-        "title": "清晰的文本",
-        "description": "使用正确的标点符号和间距以获得自然的语音效果"
-      },
-      "tip2": {
-        "title": "匹配语音与内容",
-        "description": "选择适合您内容语调和受众的语音"
-      },
-      "tip3": {
-        "title": "尝试不同选项",
-        "description": "尝试多种语音和文本以找到完美组合"
-      }
-    },
-    "previewVoice": "试听语音",
-    "selectVoice": "选择语音",
     "chooseVoice": "选择语音",
     "voicePromptLabel": "录音 #{id}",
     "voiceLabel": "语音 #{id}",
@@ -98,6 +90,26 @@
     "microphoneError": "无法访问麦克风，请检查权限设置。",
     "generateError": "音频生成失败，请重试。",
     "emptyTextWarning": "请先输入文字再生成音频。",
-    "textTooLong": "文本超出字符限制，请缩短文本。"
+    "textTooLong": "文本超出字符限制，请缩短文本。",
+    "historySection": {
+      "recentTitle": "最近合成的语音",
+      "voicesAvailable": "共 {count} 条可用",
+      "voiceAvailable": "共 {count} 条可用",
+      "deleteConfirm": "确定要删除这条合成语音吗？\n\n\"{text}\"",
+      "deleteAria": "删除合成语音",
+      "play": "播放",
+      "pause": "暂停"
+    },
+    "player": {
+      "close": "关闭播放器",
+      "play": "播放",
+      "pause": "暂停"
+    },
+    "relativeTime": {
+      "justNow": "刚刚",
+      "minutesAgo": "{n} 分钟前",
+      "hoursAgo": "{n} 小时前",
+      "daysAgo": "{n} 天前"
+    }
   }
 }

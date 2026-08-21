@@ -1,5 +1,6 @@
 "use client";
 
+import { useI18n } from "@/i18n";
 import { SpeakerIcon, PlayIcon, PauseIcon, ChevronIcon } from "./icons";
 import { HistoryTTSJob, formatRelativeTime } from "./types";
 
@@ -24,6 +25,8 @@ export function HistoryJobs({
   onToggle,
   showHeader,
 }: HistoryJobsProps) {
+  const { t } = useI18n();
+
   if (historyJobs.length === 0) return null;
 
   return (
@@ -49,10 +52,13 @@ export function HistoryJobs({
             </div>
             <div className="flex flex-col items-start">
               <span className="text-base font-bold bg-clip-text text-transparent bg-gradient-to-r from-gray-800 to-gray-900 dark:from-gray-100 dark:to-white tracking-tight group-hover:text-indigo-600 transition-colors">
-                Recent Synthesized Voices
+                {t("playground.historySection.recentTitle")}
               </span>
               <span className="text-xs font-medium text-gray-500 dark:text-zinc-400">
-                {historyJobs.length} {historyJobs.length === 1 ? "voice" : "voices"} available
+                {(historyJobs.length === 1
+                  ? t("playground.historySection.voiceAvailable")
+                  : t("playground.historySection.voicesAvailable")
+                ).replace("{count}", String(historyJobs.length))}
               </span>
             </div>
           </div>
@@ -81,7 +87,11 @@ export function HistoryJobs({
                       ? "bg-indigo-600 text-white shadow-[0_0_15px_rgba(79,70,229,0.4)]"
                       : "bg-gradient-to-br from-indigo-50 to-blue-50 dark:from-indigo-900/30 dark:to-blue-900/30 text-indigo-600 dark:text-indigo-400 hover:scale-105 shadow-sm"
                   }`}
-                  aria-label={isPlayingThis ? "Pause" : "Play"}
+                  aria-label={
+                    isPlayingThis
+                      ? t("playground.historySection.pause")
+                      : t("playground.historySection.play")
+                  }
                 >
                   {isPlayingThis && (
                     <div className="absolute inset-0 bg-white/20 animate-pulse pointer-events-none" />
@@ -104,7 +114,7 @@ export function HistoryJobs({
                     </span>
                     <span className="w-1 h-1 rounded-full bg-gray-300 dark:bg-zinc-700" />
                     <span className="text-gray-400 dark:text-zinc-500">
-                      {formatRelativeTime(job.created_at)}
+                      {formatRelativeTime(job.created_at, t)}
                     </span>
                   </div>
                 </div>
@@ -116,14 +126,14 @@ export function HistoryJobs({
                       e.stopPropagation();
                       if (
                         confirm(
-                          `Are you sure you want to delete this synthesized voice?\n\n"${job.text}"`
+                          t("playground.historySection.deleteConfirm").replace("{text}", job.text)
                         )
                       ) {
                         onDeleteHistoryJob(job.playground_job_id);
                       }
                     }}
                     className="w-9 h-9 rounded-lg flex items-center justify-center text-gray-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors relative z-10 shrink-0"
-                    aria-label="Delete synthesized voice"
+                    aria-label={t("playground.historySection.deleteAria")}
                   >
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path

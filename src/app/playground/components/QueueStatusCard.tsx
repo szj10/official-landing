@@ -209,7 +209,7 @@ function QueueWaitingCard({
             <div className="flex items-center gap-1.5 ml-1">
               <div className="h-1.5 w-1.5 rounded-full bg-indigo-500 animate-pulse" />
               <span className="text-xs font-semibold text-indigo-600 dark:text-indigo-400 tracking-wide">
-                {hasMetrics ? "In Queue" : "Loading\u2026"}
+                {hasMetrics ? t("playground.queue.inQueue") : t("playground.queue.loading")}
               </span>
             </div>
           </div>
@@ -234,7 +234,7 @@ function QueueWaitingCard({
                   d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
                 />
               </svg>
-              History
+              {t("playground.queue.history")}
               <span className="flex h-4 min-w-[16px] items-center justify-center rounded-full bg-indigo-200/80 dark:bg-indigo-700/50 px-1 text-[10px] font-bold leading-none">
                 {historyCount}
               </span>
@@ -267,6 +267,7 @@ function SuccessCard({
   checkVisible: boolean;
   onDismiss?: () => void;
 }) {
+  const { t } = useI18n();
   return (
     <div className="relative overflow-hidden rounded-3xl border border-emerald-500/25 dark:border-emerald-400/20 bg-gradient-to-br from-white via-emerald-50/60 to-teal-50/40 dark:from-zinc-900 dark:via-emerald-950/50 dark:to-teal-950/30 shadow-[0_8px_40px_rgba(16,185,129,0.14)] dark:shadow-[0_8px_40px_rgba(16,185,129,0.08)] backdrop-blur-md p-5 sm:p-6">
       {/* Ambient glows */}
@@ -312,10 +313,10 @@ function SuccessCard({
 
           <div className="flex-1 min-w-0">
             <h3 className="text-base font-bold text-gray-900 dark:text-white tracking-tight">
-              Synthesis Complete
+              {t("playground.queue.completedTitle")}
             </h3>
             <p className="text-sm text-emerald-700/80 dark:text-emerald-400/80 mt-0.5 font-medium">
-              Now playing in the bar below &#8595;
+              {t("playground.queue.nowPlayingBelow")}
             </p>
           </div>
 
@@ -325,7 +326,7 @@ function SuccessCard({
               type="button"
               onClick={onDismiss}
               className="w-8 h-8 shrink-0 rounded-xl flex items-center justify-center bg-emerald-50/60 dark:bg-emerald-950/40 border border-emerald-200/40 dark:border-emerald-700/30 text-emerald-600/70 dark:text-emerald-400/70 hover:bg-emerald-100 dark:hover:bg-emerald-900/50 hover:text-emerald-700 dark:hover:text-emerald-300 hover:border-emerald-300 dark:hover:border-emerald-600 transition-all duration-200"
-              aria-label="Dismiss"
+              aria-label={t("playground.queue.dismiss")}
             >
               <svg
                 className="w-4 h-4"
@@ -366,7 +367,7 @@ function SuccessCard({
                   d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
                 />
               </svg>
-              History
+              {t("playground.queue.history")}
               <span className="flex h-4 min-w-[16px] items-center justify-center rounded-full bg-emerald-200/80 dark:bg-emerald-700/50 px-1 text-[10px] font-bold leading-none">
                 {historyCount}
               </span>

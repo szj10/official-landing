@@ -52,7 +52,11 @@ export function VoiceGrid({
                     onVoiceSelectAndPlay(voice.id);
                   }}
                   className="absolute -bottom-1 -right-1 w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-white dark:bg-zinc-800 shadow-md flex items-center justify-center text-gray-700 dark:text-zinc-300 hover:text-purple-600 dark:hover:text-purple-400 hover:scale-110 transition-transform"
-                  aria-label={isPlaying ? "Stop preview" : "Play preview"}
+                  aria-label={
+                    isPlaying
+                      ? t("playground.voiceSection.stopPreview")
+                      : t("playground.voiceSection.playPreview")
+                  }
                 >
                   {isPlaying ? (
                     <StopIcon className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
