@@ -22,72 +22,24 @@ import {
   SAMPLE_TEXTS,
   formatRetryAfter,
 } from "./components/types";
+import {
+  playWhenReady,
+  disposePreviewAudio,
+  historyVoicePromptUrl,
+  parseHistoryVoiceIdFromUrl,
+  revokeIfBlobUrl,
+  replaceMediaUrl,
+  resolvePlaygroundAudioUrl,
+  attachMediaProgress,
+  seekFromClick,
+} from "./lib/audio";
+import { clearPendingJob, readPendingJob, writePendingJob } from "./lib/historyStorage";
+import { usePlaygroundHistory } from "./hooks/usePlaygroundHistory";
 
 // Get max length from environment variable or use default
 const MAX_TTS_TEXT_LENGTH = parseInt(process.env.NEXT_PUBLIC_MAX_TTS_TEXT_LENGTH || "600", 10);
 /** Stop polling and surface a retry banner after this many consecutive network/HTTP failures. */
 const MAX_CONSECUTIVE_POLL_FAILURES = 5;
-
-/** Play once the element can play; returns abort cleanup for unmount / URL change. */
-function playWhenReady(
-  audio: HTMLAudioElement,
-  opts?: {
-    resetTime?: boolean;
-    onPlaying?: () => void;
-    onSkipped?: (err: unknown) => void;
-  }
-): () => void {
-  let cancelled = false;
-
-  const tryPlay = () => {
-    if (cancelled) return;
-    if (opts?.resetTime) {
-      try {
-        audio.currentTime = 0;
-      } catch {
-        // ignore seek errors on unloaded media
-      }
-    }
-    audio
-      .play()
-      .then(() => {
-        if (!cancelled) opts?.onPlaying?.();
-      })
-      .catch((err) => {
-        if (!cancelled) opts?.onSkipped?.(err);
-      });
-  };
-
-  if (audio.readyState >= HTMLMediaElement.HAVE_FUTURE_DATA) {
-    tryPlay();
-    return () => {
-      cancelled = true;
-    };
-  }
-
-  const onCanPlay = () => {
-    audio.removeEventListener("canplay", onCanPlay);
-    tryPlay();
-  };
-  audio.addEventListener("canplay", onCanPlay);
-
-  return () => {
-    cancelled = true;
-    audio.removeEventListener("canplay", onCanPlay);
-  };
-}
-
-/** Pause, detach listeners, clear src, and drop the preview Audio instance. */
-function disposePreviewAudio(ref: { current: HTMLAudioElement | null }) {
-  const audio = ref.current;
-  if (!audio) return;
-  audio.pause();
-  audio.onended = null;
-  audio.onerror = null;
-  audio.removeAttribute("src");
-  audio.load();
-  ref.current = null;
-}
 
 export default function PlaygroundContent() {
   const { t, locale } = useI18n();
@@ -152,9 +104,14 @@ export default function PlaygroundContent() {
   const [audioCurrentTime, setAudioCurrentTime] = useState(0);
 
   // --- History state ---
-  const [historyVoices, setHistoryVoices] = useState<HistoryVoice[]>([]);
-  const [historyJobs, setHistoryJobs] = useState<HistoryTTSJob[]>([]);
-  const [showHistoryVoices, setShowHistoryVoices] = useState(false);
+  const {
+    historyVoices,
+    historyJobs,
+    removeHistoryVoice,
+    removeHistoryJob,
+    prependHistoryVoice,
+    prependHistoryJob,
+  } = usePlaygroundHistory();
   const [playingHistoryVoiceId, setPlayingHistoryVoiceId] = useState<number | null>(null);
   const [playingHistoryJobId, setPlayingHistoryJobId] = useState<number | string | null>(null);
 
@@ -175,166 +132,92 @@ export default function PlaygroundContent() {
   /** Request sticky recording autoplay after next recordedAudioUrl commit. */
   const pendingRecAutoplayRef = useRef(false);
   const editorRef = useRef<{ focusTextarea: () => void }>(null);
+  /** Latest recorded URL for unmount revoke (avoid effect re-running on every URL change). */
+  const recordedAudioUrlRef = useRef<string | null>(null);
+  recordedAudioUrlRef.current = recordedAudioUrl;
 
   // ---------------------------------------------------------------------------
-  // Load History from localStorage / backend + Resume pending jobs
+  // Resume pending job after refresh (voices/jobs hydrate via usePlaygroundHistory)
   // ---------------------------------------------------------------------------
   useEffect(() => {
-    const loadHistory = async () => {
+    const resumePending = async () => {
+      const pending = readPendingJob();
+      if (!pending) return;
+
       try {
-        // Load voices
-        const storedVoices = localStorage.getItem("playground_voice_ids");
-        if (storedVoices) {
-          const voices: HistoryVoice[] = JSON.parse(storedVoices);
-          const now = new Date().getTime();
-          const validIds = voices
-            .filter((v) => new Date(v.expires_at).getTime() > now)
-            .map((v) => v.anonymous_voice_id);
+        const pendingJobId = pending.job_id;
+        console.log(`🔄 Resuming pending job ${pendingJobId} after page refresh...`);
 
-          if (validIds.length > 0) {
-            const res = await fetch(
-              `/api/v1/playground/history/voices?${validIds.map((id) => `ids=${id}`).join("&")}`
-            );
-            if (res.ok) {
-              const data = await res.json();
-              const sortedData = [...data].sort(
-                (a, b) => b.anonymous_voice_id - a.anonymous_voice_id
-              );
-              setHistoryVoices(sortedData);
-              localStorage.setItem("playground_voice_ids", JSON.stringify(sortedData));
-            }
-          } else {
-            localStorage.setItem("playground_voice_ids", "[]");
+        const res = await fetch(`/api/v1/playground/tts/${pendingJobId}`);
+        if (!res.ok) {
+          clearPendingJob();
+          console.log(`❌ Job ${pendingJobId} not found on backend`);
+          return;
+        }
+
+        const job: TTSJobResponse = await res.json();
+
+        if (pending.text) {
+          setTextInput(pending.text);
+
+          if (pending.active_panel) {
+            setActiveVoicePanel(pending.active_panel);
+          }
+
+          if (pending.active_panel === "stock" && pending.selected_voice) {
+            setSelectedVoice(pending.selected_voice);
+          } else if (pending.active_panel === "custom" && pending.anonymous_voice_id) {
+            setAnonymousVoiceId(pending.anonymous_voice_id);
+            setUploadStatus("success");
           }
         }
 
-        // Load TTS jobs
-        const storedJobs = localStorage.getItem("playground_tts_jobs");
-        if (storedJobs) {
-          const jobs: HistoryTTSJob[] = JSON.parse(storedJobs);
-          const now = new Date().getTime();
-          const validJobs = jobs.filter((j) => new Date(j.expires_at).getTime() > now);
-          const validIds = validJobs.map((j) => j.playground_job_id);
+        if (job.status === "queued" || job.status === "processing") {
+          setCurrentJob(job);
+          setGenerationStatus(job.status);
+          setIsGenerating(true);
+          pollJobStatus(pendingJobId);
+          console.log(`✅ Resumed polling for job ${pendingJobId} (status: ${job.status})`);
+        } else if (job.status === "completed" && job.audio_path) {
+          setCurrentJob(job);
+          setGenerationStatus(job.status);
+          pendingTtsAutoplayRef.current = true;
+          setAudioUrl(resolvePlaygroundAudioUrl(job.audio_path));
+          setAudioDuration(job.audio_duration);
+          setShowCompletionCard(true);
 
-          if (validIds.length > 0) {
-            const res = await fetch(
-              `/api/v1/playground/history/tts?${validIds.map((id) => `ids=${id}`).join("&")}`
-            );
-            if (res.ok) {
-              const backendJobs: TTSJobResponse[] = await res.json();
-              const mergedJobs = validJobs
-                .map((localJob) => {
-                  const bj = backendJobs.find((b) => b.job_id === localJob.playground_job_id);
-                  if (bj && bj.status === "completed") {
-                    return {
-                      ...localJob,
-                      audio_path: bj.audio_path,
-                    };
-                  }
-                  return localJob;
-                })
-                .filter((j) => j.audio_path !== null);
+          saveCompletedJob(job, {
+            textInput: pending.text,
+            activeVoicePanel: pending.active_panel,
+            anonymousVoiceId: pending.anonymous_voice_id,
+            selectedVoice: pending.selected_voice,
+          });
 
-              setHistoryJobs(mergedJobs);
-              localStorage.setItem("playground_tts_jobs", JSON.stringify(mergedJobs));
-            }
-          } else {
-            localStorage.setItem("playground_tts_jobs", "[]");
-          }
-        }
-
-        // 🔄 Resume pending job if page was refreshed during generation
-        const pendingJobData = localStorage.getItem("playground_pending_job");
-        if (pendingJobData) {
-          try {
-            const parsed = JSON.parse(pendingJobData);
-            const pendingJobId = parsed.job_id || parsed; // Support old format (plain job_id string)
-
-            console.log(`🔄 Resuming pending job ${pendingJobId} after page refresh...`);
-
-            const res = await fetch(`/api/v1/playground/tts/${pendingJobId}`);
-            if (res.ok) {
-              const job: TTSJobResponse = await res.json();
-
-              // Restore input text and voice selection
-              if (typeof parsed === "object" && parsed.text) {
-                setTextInput(parsed.text);
-
-                if (parsed.active_panel) {
-                  setActiveVoicePanel(parsed.active_panel);
-                }
-
-                if (parsed.active_panel === "stock" && parsed.selected_voice) {
-                  setSelectedVoice(parsed.selected_voice);
-                } else if (parsed.active_panel === "custom" && parsed.anonymous_voice_id) {
-                  setAnonymousVoiceId(parsed.anonymous_voice_id);
-                  setUploadStatus("success");
-                }
-              }
-
-              // Only resume if job is still in progress
-              if (job.status === "queued" || job.status === "processing") {
-                setCurrentJob(job);
-                setGenerationStatus(job.status);
-                setIsGenerating(true);
-
-                // Resume polling
-                pollJobStatus(parseInt(pendingJobId));
-
-                console.log(`✅ Resumed polling for job ${pendingJobId} (status: ${job.status})`);
-              } else if (job.status === "completed" && job.audio_path) {
-                // Job completed while user was away
-                setCurrentJob(job);
-                setGenerationStatus(job.status);
-                pendingTtsAutoplayRef.current = true;
-                setAudioUrl(resolveAudioUrl(job.audio_path));
-                setAudioDuration(job.audio_duration);
-                setShowCompletionCard(true);
-
-                // Pass context to saveCompletedJob for proper voice name display
-                const contextOverride = {
-                  textInput: parsed.text,
-                  activeVoicePanel: parsed.active_panel,
-                  anonymousVoiceId: parsed.anonymous_voice_id,
-                  selectedVoice: parsed.selected_voice,
-                };
-                saveCompletedJob(job, contextOverride);
-
-                // Clear pending status
-                localStorage.removeItem("playground_pending_job");
-
-                console.log(`✅ Job ${pendingJobId} completed while away`);
-              } else {
-                // Job failed or rate limited - clear pending status
-                localStorage.removeItem("playground_pending_job");
-                console.log(`❌ Job ${pendingJobId} failed with status: ${job.status}`);
-              }
-            } else {
-              // Job not found - clear pending status
-              localStorage.removeItem("playground_pending_job");
-              console.log(`❌ Job ${pendingJobId} not found on backend`);
-            }
-          } catch (err) {
-            console.error(`Failed to resume job:`, err);
-            localStorage.removeItem("playground_pending_job");
-          }
+          clearPendingJob();
+          console.log(`✅ Job ${pendingJobId} completed while away`);
+        } else {
+          clearPendingJob();
+          console.log(`❌ Job ${pendingJobId} failed with status: ${job.status}`);
         }
       } catch (err) {
-        console.error("Failed to load playground history:", err);
+        console.error(`Failed to resume job:`, err);
+        clearPendingJob();
       }
     };
-    loadHistory();
+
+    void resumePending();
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- mount-only resume
   }, []);
 
-  // Cleanup on unmount
+  // Unmount cleanup only (blob revoke also happens in URL setters)
   useEffect(() => {
     return () => {
       if (recordingIntervalRef.current) clearInterval(recordingIntervalRef.current);
       if (pollingIntervalRef.current) clearInterval(pollingIntervalRef.current);
-      if (recordedAudioUrl) URL.revokeObjectURL(recordedAudioUrl);
+      revokeIfBlobUrl(recordedAudioUrlRef.current);
       disposePreviewAudio(voicePreviewRef);
     };
-  }, [recordedAudioUrl]);
+  }, []);
 
   // Helper to stop all other audio sources when a new one starts
   const stopAllOtherAudio = (except: "tts" | "rec" | "preview") => {
@@ -361,33 +244,21 @@ export default function PlaygroundContent() {
     const audio = recAudioRef.current;
     if (!audio) return;
 
-    const handleTimeUpdate = () => {
-      if (audio.duration) {
-        setRecAudioProgress((audio.currentTime / audio.duration) * 100);
-        setRecAudioCurrentTime(audio.currentTime);
-        setRecAudioDuration(audio.duration);
-      }
-    };
-    const handleEnded = () => {
-      setIsRecPlaying(false);
-      setRecAudioProgress(0);
-      setRecAudioCurrentTime(0);
-      setPlayingHistoryVoiceId(null);
-      // Auto-dismiss the sticky player when recording finishes
-      setActiveStickyPlayer(null);
-    };
-    const handleLoadedMetadata = () => {
-      if (audio.duration) setRecAudioDuration(audio.duration);
-    };
-
-    audio.addEventListener("timeupdate", handleTimeUpdate);
-    audio.addEventListener("ended", handleEnded);
-    audio.addEventListener("loadedmetadata", handleLoadedMetadata);
-    return () => {
-      audio.removeEventListener("timeupdate", handleTimeUpdate);
-      audio.removeEventListener("ended", handleEnded);
-      audio.removeEventListener("loadedmetadata", handleLoadedMetadata);
-    };
+    return attachMediaProgress(audio, {
+      onTimeUpdate: (currentTime, duration) => {
+        setRecAudioProgress((currentTime / duration) * 100);
+        setRecAudioCurrentTime(currentTime);
+        setRecAudioDuration(duration);
+      },
+      onEnded: () => {
+        setIsRecPlaying(false);
+        setRecAudioProgress(0);
+        setRecAudioCurrentTime(0);
+        setPlayingHistoryVoiceId(null);
+        setActiveStickyPlayer(null);
+      },
+      onLoadedMetadata: (duration) => setRecAudioDuration(duration),
+    });
   }, [recordedAudioUrl]);
 
   // Sticky recording autoplay after capture (wait for <audio src> commit + canplay)
@@ -405,7 +276,6 @@ export default function PlaygroundContent() {
       onPlaying: () => setIsRecPlaying(true),
       onSkipped: (err) => console.warn("Auto-playback skipped:", err),
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- intentional: fire on URL commit only
   }, [recordedAudioUrl]);
 
   // Track generated TTS audio progress
@@ -413,26 +283,18 @@ export default function PlaygroundContent() {
     const audio = audioRef.current;
     if (!audio) return;
 
-    const handleTimeUpdate = () => {
-      if (audio.duration) {
-        setAudioProgress((audio.currentTime / audio.duration) * 100);
-        setAudioCurrentTime(audio.currentTime);
-      }
-    };
-    const handleEnded = () => {
-      setIsPlaying(false);
-      setAudioProgress(0);
-      setAudioCurrentTime(0);
-      // Auto-dismiss the sticky player when TTS audio finishes
-      setActiveStickyPlayer(null);
-    };
-
-    audio.addEventListener("timeupdate", handleTimeUpdate);
-    audio.addEventListener("ended", handleEnded);
-    return () => {
-      audio.removeEventListener("timeupdate", handleTimeUpdate);
-      audio.removeEventListener("ended", handleEnded);
-    };
+    return attachMediaProgress(audio, {
+      onTimeUpdate: (currentTime, duration) => {
+        setAudioProgress((currentTime / duration) * 100);
+        setAudioCurrentTime(currentTime);
+      },
+      onEnded: () => {
+        setIsPlaying(false);
+        setAudioProgress(0);
+        setAudioCurrentTime(0);
+        setActiveStickyPlayer(null);
+      },
+    });
   }, [audioUrl]);
 
   // Sticky TTS autoplay after src commit (completion, history, toggle-back)
@@ -450,7 +312,6 @@ export default function PlaygroundContent() {
       onPlaying: () => setIsPlaying(true),
       onSkipped: (err) => console.warn("Auto-play after TTS skipped:", err),
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- intentional: fire on URL commit only
   }, [audioUrl]);
 
   // ---------------------------------------------------------------------------
@@ -465,8 +326,8 @@ export default function PlaygroundContent() {
     } else {
       stopAllOtherAudio("rec");
       setActiveStickyPlayer("rec");
-      const match = recordedAudioUrl?.match(/\/voice-prompt\/(\d+)/);
-      if (match) setPlayingHistoryVoiceId(Number(match[1]));
+      const historyId = parseHistoryVoiceIdFromUrl(recordedAudioUrl);
+      if (historyId != null) setPlayingHistoryVoiceId(historyId);
       recAudioRef.current
         .play()
         .then(() => setIsRecPlaying(true))
@@ -478,11 +339,8 @@ export default function PlaygroundContent() {
   };
 
   const handleRecSeek = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!recAudioRef.current || !recAudioRef.current.duration) return;
-    const rect = e.currentTarget.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const pct = x / rect.width;
-    recAudioRef.current.currentTime = pct * recAudioRef.current.duration;
+    if (!recAudioRef.current) return;
+    seekFromClick(recAudioRef.current, e.clientX, e.currentTarget);
   };
 
   // ---------------------------------------------------------------------------
@@ -553,7 +411,7 @@ export default function PlaygroundContent() {
     stopAllOtherAudio("rec");
     setPlayingHistoryVoiceId(voiceId);
 
-    const url = `/api/v1/playground/audio/voice-prompt/${voiceId}`;
+    const url = historyVoicePromptUrl(voiceId);
 
     // Same src already on <audio> — play without waiting for a URL commit
     if (recordedAudioUrl === url && recAudioRef.current) {
@@ -571,10 +429,7 @@ export default function PlaygroundContent() {
     }
 
     pendingRecAutoplayRef.current = true;
-    setRecordedAudioUrl((prev) => {
-      if (prev?.startsWith("blob:")) URL.revokeObjectURL(prev);
-      return url;
-    });
+    setRecordedAudioUrl((prev) => replaceMediaUrl(prev, url));
   };
 
   const deleteHistoryVoice = (voiceId: number) => {
@@ -594,12 +449,7 @@ export default function PlaygroundContent() {
       // DO NOT switch panels - stay in "Record Voice" tab
     }
 
-    // Remove from state and localStorage
-    setHistoryVoices((prev) => {
-      const next = prev.filter((v) => v.anonymous_voice_id !== voiceId);
-      localStorage.setItem("playground_voice_ids", JSON.stringify(next));
-      return next;
-    });
+    removeHistoryVoice(voiceId);
   };
 
   const deleteHistoryJob = (jobId: string | number) => {
@@ -611,16 +461,11 @@ export default function PlaygroundContent() {
 
       // Restore current job audio if available
       if (currentJob?.audio_path) {
-        setAudioUrl(resolveAudioUrl(currentJob.audio_path));
+        setAudioUrl(resolvePlaygroundAudioUrl(currentJob.audio_path));
       }
     }
 
-    // Remove from state and localStorage
-    setHistoryJobs((prev) => {
-      const next = prev.filter((j) => j.playground_job_id !== jobId);
-      localStorage.setItem("playground_tts_jobs", JSON.stringify(next));
-      return next;
-    });
+    removeHistoryJob(jobId);
   };
 
   // ---------------------------------------------------------------------------
@@ -652,10 +497,7 @@ export default function PlaygroundContent() {
         setRecordedAudioBlob(audioBlob);
 
         const blobUrl = URL.createObjectURL(audioBlob);
-        setRecordedAudioUrl((prev) => {
-          if (prev) URL.revokeObjectURL(prev);
-          return blobUrl;
-        });
+        setRecordedAudioUrl((prev) => replaceMediaUrl(prev, blobUrl, { revokeAnyPrev: true }));
         pendingRecAutoplayRef.current = true;
 
         setSelectedVoice(null);
@@ -757,13 +599,7 @@ export default function PlaygroundContent() {
         expires_at: data.expires_at,
         created_at: new Date().toISOString(),
       };
-      setHistoryVoices((prev) => {
-        const next = [newVoice, ...prev]
-          .sort((a, b) => b.anonymous_voice_id - a.anonymous_voice_id)
-          .slice(0, 50);
-        localStorage.setItem("playground_voice_ids", JSON.stringify(next));
-        return next;
-      });
+      prependHistoryVoice(newVoice);
     } catch (err) {
       console.error("Upload error:", err);
       setUploadStatus("error");
@@ -951,12 +787,7 @@ export default function PlaygroundContent() {
       expires_at: jobToSave.expires_at,
     };
 
-    setHistoryJobs((prev) => {
-      if (prev.find((p) => p.playground_job_id === newJob.playground_job_id)) return prev;
-      const next = [newJob, ...prev].slice(0, 50);
-      localStorage.setItem("playground_tts_jobs", JSON.stringify(next));
-      return next;
-    });
+    prependHistoryJob(newJob);
   }
 
   function handleJobResponse(job: TTSJobResponse, inputText?: string) {
@@ -965,35 +796,27 @@ export default function PlaygroundContent() {
 
     if (job.status === "completed" && job.audio_path) {
       pendingTtsAutoplayRef.current = true;
-      setAudioUrl(resolveAudioUrl(job.audio_path));
+      setAudioUrl(resolvePlaygroundAudioUrl(job.audio_path));
       setAudioDuration(job.audio_duration);
       setIsGenerating(false);
       setActiveStickyPlayer("tts");
       saveCompletedJob(job);
 
       // Clear pending job status
-      localStorage.removeItem("playground_pending_job");
+      clearPendingJob();
       return;
     }
 
     // Store job ID + context for resumption after page refresh
-    const pendingJobData = {
+    writePendingJob({
       job_id: job.job_id,
       text: inputText || textInput,
       anonymous_voice_id: anonymousVoiceId,
       active_panel: activeVoicePanel,
       selected_voice: selectedVoice,
-    };
-    localStorage.setItem("playground_pending_job", JSON.stringify(pendingJobData));
+    });
 
     pollJobStatus(job.job_id);
-  }
-
-  function resolveAudioUrl(audioPath: string, bucket: "storage" | "output" = "output"): string {
-    if (audioPath.startsWith("http://") || audioPath.startsWith("https://")) {
-      return audioPath;
-    }
-    return `/api/v1/playground/audio/${audioPath}?bucket=${bucket}`;
   }
 
   function pollJobStatus(jobId: string | number) {
@@ -1021,7 +844,7 @@ export default function PlaygroundContent() {
         // Job gone — not recoverable by retrying poll
         if (res.status === 404) {
           stopPolling();
-          localStorage.removeItem("playground_pending_job");
+          clearPendingJob();
           handleGenerationError(t("playground.jobNotFoundError"));
           return;
         }
@@ -1071,7 +894,7 @@ export default function PlaygroundContent() {
     if (job.status === "completed") {
       if (job.audio_path) {
         pendingTtsAutoplayRef.current = true;
-        setAudioUrl(resolveAudioUrl(job.audio_path));
+        setAudioUrl(resolvePlaygroundAudioUrl(job.audio_path));
         setAudioDuration(job.audio_duration);
         setActiveStickyPlayer("tts");
       }
@@ -1079,42 +902,35 @@ export default function PlaygroundContent() {
       setShowCompletionCard(true);
 
       // Retrieve context from localStorage if job was resumed after refresh
-      const pendingJobData = localStorage.getItem("playground_pending_job");
+      const pending = readPendingJob();
       let contextOverride;
-      if (pendingJobData) {
-        try {
-          const parsed = JSON.parse(pendingJobData);
-          if (typeof parsed === "object" && parsed.text) {
-            contextOverride = {
-              textInput: parsed.text,
-              activeVoicePanel: parsed.active_panel,
-              anonymousVoiceId: parsed.anonymous_voice_id,
-              selectedVoice: parsed.selected_voice,
-            };
-          }
-        } catch (e) {
-          console.warn("Failed to parse pending job context:", e);
-        }
+      if (pending?.text) {
+        contextOverride = {
+          textInput: pending.text,
+          activeVoicePanel: pending.active_panel,
+          anonymousVoiceId: pending.anonymous_voice_id,
+          selectedVoice: pending.selected_voice,
+        };
       }
 
       saveCompletedJob(job, contextOverride);
 
       // Clear pending job from localStorage
-      localStorage.removeItem("playground_pending_job");
+      clearPendingJob();
 
       stopPolling();
     } else if (job.status === "failed") {
       handleGenerationError(job.error_message ?? t("playground.generateError"));
 
       // Clear pending job from localStorage
-      localStorage.removeItem("playground_pending_job");
+      clearPendingJob();
 
       stopPolling();
     } else if (job.status === "rate_limited") {
       handleRateLimitError(3600);
 
       // Clear pending job from localStorage
-      localStorage.removeItem("playground_pending_job");
+      clearPendingJob();
 
       stopPolling();
     }
@@ -1135,7 +951,7 @@ export default function PlaygroundContent() {
         setPlayingHistoryJobId(null);
         if (currentJob?.audio_path) {
           pendingTtsAutoplayRef.current = true;
-          setAudioUrl(resolveAudioUrl(currentJob.audio_path));
+          setAudioUrl(resolvePlaygroundAudioUrl(currentJob.audio_path));
         } else {
           setAudioUrl(null);
         }
@@ -1154,11 +970,11 @@ export default function PlaygroundContent() {
       audioRef.current?.pause();
       setIsPlaying(false);
       setPlayingHistoryJobId(null);
-      if (currentJob?.audio_path) setAudioUrl(resolveAudioUrl(currentJob.audio_path));
+      if (currentJob?.audio_path) setAudioUrl(resolvePlaygroundAudioUrl(currentJob.audio_path));
       else setAudioUrl(null);
     } else {
       stopAllOtherAudio("tts");
-      const nextUrl = resolveAudioUrl(path);
+      const nextUrl = resolvePlaygroundAudioUrl(path);
       setPlayingHistoryJobId(jobId);
       setActiveStickyPlayer("tts");
       // Same URL won't re-trigger the audioUrl effect — play immediately when ready.
@@ -1176,11 +992,8 @@ export default function PlaygroundContent() {
   };
 
   const handleSeek = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!audioRef.current || !audioRef.current.duration) return;
-    const rect = e.currentTarget.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const pct = x / rect.width;
-    audioRef.current.currentTime = pct * audioRef.current.duration;
+    if (!audioRef.current) return;
+    seekFromClick(audioRef.current, e.clientX, e.currentTarget);
   };
 
   // ---------------------------------------------------------------------------
@@ -1340,7 +1153,6 @@ export default function PlaygroundContent() {
         onRetryUpload={uploadCanRetry && recordedAudioBlob ? retryUpload : undefined}
         anonymousVoiceId={anonymousVoiceId}
         historyVoices={historyVoices}
-        showHistoryVoices={showHistoryVoices}
         playingHistoryVoiceId={playingHistoryVoiceId}
         isRecPlaying={isRecPlaying}
         recAudioRef={recAudioRef}
@@ -1352,8 +1164,12 @@ export default function PlaygroundContent() {
         onResetRecording={() => {
           if (recAudioRef.current) recAudioRef.current.pause();
           setIsRecPlaying(false);
+          setPlayingHistoryVoiceId(null);
           setRecordedAudioBlob(null);
-          setRecordedAudioUrl(null);
+          setRecordedAudioUrl((prev) => {
+            revokeIfBlobUrl(prev);
+            return null;
+          });
           setRecordingTime(0);
           recordingTimeRef.current = 0;
           lastUploadDurationRef.current = 0;
@@ -1363,18 +1179,15 @@ export default function PlaygroundContent() {
           setUploadError(null);
           setUploadCanRetry(false);
         }}
-        onToggleShowHistoryVoices={() => setShowHistoryVoices((v) => !v)}
         onSelectHistoryVoice={(voice) => {
           setActiveVoicePanel("custom");
           setAnonymousVoiceId(voice.anonymous_voice_id);
           setRecordedAudioBlob(null);
           // Keep sticky-player src in sync with the selected history voice.
-          // Do not clear recordedAudioUrl — that hid StickyPlayerBar after history play.
-          const historyUrl = `/api/v1/playground/audio/voice-prompt/${voice.anonymous_voice_id}`;
+          const historyUrl = historyVoicePromptUrl(voice.anonymous_voice_id);
           setRecordedAudioUrl((prev) => {
             if (prev === historyUrl) return prev;
-            if (prev?.startsWith("blob:")) URL.revokeObjectURL(prev);
-            return historyUrl;
+            return replaceMediaUrl(prev, historyUrl);
           });
           setUploadStatus("success");
           setUploadError(null);
@@ -1390,10 +1203,10 @@ export default function PlaygroundContent() {
           // Clear custom voice selection
           setAnonymousVoiceId(null);
           setRecordedAudioBlob(null);
-          if (recordedAudioUrl) {
-            URL.revokeObjectURL(recordedAudioUrl);
-            setRecordedAudioUrl(null);
-          }
+          setRecordedAudioUrl((prev) => {
+            revokeIfBlobUrl(prev);
+            return null;
+          });
           setUploadStatus("idle");
           setUploadError(null);
 

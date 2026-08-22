@@ -24,7 +24,6 @@ interface VoiceSelectionModalProps {
   onRetryUpload?: () => void;
   anonymousVoiceId: number | null;
   historyVoices: HistoryVoice[];
-  showHistoryVoices: boolean;
   playingHistoryVoiceId: number | null;
   isRecPlaying: boolean;
   recAudioRef: React.RefObject<HTMLAudioElement | null>;
@@ -34,7 +33,6 @@ interface VoiceSelectionModalProps {
   onStartRecording: () => void;
   onStopRecording: () => void;
   onResetRecording: () => void;
-  onToggleShowHistoryVoices: () => void;
   onSelectHistoryVoice: (voice: HistoryVoice) => void;
   onPlayHistoryVoice: (voiceId: number) => void;
   onToggleRecordingPlayback: () => void;
@@ -60,7 +58,6 @@ export function VoiceSelectionModal({
   onRetryUpload,
   anonymousVoiceId,
   historyVoices,
-  showHistoryVoices,
   playingHistoryVoiceId,
   isRecPlaying,
   recAudioRef,
@@ -70,7 +67,6 @@ export function VoiceSelectionModal({
   onStartRecording,
   onStopRecording,
   onResetRecording,
-  onToggleShowHistoryVoices,
   onSelectHistoryVoice,
   onPlayHistoryVoice,
   onToggleRecordingPlayback,
@@ -258,7 +254,6 @@ export function VoiceSelectionModal({
                   onRetryUpload={onRetryUpload}
                   anonymousVoiceId={anonymousVoiceId}
                   historyVoices={historyVoices}
-                  showHistoryVoices={showHistoryVoices}
                   playingHistoryVoiceId={playingHistoryVoiceId}
                   isPlayingRecording={isRecPlaying}
                   recAudioRef={recAudioRef}
@@ -266,7 +261,6 @@ export function VoiceSelectionModal({
                   onStartRecording={onStartRecording}
                   onStopRecording={onStopRecording}
                   onResetRecording={onResetRecording}
-                  onToggleShowHistoryVoices={onToggleShowHistoryVoices}
                   onSelectHistoryVoice={onSelectHistoryVoice}
                   onPlayHistoryVoice={onPlayHistoryVoice}
                   onToggleRecordingPlayback={onToggleRecordingPlayback}
@@ -349,14 +343,12 @@ export function VoiceSelectionModal({
                       uploadError={null}
                       anonymousVoiceId={anonymousVoiceId}
                       historyVoices={historyVoices}
-                      showHistoryVoices={true}
                       playingHistoryVoiceId={playingHistoryVoiceId}
                       isPlayingRecording={isRecPlaying}
                       recAudioRef={recAudioRef}
                       onStartRecording={() => handleTabChange("record")}
                       onStopRecording={() => {}}
                       onResetRecording={() => {}}
-                      onToggleShowHistoryVoices={onToggleShowHistoryVoices}
                       onSelectHistoryVoice={onSelectHistoryVoice}
                       onPlayHistoryVoice={onPlayHistoryVoice}
                       onToggleRecordingPlayback={onToggleRecordingPlayback}

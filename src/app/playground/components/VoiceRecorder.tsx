@@ -23,7 +23,6 @@ export interface VoiceRecorderProps {
   onRetryUpload?: () => void;
   anonymousVoiceId: number | null;
   historyVoices: HistoryVoice[];
-  showHistoryVoices?: boolean;
   playingHistoryVoiceId: number | null;
   isPlayingRecording?: boolean;
   recAudioRef?: RefObject<HTMLAudioElement | null>;
@@ -31,7 +30,6 @@ export interface VoiceRecorderProps {
   onStartRecording: () => void;
   onStopRecording: () => void;
   onResetRecording: () => void;
-  onToggleShowHistoryVoices?: () => void;
   onSelectHistoryVoice: (voice: HistoryVoice) => void;
   onPlayHistoryVoice: (voiceId: number) => void;
   onToggleRecordingPlayback?: () => void;
