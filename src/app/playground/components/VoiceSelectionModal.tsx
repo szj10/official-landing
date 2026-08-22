@@ -133,7 +133,7 @@ export function VoiceSelectionModal({
       />
 
       {/* Modal Content */}
-      <div className="relative w-full max-w-2xl glass-panel rounded-2xl shadow-2xl flex flex-col max-h-[85vh] overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+      <div className="relative w-full max-w-2xl bg-gradient-to-br from-white/95 to-slate-50/90 dark:from-zinc-900/95 dark:to-zinc-950/90 backdrop-blur-2xl border border-indigo-500/10 dark:border-indigo-400/20 rounded-[2rem] shadow-2xl shadow-indigo-500/10 dark:shadow-indigo-500/20 flex flex-col max-h-[85vh] overflow-hidden animate-in fade-in zoom-in-95 duration-300 ease-out text-slate-800 dark:text-slate-100">
         {/* Scrollable Body */}
         <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4 sm:space-y-6 custom-scrollbar">
           {/* 3-Tab Navigation */}
