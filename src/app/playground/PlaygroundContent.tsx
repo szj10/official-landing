@@ -31,6 +31,11 @@ export default function PlaygroundContent() {
   const [textInput, setTextInput] = useState("");
   const [speed, setSpeed] = useState<"slow" | "normal" | "fast">("normal");
 
+  const queueRef = useRef<HTMLDivElement>(null);
+  const editorIslandRef = useRef<HTMLDivElement>(null);
+  const editorRef = useRef<{ focusTextarea: () => void }>(null);
+  const currentJobAudioPathRef = useRef<string | null | undefined>(null);
+
   const {
     selectedVoice,
     setSelectedVoice,
@@ -46,9 +51,6 @@ export default function PlaygroundContent() {
     setUploadCanRetry,
     resetVoiceState,
   } = useVoiceState();
-
-  const editorRef = useRef<{ focusTextarea: () => void }>(null);
-  const currentJobAudioPathRef = useRef<string | null | undefined>(null);
 
   const {
     historyVoices,
@@ -177,13 +179,21 @@ export default function PlaygroundContent() {
     currentJobAudioPathRef.current = currentJob?.audio_path;
   }, [currentJob?.audio_path]);
 
+  const handleGenerateWithScroll = () => {
+    handleGenerate();
+    setTimeout(() => {
+      queueRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }, 150);
+  };
+
   const handleSampleTextSelect = (id: string) => {
     const sample = SAMPLE_TEXTS.find((s) => s.id === id);
     if (sample) {
       setTextInput(t(sample.textKey));
       setTimeout(() => {
         editorRef.current?.focusTextarea();
-      }, 0);
+        editorIslandRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 50);
     }
   };
 
@@ -251,120 +261,313 @@ export default function PlaygroundContent() {
 
   return (
     <div
-      className={`max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-16 transition-all duration-300 ${
+      className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10 transition-all duration-300 ${
         isStickyPlayerVisible ? "pb-32 sm:pb-40" : "pb-16"
       }`}
     >
       {recordedAudioUrl && <audio ref={recAudioRef} src={recordedAudioUrl} className="hidden" />}
       {audioUrl && <audio ref={audioRef} src={audioUrl} className="hidden" />}
 
+      {/* Hero Header */}
       <div className="text-center mb-8 sm:mb-12">
-        <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full glass-panel text-xs text-indigo-600 dark:text-indigo-400 font-semibold mb-4 shadow-sm">
-          <SpeakerIcon className="w-3.5 h-3.5" />
+        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-indigo-50/80 dark:bg-indigo-950/50 border border-indigo-200 dark:border-indigo-800 text-xs font-bold text-indigo-600 dark:text-indigo-400 mb-4 shadow-sm backdrop-blur-md">
+          <SpeakerIcon className="w-3.5 h-3.5 animate-pulse" />
           <span>{t("playground.badge")}</span>
+          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping ml-1" />
         </div>
         <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-gray-900 dark:text-white tracking-tight mb-3">
           {t("playground.title")}
         </h1>
       </div>
 
-      <div className="space-y-6 sm:space-y-8">
-        <PlaygroundEditorPanel
-          ref={editorRef}
-          textInput={textInput}
-          onTextChange={setTextInput}
-          onSampleSelect={handleSampleTextSelect}
-        />
-
-        <div className="flex flex-col sm:flex-row items-center gap-4 max-w-lg mx-auto sm:max-w-none">
-          <button
-            onClick={() => setIsVoiceModalOpen(true)}
-            className="w-full sm:w-1/2 flex items-center justify-between px-5 py-3.5 sm:py-4 glass-panel border-2 border-gray-200 dark:border-zinc-700 rounded-xl sm:rounded-2xl hover:border-indigo-500 dark:hover:border-indigo-500 transition-colors shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+      {/* Grid Workbench: 4 Distinct Islands */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
+        {/* Left Column (8 cols): Editor Island + Controls Island */}
+        <div className="lg:col-span-8 space-y-6">
+          {/* Island 01: Prompt Text Input */}
+          <section
+            ref={editorIslandRef}
+            className="bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xl border border-gray-200/90 dark:border-zinc-800/90 rounded-3xl p-5 sm:p-7 shadow-xl shadow-indigo-500/5 space-y-4 transition-all hover:border-indigo-500/30 dark:hover:border-indigo-500/30"
           >
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full bg-indigo-100 dark:bg-indigo-900/50 flex items-center justify-center text-indigo-600 dark:text-indigo-400">
-                <SpeakerIcon className="w-4 h-4" />
+            <div className="flex items-center justify-between border-b border-gray-100 dark:border-zinc-800/80 pb-3">
+              <div className="flex items-center gap-2.5">
+                <span className="flex items-center justify-center w-6 h-6 rounded-lg bg-indigo-100 dark:bg-indigo-900/60 text-indigo-600 dark:text-indigo-400 text-xs font-black">
+                  01
+                </span>
+                <h2 className="text-sm font-bold tracking-wider uppercase text-gray-700 dark:text-zinc-200">
+                  Prompt Text Input
+                </h2>
               </div>
-              <div className="flex flex-col items-start">
-                <span className="text-sm font-bold text-gray-900 dark:text-white truncate max-w-[120px] sm:max-w-[160px]">
+              <span className="text-xs font-medium text-gray-400 dark:text-zinc-500">
+                Max 600 Characters
+              </span>
+            </div>
+
+            <PlaygroundEditorPanel
+              ref={editorRef}
+              textInput={textInput}
+              onTextChange={setTextInput}
+              onSampleSelect={handleSampleTextSelect}
+              onGenerate={handleGenerateWithScroll}
+            />
+          </section>
+
+          {/* Island 02: Synthesis & Parameter Controls */}
+          <section className="bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xl border border-gray-200/90 dark:border-zinc-800/90 rounded-3xl p-5 sm:p-7 shadow-xl shadow-indigo-500/5 space-y-6 transition-all hover:border-indigo-500/30 dark:hover:border-indigo-500/30">
+            <div className="flex items-center justify-between border-b border-gray-100 dark:border-zinc-800/80 pb-3">
+              <div className="flex items-center gap-2.5">
+                <span className="flex items-center justify-center w-6 h-6 rounded-lg bg-purple-100 dark:bg-purple-900/60 text-purple-600 dark:text-purple-400 text-xs font-black">
+                  02
+                </span>
+                <h2 className="text-sm font-bold tracking-wider uppercase text-gray-700 dark:text-zinc-200">
+                  Voice & Speed Synthesis Parameters
+                </h2>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+              {/* Quick Voice Chips */}
+              <div className="space-y-2">
+                <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-zinc-400">
+                  {t("playground.chooseVoice")}
+                </label>
+                <div className="flex flex-wrap items-center gap-2">
+                  {PLAYGROUND_VOICES.map((v) => {
+                    const isSelected = activeVoicePanel === "stock" && selectedVoice === v.id;
+                    const isPreviewing = playingVoicePreview === v.id;
+                    return (
+                      <div
+                        key={v.id}
+                        onClick={() => {
+                          setSelectedVoice(v.id);
+                          setActiveVoicePanel("stock");
+                        }}
+                        className={`inline-flex items-center gap-1.5 pl-1.5 pr-3 py-1.5 rounded-xl text-xs font-bold border transition-all cursor-pointer ${
+                          isSelected
+                            ? "bg-indigo-600 text-white border-indigo-600 shadow-md shadow-indigo-500/20"
+                            : "bg-gray-50 dark:bg-zinc-800/60 text-gray-700 dark:text-zinc-300 border-gray-200 dark:border-zinc-700/80 hover:border-indigo-400 dark:hover:border-indigo-500"
+                        }`}
+                      >
+                        <span
+                          className={`w-5 h-5 rounded-full bg-gradient-to-tr ${v.color} flex items-center justify-center text-[10px] font-black text-white`}
+                        >
+                          {v.avatar}
+                        </span>
+                        <span className="truncate max-w-[90px]">{t(v.nameKey)}</span>
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleVoiceSelectAndPlay(v.id);
+                          }}
+                          className={`p-0.5 rounded-full hover:bg-black/10 dark:hover:bg-white/20 transition-colors ${
+                            isPreviewing ? "text-amber-300 animate-pulse" : "opacity-75"
+                          }`}
+                          title="Preview Voice"
+                        >
+                          {isPreviewing ? (
+                            <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
+                              <rect x="6" y="4" width="4" height="16" rx="1" />
+                              <rect x="14" y="4" width="4" height="16" rx="1" />
+                            </svg>
+                          ) : (
+                            <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
+                              <path d="M8 5v14l11-7z" />
+                            </svg>
+                          )}
+                        </button>
+                      </div>
+                    );
+                  })}
+                  <button
+                    type="button"
+                    onClick={() => setIsVoiceModalOpen(true)}
+                    className="px-3 py-1.5 text-xs font-bold text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/50 rounded-xl border border-indigo-200 dark:border-indigo-800/80 hover:bg-indigo-100 dark:hover:bg-indigo-900/40 transition-colors"
+                  >
+                    + Clone / All Voices
+                  </button>
+                </div>
+              </div>
+
+              {/* Speed Segmented Pill */}
+              <div className="space-y-2">
+                <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-zinc-400">
+                  Playback Speed
+                </label>
+                <div className="inline-flex p-1 rounded-xl bg-gray-100 dark:bg-zinc-800/80 border border-gray-200 dark:border-zinc-700/80 w-full sm:w-auto">
+                  {(["slow", "normal", "fast"] as const).map((s) => (
+                    <button
+                      key={s}
+                      type="button"
+                      onClick={() => setSpeed(s)}
+                      className={`flex-1 sm:flex-initial px-4 py-1.5 text-xs font-bold rounded-lg transition-all ${
+                        speed === s
+                          ? "bg-white dark:bg-zinc-700 text-indigo-600 dark:text-indigo-300 shadow-sm"
+                          : "text-gray-600 dark:text-zinc-400 hover:text-gray-900 dark:hover:text-white"
+                      }`}
+                    >
+                      {s === "slow"
+                        ? t("playground.speedSection.slow")
+                        : s === "normal"
+                          ? t("playground.speedSection.normal")
+                          : t("playground.speedSection.fast")}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Hero Synthesize Action CTA */}
+            <div className="pt-2">
+              <button
+                onClick={handleGenerateWithScroll}
+                disabled={isGenerating || uploadStatus === "uploading" || !canGenerate}
+                className="w-full flex items-center justify-center gap-3 px-6 py-4 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 hover:from-indigo-500 hover:to-purple-500 disabled:opacity-40 disabled:cursor-not-allowed text-white font-extrabold text-base sm:text-lg rounded-2xl transition-all shadow-lg shadow-indigo-500/25 dark:shadow-indigo-500/15 hover:shadow-indigo-500/40 active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+              >
+                {isGenerating || uploadStatus === "uploading" ? (
+                  <svg className="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24">
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    />
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    />
+                  </svg>
+                ) : (
+                  <SparklesIcon className="w-5 h-5 animate-pulse" />
+                )}
+                <span>
+                  {isGenerating
+                    ? t("playground.preview.synthesizing")
+                    : uploadStatus === "uploading"
+                      ? t("playground.voiceSection.uploading")
+                      : t("playground.preview.generate")}
+                </span>
+                <kbd className="hidden sm:inline-flex items-center gap-0.5 px-2 py-0.5 text-[11px] font-mono bg-white/20 text-white rounded border border-white/30 ml-2">
+                  ⌘↵
+                </kbd>
+              </button>
+            </div>
+
+            <AlertBanner
+              emptyTextWarning={emptyTextWarning}
+              onDismissEmptyTextWarning={() => setEmptyTextWarning(false)}
+              generationStatus={generationStatus}
+              rateLimitRetryAfter={rateLimitRetryAfter}
+              errorMessage={errorMessage}
+              isGenerating={isGenerating}
+              onRetryConnection={pollRetryJobId != null ? retryPollConnection : null}
+            />
+          </section>
+        </div>
+
+        {/* Right Column (4 cols): Persona Island + History/Queue Island */}
+        <div className="lg:col-span-4 space-y-6">
+          {/* Island 03: Selected Voice Persona */}
+          <section className="bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xl border border-gray-200/90 dark:border-zinc-800/90 rounded-3xl p-5 sm:p-6 shadow-xl shadow-purple-500/5 space-y-5 transition-all hover:border-purple-500/30 dark:hover:border-purple-500/30">
+            <div className="flex items-center justify-between border-b border-gray-100 dark:border-zinc-800/80 pb-3">
+              <div className="flex items-center gap-2.5">
+                <span className="flex items-center justify-center w-6 h-6 rounded-lg bg-pink-100 dark:bg-pink-900/60 text-pink-600 dark:text-pink-400 text-xs font-black">
+                  03
+                </span>
+                <h2 className="text-sm font-bold tracking-wider uppercase text-gray-700 dark:text-zinc-200">
+                  Active Persona
+                </h2>
+              </div>
+              <span
+                className={`text-[10px] font-extrabold px-2.5 py-0.5 rounded-full uppercase tracking-wider ${
+                  activeVoicePanel === "stock"
+                    ? "bg-indigo-100 dark:bg-indigo-950/80 text-indigo-700 dark:text-indigo-300"
+                    : "bg-emerald-100 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-300"
+                }`}
+              >
+                {activeVoicePanel === "stock" ? "Stock Voice" : "Cloned Voice"}
+              </span>
+            </div>
+
+            <div className="flex items-center gap-3.5 p-3.5 rounded-2xl bg-gray-50 dark:bg-zinc-800/50 border border-gray-200/60 dark:border-zinc-700/60">
+              <div
+                className={`w-12 h-12 rounded-2xl bg-gradient-to-tr ${
+                  selectedStockVoiceObj
+                    ? selectedStockVoiceObj.color
+                    : "from-purple-600 to-indigo-600"
+                } flex items-center justify-center text-lg font-black text-white shadow-sm shrink-0`}
+              >
+                {selectedStockVoiceObj ? selectedStockVoiceObj.avatar : "V"}
+              </div>
+              <div className="flex-1 min-w-0">
+                <h3 className="text-base font-bold text-gray-900 dark:text-white truncate">
                   {selectedStockVoiceObj
                     ? t(selectedStockVoiceObj.nameKey)
                     : anonymousVoiceId
                       ? t("playground.voicePromptLabel").replace("{id}", String(anonymousVoiceId))
                       : t("playground.chooseVoice")}
+                </h3>
+                <p className="text-xs text-gray-500 dark:text-zinc-400 truncate">
+                  {selectedStockVoiceObj
+                    ? t(selectedStockVoiceObj.previewKey)
+                    : t("playground.voiceSection.customVoice")}
+                </p>
+              </div>
+
+              {selectedStockVoiceObj && (
+                <button
+                  type="button"
+                  onClick={() => handleVoicePreview(selectedStockVoiceObj.id)}
+                  className="p-2.5 rounded-xl bg-indigo-50 dark:bg-indigo-900/40 hover:bg-indigo-100 dark:hover:bg-indigo-900/70 text-indigo-600 dark:text-indigo-400 transition-colors shrink-0"
+                  title="Listen to Preview"
+                >
+                  <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
+                    <path d="M8 5v14l11-7z" />
+                  </svg>
+                </button>
+              )}
+            </div>
+
+            <button
+              onClick={() => setIsVoiceModalOpen(true)}
+              className="w-full py-3 px-4 rounded-2xl border border-gray-200 dark:border-zinc-700 hover:border-indigo-500 dark:hover:border-indigo-500 text-xs font-bold text-gray-700 dark:text-zinc-200 hover:text-indigo-600 dark:hover:text-indigo-400 transition-all flex items-center justify-center gap-2 shadow-xs"
+            >
+              <SpeakerIcon className="w-4 h-4" />
+              <span>{t("playground.chooseVoice")} / Clone Voice</span>
+            </button>
+          </section>
+
+          {/* Island 04: Generation History & Queue */}
+          <section
+            ref={queueRef}
+            className="bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xl border border-gray-200/90 dark:border-zinc-800/90 rounded-3xl p-5 sm:p-6 shadow-xl shadow-purple-500/5 space-y-4 transition-all hover:border-purple-500/30 dark:hover:border-purple-500/30"
+          >
+            <div className="flex items-center justify-between border-b border-gray-100 dark:border-zinc-800/80 pb-3">
+              <div className="flex items-center gap-2.5">
+                <span className="flex items-center justify-center w-6 h-6 rounded-lg bg-emerald-100 dark:bg-emerald-900/60 text-emerald-600 dark:text-emerald-400 text-xs font-black">
+                  04
                 </span>
-                <span className="text-xs text-gray-500 dark:text-zinc-400">
-                  {speed === "slow"
-                    ? t("playground.speedSection.slow")
-                    : speed === "normal"
-                      ? t("playground.speedSection.normal")
-                      : t("playground.speedSection.fast")}
-                </span>
+                <h2 className="text-sm font-bold tracking-wider uppercase text-gray-700 dark:text-zinc-200">
+                  Generation History
+                </h2>
               </div>
             </div>
-            <svg
-              className="w-5 h-5 text-gray-400 dark:text-zinc-400"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-            </svg>
-          </button>
 
-          <button
-            onClick={handleGenerate}
-            disabled={isGenerating || uploadStatus === "uploading" || !canGenerate}
-            className="w-full sm:w-1/2 flex items-center justify-center gap-2 px-5 py-3.5 sm:py-4 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 disabled:opacity-40 disabled:cursor-not-allowed text-white font-bold text-base sm:text-lg rounded-xl sm:rounded-2xl transition-all shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
-          >
-            {isGenerating || uploadStatus === "uploading" ? (
-              <svg className="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24">
-                <circle
-                  className="opacity-25"
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="currentColor"
-                  strokeWidth="4"
-                />
-                <path
-                  className="opacity-75"
-                  fill="currentColor"
-                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                />
-              </svg>
-            ) : (
-              <SparklesIcon className="w-5 h-5" />
-            )}
-            {isGenerating
-              ? t("playground.preview.synthesizing")
-              : uploadStatus === "uploading"
-                ? t("playground.voiceSection.uploading")
-                : t("playground.preview.generate")}
-          </button>
-        </div>
-
-        <div className="max-w-2xl mx-auto space-y-4">
-          <AlertBanner
-            emptyTextWarning={emptyTextWarning}
-            onDismissEmptyTextWarning={() => setEmptyTextWarning(false)}
-            generationStatus={generationStatus}
-            rateLimitRetryAfter={rateLimitRetryAfter}
-            errorMessage={errorMessage}
-            isGenerating={isGenerating}
-            onRetryConnection={pollRetryJobId != null ? retryPollConnection : null}
-          />
-          <QueueStatusCard
-            lastQueueMetrics={lastQueueMetrics}
-            isGenerating={isGenerating && generationStatus === "queued"}
-            isCompleted={showCompletionCard}
-            onDismiss={() => setShowCompletionCard(false)}
-            historyJobs={historyJobs}
-            playingHistoryJobId={playingHistoryJobId}
-            isPlaying={isPlaying}
-            onPlayHistoryJob={playHistoryJob}
-            onDeleteHistoryJob={deleteHistoryJob}
-          />
+            <QueueStatusCard
+              lastQueueMetrics={lastQueueMetrics}
+              isGenerating={isGenerating && generationStatus === "queued"}
+              isCompleted={showCompletionCard}
+              onDismiss={() => setShowCompletionCard(false)}
+              historyJobs={historyJobs}
+              playingHistoryJobId={playingHistoryJobId}
+              isPlaying={isPlaying}
+              onPlayHistoryJob={playHistoryJob}
+              onDeleteHistoryJob={deleteHistoryJob}
+            />
+          </section>
         </div>
       </div>
 

@@ -12,6 +12,7 @@ interface PlaygroundEditorPanelProps {
   textInput: string;
   onTextChange: (text: string) => void;
   onSampleSelect: (text: string) => void;
+  onGenerate?: () => void;
 }
 
 export interface PlaygroundEditorPanelRef {
@@ -21,7 +22,7 @@ export interface PlaygroundEditorPanelRef {
 export const PlaygroundEditorPanel = forwardRef<
   PlaygroundEditorPanelRef,
   PlaygroundEditorPanelProps
->(function PlaygroundEditorPanel({ textInput, onTextChange, onSampleSelect }, ref) {
+>(function PlaygroundEditorPanel({ textInput, onTextChange, onSampleSelect, onGenerate }, ref) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   useImperativeHandle(ref, () => ({
@@ -115,6 +116,12 @@ export const PlaygroundEditorPanel = forwardRef<
           ref={textareaRef}
           value={textInput}
           onChange={(e) => onTextChange(e.target.value)}
+          onKeyDown={(e) => {
+            if ((e.metaKey || e.ctrlKey) && e.key === "Enter" && onGenerate) {
+              e.preventDefault();
+              onGenerate();
+            }
+          }}
           placeholder={t("playground.textSection.placeholder")}
           rows={showSamples ? 2 : 6}
           maxLength={MAX_TTS_TEXT_LENGTH}
