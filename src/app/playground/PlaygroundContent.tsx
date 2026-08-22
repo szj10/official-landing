@@ -1,109 +1,40 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useI18n } from "@/i18n";
 import { PLAYGROUND_VOICES } from "./voices.config";
 
-// Sub-components
 import { PlaygroundEditorPanel } from "./components/PlaygroundEditorPanel";
 import { VoiceSelectionModal } from "./components/VoiceSelectionModal";
 import { StickyPlayerBar } from "./components/StickyPlayerBar";
 import { QueueStatusCard } from "./components/QueueStatusCard";
 import { AlertBanner } from "./components/AlertBanner";
-
 import { SpeakerIcon, SparklesIcon } from "./components/icons";
-
-// Types and constants
+import { SAMPLE_TEXTS } from "./components/types";
 import {
-  TTSJobStatus,
-  TTSJobResponse,
-  HistoryVoice,
-  HistoryTTSJob,
-  SAMPLE_TEXTS,
-  formatRetryAfter,
-} from "./components/types";
-import {
-  playWhenReady,
   disposePreviewAudio,
   historyVoicePromptUrl,
-  parseHistoryVoiceIdFromUrl,
-  revokeIfBlobUrl,
   replaceMediaUrl,
   resolvePlaygroundAudioUrl,
-  attachMediaProgress,
-  seekFromClick,
+  revokeIfBlobUrl,
 } from "./lib/audio";
-import { clearPendingJob, readPendingJob, writePendingJob } from "./lib/historyStorage";
 import { usePlaygroundHistory } from "./hooks/usePlaygroundHistory";
-
-// Get max length from environment variable or use default
-const MAX_TTS_TEXT_LENGTH = parseInt(process.env.NEXT_PUBLIC_MAX_TTS_TEXT_LENGTH || "600", 10);
-/** Stop polling and surface a retry banner after this many consecutive network/HTTP failures. */
-const MAX_CONSECUTIVE_POLL_FAILURES = 5;
+import { usePlaygroundAudio } from "./hooks/usePlaygroundAudio";
+import { useVoiceRecording } from "./hooks/useVoiceRecording";
+import { useTtsGeneration } from "./hooks/useTtsGeneration";
 
 export default function PlaygroundContent() {
   const { t, locale } = useI18n();
 
   const [isVoiceModalOpen, setIsVoiceModalOpen] = useState(false);
-  const [activeStickyPlayer, setActiveStickyPlayer] = useState<"tts" | "rec" | null>(null);
-
-  // --- Step 1: Text state ---
   const [textInput, setTextInput] = useState("");
-
-  // --- Step 2: Voice state ---
   const [selectedVoice, setSelectedVoice] = useState<string | null>("voice1");
-  const [playingVoicePreview, setPlayingVoicePreview] = useState<string | null>(null);
   const [activeVoicePanel, setActiveVoicePanel] = useState<"stock" | "custom">("custom");
-
-  // --- Step 2: Recording state ---
-  const [isRecording, setIsRecording] = useState(false);
-  const [recordedAudioBlob, setRecordedAudioBlob] = useState<Blob | null>(null);
-  const [recordingTime, setRecordingTime] = useState(0);
-  const [uploadStatus, setUploadStatus] = useState<"idle" | "uploading" | "success" | "error">(
-    "idle"
-  );
-  const [anonymousVoiceId, setAnonymousVoiceId] = useState<number | null>(null);
-  const [uploadError, setUploadError] = useState<string | null>(null);
-  /** Non-429 upload failures can retry with the same Blob; rate limits cannot. */
-  const [uploadCanRetry, setUploadCanRetry] = useState(false);
-
-  // --- Step 2: Recorded voice playback ---
-  const [recordedAudioUrl, setRecordedAudioUrl] = useState<string | null>(null);
-  const [isRecPlaying, setIsRecPlaying] = useState(false);
-  const [recAudioProgress, setRecAudioProgress] = useState(0);
-  const [recAudioCurrentTime, setRecAudioCurrentTime] = useState(0);
-  const [recAudioDuration, setRecAudioDuration] = useState(0);
-
-  // --- Step 3: Speed state ---
   const [speed, setSpeed] = useState<"slow" | "normal" | "fast">("normal");
 
-  // --- Step 3: Generation state ---
-  const [isGenerating, setIsGenerating] = useState(false);
-  const [generationStatus, setGenerationStatus] = useState<TTSJobStatus | null>(null);
-  const [currentJob, setCurrentJob] = useState<TTSJobResponse | null>(null);
-  const [audioUrl, setAudioUrl] = useState<string | null>(null);
-  const [audioDuration, setAudioDuration] = useState<number | null>(null);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [rateLimitRetryAfter, setRateLimitRetryAfter] = useState<number | null>(null);
-  /** When set, failed status is a recoverable poll/connection issue for this job. */
-  const [pollRetryJobId, setPollRetryJobId] = useState<string | number | null>(null);
-  const [emptyTextWarning, setEmptyTextWarning] = useState(false);
-  const [showCompletionCard, setShowCompletionCard] = useState(false);
+  const editorRef = useRef<{ focusTextarea: () => void }>(null);
+  const currentJobAudioPathRef = useRef<string | null | undefined>(null);
 
-  // Preserved queue metrics
-  const [lastQueueMetrics, setLastQueueMetrics] = useState<{
-    position: number;
-    jobsAhead: number;
-    queueDepth: number;
-    estimatedWaitSeconds: number;
-  } | null>(null);
-
-  // --- Step 3: Playback state ---
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [audioProgress, setAudioProgress] = useState(0);
-  const [audioCurrentTime, setAudioCurrentTime] = useState(0);
-
-  // --- History state ---
   const {
     historyVoices,
     historyJobs,
@@ -113,286 +44,132 @@ export default function PlaygroundContent() {
     prependHistoryVoice,
     prependHistoryJob,
   } = usePlaygroundHistory();
-  const [playingHistoryVoiceId, setPlayingHistoryVoiceId] = useState<number | null>(null);
-  const [playingHistoryJobId, setPlayingHistoryJobId] = useState<number | string | null>(null);
 
-  // --- Persistent Refs ---
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-  const recAudioRef = useRef<HTMLAudioElement | null>(null);
-  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
-  const audioChunksRef = useRef<Blob[]>([]);
-  const recordingIntervalRef = useRef<NodeJS.Timeout | null>(null);
-  const recordingTimeRef = useRef<number>(0); // Always in sync with state
-  /** Duration sent with the last upload attempt (for retry without re-record). */
-  const lastUploadDurationRef = useRef<number>(0);
-  const voicePreviewRef = useRef<HTMLAudioElement | null>(null);
-  const pollingIntervalRef = useRef<NodeJS.Timeout | null>(null);
-  const pollFailureCountRef = useRef(0);
-  /** Request sticky TTS autoplay after next audioUrl commit (completion / history / toggle). */
-  const pendingTtsAutoplayRef = useRef(false);
-  /** Request sticky recording autoplay after next recordedAudioUrl commit. */
-  const pendingRecAutoplayRef = useRef(false);
-  const editorRef = useRef<{ focusTextarea: () => void }>(null);
-  /** Latest recorded URL for unmount revoke (avoid effect re-running on every URL change). */
-  const recordedAudioUrlRef = useRef<string | null>(null);
-  recordedAudioUrlRef.current = recordedAudioUrl;
+  const {
+    audioRef,
+    recAudioRef,
+    voicePreviewRef,
+    pendingTtsAutoplayRef,
+    pendingRecAutoplayRef,
+    activeStickyPlayer,
+    setActiveStickyPlayer,
+    isStickyPlayerVisible,
+    closeStickyPlayer,
+    playingVoicePreview,
+    setPlayingVoicePreview,
+    handleVoicePreview,
+    recordedAudioUrl,
+    setRecordedAudioUrl,
+    isRecPlaying,
+    setIsRecPlaying,
+    recAudioProgress,
+    recAudioCurrentTime,
+    recAudioDuration,
+    toggleRecPlayback,
+    handleRecSeek,
+    playHistoryVoice,
+    audioUrl,
+    setAudioUrl,
+    audioDuration,
+    setAudioDuration,
+    isPlaying,
+    setIsPlaying,
+    audioProgress,
+    setAudioProgress,
+    audioCurrentTime,
+    togglePlayback,
+    playHistoryJob,
+    handleSeek,
+    playingHistoryVoiceId,
+    setPlayingHistoryVoiceId,
+    playingHistoryJobId,
+    setPlayingHistoryJobId,
+    silenceAllAudio,
+  } = usePlaygroundAudio({ currentJobAudioPathRef });
 
-  // ---------------------------------------------------------------------------
-  // Resume pending job after refresh — wait for history hydrate to avoid
-  // setHistoryJobs overwriting a saveCompletedJob prepend from resume.
-  // ---------------------------------------------------------------------------
+  const {
+    isRecording,
+    recordedAudioBlob,
+    recordingTime,
+    uploadStatus,
+    setUploadStatus,
+    anonymousVoiceId,
+    setAnonymousVoiceId,
+    uploadError,
+    setUploadError,
+    uploadCanRetry,
+    setUploadCanRetry,
+    setRecordedAudioBlob,
+    startRecording,
+    stopRecording,
+    retryUpload,
+    resetRecordingState,
+  } = useVoiceRecording({
+    locale,
+    t,
+    prependHistoryVoice,
+    silenceAllAudio,
+    setRecordedAudioUrl,
+    pendingRecAutoplayRef,
+    setSelectedVoice,
+    setActiveVoicePanel,
+  });
+
+  const hasValidStockVoice = activeVoicePanel === "stock" && !!selectedVoice;
+  const hasValidCustomVoice =
+    activeVoicePanel === "custom" && uploadStatus === "success" && anonymousVoiceId !== null;
+  const canGenerate = hasValidStockVoice || hasValidCustomVoice;
+
+  const {
+    isGenerating,
+    generationStatus,
+    currentJob,
+    errorMessage,
+    rateLimitRetryAfter,
+    pollRetryJobId,
+    emptyTextWarning,
+    setEmptyTextWarning,
+    showCompletionCard,
+    setShowCompletionCard,
+    lastQueueMetrics,
+    handleGenerate,
+    retryPollConnection,
+  } = useTtsGeneration({
+    t,
+    locale,
+    textInput,
+    setTextInput,
+    activeVoicePanel,
+    setActiveVoicePanel,
+    selectedVoice,
+    setSelectedVoice,
+    anonymousVoiceId,
+    setAnonymousVoiceId,
+    setUploadStatus,
+    speed,
+    canGenerate,
+    historyHydrated,
+    prependHistoryJob,
+    setAudioUrl,
+    setAudioDuration,
+    setIsPlaying,
+    setAudioProgress,
+    pendingTtsAutoplayRef,
+    setActiveStickyPlayer,
+  });
+
   useEffect(() => {
-    if (!historyHydrated) return;
+    currentJobAudioPathRef.current = currentJob?.audio_path;
+  }, [currentJob?.audio_path]);
 
-    const resumePending = async () => {
-      const pending = readPendingJob();
-      if (!pending) return;
-
-      try {
-        const pendingJobId = pending.job_id;
-        console.log(`🔄 Resuming pending job ${pendingJobId} after page refresh...`);
-
-        const res = await fetch(`/api/v1/playground/tts/${pendingJobId}`);
-        if (!res.ok) {
-          clearPendingJob();
-          console.log(`❌ Job ${pendingJobId} not found on backend`);
-          return;
-        }
-
-        const job: TTSJobResponse = await res.json();
-
-        if (pending.text) {
-          setTextInput(pending.text);
-
-          if (pending.active_panel) {
-            setActiveVoicePanel(pending.active_panel);
-          }
-
-          if (pending.active_panel === "stock" && pending.selected_voice) {
-            setSelectedVoice(pending.selected_voice);
-          } else if (pending.active_panel === "custom" && pending.anonymous_voice_id) {
-            setAnonymousVoiceId(pending.anonymous_voice_id);
-            setUploadStatus("success");
-          }
-        }
-
-        if (job.status === "queued" || job.status === "processing") {
-          setCurrentJob(job);
-          setGenerationStatus(job.status);
-          setIsGenerating(true);
-          pollJobStatus(pendingJobId);
-          console.log(`✅ Resumed polling for job ${pendingJobId} (status: ${job.status})`);
-        } else if (job.status === "completed" && job.audio_path) {
-          setCurrentJob(job);
-          setGenerationStatus(job.status);
-          pendingTtsAutoplayRef.current = true;
-          setAudioUrl(resolvePlaygroundAudioUrl(job.audio_path));
-          setAudioDuration(job.audio_duration);
-          setShowCompletionCard(true);
-
-          saveCompletedJob(job, {
-            textInput: pending.text,
-            activeVoicePanel: pending.active_panel,
-            anonymousVoiceId: pending.anonymous_voice_id,
-            selectedVoice: pending.selected_voice,
-          });
-
-          clearPendingJob();
-          console.log(`✅ Job ${pendingJobId} completed while away`);
-        } else {
-          clearPendingJob();
-          console.log(`❌ Job ${pendingJobId} failed with status: ${job.status}`);
-        }
-      } catch (err) {
-        console.error(`Failed to resume job:`, err);
-        clearPendingJob();
-      }
-    };
-
-    void resumePending();
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- run once after history hydrate
-  }, [historyHydrated]);
-
-  // Unmount cleanup only (blob revoke also happens in URL setters)
-  useEffect(() => {
-    return () => {
-      if (recordingIntervalRef.current) clearInterval(recordingIntervalRef.current);
-      if (pollingIntervalRef.current) clearInterval(pollingIntervalRef.current);
-      revokeIfBlobUrl(recordedAudioUrlRef.current);
-      disposePreviewAudio(voicePreviewRef);
-    };
-  }, []);
-
-  // Helper to stop all other audio sources when a new one starts
-  const stopAllOtherAudio = (except: "tts" | "rec" | "preview") => {
-    if (except !== "tts") {
-      if (audioRef.current) audioRef.current.pause();
-      setIsPlaying(false);
-    }
-    if (except !== "rec") {
-      if (recAudioRef.current) recAudioRef.current.pause();
-      setIsRecPlaying(false);
-    }
-    if (except !== "preview") {
-      disposePreviewAudio(voicePreviewRef);
-      setPlayingVoicePreview(null);
-    }
-    // History highlight tracks sticky-rec history playback; keep it when starting "rec"
-    if (except !== "rec") {
-      setPlayingHistoryVoiceId(null);
-    }
-  };
-
-  // Track recorded audio progress
-  useEffect(() => {
-    const audio = recAudioRef.current;
-    if (!audio) return;
-
-    return attachMediaProgress(audio, {
-      onTimeUpdate: (currentTime, duration) => {
-        setRecAudioProgress((currentTime / duration) * 100);
-        setRecAudioCurrentTime(currentTime);
-        setRecAudioDuration(duration);
-      },
-      onEnded: () => {
-        setIsRecPlaying(false);
-        setRecAudioProgress(0);
-        setRecAudioCurrentTime(0);
-        setPlayingHistoryVoiceId(null);
-        setActiveStickyPlayer(null);
-      },
-      onLoadedMetadata: (duration) => setRecAudioDuration(duration),
-    });
-  }, [recordedAudioUrl]);
-
-  // Sticky recording autoplay after capture (wait for <audio src> commit + canplay)
-  useEffect(() => {
-    if (!pendingRecAutoplayRef.current || !recordedAudioUrl) return;
-    const audio = recAudioRef.current;
-    if (!audio) return;
-
-    pendingRecAutoplayRef.current = false;
-    stopAllOtherAudio("rec");
-    setActiveStickyPlayer("rec");
-
-    return playWhenReady(audio, {
-      resetTime: true,
-      onPlaying: () => setIsRecPlaying(true),
-      onSkipped: (err) => console.warn("Auto-playback skipped:", err),
-    });
-  }, [recordedAudioUrl]);
-
-  // Track generated TTS audio progress
-  useEffect(() => {
-    const audio = audioRef.current;
-    if (!audio) return;
-
-    return attachMediaProgress(audio, {
-      onTimeUpdate: (currentTime, duration) => {
-        setAudioProgress((currentTime / duration) * 100);
-        setAudioCurrentTime(currentTime);
-      },
-      onEnded: () => {
-        setIsPlaying(false);
-        setAudioProgress(0);
-        setAudioCurrentTime(0);
-        setActiveStickyPlayer(null);
-      },
-    });
-  }, [audioUrl]);
-
-  // Sticky TTS autoplay after src commit (completion, history, toggle-back)
-  useEffect(() => {
-    if (!pendingTtsAutoplayRef.current || !audioUrl) return;
-    const audio = audioRef.current;
-    if (!audio) return;
-
-    pendingTtsAutoplayRef.current = false;
-    stopAllOtherAudio("tts");
-    setActiveStickyPlayer("tts");
-
-    return playWhenReady(audio, {
-      resetTime: true,
-      onPlaying: () => setIsPlaying(true),
-      onSkipped: (err) => console.warn("Auto-play after TTS skipped:", err),
-    });
-  }, [audioUrl]);
-
-  // ---------------------------------------------------------------------------
-  // Recorded Audio Controls
-  // ---------------------------------------------------------------------------
-  const toggleRecPlayback = () => {
-    if (!recAudioRef.current) return;
-    if (isRecPlaying) {
-      recAudioRef.current.pause();
-      setIsRecPlaying(false);
-      setPlayingHistoryVoiceId(null);
-    } else {
-      stopAllOtherAudio("rec");
-      setActiveStickyPlayer("rec");
-      const historyId = parseHistoryVoiceIdFromUrl(recordedAudioUrl);
-      if (historyId != null) setPlayingHistoryVoiceId(historyId);
-      recAudioRef.current
-        .play()
-        .then(() => setIsRecPlaying(true))
-        .catch(() => {
-          setIsRecPlaying(false);
-          setPlayingHistoryVoiceId(null);
-        });
-    }
-  };
-
-  const handleRecSeek = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!recAudioRef.current) return;
-    seekFromClick(recAudioRef.current, e.clientX, e.currentTarget);
-  };
-
-  // ---------------------------------------------------------------------------
-  // Step 1: Text input
-  // ---------------------------------------------------------------------------
   const handleSampleTextSelect = (id: string) => {
     const sample = SAMPLE_TEXTS.find((s) => s.id === id);
     if (sample) {
       setTextInput(t(sample.textKey));
-      // Focus textarea and move cursor to end after text is set
       setTimeout(() => {
         editorRef.current?.focusTextarea();
       }, 0);
     }
-  };
-
-  // ---------------------------------------------------------------------------
-  // Step 2: Voice Preview Audio
-  // ---------------------------------------------------------------------------
-  const handleVoicePreview = (voiceId: string) => {
-    const voice = PLAYGROUND_VOICES.find((v) => v.id === voiceId);
-    if (!voice) return;
-
-    if (playingVoicePreview === voiceId) {
-      disposePreviewAudio(voicePreviewRef);
-      setPlayingVoicePreview(null);
-      return;
-    }
-
-    stopAllOtherAudio("preview");
-    disposePreviewAudio(voicePreviewRef);
-
-    const audio = new Audio(voice.localAudioFile);
-    voicePreviewRef.current = audio;
-    audio.onended = () => {
-      setPlayingVoicePreview(null);
-      disposePreviewAudio(voicePreviewRef);
-    };
-    audio.onerror = () => {
-      console.warn(`Preview audio not available for ${voiceId} at ${voice.localAudioFile}`);
-      setPlayingVoicePreview(null);
-      disposePreviewAudio(voicePreviewRef);
-    };
-    audio.play().catch(() => {
-      setPlayingVoicePreview(null);
-      disposePreviewAudio(voicePreviewRef);
-    });
-    setPlayingVoicePreview(voiceId);
   };
 
   const handleVoiceSelectAndPlay = (voiceId: string) => {
@@ -401,43 +178,7 @@ export default function PlaygroundContent() {
     handleVoicePreview(voiceId);
   };
 
-  const playHistoryVoice = (voiceId: number) => {
-    // Toggle off when this history voice is already playing in the sticky bar
-    if (playingHistoryVoiceId === voiceId && isRecPlaying) {
-      if (recAudioRef.current) recAudioRef.current.pause();
-      setIsRecPlaying(false);
-      setPlayingHistoryVoiceId(null);
-      return;
-    }
-
-    disposePreviewAudio(voicePreviewRef);
-    setPlayingVoicePreview(null);
-    stopAllOtherAudio("rec");
-    setPlayingHistoryVoiceId(voiceId);
-
-    const url = historyVoicePromptUrl(voiceId);
-
-    // Same src already on <audio> — play without waiting for a URL commit
-    if (recordedAudioUrl === url && recAudioRef.current) {
-      pendingRecAutoplayRef.current = false;
-      setActiveStickyPlayer("rec");
-      playWhenReady(recAudioRef.current, {
-        resetTime: true,
-        onPlaying: () => setIsRecPlaying(true),
-        onSkipped: (err) => {
-          console.warn("History voice autoplay skipped:", err);
-          setPlayingHistoryVoiceId(null);
-        },
-      });
-      return;
-    }
-
-    pendingRecAutoplayRef.current = true;
-    setRecordedAudioUrl((prev) => replaceMediaUrl(prev, url));
-  };
-
   const deleteHistoryVoice = (voiceId: number) => {
-    // Stop playback if this voice is currently playing
     if (playingHistoryVoiceId === voiceId) {
       if (recAudioRef.current) recAudioRef.current.pause();
       setIsRecPlaying(false);
@@ -446,24 +187,20 @@ export default function PlaygroundContent() {
       disposePreviewAudio(voicePreviewRef);
     }
 
-    // If this was the selected voice, clear the selection (but stay in custom panel)
     if (anonymousVoiceId === voiceId) {
       setAnonymousVoiceId(null);
       setUploadStatus("idle");
-      // DO NOT switch panels - stay in "Record Voice" tab
     }
 
     removeHistoryVoice(voiceId);
   };
 
   const deleteHistoryJob = (jobId: string | number) => {
-    // Stop playback if this job is currently playing
     if (playingHistoryJobId === jobId) {
       audioRef.current?.pause();
       setIsPlaying(false);
       setPlayingHistoryJobId(null);
 
-      // Restore current job audio if available
       if (currentJob?.audio_path) {
         setAudioUrl(resolvePlaygroundAudioUrl(currentJob.audio_path));
       }
@@ -472,549 +209,6 @@ export default function PlaygroundContent() {
     removeHistoryJob(jobId);
   };
 
-  // ---------------------------------------------------------------------------
-  // Step 2: Microphone recording
-  // ---------------------------------------------------------------------------
-  const startRecording = async () => {
-    try {
-      // Stop ALL audio sources including StickyPlayerBar
-      if (audioRef.current) audioRef.current.pause();
-      setIsPlaying(false);
-      if (recAudioRef.current) recAudioRef.current.pause();
-      setIsRecPlaying(false);
-      disposePreviewAudio(voicePreviewRef);
-      setPlayingVoicePreview(null);
-      setPlayingHistoryVoiceId(null);
-      setActiveStickyPlayer(null);
-
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      const mediaRecorder = new MediaRecorder(stream);
-      mediaRecorderRef.current = mediaRecorder;
-      audioChunksRef.current = [];
-
-      mediaRecorder.ondataavailable = (event) => {
-        audioChunksRef.current.push(event.data);
-      };
-
-      mediaRecorder.onstop = async () => {
-        const audioBlob = new Blob(audioChunksRef.current, { type: "audio/webm" });
-        setRecordedAudioBlob(audioBlob);
-
-        const blobUrl = URL.createObjectURL(audioBlob);
-        setRecordedAudioUrl((prev) => replaceMediaUrl(prev, blobUrl, { revokeAnyPrev: true }));
-        pendingRecAutoplayRef.current = true;
-
-        setSelectedVoice(null);
-        setActiveVoicePanel("custom");
-
-        stream.getTracks().forEach((track) => track.stop());
-
-        // Send recording with accurate duration from ref
-        await uploadRecordingToBackend(audioBlob, recordingTimeRef.current);
-      };
-
-      mediaRecorder.start();
-      setIsRecording(true);
-      setRecordingTime(0);
-      recordingTimeRef.current = 0;
-
-      recordingIntervalRef.current = setInterval(() => {
-        setRecordingTime((prev) => {
-          const newTime = prev + 1;
-          recordingTimeRef.current = newTime; // Keep ref in sync
-          // Auto-stop at 10 seconds
-          if (newTime >= 10 && mediaRecorderRef.current?.state === "recording") {
-            mediaRecorderRef.current.stop();
-            setIsRecording(false);
-            if (recordingIntervalRef.current) {
-              clearInterval(recordingIntervalRef.current);
-              recordingIntervalRef.current = null;
-            }
-          }
-          return newTime;
-        });
-      }, 1000);
-    } catch (error) {
-      console.error("Recording error:", error);
-      alert(t("playground.microphoneError"));
-    }
-  };
-
-  const stopRecording = () => {
-    if (mediaRecorderRef.current && isRecording) {
-      mediaRecorderRef.current.stop();
-      setIsRecording(false);
-      if (recordingIntervalRef.current) {
-        clearInterval(recordingIntervalRef.current);
-      }
-    }
-  };
-
-  const uploadRecordingToBackend = async (blob: Blob, durationSeconds: number) => {
-    lastUploadDurationRef.current = durationSeconds;
-    setUploadStatus("uploading");
-    setUploadError(null);
-    setUploadCanRetry(false);
-    setAnonymousVoiceId(null);
-
-    try {
-      const formData = new FormData();
-      formData.append("file", blob, "recording.webm");
-      formData.append("language", locale);
-      formData.append("duration", durationSeconds.toString());
-
-      const res = await fetch("/api/v1/playground/upload-voice-prompt", {
-        method: "POST",
-        body: formData,
-      });
-
-      if (res.status === 429) {
-        const body = await res.json().catch(() => ({}));
-        const retryAfter: number = body?.detail?.retry_after ?? 3600;
-        setUploadStatus("error");
-        setUploadCanRetry(false);
-        setUploadError(
-          t("playground.voiceSection.uploadRateLimit").replace(
-            "{time}",
-            formatRetryAfter(retryAfter)
-          )
-        );
-        return;
-      }
-
-      if (!res.ok) {
-        const body = await res.json().catch(() => ({}));
-        const detail =
-          typeof body?.detail === "string" ? body.detail : t("playground.voiceSection.uploadError");
-        setUploadStatus("error");
-        setUploadCanRetry(true);
-        setUploadError(detail);
-        return;
-      }
-
-      const data = await res.json();
-      setAnonymousVoiceId(data.anonymous_voice_id);
-      setUploadStatus("success");
-      setUploadCanRetry(false);
-
-      const newVoice: HistoryVoice = {
-        anonymous_voice_id: data.anonymous_voice_id,
-        audio_duration: data.audio_duration,
-        expires_at: data.expires_at,
-        created_at: new Date().toISOString(),
-      };
-      prependHistoryVoice(newVoice);
-    } catch (err) {
-      console.error("Upload error:", err);
-      setUploadStatus("error");
-      setUploadCanRetry(true);
-      setUploadError(t("playground.voiceSection.uploadError"));
-    }
-  };
-
-  const retryUpload = () => {
-    if (!recordedAudioBlob || !uploadCanRetry) return;
-    const duration = lastUploadDurationRef.current || recordingTimeRef.current;
-    void uploadRecordingToBackend(recordedAudioBlob, duration);
-  };
-
-  // ---------------------------------------------------------------------------
-  // Step 3: Synthesis Generation & Polling
-  // ---------------------------------------------------------------------------
-  const handleGenerate = async () => {
-    const text = textInput.trim();
-
-    if (!text) {
-      setEmptyTextWarning(true);
-      return;
-    }
-    setEmptyTextWarning(false);
-
-    // Enforce character limit
-    if (text.length > MAX_TTS_TEXT_LENGTH) {
-      setErrorMessage(
-        t("playground.textTooLong") || `Text exceeds ${MAX_TTS_TEXT_LENGTH} character limit`
-      );
-      return;
-    }
-
-    if (!canGenerate) {
-      return;
-    }
-
-    const isStock = activeVoicePanel === "stock";
-    const voice = isStock ? PLAYGROUND_VOICES.find((v) => v.id === selectedVoice) : null;
-    if (isStock && !voice) return;
-    const language = isStock && voice ? voice.language : locale;
-
-    const rateMap = { slow: 0.3, normal: 0.5, fast: 0.8 };
-    const rate = rateMap[speed];
-
-    resetGenerationState();
-
-    try {
-      const requestBody = isStock
-        ? { text, voice_id: voice!.backendVoiceId, language, rate }
-        : { text, anonymous_voice_id: anonymousVoiceId, language, rate };
-
-      const res = await fetch("/api/v1/playground/tts", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(requestBody),
-      });
-
-      if (res.status === 429) {
-        const body = await res.json();
-        handleRateLimitError(body?.detail?.retry_after ?? 3600);
-        return;
-      }
-
-      if (!res.ok) {
-        const body = await res.json().catch(() => ({}));
-        const detail =
-          typeof body?.detail === "string" ? body.detail : t("playground.generateError");
-        handleGenerationError(detail);
-        return;
-      }
-
-      const job: TTSJobResponse = await res.json();
-      handleJobResponse(job, text);
-    } catch (err) {
-      console.error("Generate error:", err);
-      handleGenerationError(t("playground.generateError"));
-    }
-  };
-
-  function resetGenerationState() {
-    setIsGenerating(true);
-    setGenerationStatus(null);
-    setCurrentJob(null);
-    setAudioUrl(null);
-    setAudioDuration(null);
-    setErrorMessage(null);
-    setRateLimitRetryAfter(null);
-    setPollRetryJobId(null);
-    pollFailureCountRef.current = 0;
-    setIsPlaying(false);
-    setAudioProgress(0);
-    setLastQueueMetrics(null);
-    setShowCompletionCard(false);
-
-    stopPolling();
-  }
-
-  function handleRateLimitError(retryAfter: number) {
-    setPollRetryJobId(null);
-    pollFailureCountRef.current = 0;
-    setRateLimitRetryAfter(retryAfter);
-    setGenerationStatus("rate_limited");
-    setIsGenerating(false);
-  }
-
-  function handleGenerationError(message: string) {
-    setPollRetryJobId(null);
-    pollFailureCountRef.current = 0;
-    setErrorMessage(message);
-    setGenerationStatus("failed");
-    setIsGenerating(false);
-  }
-
-  function stopPolling() {
-    if (pollingIntervalRef.current) {
-      clearInterval(pollingIntervalRef.current);
-      pollingIntervalRef.current = null;
-    }
-  }
-
-  /** After N consecutive poll failures, stop the interval and offer retry (keeps pending job). */
-  function handleConsecutivePollFailure(jobId: string | number) {
-    pollFailureCountRef.current += 1;
-    if (pollFailureCountRef.current < MAX_CONSECUTIVE_POLL_FAILURES) return;
-
-    stopPolling();
-    setPollRetryJobId(jobId);
-    setErrorMessage(t("playground.connectionErrorMessage"));
-    setGenerationStatus("failed");
-    setIsGenerating(false);
-  }
-
-  function retryPollConnection() {
-    if (pollRetryJobId == null) return;
-    const jobId = pollRetryJobId;
-    setPollRetryJobId(null);
-    setErrorMessage(null);
-    setIsGenerating(true);
-    setGenerationStatus(
-      currentJob?.status === "queued" || currentJob?.status === "processing"
-        ? currentJob.status
-        : "processing"
-    );
-    pollJobStatus(jobId);
-  }
-
-  function saveCompletedJob(
-    jobToSave: TTSJobResponse,
-    contextOverride?: {
-      textInput?: string;
-      activeVoicePanel?: "stock" | "custom";
-      anonymousVoiceId?: number | null;
-      selectedVoice?: string | null;
-    }
-  ) {
-    // Use context override if provided (e.g., from resumed job), otherwise use current state
-    const ctx = contextOverride || {
-      textInput,
-      activeVoicePanel,
-      anonymousVoiceId,
-      selectedVoice,
-    };
-
-    const isStock = ctx.activeVoicePanel === "stock";
-    const stockVoice = isStock ? PLAYGROUND_VOICES.find((v) => v.id === ctx.selectedVoice) : null;
-
-    const vName =
-      isStock && stockVoice
-        ? t(stockVoice.nameKey)
-        : ctx.anonymousVoiceId
-          ? t("playground.voicePromptLabel").replace("{id}", String(ctx.anonymousVoiceId))
-          : t("playground.voiceSection.customVoice");
-
-    const textToUse = ctx.textInput || textInput;
-    const textSnippet = textToUse.slice(0, 50) + (textToUse.length > 50 ? "..." : "");
-
-    const newJob: HistoryTTSJob = {
-      playground_job_id: jobToSave.job_id,
-      text: textSnippet,
-      voice_name: vName,
-      audio_path: jobToSave.audio_path,
-      created_at: jobToSave.created_at,
-      expires_at: jobToSave.expires_at,
-    };
-
-    prependHistoryJob(newJob);
-  }
-
-  function handleJobResponse(job: TTSJobResponse, inputText?: string) {
-    setCurrentJob(job);
-    setGenerationStatus(job.status);
-
-    if (job.status === "completed" && job.audio_path) {
-      pendingTtsAutoplayRef.current = true;
-      setAudioUrl(resolvePlaygroundAudioUrl(job.audio_path));
-      setAudioDuration(job.audio_duration);
-      setIsGenerating(false);
-      setActiveStickyPlayer("tts");
-      saveCompletedJob(job);
-
-      // Clear pending job status
-      clearPendingJob();
-      return;
-    }
-
-    // Store job ID + context for resumption after page refresh
-    writePendingJob({
-      job_id: job.job_id,
-      text: inputText || textInput,
-      anonymous_voice_id: anonymousVoiceId,
-      active_panel: activeVoicePanel,
-      selected_voice: selectedVoice,
-    });
-
-    pollJobStatus(job.job_id);
-  }
-
-  function pollJobStatus(jobId: string | number) {
-    stopPolling();
-    pollFailureCountRef.current = 0;
-    setPollRetryJobId(null);
-
-    fetchJobStatus(jobId);
-
-    pollingIntervalRef.current = setInterval(() => {
-      fetchJobStatus(jobId);
-    }, 1000);
-  }
-
-  async function fetchJobStatus(jobId: string | number) {
-    try {
-      const res = await fetch(`/api/v1/playground/tts/${jobId}`);
-      if (!res.ok) {
-        if (res.status === 429) {
-          const body = await res.json().catch(() => ({}));
-          handleRateLimitError(body?.detail?.retry_after ?? 3600);
-          stopPolling();
-          return;
-        }
-        // Job gone — not recoverable by retrying poll
-        if (res.status === 404) {
-          stopPolling();
-          clearPendingJob();
-          handleGenerationError(t("playground.jobNotFoundError"));
-          return;
-        }
-        console.warn(`Polling HTTP ${res.status} for job ${jobId}`);
-        handleConsecutivePollFailure(jobId);
-        return;
-      }
-
-      pollFailureCountRef.current = 0;
-      const job: TTSJobResponse = await res.json();
-      handleJobUpdate(job);
-    } catch (e) {
-      console.error("Polling error:", e);
-      handleConsecutivePollFailure(jobId);
-    }
-  }
-
-  function handleJobUpdate(job: TTSJobResponse) {
-    setPollRetryJobId(null);
-    setCurrentJob(job);
-    setGenerationStatus(job.status);
-
-    const pos = job.queue_position != null ? Number(job.queue_position) : null;
-    const ahead = job.jobs_ahead != null ? Number(job.jobs_ahead) : null;
-    const depth = job.queue_depth != null ? Number(job.queue_depth) : null;
-    const wait = job.estimated_wait_seconds != null ? Number(job.estimated_wait_seconds) : null;
-
-    if (
-      job.status === "queued" &&
-      pos !== null &&
-      !isNaN(pos) &&
-      ahead !== null &&
-      !isNaN(ahead) &&
-      depth !== null &&
-      !isNaN(depth) &&
-      wait !== null &&
-      !isNaN(wait)
-    ) {
-      setLastQueueMetrics({
-        position: pos,
-        jobsAhead: ahead,
-        queueDepth: depth,
-        estimatedWaitSeconds: wait,
-      });
-    }
-
-    if (job.status === "completed") {
-      if (job.audio_path) {
-        pendingTtsAutoplayRef.current = true;
-        setAudioUrl(resolvePlaygroundAudioUrl(job.audio_path));
-        setAudioDuration(job.audio_duration);
-        setActiveStickyPlayer("tts");
-      }
-      setIsGenerating(false);
-      setShowCompletionCard(true);
-
-      // Retrieve context from localStorage if job was resumed after refresh
-      const pending = readPendingJob();
-      let contextOverride;
-      if (pending?.text) {
-        contextOverride = {
-          textInput: pending.text,
-          activeVoicePanel: pending.active_panel,
-          anonymousVoiceId: pending.anonymous_voice_id,
-          selectedVoice: pending.selected_voice,
-        };
-      }
-
-      saveCompletedJob(job, contextOverride);
-
-      // Clear pending job from localStorage
-      clearPendingJob();
-
-      stopPolling();
-    } else if (job.status === "failed") {
-      handleGenerationError(job.error_message ?? t("playground.generateError"));
-
-      // Clear pending job from localStorage
-      clearPendingJob();
-
-      stopPolling();
-    } else if (job.status === "rate_limited") {
-      handleRateLimitError(3600);
-
-      // Clear pending job from localStorage
-      clearPendingJob();
-
-      stopPolling();
-    }
-  }
-
-  // ---------------------------------------------------------------------------
-  // Audio playback controls
-  // ---------------------------------------------------------------------------
-  const togglePlayback = () => {
-    if (!audioRef.current) return;
-    if (isPlaying && !playingHistoryJobId) {
-      audioRef.current.pause();
-      setIsPlaying(false);
-    } else {
-      stopAllOtherAudio("tts");
-      setActiveStickyPlayer("tts");
-      if (playingHistoryJobId) {
-        setPlayingHistoryJobId(null);
-        if (currentJob?.audio_path) {
-          pendingTtsAutoplayRef.current = true;
-          setAudioUrl(resolvePlaygroundAudioUrl(currentJob.audio_path));
-        } else {
-          setAudioUrl(null);
-        }
-      } else {
-        audioRef.current
-          .play()
-          .then(() => setIsPlaying(true))
-          .catch(() => setIsPlaying(false));
-      }
-    }
-  };
-
-  const playHistoryJob = (jobId: string | number, path: string | null) => {
-    if (!path) return;
-    if (playingHistoryJobId === jobId && isPlaying) {
-      audioRef.current?.pause();
-      setIsPlaying(false);
-      setPlayingHistoryJobId(null);
-      if (currentJob?.audio_path) setAudioUrl(resolvePlaygroundAudioUrl(currentJob.audio_path));
-      else setAudioUrl(null);
-    } else {
-      stopAllOtherAudio("tts");
-      const nextUrl = resolvePlaygroundAudioUrl(path);
-      setPlayingHistoryJobId(jobId);
-      setActiveStickyPlayer("tts");
-      // Same URL won't re-trigger the audioUrl effect — play immediately when ready.
-      if (nextUrl === audioUrl && audioRef.current) {
-        playWhenReady(audioRef.current, {
-          resetTime: true,
-          onPlaying: () => setIsPlaying(true),
-          onSkipped: (err) => console.warn("Auto-play after TTS skipped:", err),
-        });
-      } else {
-        pendingTtsAutoplayRef.current = true;
-        setAudioUrl(nextUrl);
-      }
-    }
-  };
-
-  const handleSeek = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!audioRef.current) return;
-    seekFromClick(audioRef.current, e.clientX, e.currentTarget);
-  };
-
-  // ---------------------------------------------------------------------------
-  // Derived state & summaries
-  // ---------------------------------------------------------------------------
-  const hasValidStockVoice = activeVoicePanel === "stock" && !!selectedVoice;
-  const hasValidCustomVoice =
-    activeVoicePanel === "custom" && uploadStatus === "success" && anonymousVoiceId !== null;
-  const canGenerate = hasValidStockVoice || hasValidCustomVoice;
-
-  const isStickyPlayerVisible =
-    (activeStickyPlayer === "tts" && !!audioUrl) ||
-    (activeStickyPlayer === "rec" && !!recordedAudioUrl);
-
-  // Step 1 Summary
-
-  // Step 2 Summary
   const selectedStockVoiceObj = PLAYGROUND_VOICES.find((v) => v.id === selectedVoice);
 
   return (
@@ -1023,11 +217,9 @@ export default function PlaygroundContent() {
         isStickyPlayerVisible ? "pb-32 sm:pb-40" : "pb-16"
       }`}
     >
-      {/* Persistent HTML Audio Elements (prevents playback interruption on step collapse/expand) */}
       {recordedAudioUrl && <audio ref={recAudioRef} src={recordedAudioUrl} className="hidden" />}
       {audioUrl && <audio ref={audioRef} src={audioUrl} className="hidden" />}
 
-      {/* Header */}
       <div className="text-center mb-8 sm:mb-12">
         <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full glass-panel text-xs text-indigo-600 dark:text-indigo-400 font-semibold mb-4 shadow-sm">
           <SpeakerIcon className="w-3.5 h-3.5" />
@@ -1038,9 +230,7 @@ export default function PlaygroundContent() {
         </h1>
       </div>
 
-      {/* New Canvas Layout */}
       <div className="space-y-6 sm:space-y-8">
-        {/* Editor */}
         <PlaygroundEditorPanel
           ref={editorRef}
           textInput={textInput}
@@ -1048,7 +238,6 @@ export default function PlaygroundContent() {
           onSampleSelect={handleSampleTextSelect}
         />
 
-        {/* Action Row */}
         <div className="flex flex-col sm:flex-row items-center gap-4 max-w-lg mx-auto sm:max-w-none">
           <button
             onClick={() => setIsVoiceModalOpen(true)}
@@ -1117,7 +306,6 @@ export default function PlaygroundContent() {
           </button>
         </div>
 
-        {/* Inline Alerts & Queue Stats */}
         <div className="max-w-2xl mx-auto space-y-4">
           <AlertBanner
             emptyTextWarning={emptyTextWarning}
@@ -1142,7 +330,6 @@ export default function PlaygroundContent() {
         </div>
       </div>
 
-      {/* Voice Selection Modal */}
       <VoiceSelectionModal
         isOpen={isVoiceModalOpen}
         onClose={() => setIsVoiceModalOpen(false)}
@@ -1169,25 +356,13 @@ export default function PlaygroundContent() {
           if (recAudioRef.current) recAudioRef.current.pause();
           setIsRecPlaying(false);
           setPlayingHistoryVoiceId(null);
-          setRecordedAudioBlob(null);
-          setRecordedAudioUrl((prev) => {
-            revokeIfBlobUrl(prev);
-            return null;
-          });
-          setRecordingTime(0);
-          recordingTimeRef.current = 0;
-          lastUploadDurationRef.current = 0;
+          resetRecordingState();
           setSelectedVoice("voice1");
-          setUploadStatus("idle");
-          setAnonymousVoiceId(null);
-          setUploadError(null);
-          setUploadCanRetry(false);
         }}
         onSelectHistoryVoice={(voice) => {
           setActiveVoicePanel("custom");
           setAnonymousVoiceId(voice.anonymous_voice_id);
           setRecordedAudioBlob(null);
-          // Keep sticky-player src in sync with the selected history voice.
           const historyUrl = historyVoicePromptUrl(voice.anonymous_voice_id);
           setRecordedAudioUrl((prev) => {
             if (prev === historyUrl) return prev;
@@ -1201,10 +376,7 @@ export default function PlaygroundContent() {
         onToggleRecordingPlayback={toggleRecPlayback}
         onDeleteHistoryVoice={deleteHistoryVoice}
         onClearSampleVoice={() => {
-          // Clear sample voice selection
           setSelectedVoice(null);
-
-          // Clear custom voice selection
           setAnonymousVoiceId(null);
           setRecordedAudioBlob(null);
           setRecordedAudioUrl((prev) => {
@@ -1213,8 +385,6 @@ export default function PlaygroundContent() {
           });
           setUploadStatus("idle");
           setUploadError(null);
-
-          // Stop any playing audio
           disposePreviewAudio(voicePreviewRef);
           setPlayingVoicePreview(null);
           if (recAudioRef.current) {
@@ -1227,7 +397,6 @@ export default function PlaygroundContent() {
         onSetSpeed={setSpeed}
       />
 
-      {/* Sticky Bottom Player Bar */}
       <StickyPlayerBar
         isVisible={isStickyPlayerVisible}
         title={
@@ -1238,12 +407,10 @@ export default function PlaygroundContent() {
         subtitle={
           activeStickyPlayer === "tts"
             ? (() => {
-                // History job playing → use its stored voice_name
                 if (playingHistoryJobId != null) {
                   const hj = historyJobs.find((j) => j.playground_job_id === playingHistoryJobId);
                   if (hj) return hj.voice_name;
                 }
-                // Current session job
                 const isStock = activeVoicePanel === "stock";
                 const stockVoice = isStock
                   ? PLAYGROUND_VOICES.find((v) => v.id === selectedVoice)
@@ -1255,7 +422,6 @@ export default function PlaygroundContent() {
                     : t("playground.voiceSection.customVoice");
               })()
             : (() => {
-                // History voice playing → use its id for the label
                 if (playingHistoryVoiceId != null) {
                   return t("playground.voicePromptLabel").replace(
                     "{id}",
@@ -1273,19 +439,7 @@ export default function PlaygroundContent() {
         duration={activeStickyPlayer === "tts" ? audioDuration : recAudioDuration}
         onTogglePlayback={activeStickyPlayer === "tts" ? togglePlayback : toggleRecPlayback}
         onSeek={activeStickyPlayer === "tts" ? handleSeek : handleRecSeek}
-        onClose={() => {
-          // Pause the currently playing audio
-          if (activeStickyPlayer === "tts") {
-            if (audioRef.current) audioRef.current.pause();
-            setIsPlaying(false);
-          } else if (activeStickyPlayer === "rec") {
-            if (recAudioRef.current) recAudioRef.current.pause();
-            setIsRecPlaying(false);
-            setPlayingHistoryVoiceId(null);
-          }
-          // Hide the sticky player
-          setActiveStickyPlayer(null);
-        }}
+        onClose={closeStickyPlayer}
       />
     </div>
   );
