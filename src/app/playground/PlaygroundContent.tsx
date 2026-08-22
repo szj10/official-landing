@@ -338,10 +338,7 @@ export default function PlaygroundContent() {
                     return (
                       <div
                         key={v.id}
-                        onClick={() => {
-                          setSelectedVoice(v.id);
-                          setActiveVoicePanel("stock");
-                        }}
+                        onClick={() => handleVoiceSelectAndPlay(v.id)}
                         className={`inline-flex items-center gap-1.5 pl-1.5 pr-3 py-1.5 rounded-xl text-xs font-bold border transition-all cursor-pointer ${
                           isSelected
                             ? "bg-indigo-600 text-white border-indigo-600 shadow-md shadow-indigo-500/20"
@@ -354,16 +351,10 @@ export default function PlaygroundContent() {
                           {v.avatar}
                         </span>
                         <span className="truncate max-w-[90px]">{t(v.nameKey)}</span>
-                        <button
-                          type="button"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleVoiceSelectAndPlay(v.id);
-                          }}
-                          className={`p-0.5 rounded-full hover:bg-black/10 dark:hover:bg-white/20 transition-colors ${
+                        <span
+                          className={`p-0.5 rounded-full transition-colors ${
                             isPreviewing ? "text-amber-300 animate-pulse" : "opacity-75"
                           }`}
-                          title="Preview Voice"
                         >
                           {isPreviewing ? (
                             <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
@@ -375,7 +366,7 @@ export default function PlaygroundContent() {
                               <path d="M8 5v14l11-7z" />
                             </svg>
                           )}
-                        </button>
+                        </span>
                       </div>
                     );
                   })}
@@ -384,6 +375,7 @@ export default function PlaygroundContent() {
                     <div
                       onClick={() => {
                         setActiveVoicePanel("custom");
+                        playHistoryVoice(anonymousVoiceId);
                       }}
                       className={`inline-flex items-center gap-1.5 pl-1.5 pr-3 py-1.5 rounded-xl text-xs font-bold border transition-all cursor-pointer ${
                         activeVoicePanel === "custom"
@@ -397,18 +389,12 @@ export default function PlaygroundContent() {
                       <span className="truncate max-w-[100px]">
                         {t("playground.voicePromptLabel").replace("{id}", String(anonymousVoiceId))}
                       </span>
-                      <button
-                        type="button"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          playHistoryVoice(anonymousVoiceId);
-                        }}
-                        className={`p-0.5 rounded-full hover:bg-black/10 dark:hover:bg-white/20 transition-colors ${
+                      <span
+                        className={`p-0.5 rounded-full transition-colors ${
                           playingHistoryVoiceId === anonymousVoiceId && isRecPlaying
                             ? "text-amber-300 animate-pulse"
                             : "opacity-75"
                         }`}
-                        title="Preview Recording"
                       >
                         {playingHistoryVoiceId === anonymousVoiceId && isRecPlaying ? (
                           <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
@@ -420,7 +406,7 @@ export default function PlaygroundContent() {
                             <path d="M8 5v14l11-7z" />
                           </svg>
                         )}
-                      </button>
+                      </span>
                     </div>
                   )}
 
