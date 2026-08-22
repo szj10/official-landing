@@ -1238,6 +1238,12 @@ export default function PlaygroundContent() {
         subtitle={
           activeStickyPlayer === "tts"
             ? (() => {
+                // History job playing → use its stored voice_name
+                if (playingHistoryJobId != null) {
+                  const hj = historyJobs.find((j) => j.playground_job_id === playingHistoryJobId);
+                  if (hj) return hj.voice_name;
+                }
+                // Current session job
                 const isStock = activeVoicePanel === "stock";
                 const stockVoice = isStock
                   ? PLAYGROUND_VOICES.find((v) => v.id === selectedVoice)
@@ -1248,9 +1254,18 @@ export default function PlaygroundContent() {
                     ? t("playground.voicePromptLabel").replace("{id}", String(anonymousVoiceId))
                     : t("playground.voiceSection.customVoice");
               })()
-            : anonymousVoiceId
-              ? t("playground.voicePromptLabel").replace("{id}", String(anonymousVoiceId))
-              : t("playground.unsavedRecording")
+            : (() => {
+                // History voice playing → use its id for the label
+                if (playingHistoryVoiceId != null) {
+                  return t("playground.voicePromptLabel").replace(
+                    "{id}",
+                    String(playingHistoryVoiceId)
+                  );
+                }
+                return anonymousVoiceId
+                  ? t("playground.voicePromptLabel").replace("{id}", String(anonymousVoiceId))
+                  : t("playground.unsavedRecording");
+              })()
         }
         isPlaying={activeStickyPlayer === "tts" ? isPlaying : isRecPlaying}
         progress={activeStickyPlayer === "tts" ? audioProgress : recAudioProgress}
