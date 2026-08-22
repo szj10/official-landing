@@ -125,7 +125,7 @@ export function VoiceSelectionModal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-6">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center px-3 py-4 sm:px-6 sm:py-8">
       {/* Backdrop */}
       <div
         className="absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity"
@@ -133,9 +133,12 @@ export function VoiceSelectionModal({
       />
 
       {/* Modal Content */}
-      <div className="relative w-full max-w-2xl bg-gradient-to-br from-white/95 to-slate-50/90 dark:from-zinc-900/95 dark:to-zinc-950/90 backdrop-blur-2xl border border-indigo-500/10 dark:border-indigo-400/20 rounded-[2rem] shadow-2xl shadow-indigo-500/10 dark:shadow-indigo-500/20 flex flex-col max-h-[85vh] overflow-hidden animate-in fade-in zoom-in-95 duration-300 ease-out text-slate-800 dark:text-slate-100">
+      <div
+        className="relative w-full max-w-2xl bg-gradient-to-br from-white/95 to-slate-50/90 dark:from-zinc-900/95 dark:to-zinc-950/90 backdrop-blur-2xl border border-indigo-500/10 dark:border-indigo-400/20 rounded-[2rem] shadow-2xl shadow-indigo-500/10 dark:shadow-indigo-500/20 flex flex-col max-h-[min(85dvh,85vh)] overflow-hidden animate-in fade-in zoom-in-95 duration-300 ease-out text-slate-800 dark:text-slate-100"
+        style={{ maxHeight: "min(85dvh, 85vh)" }}
+      >
         {/* Scrollable Body */}
-        <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4 sm:space-y-6 custom-scrollbar">
+        <div className="flex-1 min-h-0 overflow-y-auto p-4 sm:p-6 space-y-4 sm:space-y-6 custom-scrollbar">
           {/* 3-Tab Navigation */}
           <div className="flex p-1 bg-gray-100/80 dark:bg-zinc-800/80 rounded-xl shadow-inner w-full max-w-lg mx-auto">
             <button
@@ -179,7 +182,7 @@ export function VoiceSelectionModal({
           </div>
 
           {/* Tab Content - Fixed height container for consistent sizing */}
-          <div className="h-[280px] sm:h-[320px] flex flex-col">
+          <div className="flex-1 min-h-0 flex flex-col">
             {activeTab === "sample" && (
               <>
                 {/* Quick Navigation Banner - Navigate to History */}
