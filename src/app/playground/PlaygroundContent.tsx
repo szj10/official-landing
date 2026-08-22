@@ -107,6 +107,7 @@ export default function PlaygroundContent() {
   const {
     historyVoices,
     historyJobs,
+    hydrated: historyHydrated,
     removeHistoryVoice,
     removeHistoryJob,
     prependHistoryVoice,
@@ -137,9 +138,12 @@ export default function PlaygroundContent() {
   recordedAudioUrlRef.current = recordedAudioUrl;
 
   // ---------------------------------------------------------------------------
-  // Resume pending job after refresh (voices/jobs hydrate via usePlaygroundHistory)
+  // Resume pending job after refresh — wait for history hydrate to avoid
+  // setHistoryJobs overwriting a saveCompletedJob prepend from resume.
   // ---------------------------------------------------------------------------
   useEffect(() => {
+    if (!historyHydrated) return;
+
     const resumePending = async () => {
       const pending = readPendingJob();
       if (!pending) return;
@@ -206,8 +210,8 @@ export default function PlaygroundContent() {
     };
 
     void resumePending();
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- mount-only resume
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- run once after history hydrate
+  }, [historyHydrated]);
 
   // Unmount cleanup only (blob revoke also happens in URL setters)
   useEffect(() => {

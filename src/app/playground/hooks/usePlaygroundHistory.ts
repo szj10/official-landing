@@ -11,11 +11,13 @@ import {
 
 /**
  * Hydrates voice + TTS history from localStorage / backend.
- * Pending-job resume stays in PlaygroundContent (needs generate/poll wiring).
+ * `hydrated` flips true after the first load attempt (success or failure) so
+ * pending-job resume can run afterward without racing setHistoryJobs.
  */
 export function usePlaygroundHistory() {
   const [historyVoices, setHistoryVoices] = useState<HistoryVoice[]>([]);
   const [historyJobs, setHistoryJobs] = useState<HistoryTTSJob[]>([]);
+  const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -28,6 +30,8 @@ export function usePlaygroundHistory() {
         if (jobs) setHistoryJobs(jobs);
       } catch (err) {
         console.error("Failed to load playground history:", err);
+      } finally {
+        if (!cancelled) setHydrated(true);
       }
     };
 
@@ -75,8 +79,7 @@ export function usePlaygroundHistory() {
   return {
     historyVoices,
     historyJobs,
-    setHistoryVoices,
-    setHistoryJobs,
+    hydrated,
     removeHistoryVoice,
     removeHistoryJob,
     prependHistoryVoice,
