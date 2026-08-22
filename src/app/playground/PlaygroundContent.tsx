@@ -379,114 +379,57 @@ export default function PlaygroundContent() {
                       </div>
                     );
                   })}
+                  {/* Active Custom/Cloned Voice Chip if available */}
+                  {anonymousVoiceId !== null && (
+                    <div
+                      onClick={() => {
+                        setActiveVoicePanel("custom");
+                      }}
+                      className={`inline-flex items-center gap-1.5 pl-1.5 pr-3 py-1.5 rounded-xl text-xs font-bold border transition-all cursor-pointer ${
+                        activeVoicePanel === "custom"
+                          ? "bg-emerald-600 text-white border-emerald-600 shadow-md shadow-emerald-500/20"
+                          : "bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800/80 hover:border-emerald-400"
+                      }`}
+                    >
+                      <span className="w-5 h-5 rounded-full bg-gradient-to-tr from-emerald-500 to-teal-600 flex items-center justify-center text-[10px] font-black text-white">
+                        🎙️
+                      </span>
+                      <span className="truncate max-w-[100px]">
+                        {t("playground.voicePromptLabel").replace("{id}", String(anonymousVoiceId))}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          playHistoryVoice(anonymousVoiceId);
+                        }}
+                        className={`p-0.5 rounded-full hover:bg-black/10 dark:hover:bg-white/20 transition-colors ${
+                          playingHistoryVoiceId === anonymousVoiceId && isRecPlaying
+                            ? "text-amber-300 animate-pulse"
+                            : "opacity-75"
+                        }`}
+                        title="Preview Recording"
+                      >
+                        {playingHistoryVoiceId === anonymousVoiceId && isRecPlaying ? (
+                          <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
+                            <rect x="6" y="4" width="4" height="16" rx="1" />
+                            <rect x="14" y="4" width="4" height="16" rx="1" />
+                          </svg>
+                        ) : (
+                          <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
+                            <path d="M8 5v14l11-7z" />
+                          </svg>
+                        )}
+                      </button>
+                    </div>
+                  )}
+
                   <button
                     type="button"
                     onClick={() => setIsVoiceModalOpen(true)}
                     className="px-3 py-1.5 text-xs font-bold text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/50 rounded-xl border border-indigo-200 dark:border-indigo-800/80 hover:bg-indigo-100 dark:hover:bg-indigo-900/40 transition-colors"
                   >
                     + Clone / All Voices
-                  </button>
-                </div>
-              </div>
-
-              {/* Mobile-only: Active Persona Summary (Island 03 is hidden on mobile) */}
-              <div className="block lg:hidden">
-                <div className="flex items-center gap-3 p-3 rounded-2xl bg-gray-50 dark:bg-zinc-800/50 border border-gray-200/60 dark:border-zinc-700/60">
-                  {/* Avatar */}
-                  <div
-                    className={`w-9 h-9 rounded-xl bg-gradient-to-tr ${
-                      activeVoicePanel === "stock" && selectedStockVoiceObj
-                        ? selectedStockVoiceObj.color
-                        : "from-purple-600 to-indigo-600"
-                    } flex items-center justify-center text-sm font-black text-white shadow-sm shrink-0`}
-                  >
-                    {activeVoicePanel === "stock" && selectedStockVoiceObj
-                      ? selectedStockVoiceObj.avatar
-                      : "V"}
-                  </div>
-
-                  {/* Name + badge */}
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-1.5 flex-wrap">
-                      <span className="text-sm font-bold text-gray-900 dark:text-white truncate">
-                        {activeVoicePanel === "stock" && selectedStockVoiceObj
-                          ? t(selectedStockVoiceObj.nameKey)
-                          : anonymousVoiceId
-                            ? t("playground.voicePromptLabel").replace(
-                                "{id}",
-                                String(anonymousVoiceId)
-                              )
-                            : t("playground.chooseVoice")}
-                      </span>
-                      <span
-                        className={`text-[9px] font-extrabold px-1.5 py-0.5 rounded-full uppercase tracking-wider shrink-0 ${
-                          activeVoicePanel === "stock"
-                            ? "bg-indigo-100 dark:bg-indigo-950/80 text-indigo-700 dark:text-indigo-300"
-                            : "bg-emerald-100 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-300"
-                        }`}
-                      >
-                        {activeVoicePanel === "stock" ? "Stock" : "Cloned"}
-                      </span>
-                    </div>
-                    <p className="text-xs text-gray-400 dark:text-zinc-500 truncate">
-                      {activeVoicePanel === "stock" && selectedStockVoiceObj
-                        ? t(selectedStockVoiceObj.previewKey)
-                        : t("playground.voiceSection.customVoice")}
-                    </p>
-                  </div>
-
-                  {/* Preview button */}
-                  {activeVoicePanel === "stock" && selectedStockVoiceObj ? (
-                    <button
-                      type="button"
-                      onClick={() => handleVoicePreview(selectedStockVoiceObj.id)}
-                      className="p-2 rounded-xl bg-indigo-50 dark:bg-indigo-900/40 hover:bg-indigo-100 dark:hover:bg-indigo-900/70 text-indigo-600 dark:text-indigo-400 transition-colors shrink-0"
-                      title="Listen to Preview"
-                    >
-                      {playingVoicePreview === selectedStockVoiceObj.id ? (
-                        <svg
-                          className="w-4 h-4 fill-current text-amber-500 animate-pulse"
-                          viewBox="0 0 24 24"
-                        >
-                          <rect x="6" y="4" width="4" height="16" rx="1" />
-                          <rect x="14" y="4" width="4" height="16" rx="1" />
-                        </svg>
-                      ) : (
-                        <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
-                          <path d="M8 5v14l11-7z" />
-                        </svg>
-                      )}
-                    </button>
-                  ) : activeVoicePanel === "custom" && anonymousVoiceId !== null ? (
-                    <button
-                      type="button"
-                      onClick={() => playHistoryVoice(anonymousVoiceId)}
-                      className="p-2 rounded-xl bg-emerald-50 dark:bg-emerald-900/40 hover:bg-emerald-100 dark:hover:bg-emerald-900/70 text-emerald-600 dark:text-emerald-400 transition-colors shrink-0"
-                      title="Listen to Recorded Voice Preview"
-                    >
-                      {playingHistoryVoiceId === anonymousVoiceId && isRecPlaying ? (
-                        <svg
-                          className="w-4 h-4 fill-current text-amber-500 animate-pulse"
-                          viewBox="0 0 24 24"
-                        >
-                          <rect x="6" y="4" width="4" height="16" rx="1" />
-                          <rect x="14" y="4" width="4" height="16" rx="1" />
-                        </svg>
-                      ) : (
-                        <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
-                          <path d="M8 5v14l11-7z" />
-                        </svg>
-                      )}
-                    </button>
-                  ) : null}
-
-                  {/* Change voice button */}
-                  <button
-                    type="button"
-                    onClick={() => setIsVoiceModalOpen(true)}
-                    className="px-2.5 py-1.5 text-xs font-bold text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/50 rounded-xl border border-indigo-200 dark:border-indigo-800/80 hover:bg-indigo-100 dark:hover:bg-indigo-900/40 transition-colors shrink-0"
-                  >
-                    Change
                   </button>
                 </div>
               </div>
