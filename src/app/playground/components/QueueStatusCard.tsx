@@ -59,7 +59,7 @@ function AnimatedWaveform({ color = "emerald" }: { color?: "emerald" | "indigo" 
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Queue Waiting State (modernised)
+// Queue Waiting State
 // ─────────────────────────────────────────────────────────────────────────────
 
 function QueueWaitingCard({
@@ -251,7 +251,7 @@ function QueueWaitingCard({
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Success State (no big Play CTA – StickyPlayerBar handles auto-play)
+// Success State
 // ─────────────────────────────────────────────────────────────────────────────
 
 function SuccessCard({
@@ -384,8 +384,6 @@ function SuccessCard({
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-
-// ─────────────────────────────────────────────────────────────────────────────
 // Main export
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -406,12 +404,15 @@ export function QueueStatusCard({
   const prevCompletedRef = useRef(false);
   const [successDismissed, setSuccessDismissed] = useState(false);
 
-  /* Animate checkmark when completion first triggers */
+  /* Animate checkmark when completion first triggers;
+     also auto-expand history so newest item is immediately visible */
   useEffect(() => {
     if (isCompleted && !prevCompletedRef.current) {
       prevCompletedRef.current = true;
       setCheckVisible(false);
       setSuccessDismissed(false);
+      // Scenario 3: auto-expand history to reveal the newly generated item
+      setShowHistory(true);
       const timer = setTimeout(() => {
         setCheckVisible(true);
       }, 150);
@@ -422,7 +423,7 @@ export function QueueStatusCard({
     }
   }, [isCompleted]);
 
-  /* Collapse history whenever a new generation starts */
+  /* Scenario 2: collapse history when a new generation starts */
   useEffect(() => {
     if (isGenerating && !prevGeneratingRef.current) {
       setShowHistory(false);
@@ -455,7 +456,7 @@ export function QueueStatusCard({
         />
       )}
 
-      {/* History list – embedded below waiting card */}
+      {/* History list during generation — collapsed by default, toggled via waiting card button */}
       {isGenerating && !isCompleted && (
         <HistoryJobs
           historyJobs={historyJobs}
@@ -466,10 +467,11 @@ export function QueueStatusCard({
           show={showHistory}
           onToggle={() => setShowHistory((v) => !v)}
           showHeader={false}
+          highlightFirst={false}
         />
       )}
 
-      {/* Success card (auto-play by StickyPlayerBar, no Play CTA here) */}
+      {/* Success card — stays visible until user manually dismisses */}
       {showSuccessCard && (
         <SuccessCard
           showHistory={showHistory}
@@ -480,7 +482,7 @@ export function QueueStatusCard({
         />
       )}
 
-      {/* History list – embedded below success card */}
+      {/* History list after completion — auto-expanded, newest item glows */}
       {showSuccessCard && (
         <HistoryJobs
           historyJobs={historyJobs}
@@ -491,10 +493,11 @@ export function QueueStatusCard({
           show={showHistory}
           onToggle={() => setShowHistory((v) => !v)}
           showHeader={false}
+          highlightFirst={true}
         />
       )}
 
-      {/* History list – standalone header when idle or success dismissed */}
+      {/* Scenario 1: Idle standalone history — top 2 always visible, expand for rest */}
       {showStandaloneHistory && (
         <HistoryJobs
           historyJobs={historyJobs}
@@ -505,6 +508,7 @@ export function QueueStatusCard({
           show={showHistory}
           onToggle={() => setShowHistory((v) => !v)}
           showHeader={true}
+          highlightFirst={false}
         />
       )}
 
