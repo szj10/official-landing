@@ -16,6 +16,11 @@ type UseVoiceRecordingOptions = {
   pendingRecAutoplayRef: MutableRefObject<boolean>;
   setSelectedVoice: (voiceId: string | null) => void;
   setActiveVoicePanel: (panel: "stock" | "custom") => void;
+  setUploadStatus: (status: UploadStatus) => void;
+  setAnonymousVoiceId: (id: number | null) => void;
+  setUploadError: (err: string | null) => void;
+  setUploadCanRetry: (canRetry: boolean) => void;
+  uploadCanRetry: boolean;
 };
 
 /**
@@ -30,15 +35,15 @@ export function useVoiceRecording({
   pendingRecAutoplayRef,
   setSelectedVoice,
   setActiveVoicePanel,
+  setUploadStatus,
+  setAnonymousVoiceId,
+  setUploadError,
+  setUploadCanRetry,
+  uploadCanRetry,
 }: UseVoiceRecordingOptions) {
   const [isRecording, setIsRecording] = useState(false);
   const [recordedAudioBlob, setRecordedAudioBlob] = useState<Blob | null>(null);
   const [recordingTime, setRecordingTime] = useState(0);
-  const [uploadStatus, setUploadStatus] = useState<UploadStatus>("idle");
-  const [anonymousVoiceId, setAnonymousVoiceId] = useState<number | null>(null);
-  const [uploadError, setUploadError] = useState<string | null>(null);
-  /** Non-429 upload failures can retry with the same Blob; rate limits cannot. */
-  const [uploadCanRetry, setUploadCanRetry] = useState(false);
 
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
@@ -207,14 +212,6 @@ export function useVoiceRecording({
     isRecording,
     recordedAudioBlob,
     recordingTime,
-    uploadStatus,
-    setUploadStatus,
-    anonymousVoiceId,
-    setAnonymousVoiceId,
-    uploadError,
-    setUploadError,
-    uploadCanRetry,
-    setUploadCanRetry,
     setRecordedAudioBlob,
     recordingTimeRef,
     startRecording,

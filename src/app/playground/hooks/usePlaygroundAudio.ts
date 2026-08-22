@@ -338,6 +338,13 @@ export function usePlaygroundAudio({ currentJobAudioPathRef }: UsePlaygroundAudi
     (activeStickyPlayer === "tts" && !!audioUrl) ||
     (activeStickyPlayer === "rec" && !!recordedAudioUrl);
 
+  const playGeneratedAudio = (audioPath: string, duration: number | null) => {
+    pendingTtsAutoplayRef.current = true;
+    setAudioUrl(resolvePlaygroundAudioUrl(audioPath));
+    setAudioDuration(duration);
+    setActiveStickyPlayer("tts");
+  };
+
   return {
     audioRef,
     recAudioRef,
@@ -385,5 +392,6 @@ export function usePlaygroundAudio({ currentJobAudioPathRef }: UsePlaygroundAudi
 
     stopAllOtherAudio,
     silenceAllAudio,
+    playGeneratedAudio,
   };
 }

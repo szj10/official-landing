@@ -20,6 +20,7 @@ import {
 } from "./lib/audio";
 import { usePlaygroundHistory } from "./hooks/usePlaygroundHistory";
 import { usePlaygroundAudio } from "./hooks/usePlaygroundAudio";
+import { useVoiceState } from "./hooks/useVoiceState";
 import { useVoiceRecording } from "./hooks/useVoiceRecording";
 import { useTtsGeneration } from "./hooks/useTtsGeneration";
 
@@ -28,9 +29,23 @@ export default function PlaygroundContent() {
 
   const [isVoiceModalOpen, setIsVoiceModalOpen] = useState(false);
   const [textInput, setTextInput] = useState("");
-  const [selectedVoice, setSelectedVoice] = useState<string | null>("voice1");
-  const [activeVoicePanel, setActiveVoicePanel] = useState<"stock" | "custom">("custom");
   const [speed, setSpeed] = useState<"slow" | "normal" | "fast">("normal");
+
+  const {
+    selectedVoice,
+    setSelectedVoice,
+    activeVoicePanel,
+    setActiveVoicePanel,
+    anonymousVoiceId,
+    setAnonymousVoiceId,
+    uploadStatus,
+    setUploadStatus,
+    uploadError,
+    setUploadError,
+    uploadCanRetry,
+    setUploadCanRetry,
+    resetVoiceState,
+  } = useVoiceState();
 
   const editorRef = useRef<{ focusTextarea: () => void }>(null);
   const currentJobAudioPathRef = useRef<string | null | undefined>(null);
@@ -49,8 +64,6 @@ export default function PlaygroundContent() {
     audioRef,
     recAudioRef,
     voicePreviewRef,
-    pendingTtsAutoplayRef,
-    pendingRecAutoplayRef,
     activeStickyPlayer,
     setActiveStickyPlayer,
     isStickyPlayerVisible,
@@ -71,7 +84,6 @@ export default function PlaygroundContent() {
     audioUrl,
     setAudioUrl,
     audioDuration,
-    setAudioDuration,
     isPlaying,
     setIsPlaying,
     audioProgress,
@@ -85,20 +97,12 @@ export default function PlaygroundContent() {
     playingHistoryJobId,
     setPlayingHistoryJobId,
     silenceAllAudio,
+    playGeneratedAudio,
   } = usePlaygroundAudio({ currentJobAudioPathRef });
 
   const {
     isRecording,
     recordedAudioBlob,
-    recordingTime,
-    uploadStatus,
-    setUploadStatus,
-    anonymousVoiceId,
-    setAnonymousVoiceId,
-    uploadError,
-    setUploadError,
-    uploadCanRetry,
-    setUploadCanRetry,
     setRecordedAudioBlob,
     startRecording,
     stopRecording,
@@ -113,6 +117,11 @@ export default function PlaygroundContent() {
     pendingRecAutoplayRef,
     setSelectedVoice,
     setActiveVoicePanel,
+    setUploadStatus,
+    setAnonymousVoiceId,
+    setUploadError,
+    setUploadCanRetry,
+    uploadCanRetry,
   });
 
   const hasValidStockVoice = activeVoicePanel === "stock" && !!selectedVoice;
@@ -150,12 +159,16 @@ export default function PlaygroundContent() {
     canGenerate,
     historyHydrated,
     prependHistoryJob,
-    setAudioUrl,
-    setAudioDuration,
-    setIsPlaying,
-    setAudioProgress,
-    pendingTtsAutoplayRef,
-    setActiveStickyPlayer,
+    onJobComplete: (job) => {
+      if (job.audio_path) {
+        playGeneratedAudio(job.audio_path, job.audio_duration);
+      }
+    },
+    onJobStart: () => {
+      audioRef.current?.pause();
+      setIsPlaying(false);
+      setAudioProgress(0);
+    },
   });
 
   useEffect(() => {
@@ -210,6 +223,29 @@ export default function PlaygroundContent() {
   };
 
   const selectedStockVoiceObj = PLAYGROUND_VOICES.find((v) => v.id === selectedVoice);
+
+  const deriveStickySubtitle = () => {
+    if (activeStickyPlayer === "tts") {
+      if (playingHistoryJobId != null) {
+        const hj = historyJobs.find((j) => j.playground_job_id === playingHistoryJobId);
+        if (hj) return hj.voice_name;
+      }
+      const isStock = activeVoicePanel === "stock";
+      const stockVoice = isStock ? PLAYGROUND_VOICES.find((v) => v.id === selectedVoice) : null;
+      return isStock && stockVoice
+        ? t(stockVoice.nameKey)
+        : anonymousVoiceId
+          ? t("playground.voicePromptLabel").replace("{id}", String(anonymousVoiceId))
+          : t("playground.voiceSection.customVoice");
+    } else {
+      if (playingHistoryVoiceId != null) {
+        return t("playground.voicePromptLabel").replace("{id}", String(playingHistoryVoiceId));
+      }
+      return anonymousVoiceId
+        ? t("playground.voicePromptLabel").replace("{id}", String(anonymousVoiceId))
+        : t("playground.unsavedRecording");
+    }
+  };
 
   return (
     <div
@@ -348,7 +384,6 @@ export default function PlaygroundContent() {
         isRecPlaying={isRecPlaying}
         recAudioRef={recAudioRef}
         recordedDuration={recordingTime}
-        onSetActiveVoicePanel={setActiveVoicePanel}
         onVoiceSelectAndPlay={handleVoiceSelectAndPlay}
         onStartRecording={startRecording}
         onStopRecording={stopRecording}
@@ -376,15 +411,12 @@ export default function PlaygroundContent() {
         onToggleRecordingPlayback={toggleRecPlayback}
         onDeleteHistoryVoice={deleteHistoryVoice}
         onClearSampleVoice={() => {
-          setSelectedVoice(null);
-          setAnonymousVoiceId(null);
+          resetVoiceState();
           setRecordedAudioBlob(null);
           setRecordedAudioUrl((prev) => {
             revokeIfBlobUrl(prev);
             return null;
           });
-          setUploadStatus("idle");
-          setUploadError(null);
           disposePreviewAudio(voicePreviewRef);
           setPlayingVoicePreview(null);
           if (recAudioRef.current) {
@@ -404,35 +436,7 @@ export default function PlaygroundContent() {
             ? t("playground.synthesizedSpeech")
             : t("playground.yourRecording")
         }
-        subtitle={
-          activeStickyPlayer === "tts"
-            ? (() => {
-                if (playingHistoryJobId != null) {
-                  const hj = historyJobs.find((j) => j.playground_job_id === playingHistoryJobId);
-                  if (hj) return hj.voice_name;
-                }
-                const isStock = activeVoicePanel === "stock";
-                const stockVoice = isStock
-                  ? PLAYGROUND_VOICES.find((v) => v.id === selectedVoice)
-                  : null;
-                return isStock && stockVoice
-                  ? t(stockVoice.nameKey)
-                  : anonymousVoiceId
-                    ? t("playground.voicePromptLabel").replace("{id}", String(anonymousVoiceId))
-                    : t("playground.voiceSection.customVoice");
-              })()
-            : (() => {
-                if (playingHistoryVoiceId != null) {
-                  return t("playground.voicePromptLabel").replace(
-                    "{id}",
-                    String(playingHistoryVoiceId)
-                  );
-                }
-                return anonymousVoiceId
-                  ? t("playground.voicePromptLabel").replace("{id}", String(anonymousVoiceId))
-                  : t("playground.unsavedRecording");
-              })()
-        }
+        subtitle={deriveStickySubtitle()}
         isPlaying={activeStickyPlayer === "tts" ? isPlaying : isRecPlaying}
         progress={activeStickyPlayer === "tts" ? audioProgress : recAudioProgress}
         currentTime={activeStickyPlayer === "tts" ? audioCurrentTime : recAudioCurrentTime}

@@ -1,16 +1,8 @@
 "use client";
 
-import {
-  useEffect,
-  useRef,
-  useState,
-  type Dispatch,
-  type MutableRefObject,
-  type SetStateAction,
-} from "react";
+import { useEffect, useRef, useState, type Dispatch, type SetStateAction } from "react";
 import { PLAYGROUND_VOICES } from "../voices.config";
 import type { HistoryTTSJob, TTSJobResponse, TTSJobStatus } from "../components/types";
-import { resolvePlaygroundAudioUrl } from "../lib/audio";
 import { clearPendingJob, readPendingJob, writePendingJob } from "../lib/historyStorage";
 
 const MAX_TTS_TEXT_LENGTH = parseInt(process.env.NEXT_PUBLIC_MAX_TTS_TEXT_LENGTH || "600", 10);
@@ -40,12 +32,16 @@ type UseTtsGenerationOptions = {
   canGenerate: boolean;
   historyHydrated: boolean;
   prependHistoryJob: (job: HistoryTTSJob) => void;
-  setAudioUrl: Dispatch<SetStateAction<string | null>>;
-  setAudioDuration: Dispatch<SetStateAction<number | null>>;
-  setIsPlaying: Dispatch<SetStateAction<boolean>>;
-  setAudioProgress: Dispatch<SetStateAction<number>>;
-  pendingTtsAutoplayRef: MutableRefObject<boolean>;
-  setActiveStickyPlayer: Dispatch<SetStateAction<"tts" | "rec" | null>>;
+  onJobComplete: (
+    job: TTSJobResponse,
+    contextOverride?: {
+      textInput?: string;
+      activeVoicePanel?: "stock" | "custom";
+      anonymousVoiceId?: number | null;
+      selectedVoice?: string | null;
+    }
+  ) => void;
+  onJobStart: () => void;
 };
 
 /**
@@ -67,12 +63,8 @@ export function useTtsGeneration({
   canGenerate,
   historyHydrated,
   prependHistoryJob,
-  setAudioUrl,
-  setAudioDuration,
-  setIsPlaying,
-  setAudioProgress,
-  pendingTtsAutoplayRef,
-  setActiveStickyPlayer,
+  onJobComplete,
+  onJobStart,
 }: UseTtsGenerationOptions) {
   const [isGenerating, setIsGenerating] = useState(false);
   const [generationStatus, setGenerationStatus] = useState<TTSJobStatus | null>(null);
@@ -142,9 +134,12 @@ export function useTtsGeneration({
         } else if (job.status === "completed" && job.audio_path) {
           setCurrentJob(job);
           setGenerationStatus(job.status);
-          pendingTtsAutoplayRef.current = true;
-          setAudioUrl(resolvePlaygroundAudioUrl(job.audio_path));
-          setAudioDuration(job.audio_duration);
+          onJobComplete(job, {
+            textInput: pending.text,
+            activeVoicePanel: pending.active_panel,
+            anonymousVoiceId: pending.anonymous_voice_id,
+            selectedVoice: pending.selected_voice,
+          });
           setShowCompletionCard(true);
 
           saveCompletedJob(job, {
@@ -174,16 +169,14 @@ export function useTtsGeneration({
     setIsGenerating(true);
     setGenerationStatus(null);
     setCurrentJob(null);
-    setAudioUrl(null);
-    setAudioDuration(null);
     setErrorMessage(null);
     setRateLimitRetryAfter(null);
     setPollRetryJobId(null);
     pollFailureCountRef.current = 0;
-    setIsPlaying(false);
-    setAudioProgress(0);
     setLastQueueMetrics(null);
     setShowCompletionCard(false);
+
+    onJobStart();
 
     stopPolling();
   }
@@ -284,11 +277,8 @@ export function useTtsGeneration({
     setGenerationStatus(job.status);
 
     if (job.status === "completed" && job.audio_path) {
-      pendingTtsAutoplayRef.current = true;
-      setAudioUrl(resolvePlaygroundAudioUrl(job.audio_path));
-      setAudioDuration(job.audio_duration);
+      onJobComplete(job);
       setIsGenerating(false);
-      setActiveStickyPlayer("tts");
       saveCompletedJob(job);
 
       // Clear pending job status
@@ -382,10 +372,7 @@ export function useTtsGeneration({
 
     if (job.status === "completed") {
       if (job.audio_path) {
-        pendingTtsAutoplayRef.current = true;
-        setAudioUrl(resolvePlaygroundAudioUrl(job.audio_path));
-        setAudioDuration(job.audio_duration);
-        setActiveStickyPlayer("tts");
+        onJobComplete(job);
       }
       setIsGenerating(false);
       setShowCompletionCard(true);

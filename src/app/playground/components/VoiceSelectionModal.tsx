@@ -28,7 +28,6 @@ interface VoiceSelectionModalProps {
   isRecPlaying: boolean;
   recAudioRef: React.RefObject<HTMLAudioElement | null>;
   recordedDuration?: number; // Duration in seconds
-  onSetActiveVoicePanel: (panel: "stock" | "custom") => void;
   onVoiceSelectAndPlay: (voiceId: string) => void;
   onStartRecording: () => void;
   onStopRecording: () => void;
@@ -62,7 +61,6 @@ export function VoiceSelectionModal({
   isRecPlaying,
   recAudioRef,
   recordedDuration,
-  onSetActiveVoicePanel,
   onVoiceSelectAndPlay,
   onStartRecording,
   onStopRecording,
