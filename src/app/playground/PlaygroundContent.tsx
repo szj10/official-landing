@@ -64,6 +64,7 @@ export default function PlaygroundContent() {
     audioRef,
     recAudioRef,
     voicePreviewRef,
+    pendingRecAutoplayRef,
     activeStickyPlayer,
     setActiveStickyPlayer,
     isStickyPlayerVisible,
@@ -103,6 +104,7 @@ export default function PlaygroundContent() {
   const {
     isRecording,
     recordedAudioBlob,
+    recordingTime,
     setRecordedAudioBlob,
     startRecording,
     stopRecording,
