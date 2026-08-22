@@ -28,14 +28,7 @@ Primary surface:
 
 ### 1. Fragile sticky autoplay
 
-When a TTS job completes, sticky playback starts with a fixed delay:
-
-```tsx
-// PlaygroundContent.tsx — showCompletionCard effect
-setTimeout(() => { audioRef.current?.play()... }, 150);
-```
-
-History playback uses a similar `setTimeout(..., 50)`. On slow networks or cold cache, the `<audio>` element may not be ready; `play()` fails silently (caught / warned). Prefer media events (`canplay` / `loadedmetadata`) with a one-shot listener and cleanup.
+~~When a TTS job completes, sticky playback starts with a fixed delay (`setTimeout` 150ms / history 50ms).~~ **Done:** `playWhenReady` waits for `canplay` (or plays immediately if already ready); pending flags fire after `audioUrl` / `recordedAudioUrl` commit with abortable cleanup.
 
 ### 2. Redundant playback identity state
 
@@ -43,7 +36,7 @@ History playback uses a similar `setTimeout(..., 50)`. On slow networks or cold 
 
 ### 3. Preview `Audio` objects are not disposed
 
-`handleVoicePreview` / `playHistoryVoice` call `stopAllOtherAudio("preview")`, then assign `voicePreviewRef.current = new Audio(...)`. The previous instance is paused at best; `src` is not cleared and listeners are not removed. Under rapid voice switching this can leave orphaned media elements until GC.
+~~`handleVoicePreview` / `playHistoryVoice` assign `new Audio(...)` without disposing the previous instance.~~ **Done:** `disposePreviewAudio` pauses, clears listeners/`src`, and nulls the ref before reassign and on stop/unmount.
 
 ### 4. Upload / poll error recovery is thin
 
@@ -68,7 +61,7 @@ On load, local TTS IDs are filtered by `expires_at`, then merged with `/history/
 
 ### P1 — Reliability
 
-- [ ] **Event-driven sticky autoplay**  
+- [x] **Event-driven sticky autoplay**  
       Replace `setTimeout(150)` (and history `50ms`) with `canplay` / `loadedmetadata` (or `play()` after `load()` with abortable listener). Ensure cleanup on unmount / URL change.
 
 - [x] **Upload retry UX**  
@@ -79,7 +72,7 @@ On load, local TTS IDs are filtered by `expires_at`, then merged with `/history/
 
 ### P2 — Correctness & cleanup
 
-- [ ] **Dispose preview audio**  
+- [x] **Dispose preview audio**  
       Before reassigning `voicePreviewRef`, `pause()`, clear `src`, remove `onended` / `onerror`, set ref to `null`.
 
 - [ ] **Purge stale history on hydrate**  

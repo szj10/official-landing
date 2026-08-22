@@ -28,6 +28,67 @@ const MAX_TTS_TEXT_LENGTH = parseInt(process.env.NEXT_PUBLIC_MAX_TTS_TEXT_LENGTH
 /** Stop polling and surface a retry banner after this many consecutive network/HTTP failures. */
 const MAX_CONSECUTIVE_POLL_FAILURES = 5;
 
+/** Play once the element can play; returns abort cleanup for unmount / URL change. */
+function playWhenReady(
+  audio: HTMLAudioElement,
+  opts?: {
+    resetTime?: boolean;
+    onPlaying?: () => void;
+    onSkipped?: (err: unknown) => void;
+  }
+): () => void {
+  let cancelled = false;
+
+  const tryPlay = () => {
+    if (cancelled) return;
+    if (opts?.resetTime) {
+      try {
+        audio.currentTime = 0;
+      } catch {
+        // ignore seek errors on unloaded media
+      }
+    }
+    audio
+      .play()
+      .then(() => {
+        if (!cancelled) opts?.onPlaying?.();
+      })
+      .catch((err) => {
+        if (!cancelled) opts?.onSkipped?.(err);
+      });
+  };
+
+  if (audio.readyState >= HTMLMediaElement.HAVE_FUTURE_DATA) {
+    tryPlay();
+    return () => {
+      cancelled = true;
+    };
+  }
+
+  const onCanPlay = () => {
+    audio.removeEventListener("canplay", onCanPlay);
+    tryPlay();
+  };
+  audio.addEventListener("canplay", onCanPlay);
+
+  return () => {
+    cancelled = true;
+    audio.removeEventListener("canplay", onCanPlay);
+  };
+}
+
+/** Pause, detach listeners, clear src, and drop the preview Audio instance. */
+function disposePreviewAudio(ref: { current: HTMLAudioElement | null }) {
+  const audio = ref.current;
+  if (!audio) return;
+  audio.pause();
+  audio.onended = null;
+  audio.onerror = null;
+  audio.removeAttribute("src");
+  audio.load();
+  ref.current = null;
+}
+
 export default function PlaygroundContent() {
   const { t, locale } = useI18n();
 
@@ -109,6 +170,10 @@ export default function PlaygroundContent() {
   const voicePreviewRef = useRef<HTMLAudioElement | null>(null);
   const pollingIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const pollFailureCountRef = useRef(0);
+  /** Request sticky TTS autoplay after next audioUrl commit (completion / history / toggle). */
+  const pendingTtsAutoplayRef = useRef(false);
+  /** Request sticky recording autoplay after next recordedAudioUrl commit. */
+  const pendingRecAutoplayRef = useRef(false);
   const editorRef = useRef<{ focusTextarea: () => void }>(null);
 
   // ---------------------------------------------------------------------------
@@ -221,6 +286,7 @@ export default function PlaygroundContent() {
                 // Job completed while user was away
                 setCurrentJob(job);
                 setGenerationStatus(job.status);
+                pendingTtsAutoplayRef.current = true;
                 setAudioUrl(resolveAudioUrl(job.audio_path));
                 setAudioDuration(job.audio_duration);
                 setShowCompletionCard(true);
@@ -266,8 +332,26 @@ export default function PlaygroundContent() {
       if (recordingIntervalRef.current) clearInterval(recordingIntervalRef.current);
       if (pollingIntervalRef.current) clearInterval(pollingIntervalRef.current);
       if (recordedAudioUrl) URL.revokeObjectURL(recordedAudioUrl);
+      disposePreviewAudio(voicePreviewRef);
     };
   }, [recordedAudioUrl]);
+
+  // Helper to stop all other audio sources when a new one starts
+  const stopAllOtherAudio = (except: "tts" | "rec" | "preview") => {
+    if (except !== "tts") {
+      if (audioRef.current) audioRef.current.pause();
+      setIsPlaying(false);
+    }
+    if (except !== "rec") {
+      if (recAudioRef.current) recAudioRef.current.pause();
+      setIsRecPlaying(false);
+    }
+    if (except !== "preview") {
+      disposePreviewAudio(voicePreviewRef);
+      setPlayingVoicePreview(null);
+      setPlayingHistoryVoiceId(null);
+    }
+  };
 
   // Track recorded audio progress
   useEffect(() => {
@@ -302,22 +386,23 @@ export default function PlaygroundContent() {
     };
   }, [recordedAudioUrl]);
 
-  // Helper to stop all other audio sources when a new one starts
-  const stopAllOtherAudio = (except: "tts" | "rec" | "preview") => {
-    if (except !== "tts") {
-      if (audioRef.current) audioRef.current.pause();
-      setIsPlaying(false);
-    }
-    if (except !== "rec") {
-      if (recAudioRef.current) recAudioRef.current.pause();
-      setIsRecPlaying(false);
-    }
-    if (except !== "preview") {
-      if (voicePreviewRef.current) voicePreviewRef.current.pause();
-      setPlayingVoicePreview(null);
-      setPlayingHistoryVoiceId(null);
-    }
-  };
+  // Sticky recording autoplay after capture (wait for <audio src> commit + canplay)
+  useEffect(() => {
+    if (!pendingRecAutoplayRef.current || !recordedAudioUrl) return;
+    const audio = recAudioRef.current;
+    if (!audio) return;
+
+    pendingRecAutoplayRef.current = false;
+    stopAllOtherAudio("rec");
+    setActiveStickyPlayer("rec");
+
+    return playWhenReady(audio, {
+      resetTime: true,
+      onPlaying: () => setIsRecPlaying(true),
+      onSkipped: (err) => console.warn("Auto-playback skipped:", err),
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- intentional: fire on URL commit only
+  }, [recordedAudioUrl]);
 
   // Track generated TTS audio progress
   useEffect(() => {
@@ -346,24 +431,23 @@ export default function PlaygroundContent() {
     };
   }, [audioUrl]);
 
-  // Auto-start StickyPlayerBar playback when a new TTS job completes
+  // Sticky TTS autoplay after src commit (completion, history, toggle-back)
   useEffect(() => {
-    if (showCompletionCard && audioUrl && audioRef.current) {
-      // Give the <audio> element a tick to load the new src
-      const timer = setTimeout(() => {
-        if (!audioRef.current) return;
-        stopAllOtherAudio("tts");
-        setActiveStickyPlayer("tts");
-        audioRef.current.currentTime = 0;
-        audioRef.current
-          .play()
-          .then(() => setIsPlaying(true))
-          .catch((err) => console.warn("Auto-play after TTS completion skipped:", err));
-      }, 150);
-      return () => clearTimeout(timer);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [showCompletionCard]);
+    if (!pendingTtsAutoplayRef.current || !audioUrl) return;
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    pendingTtsAutoplayRef.current = false;
+    stopAllOtherAudio("tts");
+    setActiveStickyPlayer("tts");
+
+    return playWhenReady(audio, {
+      resetTime: true,
+      onPlaying: () => setIsPlaying(true),
+      onSkipped: (err) => console.warn("Auto-play after TTS skipped:", err),
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- intentional: fire on URL commit only
+  }, [audioUrl]);
 
   // ---------------------------------------------------------------------------
   // Recorded Audio Controls
@@ -413,21 +497,29 @@ export default function PlaygroundContent() {
     if (!voice) return;
 
     if (playingVoicePreview === voiceId) {
-      voicePreviewRef.current?.pause();
+      disposePreviewAudio(voicePreviewRef);
       setPlayingVoicePreview(null);
       return;
     }
 
     stopAllOtherAudio("preview");
+    disposePreviewAudio(voicePreviewRef);
 
     const audio = new Audio(voice.localAudioFile);
     voicePreviewRef.current = audio;
-    audio.onended = () => setPlayingVoicePreview(null);
+    audio.onended = () => {
+      setPlayingVoicePreview(null);
+      disposePreviewAudio(voicePreviewRef);
+    };
     audio.onerror = () => {
       console.warn(`Preview audio not available for ${voiceId} at ${voice.localAudioFile}`);
       setPlayingVoicePreview(null);
+      disposePreviewAudio(voicePreviewRef);
     };
-    audio.play().catch(() => setPlayingVoicePreview(null));
+    audio.play().catch(() => {
+      setPlayingVoicePreview(null);
+      disposePreviewAudio(voicePreviewRef);
+    });
     setPlayingVoicePreview(voiceId);
   };
 
@@ -439,24 +531,35 @@ export default function PlaygroundContent() {
 
   const playHistoryVoice = (voiceId: number) => {
     if (playingHistoryVoiceId === voiceId) {
-      voicePreviewRef.current?.pause();
+      disposePreviewAudio(voicePreviewRef);
       setPlayingHistoryVoiceId(null);
       return;
     }
 
     stopAllOtherAudio("preview");
+    disposePreviewAudio(voicePreviewRef);
 
     const audio = new Audio(`/api/v1/playground/audio/voice-prompt/${voiceId}`);
     voicePreviewRef.current = audio;
-    audio.onended = () => setPlayingHistoryVoiceId(null);
-    audio.play().catch(() => setPlayingHistoryVoiceId(null));
+    audio.onended = () => {
+      setPlayingHistoryVoiceId(null);
+      disposePreviewAudio(voicePreviewRef);
+    };
+    audio.onerror = () => {
+      setPlayingHistoryVoiceId(null);
+      disposePreviewAudio(voicePreviewRef);
+    };
+    audio.play().catch(() => {
+      setPlayingHistoryVoiceId(null);
+      disposePreviewAudio(voicePreviewRef);
+    });
     setPlayingHistoryVoiceId(voiceId);
   };
 
   const deleteHistoryVoice = (voiceId: number) => {
     // Stop playback if this voice is currently playing
     if (playingHistoryVoiceId === voiceId) {
-      voicePreviewRef.current?.pause();
+      disposePreviewAudio(voicePreviewRef);
       setPlayingHistoryVoiceId(null);
     }
 
@@ -506,7 +609,7 @@ export default function PlaygroundContent() {
       setIsPlaying(false);
       if (recAudioRef.current) recAudioRef.current.pause();
       setIsRecPlaying(false);
-      if (voicePreviewRef.current) voicePreviewRef.current.pause();
+      disposePreviewAudio(voicePreviewRef);
       setPlayingVoicePreview(null);
       setPlayingHistoryVoiceId(null);
       setActiveStickyPlayer(null);
@@ -529,6 +632,7 @@ export default function PlaygroundContent() {
           if (prev) URL.revokeObjectURL(prev);
           return blobUrl;
         });
+        pendingRecAutoplayRef.current = true;
 
         setSelectedVoice(null);
         setActiveVoicePanel("custom");
@@ -537,18 +641,6 @@ export default function PlaygroundContent() {
 
         // Send recording with accurate duration from ref
         await uploadRecordingToBackend(audioBlob, recordingTimeRef.current);
-
-        setTimeout(() => {
-          if (recAudioRef.current) {
-            stopAllOtherAudio("rec");
-            setActiveStickyPlayer("rec");
-            recAudioRef.current.currentTime = 0;
-            recAudioRef.current
-              .play()
-              .then(() => setIsRecPlaying(true))
-              .catch((err) => console.warn("Auto-playback skipped:", err));
-          }
-        }, 250);
       };
 
       mediaRecorder.start();
@@ -848,6 +940,7 @@ export default function PlaygroundContent() {
     setGenerationStatus(job.status);
 
     if (job.status === "completed" && job.audio_path) {
+      pendingTtsAutoplayRef.current = true;
       setAudioUrl(resolveAudioUrl(job.audio_path));
       setAudioDuration(job.audio_duration);
       setIsGenerating(false);
@@ -953,6 +1046,7 @@ export default function PlaygroundContent() {
 
     if (job.status === "completed") {
       if (job.audio_path) {
+        pendingTtsAutoplayRef.current = true;
         setAudioUrl(resolveAudioUrl(job.audio_path));
         setAudioDuration(job.audio_duration);
         setActiveStickyPlayer("tts");
@@ -1012,16 +1106,21 @@ export default function PlaygroundContent() {
       setIsPlaying(false);
     } else {
       stopAllOtherAudio("tts");
+      setActiveStickyPlayer("tts");
       if (playingHistoryJobId) {
         setPlayingHistoryJobId(null);
-        if (currentJob?.audio_path) setAudioUrl(resolveAudioUrl(currentJob.audio_path));
-        else setAudioUrl(null);
+        if (currentJob?.audio_path) {
+          pendingTtsAutoplayRef.current = true;
+          setAudioUrl(resolveAudioUrl(currentJob.audio_path));
+        } else {
+          setAudioUrl(null);
+        }
+      } else {
+        audioRef.current
+          .play()
+          .then(() => setIsPlaying(true))
+          .catch(() => setIsPlaying(false));
       }
-      setTimeout(() => {
-        setActiveStickyPlayer("tts");
-        audioRef.current?.play();
-        setIsPlaying(true);
-      }, 50);
     }
   };
 
@@ -1035,11 +1134,20 @@ export default function PlaygroundContent() {
       else setAudioUrl(null);
     } else {
       stopAllOtherAudio("tts");
-      setAudioUrl(resolveAudioUrl(path));
+      const nextUrl = resolveAudioUrl(path);
       setPlayingHistoryJobId(jobId);
       setActiveStickyPlayer("tts");
-      setIsPlaying(true);
-      setTimeout(() => audioRef.current?.play(), 50);
+      // Same URL won't re-trigger the audioUrl effect — play immediately when ready.
+      if (nextUrl === audioUrl && audioRef.current) {
+        playWhenReady(audioRef.current, {
+          resetTime: true,
+          onPlaying: () => setIsPlaying(true),
+          onSkipped: (err) => console.warn("Auto-play after TTS skipped:", err),
+        });
+      } else {
+        pendingTtsAutoplayRef.current = true;
+        setAudioUrl(nextUrl);
+      }
     }
   };
 
@@ -1262,10 +1370,8 @@ export default function PlaygroundContent() {
           setUploadError(null);
 
           // Stop any playing audio
-          if (voicePreviewRef.current) {
-            voicePreviewRef.current.pause();
-            setPlayingVoicePreview(null);
-          }
+          disposePreviewAudio(voicePreviewRef);
+          setPlayingVoicePreview(null);
           if (recAudioRef.current) {
             recAudioRef.current.pause();
             setIsRecPlaying(false);
