@@ -349,6 +349,9 @@ export default function PlaygroundContent() {
     if (except !== "preview") {
       disposePreviewAudio(voicePreviewRef);
       setPlayingVoicePreview(null);
+    }
+    // History highlight tracks sticky-rec history playback; keep it when starting "rec"
+    if (except !== "rec") {
       setPlayingHistoryVoiceId(null);
     }
   };
@@ -369,6 +372,7 @@ export default function PlaygroundContent() {
       setIsRecPlaying(false);
       setRecAudioProgress(0);
       setRecAudioCurrentTime(0);
+      setPlayingHistoryVoiceId(null);
       // Auto-dismiss the sticky player when recording finishes
       setActiveStickyPlayer(null);
     };
@@ -457,13 +461,19 @@ export default function PlaygroundContent() {
     if (isRecPlaying) {
       recAudioRef.current.pause();
       setIsRecPlaying(false);
+      setPlayingHistoryVoiceId(null);
     } else {
       stopAllOtherAudio("rec");
       setActiveStickyPlayer("rec");
+      const match = recordedAudioUrl?.match(/\/voice-prompt\/(\d+)/);
+      if (match) setPlayingHistoryVoiceId(Number(match[1]));
       recAudioRef.current
         .play()
         .then(() => setIsRecPlaying(true))
-        .catch(() => setIsRecPlaying(false));
+        .catch(() => {
+          setIsRecPlaying(false);
+          setPlayingHistoryVoiceId(null);
+        });
     }
   };
 
@@ -530,37 +540,51 @@ export default function PlaygroundContent() {
   };
 
   const playHistoryVoice = (voiceId: number) => {
-    if (playingHistoryVoiceId === voiceId) {
-      disposePreviewAudio(voicePreviewRef);
+    // Toggle off when this history voice is already playing in the sticky bar
+    if (playingHistoryVoiceId === voiceId && isRecPlaying) {
+      if (recAudioRef.current) recAudioRef.current.pause();
+      setIsRecPlaying(false);
       setPlayingHistoryVoiceId(null);
       return;
     }
 
-    stopAllOtherAudio("preview");
     disposePreviewAudio(voicePreviewRef);
-
-    const audio = new Audio(`/api/v1/playground/audio/voice-prompt/${voiceId}`);
-    voicePreviewRef.current = audio;
-    audio.onended = () => {
-      setPlayingHistoryVoiceId(null);
-      disposePreviewAudio(voicePreviewRef);
-    };
-    audio.onerror = () => {
-      setPlayingHistoryVoiceId(null);
-      disposePreviewAudio(voicePreviewRef);
-    };
-    audio.play().catch(() => {
-      setPlayingHistoryVoiceId(null);
-      disposePreviewAudio(voicePreviewRef);
-    });
+    setPlayingVoicePreview(null);
+    stopAllOtherAudio("rec");
     setPlayingHistoryVoiceId(voiceId);
+
+    const url = `/api/v1/playground/audio/voice-prompt/${voiceId}`;
+
+    // Same src already on <audio> — play without waiting for a URL commit
+    if (recordedAudioUrl === url && recAudioRef.current) {
+      pendingRecAutoplayRef.current = false;
+      setActiveStickyPlayer("rec");
+      playWhenReady(recAudioRef.current, {
+        resetTime: true,
+        onPlaying: () => setIsRecPlaying(true),
+        onSkipped: (err) => {
+          console.warn("History voice autoplay skipped:", err);
+          setPlayingHistoryVoiceId(null);
+        },
+      });
+      return;
+    }
+
+    pendingRecAutoplayRef.current = true;
+    setRecordedAudioUrl((prev) => {
+      if (prev?.startsWith("blob:")) URL.revokeObjectURL(prev);
+      return url;
+    });
   };
 
   const deleteHistoryVoice = (voiceId: number) => {
     // Stop playback if this voice is currently playing
     if (playingHistoryVoiceId === voiceId) {
-      disposePreviewAudio(voicePreviewRef);
+      if (recAudioRef.current) recAudioRef.current.pause();
+      setIsRecPlaying(false);
       setPlayingHistoryVoiceId(null);
+      if (activeStickyPlayer === "rec") setActiveStickyPlayer(null);
+      disposePreviewAudio(voicePreviewRef);
     }
 
     // If this was the selected voice, clear the selection (but stay in custom panel)
@@ -1344,10 +1368,14 @@ export default function PlaygroundContent() {
           setActiveVoicePanel("custom");
           setAnonymousVoiceId(voice.anonymous_voice_id);
           setRecordedAudioBlob(null);
-          if (recordedAudioUrl) {
-            URL.revokeObjectURL(recordedAudioUrl);
-            setRecordedAudioUrl(null);
-          }
+          // Keep sticky-player src in sync with the selected history voice.
+          // Do not clear recordedAudioUrl — that hid StickyPlayerBar after history play.
+          const historyUrl = `/api/v1/playground/audio/voice-prompt/${voice.anonymous_voice_id}`;
+          setRecordedAudioUrl((prev) => {
+            if (prev === historyUrl) return prev;
+            if (prev?.startsWith("blob:")) URL.revokeObjectURL(prev);
+            return historyUrl;
+          });
           setUploadStatus("success");
           setUploadError(null);
           setUploadCanRetry(false);
@@ -1421,6 +1449,7 @@ export default function PlaygroundContent() {
           } else if (activeStickyPlayer === "rec") {
             if (recAudioRef.current) recAudioRef.current.pause();
             setIsRecPlaying(false);
+            setPlayingHistoryVoiceId(null);
           }
           // Hide the sticky player
           setActiveStickyPlayer(null);
