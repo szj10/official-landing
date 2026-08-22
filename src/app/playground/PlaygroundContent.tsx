@@ -471,7 +471,7 @@ export default function PlaygroundContent() {
         {/* Right Column (4 cols): Persona Island + History/Queue Island */}
         <div className="lg:col-span-4 space-y-6">
           {/* Island 03: Selected Voice Persona */}
-          <section className="bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xl border border-gray-200/90 dark:border-zinc-800/90 rounded-3xl p-5 sm:p-6 shadow-xl shadow-purple-500/5 space-y-5 transition-all hover:border-purple-500/30 dark:hover:border-purple-500/30">
+          <section className="hidden lg:block bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xl border border-gray-200/90 dark:border-zinc-800/90 rounded-3xl p-5 sm:p-6 shadow-xl shadow-purple-500/5 space-y-5 transition-all hover:border-purple-500/30 dark:hover:border-purple-500/30">
             <div className="flex items-center justify-between border-b border-gray-100 dark:border-zinc-800/80 pb-3">
               <div className="flex items-center gap-2.5">
                 <span className="flex items-center justify-center w-6 h-6 rounded-lg bg-pink-100 dark:bg-pink-900/60 text-pink-600 dark:text-pink-400 text-xs font-black">
@@ -495,40 +495,73 @@ export default function PlaygroundContent() {
             <div className="flex items-center gap-3.5 p-3.5 rounded-2xl bg-gray-50 dark:bg-zinc-800/50 border border-gray-200/60 dark:border-zinc-700/60">
               <div
                 className={`w-12 h-12 rounded-2xl bg-gradient-to-tr ${
-                  selectedStockVoiceObj
+                  activeVoicePanel === "stock" && selectedStockVoiceObj
                     ? selectedStockVoiceObj.color
                     : "from-purple-600 to-indigo-600"
                 } flex items-center justify-center text-lg font-black text-white shadow-sm shrink-0`}
               >
-                {selectedStockVoiceObj ? selectedStockVoiceObj.avatar : "V"}
+                {activeVoicePanel === "stock" && selectedStockVoiceObj
+                  ? selectedStockVoiceObj.avatar
+                  : "V"}
               </div>
               <div className="flex-1 min-w-0">
                 <h3 className="text-base font-bold text-gray-900 dark:text-white truncate">
-                  {selectedStockVoiceObj
+                  {activeVoicePanel === "stock" && selectedStockVoiceObj
                     ? t(selectedStockVoiceObj.nameKey)
                     : anonymousVoiceId
                       ? t("playground.voicePromptLabel").replace("{id}", String(anonymousVoiceId))
                       : t("playground.chooseVoice")}
                 </h3>
                 <p className="text-xs text-gray-500 dark:text-zinc-400 truncate">
-                  {selectedStockVoiceObj
+                  {activeVoicePanel === "stock" && selectedStockVoiceObj
                     ? t(selectedStockVoiceObj.previewKey)
                     : t("playground.voiceSection.customVoice")}
                 </p>
               </div>
 
-              {selectedStockVoiceObj && (
+              {activeVoicePanel === "stock" && selectedStockVoiceObj ? (
                 <button
                   type="button"
                   onClick={() => handleVoicePreview(selectedStockVoiceObj.id)}
                   className="p-2.5 rounded-xl bg-indigo-50 dark:bg-indigo-900/40 hover:bg-indigo-100 dark:hover:bg-indigo-900/70 text-indigo-600 dark:text-indigo-400 transition-colors shrink-0"
                   title="Listen to Preview"
                 >
-                  <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
-                    <path d="M8 5v14l11-7z" />
-                  </svg>
+                  {playingVoicePreview === selectedStockVoiceObj.id ? (
+                    <svg
+                      className="w-5 h-5 fill-current text-amber-500 animate-pulse"
+                      viewBox="0 0 24 24"
+                    >
+                      <rect x="6" y="4" width="4" height="16" rx="1" />
+                      <rect x="14" y="4" width="4" height="16" rx="1" />
+                    </svg>
+                  ) : (
+                    <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
+                      <path d="M8 5v14l11-7z" />
+                    </svg>
+                  )}
                 </button>
-              )}
+              ) : activeVoicePanel === "custom" && anonymousVoiceId !== null ? (
+                <button
+                  type="button"
+                  onClick={() => playHistoryVoice(anonymousVoiceId)}
+                  className="p-2.5 rounded-xl bg-emerald-50 dark:bg-emerald-900/40 hover:bg-emerald-100 dark:hover:bg-emerald-900/70 text-emerald-600 dark:text-emerald-400 transition-colors shrink-0"
+                  title="Listen to Recorded Voice Preview"
+                >
+                  {playingHistoryVoiceId === anonymousVoiceId && isRecPlaying ? (
+                    <svg
+                      className="w-5 h-5 fill-current text-amber-500 animate-pulse"
+                      viewBox="0 0 24 24"
+                    >
+                      <rect x="6" y="4" width="4" height="16" rx="1" />
+                      <rect x="14" y="4" width="4" height="16" rx="1" />
+                    </svg>
+                  ) : (
+                    <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
+                      <path d="M8 5v14l11-7z" />
+                    </svg>
+                  )}
+                </button>
+              ) : null}
             </div>
 
             <button
