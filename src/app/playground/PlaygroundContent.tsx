@@ -228,6 +228,11 @@ export default function PlaygroundContent() {
 
       if (currentJob?.audio_path) {
         setAudioUrl(resolvePlaygroundAudioUrl(currentJob.audio_path));
+      } else {
+        setAudioUrl(null);
+        if (activeStickyPlayer === "tts") {
+          setActiveStickyPlayer(null);
+        }
       }
     }
 
