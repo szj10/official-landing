@@ -179,6 +179,35 @@ export default function PlaygroundContent() {
     currentJobAudioPathRef.current = currentJob?.audio_path;
   }, [currentJob?.audio_path]);
 
+  // Space toggles sticky play/pause when the bar is visible and focus is not in an editable field.
+  useEffect(() => {
+    if (!isStickyPlayerVisible) return;
+
+    const isEditableTarget = (target: EventTarget | null) => {
+      if (!(target instanceof HTMLElement)) return false;
+      if (target.isContentEditable) return true;
+      const tag = target.tagName;
+      if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT") return true;
+      return Boolean(target.closest("input, textarea, select, [contenteditable='true']"));
+    };
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key !== " " && e.code !== "Space") return;
+      if (e.metaKey || e.ctrlKey || e.altKey || e.isComposing) return;
+      if (isEditableTarget(e.target)) return;
+
+      e.preventDefault();
+      if (activeStickyPlayer === "tts") {
+        togglePlayback();
+      } else if (activeStickyPlayer === "rec") {
+        toggleRecPlayback();
+      }
+    };
+
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [isStickyPlayerVisible, activeStickyPlayer, togglePlayback, toggleRecPlayback]);
+
   const handleGenerateWithScroll = () => {
     handleGenerate();
     setTimeout(() => {
