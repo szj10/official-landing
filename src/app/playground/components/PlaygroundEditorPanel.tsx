@@ -3,7 +3,6 @@
 import React, { useState, useRef, useImperativeHandle, forwardRef } from "react";
 import { useI18n } from "@/i18n";
 import { SAMPLE_TEXTS } from "./types";
-import { SparklesIcon } from "./icons";
 
 // Get max length from environment variable or use default
 const MAX_TTS_TEXT_LENGTH = parseInt(process.env.NEXT_PUBLIC_MAX_TTS_TEXT_LENGTH || "600", 10);
@@ -81,31 +80,20 @@ export const PlaygroundEditorPanel = forwardRef<
     <div className="w-full space-y-3 sm:space-y-4">
       {/* Samples Section - Auto-shown when textarea is empty */}
       {showSamples && (
-        <div className="glass-panel rounded-2xl overflow-hidden shadow-sm">
-          <div className="px-4 sm:px-5 py-3 sm:py-3.5 bg-gray-50/80 dark:bg-zinc-800/50">
-            <div className="flex items-center gap-2">
-              <SparklesIcon className="w-4 h-4 sm:w-5 sm:h-5 text-indigo-500" />
-              <span className="text-sm font-semibold text-gray-700 dark:text-zinc-200">
-                {t("playground.textSection.sampleTexts")}
-              </span>
-            </div>
-          </div>
-
-          <div className="p-4 sm:p-5 border-t border-gray-200 dark:border-zinc-800">
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-3">
-              {SAMPLE_TEXTS.map((sample) => (
-                <button
-                  key={sample.id}
-                  type="button"
-                  onClick={() => handleSampleClick(sample.id)}
-                  className="text-left p-3 rounded-xl border border-gray-100 dark:border-zinc-800 bg-gray-50/50 dark:bg-zinc-800/30 hover:border-indigo-200 dark:hover:border-indigo-800 hover:bg-indigo-50/50 dark:hover:bg-indigo-900/20 transition-all group"
-                >
-                  <p className="text-xs sm:text-sm text-gray-600 dark:text-zinc-400 line-clamp-2 group-hover:text-indigo-700 dark:group-hover:text-indigo-300">
-                    {t(sample.textKey)}
-                  </p>
-                </button>
-              ))}
-            </div>
+        <div className="glass-panel rounded-2xl overflow-hidden shadow-sm p-4 sm:p-5">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-3">
+            {SAMPLE_TEXTS.map((sample) => (
+              <button
+                key={sample.id}
+                type="button"
+                onClick={() => handleSampleClick(sample.id)}
+                className="text-left p-3 rounded-xl border border-gray-100 dark:border-zinc-800 bg-gray-50/50 dark:bg-zinc-800/30 hover:border-indigo-200 dark:hover:border-indigo-800 hover:bg-indigo-50/50 dark:hover:bg-indigo-900/20 transition-all group"
+              >
+                <p className="text-xs sm:text-sm text-gray-600 dark:text-zinc-400 line-clamp-2 group-hover:text-indigo-700 dark:group-hover:text-indigo-300">
+                  {t(sample.textKey)}
+                </p>
+              </button>
+            ))}
           </div>
         </div>
       )}
@@ -123,11 +111,9 @@ export const PlaygroundEditorPanel = forwardRef<
             }
           }}
           placeholder={t("playground.textSection.placeholder")}
-          rows={showSamples ? 2 : 6}
+          rows={2}
           maxLength={MAX_TTS_TEXT_LENGTH}
-          className={`w-full px-4 sm:px-5 py-4 pb-14 rounded-2xl glass-panel border-2 border-gray-200 dark:border-zinc-700 focus:border-indigo-500 dark:focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-zinc-500 text-base sm:text-lg resize-y ${
-            showSamples ? "min-h-[80px]" : "min-h-[160px]"
-          }`}
+          className="w-full px-4 sm:px-5 py-4 pb-14 rounded-2xl glass-panel border-2 border-gray-200 dark:border-zinc-700 focus:border-indigo-500 dark:focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-zinc-500 text-base sm:text-lg resize-y min-h-[160px]"
         />
 
         {/* Clear button (only visible when there's text) */}
