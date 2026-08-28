@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type Dispatch, type SetStateAction } from "react";
-import { PLAYGROUND_VOICES } from "../voices.config";
+import { PlaygroundVoice } from "../voices.config";
 import type { HistoryTTSJob, TTSJobResponse, TTSJobStatus } from "../components/types";
 import { clearPendingJob, readPendingJob, writePendingJob } from "../lib/historyStorage";
 
@@ -19,6 +19,7 @@ export type QueueMetrics = {
 type UseTtsGenerationOptions = {
   t: (key: string) => string;
   locale: string;
+  stockVoices?: PlaygroundVoice[];
   textInput: string;
   setTextInput: Dispatch<SetStateAction<string>>;
   activeVoicePanel: "stock" | "custom";
@@ -50,6 +51,7 @@ type UseTtsGenerationOptions = {
 export function useTtsGeneration({
   t,
   locale,
+  stockVoices = [],
   textInput,
   setTextInput,
   activeVoicePanel,
@@ -248,11 +250,13 @@ export function useTtsGeneration({
     };
 
     const isStock = ctx.activeVoicePanel === "stock";
-    const stockVoice = isStock ? PLAYGROUND_VOICES.find((v) => v.id === ctx.selectedVoice) : null;
+    const stockVoice = isStock ? stockVoices.find((v) => v.id === ctx.selectedVoice) : null;
 
     const vName =
       isStock && stockVoice
-        ? t(stockVoice.nameKey)
+        ? stockVoice.nameKey
+          ? t(stockVoice.nameKey)
+          : stockVoice.name
         : ctx.anonymousVoiceId
           ? t("playground.voicePromptLabel").replace("{id}", String(ctx.anonymousVoiceId))
           : t("playground.voiceSection.customVoice");
@@ -434,7 +438,7 @@ export function useTtsGeneration({
     }
 
     const isStock = activeVoicePanel === "stock";
-    const voice = isStock ? PLAYGROUND_VOICES.find((v) => v.id === selectedVoice) : null;
+    const voice = isStock ? stockVoices.find((v) => v.id === selectedVoice) : null;
     if (isStock && !voice) return;
     const language = isStock && voice ? voice.language : locale;
 

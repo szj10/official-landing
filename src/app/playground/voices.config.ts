@@ -1,89 +1,72 @@
 /**
- * Playground Voice Configuration
- * ================================
- * Edit this file to add, remove, or modify voices shown in the TTS playground.
- *
- * Each voice needs:
- *   - id            : Unique frontend identifier string (e.g. "voice1")
- *   - backendVoiceId: INTEGER primary key from voice.voices table in the backend DB
- *   - language      : Language code matching voice.language in the DB (e.g. "zh", "en")
- *   - localAudioFile: Path under /public/ for the instant browser preview
- *                     (copy the wav from MinIO to /public/audio_prompts/<filename>)
- *   - nameKey       : i18n translation key for the display name
- *   - gender        : Gender identifier - either "male" or "female"
- *   - previewKey    : i18n translation key for short description
- *   - color         : Tailwind gradient classes for the avatar circle
- *   - avatar        : Single letter shown inside the avatar circle
- *
- * Translation keys live in /public/locales/<locale>/sample-voices.json
- * under the "sampleVoices" namespace (voice1, voice2, …).
- *
- * ⚠️  The voice must have is_shared=true AND is_approved=true in the backend
- *     for the TTS generation call to succeed (rate-limiting aside).
+ * Playground Voice Types and Helpers
+ * ===================================
+ * Community voices are fetched dynamically from GET /api/v1/voices/community.
  */
+
+export interface BackendCommunityVoice {
+  id: number;
+  name: string;
+  audio_path: string;
+  mime_type: string;
+  language: string | null;
+  duration_seconds: number | null;
+  user_id: number;
+  is_shared: boolean;
+  is_approved: boolean;
+  is_deleted: boolean;
+  creator_username: string;
+  creator_avatar_url: string | null;
+  audio_url: string | null;
+  admin_approved_at: string | null;
+  created_at: string;
+  updated_at: string;
+}
 
 export interface PlaygroundVoice {
   id: string;
   backendVoiceId: number;
+  name: string;
+  nameKey?: string;
   language: string;
-  localAudioFile: string;
-  nameKey: string;
-  gender: "male" | "female";
-  previewKey: string;
+  audioUrl: string;
+  gender?: "male" | "female";
+  previewKey?: string;
   color: string;
   avatar: string;
+  avatarUrl?: string | null;
+  creatorUsername?: string;
 }
 
-// ---------------------------------------------------------------------------
-// ✏️  EDIT HERE — add / remove / reorder voices as needed
-// ---------------------------------------------------------------------------
-export const PLAYGROUND_VOICES: PlaygroundVoice[] = [
-  {
-    id: "voice1",
-    // DB id=105 | name="lakesys" | lang=zh | is_shared=false | is_approved=false
-    backendVoiceId: 105,
-    language: "zh",
-    localAudioFile: "/audio_prompts/lakesys.wav",
-    nameKey: "sampleVoices.voice1.name",
-    gender: "female",
-    previewKey: "sampleVoices.voice1.preview",
-    color: "from-pink-500 to-rose-500",
-    avatar: "L",
-  },
-  {
-    id: "voice2",
-    // DB id=106 | name="hef" | lang=zh | is_shared=false | is_approved=false
-    backendVoiceId: 106,
-    language: "zh",
-    localAudioFile: "/audio_prompts/hef.wav",
-    nameKey: "sampleVoices.voice2.name",
-    gender: "male",
-    previewKey: "sampleVoices.voice2.preview",
-    color: "from-blue-500 to-indigo-500",
-    avatar: "H",
-  },
-  {
-    id: "voice3",
-    // DB id=108 | name="andhelo" | lang=zh | is_shared=true | is_approved=false | is_deleted=true ⚠️
-    backendVoiceId: 108,
-    language: "zh",
-    localAudioFile: "/audio_prompts/andhelo.wav",
-    nameKey: "sampleVoices.voice3.name",
-    gender: "male",
-    previewKey: "sampleVoices.voice3.preview",
-    color: "from-purple-500 to-violet-500",
-    avatar: "A",
-  },
-  {
-    id: "voice4",
-    // DB id=104 | name="whaat goina be" | lang=zh | is_shared=false | is_approved=false | is_deleted=true ⚠️
-    backendVoiceId: 104,
-    language: "zh",
-    localAudioFile: "/audio_prompts/whaat-goina-be.wav",
-    nameKey: "sampleVoices.voice4.name",
-    gender: "female",
-    previewKey: "sampleVoices.voice4.preview",
-    color: "from-emerald-500 to-teal-500",
-    avatar: "W",
-  },
+export const VOICE_GRADIENTS = [
+  "from-pink-500 to-rose-500",
+  "from-blue-500 to-indigo-500",
+  "from-purple-500 to-violet-500",
+  "from-emerald-500 to-teal-500",
+  "from-amber-500 to-orange-500",
+  "from-cyan-500 to-blue-600",
+  "from-fuchsia-500 to-pink-600",
+  "from-violet-500 to-purple-600",
 ];
+
+export function mapCommunityVoiceToPlaygroundVoice(
+  v: BackendCommunityVoice,
+  index: number
+): PlaygroundVoice {
+  const name = v.name || `Voice ${v.id}`;
+  const firstLetter = name.trim().charAt(0).toUpperCase() || "V";
+  const color = VOICE_GRADIENTS[index % VOICE_GRADIENTS.length];
+  const audioUrl = v.audio_url || `/api/v1/playground/audio/${v.audio_path}?bucket=storage`;
+
+  return {
+    id: String(v.id),
+    backendVoiceId: v.id,
+    name: name,
+    language: v.language || "en",
+    audioUrl: audioUrl,
+    color: color,
+    avatar: firstLetter,
+    avatarUrl: v.creator_avatar_url || null,
+    creatorUsername: v.creator_username,
+  };
+}

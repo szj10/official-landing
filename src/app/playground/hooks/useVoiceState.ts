@@ -4,7 +4,7 @@ import { useState } from "react";
 import type { UploadStatus } from "./useVoiceRecording";
 
 export function useVoiceState() {
-  const [selectedVoice, setSelectedVoice] = useState<string | null>("voice1");
+  const [selectedVoice, setSelectedVoice] = useState<string | null>(null);
   const [activeVoicePanel, setActiveVoicePanel] = useState<"stock" | "custom">("custom");
   const [anonymousVoiceId, setAnonymousVoiceId] = useState<number | null>(null);
 

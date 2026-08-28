@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type MutableRefObject, type MouseEvent } from "react";
-import { PLAYGROUND_VOICES } from "../voices.config";
+import { PlaygroundVoice } from "../voices.config";
 import {
   playWhenReady,
   disposePreviewAudio,
@@ -19,12 +19,16 @@ export type StickyPlayerKind = "tts" | "rec" | null;
 type UsePlaygroundAudioOptions = {
   /** Latest TTS job audio path (for toggle / history restore). Updated by the controller each render. */
   currentJobAudioPathRef: MutableRefObject<string | null | undefined>;
+  stockVoices?: PlaygroundVoice[];
 };
 
 /**
  * Sticky TTS + recording playback, stock voice preview, and history play helpers.
  */
-export function usePlaygroundAudio({ currentJobAudioPathRef }: UsePlaygroundAudioOptions) {
+export function usePlaygroundAudio({
+  currentJobAudioPathRef,
+  stockVoices = [],
+}: UsePlaygroundAudioOptions) {
   const [activeStickyPlayer, setActiveStickyPlayer] = useState<StickyPlayerKind>(null);
 
   const [playingVoicePreview, setPlayingVoicePreview] = useState<string | null>(null);
@@ -197,9 +201,10 @@ export function usePlaygroundAudio({ currentJobAudioPathRef }: UsePlaygroundAudi
     seekFromClick(recAudioRef.current, e.clientX, e.currentTarget);
   };
 
-  const handleVoicePreview = (voiceId: string) => {
-    const voice = PLAYGROUND_VOICES.find((v) => v.id === voiceId);
-    if (!voice) return;
+  const handleVoicePreview = (voiceId: string, overrideAudioUrl?: string) => {
+    const voice = stockVoices.find((v) => v.id === voiceId);
+    const audioUrl = overrideAudioUrl || voice?.audioUrl;
+    if (!audioUrl) return;
 
     if (playingVoicePreview === voiceId) {
       disposePreviewAudio(voicePreviewRef);
@@ -210,14 +215,14 @@ export function usePlaygroundAudio({ currentJobAudioPathRef }: UsePlaygroundAudi
     stopAllOtherAudio("preview");
     disposePreviewAudio(voicePreviewRef);
 
-    const audio = new Audio(voice.localAudioFile);
+    const audio = new Audio(audioUrl);
     voicePreviewRef.current = audio;
     audio.onended = () => {
       setPlayingVoicePreview(null);
       disposePreviewAudio(voicePreviewRef);
     };
     audio.onerror = () => {
-      console.warn(`Preview audio not available for ${voiceId} at ${voice.localAudioFile}`);
+      console.warn(`Preview audio not available for ${voiceId} at ${audioUrl}`);
       setPlayingVoicePreview(null);
       disposePreviewAudio(voicePreviewRef);
     };

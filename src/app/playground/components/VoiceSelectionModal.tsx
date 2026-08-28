@@ -2,6 +2,7 @@
 
 import React, { useEffect } from "react";
 import { useI18n } from "@/i18n";
+import { PlaygroundVoice } from "../voices.config";
 import { VoiceGrid } from "./VoiceGrid";
 import { VoiceRecorder } from "./VoiceRecorder";
 import { HistoryVoice } from "./types";
@@ -11,6 +12,7 @@ type VoiceTab = "sample" | "record" | "history";
 interface VoiceSelectionModalProps {
   isOpen: boolean;
   onClose: () => void;
+  stockVoices?: PlaygroundVoice[];
   // Voice Selection Props
   activeVoicePanel: "stock" | "custom";
   selectedVoice: string | null;
@@ -46,6 +48,7 @@ interface VoiceSelectionModalProps {
 export function VoiceSelectionModal({
   isOpen,
   onClose,
+  stockVoices = [],
   activeVoicePanel,
   selectedVoice,
   playingVoicePreview,
@@ -201,6 +204,7 @@ export function VoiceSelectionModal({
                   </button>
                 </div>
                 <VoiceGrid
+                  voices={stockVoices}
                   selectedVoice={selectedVoice}
                   playingVoicePreview={playingVoicePreview}
                   onVoiceSelectAndPlay={onVoiceSelectAndPlay}
