@@ -1,8 +1,12 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useI18n } from "@/i18n";
-import { PLAYGROUND_VOICES } from "./voices.config";
+import {
+  type BackendCommunityVoice,
+  type PlaygroundVoice,
+  mapCommunityVoiceToPlaygroundVoice,
+} from "./voices.config";
 
 import { PlaygroundEditorPanel } from "./components/PlaygroundEditorPanel";
 import { VoiceSelectionModal } from "./components/VoiceSelectionModal";
@@ -30,6 +34,8 @@ export default function PlaygroundContent() {
   const [isVoiceModalOpen, setIsVoiceModalOpen] = useState(false);
   const [textInput, setTextInput] = useState("");
   const [speed, setSpeed] = useState<"slow" | "normal" | "fast">("normal");
+  const [stockVoices, setStockVoices] = useState<PlaygroundVoice[]>([]);
+  const [stockVoicesLoading, setStockVoicesLoading] = useState(true);
 
   const queueRef = useRef<HTMLDivElement>(null);
   const editorIslandRef = useRef<HTMLDivElement>(null);
@@ -101,7 +107,7 @@ export default function PlaygroundContent() {
     setPlayingHistoryJobId,
     silenceAllAudio,
     playGeneratedAudio,
-  } = usePlaygroundAudio({ currentJobAudioPathRef });
+  } = usePlaygroundAudio({ currentJobAudioPathRef, stockVoices });
 
   const {
     isRecording,
@@ -150,6 +156,7 @@ export default function PlaygroundContent() {
   } = useTtsGeneration({
     t,
     locale,
+    stockVoices,
     textInput,
     setTextInput,
     activeVoicePanel,
@@ -174,6 +181,40 @@ export default function PlaygroundContent() {
       setAudioProgress(0);
     },
   });
+
+  // Fetch top 5 community voices when locale changes
+  const fetchStockVoices = useCallback(
+    async (currentLocale: string) => {
+      setStockVoicesLoading(true);
+      try {
+        const apiBase = process.env.NEXT_PUBLIC_BACKEND_URL || "";
+        const url = `${apiBase}/api/v1/voices/community?language=${encodeURIComponent(currentLocale)}&limit=5`;
+        const res = await fetch(url);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data: BackendCommunityVoice[] = await res.json();
+        const mapped = data.map((v, i) => mapCommunityVoiceToPlaygroundVoice(v, i));
+        setStockVoices(mapped);
+        // Auto-select the first voice if none selected yet
+        setSelectedVoice((prev) => {
+          const firstId = mapped[0]?.id ?? null;
+          if (!prev || !mapped.find((v) => v.id === prev)) return firstId;
+          return prev;
+        });
+        if (mapped.length > 0) {
+          setActiveVoicePanel("stock");
+        }
+      } catch (err) {
+        console.warn("Failed to fetch community voices:", err);
+      } finally {
+        setStockVoicesLoading(false);
+      }
+    },
+    [setSelectedVoice, setActiveVoicePanel]
+  );
+
+  useEffect(() => {
+    fetchStockVoices(locale);
+  }, [locale, fetchStockVoices]);
 
   useEffect(() => {
     currentJobAudioPathRef.current = currentJob?.audio_path;
@@ -268,7 +309,7 @@ export default function PlaygroundContent() {
     removeHistoryJob(jobId);
   };
 
-  const selectedStockVoiceObj = PLAYGROUND_VOICES.find((v) => v.id === selectedVoice);
+  const selectedStockVoiceObj = stockVoices.find((v) => v.id === selectedVoice);
 
   const deriveStickySubtitle = () => {
     if (activeStickyPlayer === "tts") {
@@ -277,9 +318,11 @@ export default function PlaygroundContent() {
         if (hj) return hj.voice_name;
       }
       const isStock = activeVoicePanel === "stock";
-      const stockVoice = isStock ? PLAYGROUND_VOICES.find((v) => v.id === selectedVoice) : null;
+      const stockVoice = isStock ? stockVoices.find((v) => v.id === selectedVoice) : null;
       return isStock && stockVoice
-        ? t(stockVoice.nameKey)
+        ? stockVoice.nameKey
+          ? t(stockVoice.nameKey)
+          : stockVoice.name
         : anonymousVoiceId
           ? t("playground.voicePromptLabel").replace("{id}", String(anonymousVoiceId))
           : t("playground.voiceSection.customVoice");
@@ -366,44 +409,52 @@ export default function PlaygroundContent() {
                   {t("playground.chooseVoice")}
                 </label>
                 <div className="flex flex-wrap items-center gap-2">
-                  {PLAYGROUND_VOICES.map((v) => {
-                    const isSelected = activeVoicePanel === "stock" && selectedVoice === v.id;
-                    const isPreviewing = playingVoicePreview === v.id;
-                    return (
-                      <div
-                        key={v.id}
-                        onClick={() => handleVoiceSelectAndPlay(v.id)}
-                        className={`inline-flex items-center gap-1.5 pl-1.5 pr-3 py-1.5 rounded-xl text-xs font-bold border transition-all cursor-pointer ${
-                          isSelected
-                            ? "bg-indigo-600 text-white border-indigo-600 shadow-md shadow-indigo-500/20"
-                            : "bg-gray-50 dark:bg-zinc-800/60 text-gray-700 dark:text-zinc-300 border-gray-200 dark:border-zinc-700/80 hover:border-indigo-400 dark:hover:border-indigo-500"
-                        }`}
-                      >
-                        <span
-                          className={`w-5 h-5 rounded-full bg-gradient-to-tr ${v.color} flex items-center justify-center text-[10px] font-black text-white`}
-                        >
-                          {v.avatar}
-                        </span>
-                        <span className="truncate max-w-[90px]">{t(v.nameKey)}</span>
-                        <span
-                          className={`p-0.5 rounded-full transition-colors ${
-                            isPreviewing ? "text-amber-300 animate-pulse" : "opacity-75"
-                          }`}
-                        >
-                          {isPreviewing ? (
-                            <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
-                              <rect x="6" y="4" width="4" height="16" rx="1" />
-                              <rect x="14" y="4" width="4" height="16" rx="1" />
-                            </svg>
-                          ) : (
-                            <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
-                              <path d="M8 5v14l11-7z" />
-                            </svg>
-                          )}
-                        </span>
-                      </div>
-                    );
-                  })}
+                  {stockVoicesLoading
+                    ? Array.from({ length: 3 }).map((_, i) => (
+                        <div
+                          key={i}
+                          className="inline-flex items-center gap-1.5 pl-1.5 pr-3 py-1.5 rounded-xl text-xs border border-gray-200 dark:border-zinc-700 animate-pulse bg-gray-100 dark:bg-zinc-800 w-20 h-8"
+                        />
+                      ))
+                    : stockVoices.map((v) => {
+                        const isSelected = activeVoicePanel === "stock" && selectedVoice === v.id;
+                        const isPreviewing = playingVoicePreview === v.id;
+                        const displayName = v.nameKey ? t(v.nameKey) : v.name;
+                        return (
+                          <div
+                            key={v.id}
+                            onClick={() => handleVoiceSelectAndPlay(v.id)}
+                            className={`inline-flex items-center gap-1.5 pl-1.5 pr-3 py-1.5 rounded-xl text-xs font-bold border transition-all cursor-pointer ${
+                              isSelected
+                                ? "bg-indigo-600 text-white border-indigo-600 shadow-md shadow-indigo-500/20"
+                                : "bg-gray-50 dark:bg-zinc-800/60 text-gray-700 dark:text-zinc-300 border-gray-200 dark:border-zinc-700/80 hover:border-indigo-400 dark:hover:border-indigo-500"
+                            }`}
+                          >
+                            <span
+                              className={`w-5 h-5 rounded-full bg-gradient-to-tr ${v.color} flex items-center justify-center text-[10px] font-black text-white overflow-hidden`}
+                            >
+                              {v.avatar}
+                            </span>
+                            <span className="truncate max-w-[90px]">{displayName}</span>
+                            <span
+                              className={`p-0.5 rounded-full transition-colors ${
+                                isPreviewing ? "text-amber-300 animate-pulse" : "opacity-75"
+                              }`}
+                            >
+                              {isPreviewing ? (
+                                <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
+                                  <rect x="6" y="4" width="4" height="16" rx="1" />
+                                  <rect x="14" y="4" width="4" height="16" rx="1" />
+                                </svg>
+                              ) : (
+                                <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
+                                  <path d="M8 5v14l11-7z" />
+                                </svg>
+                              )}
+                            </span>
+                          </div>
+                        );
+                      })}
                   {/* Active Custom/Cloned Voice Chip if available */}
                   {anonymousVoiceId !== null && (
                     <div
@@ -563,7 +614,7 @@ export default function PlaygroundContent() {
                   activeVoicePanel === "stock" && selectedStockVoiceObj
                     ? selectedStockVoiceObj.color
                     : "from-purple-600 to-indigo-600"
-                } flex items-center justify-center text-lg font-black text-white shadow-sm shrink-0`}
+                } flex items-center justify-center text-lg font-black text-white shadow-sm shrink-0 overflow-hidden`}
               >
                 {activeVoicePanel === "stock" && selectedStockVoiceObj
                   ? selectedStockVoiceObj.avatar
@@ -572,14 +623,18 @@ export default function PlaygroundContent() {
               <div className="flex-1 min-w-0">
                 <h3 className="text-base font-bold text-gray-900 dark:text-white truncate">
                   {activeVoicePanel === "stock" && selectedStockVoiceObj
-                    ? t(selectedStockVoiceObj.nameKey)
+                    ? selectedStockVoiceObj.nameKey
+                      ? t(selectedStockVoiceObj.nameKey)
+                      : selectedStockVoiceObj.name
                     : anonymousVoiceId
                       ? t("playground.voicePromptLabel").replace("{id}", String(anonymousVoiceId))
                       : t("playground.chooseVoice")}
                 </h3>
                 <p className="text-xs text-gray-500 dark:text-zinc-400 truncate">
                   {activeVoicePanel === "stock" && selectedStockVoiceObj
-                    ? t(selectedStockVoiceObj.previewKey)
+                    ? selectedStockVoiceObj.creatorUsername
+                      ? `@${selectedStockVoiceObj.creatorUsername}`
+                      : selectedStockVoiceObj.language
                     : t("playground.voiceSection.customVoice")}
                 </p>
               </div>
@@ -672,6 +727,7 @@ export default function PlaygroundContent() {
       <VoiceSelectionModal
         isOpen={isVoiceModalOpen}
         onClose={() => setIsVoiceModalOpen(false)}
+        stockVoices={stockVoices}
         activeVoicePanel={activeVoicePanel}
         selectedVoice={selectedVoice}
         playingVoicePreview={playingVoicePreview}
@@ -695,7 +751,7 @@ export default function PlaygroundContent() {
           setIsRecPlaying(false);
           setPlayingHistoryVoiceId(null);
           resetRecordingState();
-          setSelectedVoice("voice1");
+          setSelectedVoice(stockVoices[0]?.id ?? null);
         }}
         onSelectHistoryVoice={(voice) => {
           setActiveVoicePanel("custom");
