@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, type Dispatch, type SetStateAction } from "react";
+import { useEffect, useRef, useState } from "react";
 import { PlaygroundVoice } from "../voices.config";
 import type { HistoryTTSJob, TTSJobResponse, TTSJobStatus } from "../components/types";
 import { clearPendingJob, readPendingJob, writePendingJob } from "../lib/historyStorage";
@@ -16,33 +16,35 @@ export type QueueMetrics = {
   estimatedWaitSeconds: number;
 };
 
+export type JobContext = {
+  textInput?: string;
+  activeVoicePanel?: "stock" | "custom";
+  anonymousVoiceId?: number | null;
+  selectedVoice?: string | null;
+};
+
+export type PendingResumeData = {
+  text: string;
+  activePanel?: "stock" | "custom";
+  selectedVoice?: string | null;
+  anonymousVoiceId?: number | null;
+};
+
 type UseTtsGenerationOptions = {
   t: (key: string) => string;
   locale: string;
   stockVoices?: PlaygroundVoice[];
   textInput: string;
-  setTextInput: Dispatch<SetStateAction<string>>;
-  activeVoicePanel: "stock" | "custom";
-  setActiveVoicePanel: Dispatch<SetStateAction<"stock" | "custom">>;
-  selectedVoice: string | null;
-  setSelectedVoice: Dispatch<SetStateAction<string | null>>;
-  anonymousVoiceId: number | null;
-  setAnonymousVoiceId: Dispatch<SetStateAction<number | null>>;
-  setUploadStatus: Dispatch<SetStateAction<"idle" | "uploading" | "success" | "error">>;
   speed: "slow" | "normal" | "fast";
+  activeVoicePanel: "stock" | "custom";
+  selectedVoice: string | null;
+  anonymousVoiceId: number | null;
   canGenerate: boolean;
   historyHydrated: boolean;
   prependHistoryJob: (job: HistoryTTSJob) => void;
-  onJobComplete: (
-    job: TTSJobResponse,
-    contextOverride?: {
-      textInput?: string;
-      activeVoicePanel?: "stock" | "custom";
-      anonymousVoiceId?: number | null;
-      selectedVoice?: string | null;
-    }
-  ) => void;
+  onJobComplete: (job: TTSJobResponse, contextOverride?: JobContext) => void;
   onJobStart: () => void;
+  onResumePending?: (pending: PendingResumeData) => void;
 };
 
 /**
@@ -53,20 +55,16 @@ export function useTtsGeneration({
   locale,
   stockVoices = [],
   textInput,
-  setTextInput,
-  activeVoicePanel,
-  setActiveVoicePanel,
-  selectedVoice,
-  setSelectedVoice,
-  anonymousVoiceId,
-  setAnonymousVoiceId,
-  setUploadStatus,
   speed,
+  activeVoicePanel,
+  selectedVoice,
+  anonymousVoiceId,
   canGenerate,
   historyHydrated,
   prependHistoryJob,
   onJobComplete,
   onJobStart,
+  onResumePending,
 }: UseTtsGenerationOptions) {
   const [isGenerating, setIsGenerating] = useState(false);
   const [generationStatus, setGenerationStatus] = useState<TTSJobStatus | null>(null);
@@ -112,19 +110,13 @@ export function useTtsGeneration({
 
         const job: TTSJobResponse = await res.json();
 
-        if (pending.text) {
-          setTextInput(pending.text);
-
-          if (pending.active_panel) {
-            setActiveVoicePanel(pending.active_panel);
-          }
-
-          if (pending.active_panel === "stock" && pending.selected_voice) {
-            setSelectedVoice(pending.selected_voice);
-          } else if (pending.active_panel === "custom" && pending.anonymous_voice_id) {
-            setAnonymousVoiceId(pending.anonymous_voice_id);
-            setUploadStatus("success");
-          }
+        if (pending.text && onResumePending) {
+          onResumePending({
+            text: pending.text,
+            activePanel: pending.active_panel,
+            selectedVoice: pending.selected_voice,
+            anonymousVoiceId: pending.anonymous_voice_id,
+          });
         }
 
         if (job.status === "queued" || job.status === "processing") {

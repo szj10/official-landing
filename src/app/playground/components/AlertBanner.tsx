@@ -11,7 +11,6 @@ interface AlertBannerProps {
   generationStatus: string | null;
   rateLimitRetryAfter: number | null;
   errorMessage: string | null;
-  isGenerating: boolean;
   /** When set, failed banner is a recoverable connection/poll issue with Retry. */
   onRetryConnection?: (() => void) | null;
 }
@@ -22,27 +21,9 @@ export function AlertBanner({
   generationStatus,
   rateLimitRetryAfter,
   errorMessage,
-  isGenerating,
   onRetryConnection = null,
 }: AlertBannerProps) {
   const { t } = useI18n();
-
-  const statusLabel = () => {
-    switch (generationStatus) {
-      case "queued":
-        return t("playground.status.queued");
-      case "processing":
-        return t("playground.status.processing");
-      case "completed":
-        return t("playground.status.completed");
-      case "failed":
-        return t("playground.status.failed");
-      case "rate_limited":
-        return t("playground.status.rateLimited");
-      default:
-        return "";
-    }
-  };
 
   const isConnectionError = generationStatus === "failed" && !!errorMessage && !!onRetryConnection;
 
@@ -106,20 +87,6 @@ export function AlertBanner({
               </button>
             )}
           </div>
-        </div>
-      )}
-
-      {/* Processing indicator (when in processing state) */}
-      {isGenerating && generationStatus === "processing" && (
-        <div className="px-6 py-4 rounded-2xl bg-indigo-50 dark:bg-indigo-900/20 border border-indigo-100 dark:border-indigo-800/50 flex flex-col items-center justify-center gap-3 animate-fade-in-up">
-          <div className="flex gap-1.5">
-            <span className="w-2.5 h-2.5 rounded-full bg-indigo-500 animate-bounce [animation-delay:0ms]" />
-            <span className="w-2.5 h-2.5 rounded-full bg-indigo-500 animate-bounce [animation-delay:150ms]" />
-            <span className="w-2.5 h-2.5 rounded-full bg-indigo-500 animate-bounce [animation-delay:300ms]" />
-          </div>
-          <span className="text-xs sm:text-sm text-indigo-700 dark:text-indigo-300 font-bold tracking-wide">
-            {statusLabel()}
-          </span>
         </div>
       )}
     </div>

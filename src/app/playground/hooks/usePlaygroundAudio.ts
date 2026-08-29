@@ -327,6 +327,86 @@ export function usePlaygroundAudio({
     seekFromClick(audioRef.current, e.clientX, e.currentTarget);
   };
 
+  const setRecordedBlob = (blob: Blob | null, options?: { autoplay?: boolean }) => {
+    if (!blob) {
+      setRecordedAudioUrl((prev) => {
+        revokeIfBlobUrl(prev);
+        return null;
+      });
+      return;
+    }
+    const blobUrl = URL.createObjectURL(blob);
+    if (options?.autoplay) {
+      pendingRecAutoplayRef.current = true;
+    }
+    setRecordedAudioUrl((prev) => replaceMediaUrl(prev, blobUrl, { revokeAnyPrev: true }));
+  };
+
+  const setRecordedUrl = (url: string | null, options?: { autoplay?: boolean }) => {
+    if (options?.autoplay) {
+      pendingRecAutoplayRef.current = true;
+    }
+    setRecordedAudioUrl((prev) => {
+      if (prev === url) return prev;
+      return replaceMediaUrl(prev, url);
+    });
+  };
+
+  const stopRecordingPlayback = () => {
+    if (recAudioRef.current) recAudioRef.current.pause();
+    setIsRecPlaying(false);
+    setPlayingHistoryVoiceId(null);
+  };
+
+  const clearRecordedAudio = () => {
+    stopRecordingPlayback();
+    if (activeStickyPlayer === "rec") {
+      setActiveStickyPlayer(null);
+    }
+    setRecordedAudioUrl((prev) => {
+      revokeIfBlobUrl(prev);
+      return null;
+    });
+  };
+
+  const clearVoicePreview = () => {
+    disposePreviewAudio(voicePreviewRef);
+    setPlayingVoicePreview(null);
+  };
+
+  const handleHistoryVoiceDeleted = (voiceId: number) => {
+    if (playingHistoryVoiceId === voiceId) {
+      if (recAudioRef.current) recAudioRef.current.pause();
+      setIsRecPlaying(false);
+      setPlayingHistoryVoiceId(null);
+      if (activeStickyPlayer === "rec") setActiveStickyPlayer(null);
+      disposePreviewAudio(voicePreviewRef);
+    }
+  };
+
+  const handleHistoryJobDeleted = (jobId: string | number, currentJobAudioPath?: string | null) => {
+    if (playingHistoryJobId === jobId) {
+      audioRef.current?.pause();
+      setIsPlaying(false);
+      setPlayingHistoryJobId(null);
+
+      if (currentJobAudioPath) {
+        setAudioUrl(resolvePlaygroundAudioUrl(currentJobAudioPath));
+      } else {
+        setAudioUrl(null);
+        if (activeStickyPlayer === "tts") {
+          setActiveStickyPlayer(null);
+        }
+      }
+    }
+  };
+
+  const onTtsStart = () => {
+    audioRef.current?.pause();
+    setIsPlaying(false);
+    setAudioProgress(0);
+  };
+
   const closeStickyPlayer = () => {
     if (activeStickyPlayer === "tts") {
       if (audioRef.current) audioRef.current.pause();
@@ -365,15 +445,20 @@ export function usePlaygroundAudio({
     playingVoicePreview,
     setPlayingVoicePreview,
     handleVoicePreview,
+    clearVoicePreview,
 
     recordedAudioUrl,
     setRecordedAudioUrl,
+    setRecordedBlob,
+    setRecordedUrl,
     isRecPlaying,
     setIsRecPlaying,
     recAudioProgress,
     recAudioCurrentTime,
     recAudioDuration,
     toggleRecPlayback,
+    stopRecordingPlayback,
+    clearRecordedAudio,
     handleRecSeek,
     playHistoryVoice,
 
@@ -395,6 +480,9 @@ export function usePlaygroundAudio({
     playingHistoryJobId,
     setPlayingHistoryJobId,
 
+    handleHistoryVoiceDeleted,
+    handleHistoryJobDeleted,
+    onTtsStart,
     stopAllOtherAudio,
     silenceAllAudio,
     playGeneratedAudio,
