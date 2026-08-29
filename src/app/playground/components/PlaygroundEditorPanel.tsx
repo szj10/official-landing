@@ -6,68 +6,30 @@ import { SAMPLE_TEXTS } from "./types";
 
 const MAX_TTS_TEXT_LENGTH = parseInt(process.env.NEXT_PUBLIC_MAX_TTS_TEXT_LENGTH || "600", 10);
 
-export const SPEECH_TAGS = [
-  { label: "[chuckle]", value: "[chuckle]", desc: "Subtle giggle" },
-  { label: "[emphasis]", value: "[emphasis]", desc: "Stress word" },
-  { label: "[long pause]", value: "[long pause]", desc: "Dramatic break" },
-  { label: "[whisper]", value: "[whisper]", desc: "Quiet tone" },
-  { label: "[sigh]", value: "[sigh]", desc: "Exhale softly" },
-  { label: "[laughter]", value: "[laughter]", desc: "Full laugh" },
-  { label: "[gasp]", value: "[gasp]", desc: "Surprised breath" },
-  { label: "[applause]", value: "[applause]", desc: "Clapping sound" },
-];
-
 interface PlaygroundEditorPanelProps {
   textInput: string;
   onTextChange: (text: string) => void;
   onSampleSelect: (text: string) => void;
   onGenerate?: () => void;
+  speed: "slow" | "normal" | "fast";
+  onSpeedChange: (speed: "slow" | "normal" | "fast") => void;
 }
 
 export interface PlaygroundEditorPanelRef {
   focusTextarea: () => void;
-  insertTag: (tag: string) => void;
 }
 
 export const PlaygroundEditorPanel = forwardRef<
   PlaygroundEditorPanelRef,
   PlaygroundEditorPanelProps
->(function PlaygroundEditorPanel({ textInput, onTextChange, onSampleSelect, onGenerate }, ref) {
+>(function PlaygroundEditorPanel(
+  { textInput, onTextChange, onSampleSelect, onGenerate, speed, onSpeedChange },
+  ref
+) {
   const { t } = useI18n();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const [isTagsOpen, setIsTagsOpen] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [pendingSampleId, setPendingSampleId] = useState<string | null>(null);
-
-  const insertTagAtCursor = (tag: string) => {
-    if (!textareaRef.current) {
-      onTextChange(
-        textInput + (textInput.endsWith(" ") || textInput === "" ? "" : " ") + tag + " "
-      );
-      return;
-    }
-
-    const textarea = textareaRef.current;
-    const start = textarea.selectionStart ?? textInput.length;
-    const end = textarea.selectionEnd ?? textInput.length;
-
-    // Add spaces around tag cleanly
-    const before = textInput.substring(0, start);
-    const after = textInput.substring(end);
-    const needLeadingSpace = before.length > 0 && !before.endsWith(" ");
-    const needTrailingSpace = !after.startsWith(" ");
-    const insertion = (needLeadingSpace ? " " : "") + tag + (needTrailingSpace ? " " : "");
-
-    const newText = before + insertion + after;
-    onTextChange(newText);
-
-    // Reposition cursor right after the inserted tag
-    setTimeout(() => {
-      textarea.focus();
-      const newCursorPos = start + insertion.length;
-      textarea.setSelectionRange(newCursorPos, newCursorPos);
-    }, 10);
-  };
 
   useImperativeHandle(ref, () => ({
     focusTextarea: () => {
@@ -76,9 +38,6 @@ export const PlaygroundEditorPanel = forwardRef<
         const length = textareaRef.current.value.length;
         textareaRef.current.setSelectionRange(length, length);
       }
-    },
-    insertTag: (tag: string) => {
-      insertTagAtCursor(tag);
     },
   }));
 
@@ -170,59 +129,25 @@ export const PlaygroundEditorPanel = forwardRef<
         />
       </div>
 
-      {/* Expandable Tags Drawer */}
-      {isTagsOpen && (
-        <div className="p-3 rounded-2xl bg-purple-50/60 dark:bg-purple-950/30 border border-purple-200/80 dark:border-purple-800/60 animate-in fade-in slide-in-from-top-2 duration-150 space-y-2">
-          <div className="flex items-center justify-between">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-purple-700 dark:text-purple-300">
-              Speech Emotion & Pacing Tags
-            </span>
-            <span className="text-[10px] text-purple-500 dark:text-purple-400">
-              Click to insert at cursor
-            </span>
-          </div>
-          <div className="flex flex-wrap gap-1.5">
-            {SPEECH_TAGS.map((tag) => (
-              <button
-                key={tag.value}
-                type="button"
-                onClick={() => insertTagAtCursor(tag.value)}
-                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-white dark:bg-zinc-800 border border-purple-200 dark:border-purple-800/80 text-xs font-semibold text-purple-700 dark:text-purple-300 hover:bg-purple-600 hover:text-white dark:hover:bg-purple-600 dark:hover:text-white shadow-2xs hover:shadow-sm active:scale-95 transition-all"
-                title={tag.desc}
-              >
-                <span>{tag.label}</span>
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* Bottom Tool Row: Tags > button on Left, Character count on Right */}
+      {/* Bottom Tool Row: Speed Control on Left, Character count on Right */}
       <div className="flex items-center justify-between pt-2 border-t border-gray-100 dark:border-zinc-800/80">
-        {/* Tags Button */}
-        <button
-          type="button"
-          onClick={() => setIsTagsOpen(!isTagsOpen)}
-          className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold transition-all shadow-2xs active:scale-95 ${
-            isTagsOpen
-              ? "bg-purple-600 text-white border border-purple-600 shadow-sm"
-              : "bg-gray-100 dark:bg-zinc-800/90 text-gray-700 dark:text-zinc-300 border border-gray-200 dark:border-zinc-700 hover:bg-gray-200 dark:hover:bg-zinc-700"
-          }`}
-          aria-expanded={isTagsOpen}
-        >
-          <span>Tags</span>
-          <svg
-            className={`w-3.5 h-3.5 transition-transform duration-200 ${
-              isTagsOpen ? "rotate-90" : ""
-            }`}
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            strokeWidth={2.5}
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-          </svg>
-        </button>
+        {/* Speed Pill */}
+        <div className="inline-flex p-0.5 rounded-full bg-gray-100 dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700/80 text-[11px] font-semibold">
+          {(["slow", "normal", "fast"] as const).map((s) => (
+            <button
+              key={s}
+              type="button"
+              onClick={() => onSpeedChange(s)}
+              className={`px-2.5 py-0.5 rounded-full transition-all ${
+                speed === s
+                  ? "bg-white dark:bg-zinc-700 text-indigo-600 dark:text-indigo-300 shadow-xs font-bold"
+                  : "text-gray-500 dark:text-zinc-400 hover:text-gray-900 dark:hover:text-white"
+              }`}
+            >
+              {s === "slow" ? "0.8x" : s === "normal" ? "1.0x" : "1.2x"}
+            </button>
+          ))}
+        </div>
 
         {/* Character Count */}
         <div className="text-xs sm:text-sm">

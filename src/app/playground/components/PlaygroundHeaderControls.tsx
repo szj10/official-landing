@@ -83,7 +83,7 @@ export function PlaygroundHeaderControls({
   };
 
   return (
-    <div className="flex items-center gap-2.5 flex-wrap">
+    <div className="flex items-center gap-2.5 flex-nowrap">
       {/* Language Selector Pill */}
       <div className="relative" ref={langRef}>
         <button
@@ -92,7 +92,7 @@ export function PlaygroundHeaderControls({
             setIsLangOpen(!isLangOpen);
             setIsVoiceOpen(false);
           }}
-          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white dark:bg-zinc-800/90 border border-gray-200/90 dark:border-zinc-700/80 text-xs font-semibold text-gray-800 dark:text-zinc-200 shadow-xs hover:bg-gray-50 dark:hover:bg-zinc-700/80 active:scale-95 transition-all"
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white dark:bg-zinc-800/90 border border-gray-200/90 dark:border-zinc-700/80 text-xs font-semibold text-gray-800 dark:text-zinc-200 shadow-xs hover:bg-gray-50 dark:hover:bg-zinc-700/80 active:scale-95 transition-all shrink-0"
           aria-expanded={isLangOpen}
           aria-label="Select Language"
         >
@@ -165,7 +165,7 @@ export function PlaygroundHeaderControls({
             setIsVoiceOpen(!isVoiceOpen);
             setIsLangOpen(false);
           }}
-          className="inline-flex items-center gap-2 pl-2 pr-3 py-1.5 rounded-full bg-white dark:bg-zinc-800/90 border border-gray-200/90 dark:border-zinc-700/80 text-xs font-semibold text-gray-800 dark:text-zinc-200 shadow-xs hover:bg-gray-50 dark:hover:bg-zinc-700/80 active:scale-95 transition-all"
+          className="inline-flex items-center gap-2 pl-2 pr-3 py-1.5 rounded-full bg-white dark:bg-zinc-800/90 border border-gray-200/90 dark:border-zinc-700/80 text-xs font-semibold text-gray-800 dark:text-zinc-200 shadow-xs hover:bg-gray-50 dark:hover:bg-zinc-700/80 active:scale-95 transition-all min-w-0"
           aria-expanded={isVoiceOpen}
           aria-label="Select Voice"
         >
@@ -180,13 +180,13 @@ export function PlaygroundHeaderControls({
             {isCustomActive ? "🎙️" : currentStockVoice?.avatar || "V"}
           </div>
 
-          <span className="truncate max-w-[110px]">{currentVoiceName}</span>
+          <span className="truncate max-w-[100px] sm:max-w-[150px]">{currentVoiceName}</span>
 
           {/* Inline mini preview play/pause icon */}
           <button
             type="button"
             onClick={handleCurrentVoicePreview}
-            className={`p-0.5 rounded-full hover:bg-gray-200/60 dark:hover:bg-zinc-700 transition-colors ${
+            className={`p-0.5 rounded-full hover:bg-gray-200/60 dark:hover:bg-zinc-700 transition-colors shrink-0 ${
               isCurrentVoicePreviewing
                 ? "text-indigo-600 dark:text-indigo-400 animate-pulse"
                 : "text-gray-400 hover:text-gray-700 dark:hover:text-zinc-200"
@@ -206,7 +206,7 @@ export function PlaygroundHeaderControls({
           </button>
 
           <svg
-            className={`w-3 h-3 text-gray-400 dark:text-zinc-400 transition-transform duration-200 ${
+            className={`w-3 h-3 text-gray-400 dark:text-zinc-400 transition-transform duration-200 shrink-0 ${
               isVoiceOpen ? "rotate-180" : ""
             }`}
             fill="none"
@@ -243,6 +243,7 @@ export function PlaygroundHeaderControls({
                         key={v.id}
                         onClick={() => {
                           onSelectVoice(v.id);
+                          onPreviewVoice(v.id);
                           setIsVoiceOpen(false);
                         }}
                         className={`flex items-center justify-between p-2 rounded-xl text-xs font-semibold cursor-pointer transition-colors ${

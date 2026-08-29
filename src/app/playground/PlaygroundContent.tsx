@@ -364,7 +364,7 @@ export default function PlaygroundContent() {
       <div className="max-w-xl mx-auto">
         <div className="bg-white dark:bg-zinc-900 border border-gray-200/90 dark:border-zinc-800 rounded-3xl sm:rounded-[32px] p-5 sm:p-7 shadow-xl shadow-gray-200/60 dark:shadow-none space-y-4 sm:space-y-5 transition-all">
           {/* Top Bar: Language Pill + Voice Pill */}
-          <div className="flex items-center justify-between pb-3 border-b border-gray-100 dark:border-zinc-800/80">
+          <div className="flex items-center pb-3 border-b border-gray-100 dark:border-zinc-800/80">
             <PlaygroundHeaderControls
               stockVoices={stockVoices}
               stockVoicesLoading={stockVoicesLoading}
@@ -374,41 +374,22 @@ export default function PlaygroundContent() {
               playingVoicePreview={playingVoicePreview}
               playingHistoryVoiceId={playingHistoryVoiceId}
               isRecPlaying={isRecPlaying}
-              onSelectVoice={(id) => {
-                setSelectedVoice(id);
-                setActiveVoicePanel("stock");
-              }}
+              onSelectVoice={handleVoiceSelectAndPlay}
               onPreviewVoice={handleVoicePreview}
               onPlayHistoryVoice={playHistoryVoice}
               onOpenVoiceModal={() => setIsVoiceModalOpen(true)}
             />
-
-            {/* Speed Pill */}
-            <div className="inline-flex p-0.5 rounded-full bg-gray-100 dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700/80 text-[11px] font-semibold">
-              {(["slow", "normal", "fast"] as const).map((s) => (
-                <button
-                  key={s}
-                  type="button"
-                  onClick={() => setSpeed(s)}
-                  className={`px-2 py-0.5 rounded-full transition-all ${
-                    speed === s
-                      ? "bg-white dark:bg-zinc-700 text-indigo-600 dark:text-indigo-300 shadow-xs"
-                      : "text-gray-500 dark:text-zinc-400 hover:text-gray-900 dark:hover:text-white"
-                  }`}
-                >
-                  {s === "slow" ? "0.8x" : s === "normal" ? "1.0x" : "1.2x"}
-                </button>
-              ))}
-            </div>
           </div>
 
-          {/* Text Editor with Tags > button & character counter */}
+          {/* Text Editor with speed control & character counter */}
           <PlaygroundEditorPanel
             ref={editorRef}
             textInput={textInput}
             onTextChange={setTextInput}
             onSampleSelect={handleSampleTextSelect}
             onGenerate={handleGenerateWithScroll}
+            speed={speed}
+            onSpeedChange={setSpeed}
           />
 
           {/* Action CTA: Generate & Play */}
