@@ -19,7 +19,7 @@ import { QueueStatusCard } from "./components/QueueStatusCard";
 import { HistoryJobs } from "./components/HistoryJobs";
 import { AlertBanner } from "./components/AlertBanner";
 import { SpeakerIcon, SparklesIcon } from "./components/icons";
-import { SAMPLE_TEXTS } from "./components/types";
+import { SAMPLE_TEXTS, type HistoryVoice } from "./components/types";
 import { historyVoicePromptUrl } from "./lib/audio";
 import { usePlaygroundHistory } from "./hooks/usePlaygroundHistory";
 import { usePlaygroundAudio } from "./hooks/usePlaygroundAudio";
@@ -170,6 +170,11 @@ export default function PlaygroundContent() {
     audio.handleVoicePreview(voiceId);
   };
 
+  const handleSelectHistoryVoice = (item: HistoryVoice) => {
+    voice.selectHistoryVoice(item);
+    audio.setRecordedUrl(historyVoicePromptUrl(item.anonymous_voice_id));
+  };
+
   const deleteHistoryVoice = (voiceId: number) => {
     audio.handleHistoryVoiceDeleted(voiceId);
     voice.handleHistoryVoiceDeleted(voiceId);
@@ -245,10 +250,12 @@ export default function PlaygroundContent() {
               selectedVoice={voice.selectedVoice}
               activeVoicePanel={voice.activeVoicePanel}
               anonymousVoiceId={voice.anonymousVoiceId}
+              historyVoices={history.historyVoices}
               playingVoicePreview={audio.playingVoicePreview}
               playingHistoryVoiceId={audio.playingHistoryVoiceId}
               isRecPlaying={audio.isRecPlaying}
               onSelectVoice={handleVoiceSelectAndPlay}
+              onSelectHistoryVoice={handleSelectHistoryVoice}
               onPreviewVoice={audio.handleVoicePreview}
               onPlayHistoryVoice={audio.playHistoryVoice}
               onOpenVoiceModal={() => setIsVoiceModalOpen(true)}
@@ -399,10 +406,7 @@ export default function PlaygroundContent() {
           audio.stopRecordingPlayback();
           voice.resetRecording(stockVoices[0]?.id ?? null);
         }}
-        onSelectHistoryVoice={(item) => {
-          voice.selectHistoryVoice(item);
-          audio.setRecordedUrl(historyVoicePromptUrl(item.anonymous_voice_id));
-        }}
+        onSelectHistoryVoice={handleSelectHistoryVoice}
         onPlayHistoryVoice={audio.playHistoryVoice}
         onToggleRecordingPlayback={audio.toggleRecPlayback}
         onDeleteHistoryVoice={deleteHistoryVoice}

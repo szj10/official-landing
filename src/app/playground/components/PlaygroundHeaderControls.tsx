@@ -4,6 +4,8 @@ import { useState, useRef, useEffect } from "react";
 import { useI18n } from "@/i18n";
 import { locales, localeNames, type Locale } from "@/i18n/config";
 import type { PlaygroundVoice } from "../voices.config";
+import type { HistoryVoice } from "./types";
+import { formatTime } from "./types";
 
 interface PlaygroundHeaderControlsProps {
   stockVoices: PlaygroundVoice[];
@@ -11,10 +13,12 @@ interface PlaygroundHeaderControlsProps {
   selectedVoice: string | null;
   activeVoicePanel: "stock" | "custom";
   anonymousVoiceId: number | null;
+  historyVoices?: HistoryVoice[];
   playingVoicePreview: string | null;
   playingHistoryVoiceId: number | null;
   isRecPlaying: boolean;
   onSelectVoice: (id: string) => void;
+  onSelectHistoryVoice?: (voice: HistoryVoice) => void;
   onPreviewVoice: (id: string) => void;
   onPlayHistoryVoice: (id: number) => void;
   onOpenVoiceModal: () => void;
@@ -26,10 +30,12 @@ export function PlaygroundHeaderControls({
   selectedVoice,
   activeVoicePanel,
   anonymousVoiceId,
+  historyVoices = [],
   playingVoicePreview,
   playingHistoryVoiceId,
   isRecPlaying,
   onSelectVoice,
+  onSelectHistoryVoice,
   onPreviewVoice,
   onPlayHistoryVoice,
   onOpenVoiceModal,
@@ -56,6 +62,19 @@ export function PlaygroundHeaderControls({
   }, []);
 
   const currentLang = localeNames[locale as Locale] || { name: "English", flag: "🇺🇸" };
+
+  // Combine saved history voices + active anonymousVoiceId if not already in list
+  const customVoicesList: HistoryVoice[] = [...(historyVoices || [])];
+  if (
+    anonymousVoiceId !== null &&
+    !customVoicesList.some((v) => v.anonymous_voice_id === anonymousVoiceId)
+  ) {
+    customVoicesList.unshift({
+      anonymous_voice_id: anonymousVoiceId,
+      audio_duration: null,
+      expires_at: "",
+    });
+  }
 
   // Current active voice details
   const currentStockVoice = stockVoices.find((v) => v.id === selectedVoice) || stockVoices[0];
@@ -232,83 +251,178 @@ export function PlaygroundHeaderControls({
 
         {/* Voice Dropdown Menu */}
         {isVoiceOpen && (
-          <div className="absolute right-0 sm:left-0 sm:right-auto mt-1.5 w-64 max-w-[calc(100vw-2.5rem)] rounded-2xl bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 shadow-2xl p-2 z-50 animate-in fade-in zoom-in-95 duration-150 backdrop-blur-xl">
-            <div className="text-[10px] font-bold uppercase tracking-wider text-gray-400 dark:text-zinc-500 px-2.5 py-1">
-              {t("playground.chooseVoice")}
-            </div>
+          <div className="absolute right-0 sm:left-0 sm:right-auto mt-1.5 w-68 max-w-[calc(100vw-2.5rem)] rounded-2xl bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 shadow-2xl p-2 z-50 animate-in fade-in zoom-in-95 duration-150 backdrop-blur-xl">
+            <div className="max-h-72 overflow-y-auto space-y-2 scrollbar-thin p-0.5">
+              {/* 1. Custom Voices Section */}
+              {customVoicesList.length > 0 && (
+                <div>
+                  <div className="flex items-center justify-between px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">
+                    <span>{t("playground.voiceSection.yourVoice") || "Your Voices"}</span>
+                    <span className="text-[10px] text-gray-400 dark:text-zinc-500 font-normal">
+                      {customVoicesList.length}
+                    </span>
+                  </div>
+                  <div className="space-y-1">
+                    {customVoicesList.slice(0, 4).map((hv) => {
+                      const isSelected =
+                        activeVoicePanel === "custom" && anonymousVoiceId === hv.anonymous_voice_id;
+                      const isPreviewing =
+                        playingHistoryVoiceId === hv.anonymous_voice_id && isRecPlaying;
+                      const name = t("playground.voicePromptLabel").replace(
+                        "{id}",
+                        String(hv.anonymous_voice_id)
+                      );
+                      const durationStr = hv.audio_duration ? formatTime(hv.audio_duration) : null;
 
-            <div className="max-h-60 overflow-y-auto space-y-1 scrollbar-thin my-1">
-              {stockVoicesLoading
-                ? Array.from({ length: 3 }).map((_, i) => (
-                    <div
-                      key={i}
-                      className="h-10 rounded-xl bg-gray-100 dark:bg-zinc-800 animate-pulse"
-                    />
-                  ))
-                : stockVoices.map((v) => {
-                    const isSelected = activeVoicePanel === "stock" && selectedVoice === v.id;
-                    const isPreviewing = playingVoicePreview === v.id;
-                    const name = v.nameKey ? t(v.nameKey) : v.name;
-
-                    return (
-                      <div
-                        key={v.id}
-                        onClick={() => {
-                          onSelectVoice(v.id);
-                          setIsVoiceOpen(false);
-                        }}
-                        className={`flex items-center justify-between p-2 rounded-xl text-xs font-semibold cursor-pointer transition-colors ${
-                          isSelected
-                            ? "bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 border border-indigo-200/60 dark:border-indigo-800/60"
-                            : "text-gray-700 dark:text-zinc-300 hover:bg-gray-100 dark:hover:bg-zinc-800"
-                        }`}
-                      >
-                        <div className="flex items-center gap-2.5 min-w-0">
-                          <div
-                            className={`w-6 h-6 rounded-full bg-gradient-to-tr ${v.color} flex items-center justify-center text-[10px] font-black text-white shrink-0`}
-                          >
-                            {v.avatar}
+                      return (
+                        <div
+                          key={hv.anonymous_voice_id}
+                          onClick={() => {
+                            if (onSelectHistoryVoice) {
+                              onSelectHistoryVoice(hv);
+                            }
+                            setIsVoiceOpen(false);
+                          }}
+                          className={`flex items-center justify-between p-2 rounded-xl text-xs font-semibold cursor-pointer transition-colors ${
+                            isSelected
+                              ? "bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-200/60 dark:border-emerald-800/60"
+                              : "text-gray-700 dark:text-zinc-300 hover:bg-gray-100 dark:hover:bg-zinc-800"
+                          }`}
+                        >
+                          <div className="flex items-center gap-2.5 min-w-0">
+                            <div className="w-6 h-6 rounded-full bg-gradient-to-tr from-emerald-500 to-teal-600 flex items-center justify-center text-[10px] font-black text-white shrink-0 shadow-xs">
+                              🎙️
+                            </div>
+                            <div className="min-w-0">
+                              <p className="truncate text-xs font-bold leading-tight">{name}</p>
+                              {durationStr && (
+                                <p className="text-[10px] text-gray-400 dark:text-zinc-500 truncate">
+                                  {durationStr}
+                                </p>
+                              )}
+                            </div>
                           </div>
-                          <div className="min-w-0">
-                            <p className="truncate text-xs font-bold leading-tight">{name}</p>
-                            {v.creatorUsername && (
-                              <p className="text-[10px] text-gray-400 dark:text-zinc-500 truncate">
-                                @{v.creatorUsername}
-                              </p>
+
+                          <div className="flex items-center gap-1 shrink-0">
+                            {isSelected && (
+                              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1" />
                             )}
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                onPlayHistoryVoice(hv.anonymous_voice_id);
+                              }}
+                              className="p-1 rounded-lg hover:bg-gray-200/60 dark:hover:bg-zinc-700 text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400 shrink-0 transition-colors"
+                              title="Preview voice audio"
+                            >
+                              {isPreviewing ? (
+                                <svg
+                                  className="w-3.5 h-3.5 fill-current text-emerald-600 dark:text-emerald-400 animate-pulse"
+                                  viewBox="0 0 24 24"
+                                >
+                                  <rect x="6" y="4" width="4" height="16" rx="1" />
+                                  <rect x="14" y="4" width="4" height="16" rx="1" />
+                                </svg>
+                              ) : (
+                                <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
+                                  <path d="M8 5v14l11-7z" />
+                                </svg>
+                              )}
+                            </button>
                           </div>
                         </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
 
-                        <button
-                          type="button"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            onPreviewVoice(v.id);
-                          }}
-                          className="p-1 rounded-lg hover:bg-gray-200/60 dark:hover:bg-zinc-700 text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 shrink-0 transition-colors"
-                          title="Preview voice audio"
-                        >
-                          {isPreviewing ? (
-                            <svg
-                              className="w-3.5 h-3.5 fill-current text-indigo-600 dark:text-indigo-400 animate-pulse"
-                              viewBox="0 0 24 24"
-                            >
-                              <rect x="6" y="4" width="4" height="16" rx="1" />
-                              <rect x="14" y="4" width="4" height="16" rx="1" />
-                            </svg>
-                          ) : (
-                            <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
-                              <path d="M8 5v14l11-7z" />
-                            </svg>
-                          )}
-                        </button>
-                      </div>
-                    );
-                  })}
+              {/* 2. Community Voices Section */}
+              <div>
+                <div className="text-[10px] font-bold uppercase tracking-wider text-gray-400 dark:text-zinc-500 px-2 py-1">
+                  {t("playground.voiceSection.sampleVoices") || "Community Voices"}
+                </div>
+
+                <div className="space-y-1">
+                  {stockVoicesLoading
+                    ? Array.from({ length: 3 }).map((_, i) => (
+                        <div
+                          key={i}
+                          className="h-10 rounded-xl bg-gray-100 dark:bg-zinc-800 animate-pulse"
+                        />
+                      ))
+                    : stockVoices.map((v) => {
+                        const isSelected = activeVoicePanel === "stock" && selectedVoice === v.id;
+                        const isPreviewing = playingVoicePreview === v.id;
+                        const name = v.nameKey ? t(v.nameKey) : v.name;
+
+                        return (
+                          <div
+                            key={v.id}
+                            onClick={() => {
+                              onSelectVoice(v.id);
+                              setIsVoiceOpen(false);
+                            }}
+                            className={`flex items-center justify-between p-2 rounded-xl text-xs font-semibold cursor-pointer transition-colors ${
+                              isSelected
+                                ? "bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 border border-indigo-200/60 dark:border-indigo-800/60"
+                                : "text-gray-700 dark:text-zinc-300 hover:bg-gray-100 dark:hover:bg-zinc-800"
+                            }`}
+                          >
+                            <div className="flex items-center gap-2.5 min-w-0">
+                              <div
+                                className={`w-6 h-6 rounded-full bg-gradient-to-tr ${v.color} flex items-center justify-center text-[10px] font-black text-white shrink-0`}
+                              >
+                                {v.avatar}
+                              </div>
+                              <div className="min-w-0">
+                                <p className="truncate text-xs font-bold leading-tight">{name}</p>
+                                {v.creatorUsername && (
+                                  <p className="text-[10px] text-gray-400 dark:text-zinc-500 truncate">
+                                    @{v.creatorUsername}
+                                  </p>
+                                )}
+                              </div>
+                            </div>
+
+                            <div className="flex items-center gap-1 shrink-0">
+                              {isSelected && (
+                                <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 mr-1" />
+                              )}
+                              <button
+                                type="button"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  onPreviewVoice(v.id);
+                                }}
+                                className="p-1 rounded-lg hover:bg-gray-200/60 dark:hover:bg-zinc-700 text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 shrink-0 transition-colors"
+                                title="Preview voice audio"
+                              >
+                                {isPreviewing ? (
+                                  <svg
+                                    className="w-3.5 h-3.5 fill-current text-indigo-600 dark:text-indigo-400 animate-pulse"
+                                    viewBox="0 0 24 24"
+                                  >
+                                    <rect x="6" y="4" width="4" height="16" rx="1" />
+                                    <rect x="14" y="4" width="4" height="16" rx="1" />
+                                  </svg>
+                                ) : (
+                                  <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
+                                    <path d="M8 5v14l11-7z" />
+                                  </svg>
+                                )}
+                              </button>
+                            </div>
+                          </div>
+                        );
+                      })}
+                </div>
+              </div>
             </div>
 
             {/* Modal opener button */}
-            <div className="pt-1 border-t border-gray-100 dark:border-zinc-800/80 mt-1">
+            <div className="pt-1.5 border-t border-gray-100 dark:border-zinc-800/80 mt-1">
               <button
                 type="button"
                 onClick={() => {
@@ -317,6 +431,15 @@ export function PlaygroundHeaderControls({
                 }}
                 className="w-full py-2 px-3 rounded-xl bg-gray-50 dark:bg-zinc-800/60 hover:bg-indigo-50 dark:hover:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 text-xs font-bold transition-colors flex items-center justify-center gap-1.5"
               >
+                <svg
+                  className="w-3.5 h-3.5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2.5}
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                </svg>
                 <span>+ All Voices & Clone</span>
               </button>
             </div>
