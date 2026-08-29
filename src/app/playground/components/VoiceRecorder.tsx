@@ -144,18 +144,20 @@ export function VoiceRecorder({
       ) : (
         /* Recording Console */
         <div className="w-full flex flex-col items-center space-y-4">
-          {/* Reading Script Card */}
-          <div className="w-full bg-gray-50/80 dark:bg-zinc-800/40 rounded-2xl p-4 border border-gray-100 dark:border-zinc-800 space-y-2">
-            <div className="flex items-center justify-between text-[10px] font-bold text-gray-400 dark:text-zinc-500 uppercase tracking-widest">
-              <span>{t("playground.voiceSection.promptGuideTitle")}</span>
+          {/* Reading Script Card - only shown during active recording */}
+          {isRecording && (
+            <div className="w-full bg-gray-50/80 dark:bg-zinc-800/40 rounded-2xl p-4 border border-gray-100 dark:border-zinc-800 space-y-2 animate-in fade-in duration-200">
+              <div className="flex items-center justify-between text-[10px] font-bold text-gray-400 dark:text-zinc-500 uppercase tracking-widest">
+                <span>{t("playground.voiceSection.promptGuideTitle")}</span>
+              </div>
+              <p className="text-xs sm:text-sm font-medium text-gray-800 dark:text-zinc-200 italic leading-relaxed">
+                &quot;{promptText}&quot;
+              </p>
+              <p className="text-[11px] text-gray-400 dark:text-zinc-500">
+                {t("playground.voiceSection.recordHint")}
+              </p>
             </div>
-            <p className="text-xs sm:text-sm font-medium text-gray-800 dark:text-zinc-200 italic leading-relaxed">
-              &quot;{promptText}&quot;
-            </p>
-            <p className="text-[11px] text-gray-400 dark:text-zinc-500">
-              {t("playground.voiceSection.recordHint")}
-            </p>
-          </div>
+          )}
 
           {/* Mic Console */}
           {isRecording ? (
