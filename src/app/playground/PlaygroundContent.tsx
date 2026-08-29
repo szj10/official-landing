@@ -406,13 +406,6 @@ export default function PlaygroundContent() {
         onPlayHistoryVoice={audio.playHistoryVoice}
         onToggleRecordingPlayback={audio.toggleRecPlayback}
         onDeleteHistoryVoice={deleteHistoryVoice}
-        onClearSampleVoice={() => {
-          voice.clearVoice();
-          audio.clearRecordedAudio();
-          audio.clearVoicePreview();
-        }}
-        speed={speed}
-        onSetSpeed={setSpeed}
       />
 
       <StickyPlayerBar

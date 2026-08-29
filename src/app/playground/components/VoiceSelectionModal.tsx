@@ -1,19 +1,18 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import Image from "next/image";
 import { useI18n } from "@/i18n";
 import { PlaygroundVoice } from "../voices.config";
-import { VoiceGrid } from "./VoiceGrid";
 import { VoiceRecorder } from "./VoiceRecorder";
-import { HistoryVoice } from "./types";
-
-type VoiceTab = "sample" | "record" | "history";
+import { HistoryVoice, formatTime, formatRelativeTime } from "./types";
+import { CheckIcon, PlayIcon, StopIcon, MicIcon } from "./icons";
 
 interface VoiceSelectionModalProps {
   isOpen: boolean;
   onClose: () => void;
   stockVoices?: PlaygroundVoice[];
-  // Voice Selection Props
+  // Voice state
   activeVoicePanel: "stock" | "custom";
   selectedVoice: string | null;
   playingVoicePreview: string | null;
@@ -29,7 +28,8 @@ interface VoiceSelectionModalProps {
   playingHistoryVoiceId: number | null;
   isRecPlaying: boolean;
   recAudioRef: React.RefObject<HTMLAudioElement | null>;
-  recordedDuration?: number; // Duration in seconds
+  recordedDuration?: number;
+  // Callbacks
   onVoiceSelectAndPlay: (voiceId: string) => void;
   onStartRecording: () => void;
   onStopRecording: () => void;
@@ -38,11 +38,6 @@ interface VoiceSelectionModalProps {
   onPlayHistoryVoice: (voiceId: number) => void;
   onToggleRecordingPlayback: () => void;
   onDeleteHistoryVoice?: (voiceId: number) => void;
-  onClearSampleVoice?: () => void;
-
-  // Speed Selector Props
-  speed: "slow" | "normal" | "fast";
-  onSetSpeed: (speed: "slow" | "normal" | "fast") => void;
 }
 
 export function VoiceSelectionModal({
@@ -72,365 +67,372 @@ export function VoiceSelectionModal({
   onPlayHistoryVoice,
   onToggleRecordingPlayback,
   onDeleteHistoryVoice,
-  onClearSampleVoice,
-  speed,
-  onSetSpeed,
 }: VoiceSelectionModalProps) {
   const { t } = useI18n();
+  const [showAllHistory, setShowAllHistory] = useState(false);
 
-  // Compute initial tab based on voice selection state
-  const getInitialTab = (): VoiceTab => {
-    if (anonymousVoiceId && activeVoicePanel === "custom") {
-      return recordedAudioBlob ? "record" : "history";
-    }
-    if (selectedVoice && activeVoicePanel === "stock") {
-      return "sample";
-    }
-    return "sample"; // default
-  };
-
-  const [activeTab, setActiveTab] = React.useState<VoiceTab>(getInitialTab);
-
-  // Handle tab change - clear voice selections when switching tabs
-  const handleTabChange = (newTab: VoiceTab) => {
-    if (activeTab === newTab) return; // No-op if same tab
-
-    // Clear all selections when changing tabs
-    if (onClearSampleVoice) {
-      onClearSampleVoice();
-    }
-    setActiveTab(newTab);
-  };
-
-  // Handle escape key to close
+  // Escape key to close
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && isOpen) {
-        onClose();
-      }
+      if (e.key === "Escape" && isOpen) onClose();
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isOpen, onClose]);
 
-  // Prevent background scrolling when modal is open
+  // Prevent background scroll while open
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = "hidden";
     } else {
-      document.body.style.overflow = "auto";
+      document.body.style.overflow = "";
     }
     return () => {
-      document.body.style.overflow = "auto";
+      document.body.style.overflow = "";
     };
   }, [isOpen]);
 
   if (!isOpen) return null;
 
+  // CTA gate
+  const hasSampleVoice = selectedVoice && activeVoicePanel === "stock";
+  const hasCustomVoice =
+    anonymousVoiceId !== null && activeVoicePanel === "custom" && uploadStatus === "success";
+  const isProcessing = isRecording || uploadStatus === "uploading";
+  const canConfirm = !!(hasSampleVoice || hasCustomVoice) && !isProcessing;
+
+  const visibleHistory = showAllHistory ? historyVoices : historyVoices.slice(0, 5);
+
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center px-3 py-4 sm:px-6 sm:py-8">
+    /* Overlay: bottom-sheet on mobile, centered on desktop */
+    <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center">
       {/* Backdrop */}
       <div
-        className="absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity"
+        className="absolute inset-0 bg-black/50 backdrop-blur-sm"
         onClick={onClose}
+        aria-hidden="true"
       />
 
-      {/* Modal Content */}
+      {/* Sheet / Dialog */}
       <div
-        className="relative w-full max-w-2xl bg-gradient-to-br from-white/95 to-slate-50/90 dark:from-zinc-900/95 dark:to-zinc-950/90 backdrop-blur-2xl border border-indigo-500/10 dark:border-indigo-400/20 rounded-[2rem] shadow-2xl shadow-indigo-500/10 dark:shadow-indigo-500/20 flex flex-col max-h-[min(85dvh,85vh)] overflow-hidden animate-in fade-in zoom-in-95 duration-300 ease-out text-slate-800 dark:text-slate-100"
-        style={{ maxHeight: "min(85dvh, 85vh)" }}
+        role="dialog"
+        aria-modal="true"
+        aria-label="Choose Voice"
+        className="relative w-full sm:max-w-lg bg-white dark:bg-zinc-900 border-0 sm:border sm:border-gray-200/80 dark:sm:border-zinc-800 rounded-t-[2rem] sm:rounded-[2rem] shadow-2xl shadow-black/20 flex flex-col max-h-[92dvh] sm:max-h-[88dvh] overflow-hidden animate-in slide-in-from-bottom-8 sm:slide-in-from-bottom-0 sm:zoom-in-95 fade-in duration-300 ease-out text-slate-800 dark:text-slate-100"
       >
-        {/* Scrollable Body */}
-        <div className="flex-1 min-h-0 overflow-y-auto p-4 sm:p-6 space-y-4 sm:space-y-6 custom-scrollbar">
-          {/* 3-Tab Navigation */}
-          <div className="flex p-1 bg-gray-100/80 dark:bg-zinc-800/80 rounded-xl shadow-inner w-full max-w-lg mx-auto">
-            <button
-              type="button"
-              className={`flex-1 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold rounded-lg transition-all ${
-                activeTab === "sample"
-                  ? "bg-white dark:bg-zinc-700 text-indigo-600 dark:text-indigo-400 shadow-sm"
-                  : "text-gray-500 dark:text-zinc-400 hover:text-gray-900 dark:hover:text-zinc-200"
-              }`}
-              onClick={() => handleTabChange("sample")}
-            >
-              {t("playground.voiceSection.sampleVoices")}
-            </button>
-            <button
-              type="button"
-              className={`flex-1 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold rounded-lg transition-all ${
-                activeTab === "record"
-                  ? "bg-white dark:bg-zinc-700 text-indigo-600 dark:text-indigo-400 shadow-sm"
-                  : "text-gray-500 dark:text-zinc-400 hover:text-gray-900 dark:hover:text-zinc-200"
-              }`}
-              onClick={() => handleTabChange("record")}
-            >
-              {t("playground.voiceSection.tabCustom")}
-            </button>
-            {historyVoices.length > 0 && (
-              <button
-                type="button"
-                className={`flex-1 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold rounded-lg transition-all relative ${
-                  activeTab === "history"
-                    ? "bg-white dark:bg-zinc-700 text-indigo-600 dark:text-indigo-400 shadow-sm"
-                    : "text-gray-500 dark:text-zinc-400 hover:text-gray-900 dark:hover:text-zinc-200"
-                }`}
-                onClick={() => handleTabChange("history")}
-              >
-                {t("playground.voiceSection.history")}
-                <span className="ml-1.5 inline-flex items-center justify-center px-1.5 py-0.5 text-[10px] font-bold rounded-full bg-indigo-100 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400">
-                  {historyVoices.length}
-                </span>
-              </button>
-            )}
+        {/* Drag handle — mobile only */}
+        <div className="sm:hidden flex justify-center pt-3 pb-1 shrink-0">
+          <div className="w-10 h-1 rounded-full bg-gray-300 dark:bg-zinc-600" />
+        </div>
+
+        {/* ── Sticky Header ─────────────────────────────────────── */}
+        <div className="flex items-center justify-between px-5 pt-3 pb-4 sm:pt-5 sm:pb-4 border-b border-gray-100 dark:border-zinc-800/80 shrink-0">
+          <div>
+            <h2 className="font-extrabold text-base sm:text-lg text-gray-900 dark:text-white tracking-tight leading-none">
+              Choose Voice
+            </h2>
+            <p className="text-[11px] text-gray-400 dark:text-zinc-500 mt-0.5">
+              Community voices &middot; Your recording
+            </p>
           </div>
+          <button
+            type="button"
+            onClick={onClose}
+            className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 dark:bg-zinc-800 text-gray-500 dark:text-zinc-400 hover:bg-gray-200 dark:hover:bg-zinc-700 hover:text-gray-900 dark:hover:text-white transition-colors shrink-0"
+            aria-label="Close"
+          >
+            <svg
+              className="w-4 h-4"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2.5}
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
 
-          {/* Tab Content - Fixed height container for consistent sizing */}
-          <div className="flex-1 min-h-0 flex flex-col">
-            {activeTab === "sample" && (
-              <>
-                {/* Quick Navigation Banner - Navigate to History */}
-                <div className="w-full flex items-center justify-between px-3.5 py-2 bg-gradient-to-r from-indigo-50/80 to-purple-50/80 dark:from-indigo-950/40 dark:to-purple-950/40 border border-indigo-100 dark:border-indigo-900/40 rounded-xl text-xs shadow-xs mb-4">
-                  <span className="text-indigo-900 dark:text-indigo-200 font-medium flex items-center gap-1.5 text-[11px] sm:text-xs">
-                    <span className="inline-block w-2 h-2 rounded-full bg-indigo-500 animate-pulse shrink-0" />
-                    {t("playground.voiceSection.preferRecordedVoices")}
-                  </span>
-                  <button
-                    type="button"
-                    onClick={() => handleTabChange("record")}
-                    className="inline-flex items-center gap-1 font-semibold text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 transition-colors shrink-0 text-[11px] sm:text-xs group"
-                  >
-                    {t("playground.voiceSection.recordingTab")}
-                    <span className="group-hover:translate-x-0.5 transition-transform">&rarr;</span>
-                  </button>
+        {/* ── Scrollable Body ────────────────────────────────────── */}
+        <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain">
+          <div className="px-5 py-5 space-y-6">
+            {/* ── Section 1: Community Voices ─────────────────── */}
+            <section>
+              <h3 className="text-[10px] font-bold uppercase tracking-widest text-gray-400 dark:text-zinc-500 mb-3">
+                Community Voices
+              </h3>
+
+              {stockVoices.length === 0 ? (
+                <div className="space-y-2">
+                  {[1, 2, 3].map((i) => (
+                    <div
+                      key={i}
+                      className="h-14 rounded-2xl bg-gray-100 dark:bg-zinc-800 animate-pulse"
+                    />
+                  ))}
                 </div>
-                <VoiceGrid
-                  voices={stockVoices}
-                  selectedVoice={selectedVoice}
-                  playingVoicePreview={playingVoicePreview}
-                  onVoiceSelectAndPlay={onVoiceSelectAndPlay}
-                />
-              </>
-            )}
+              ) : (
+                <div className="max-h-56 overflow-y-auto space-y-1 -mx-1 px-1 overscroll-contain">
+                  {stockVoices.map((voice) => {
+                    const isSelected = selectedVoice === voice.id && activeVoicePanel === "stock";
+                    const isPreviewing = playingVoicePreview === voice.id;
+                    const displayName = voice.nameKey ? t(voice.nameKey) : voice.name;
 
-            {activeTab === "record" && (
-              <>
-                {/* Quick Navigation Banner - Navigate to History */}
-                {historyVoices.length > 0 ? (
-                  <div className="w-full flex items-center justify-between px-3.5 py-2 bg-gradient-to-r from-indigo-50/80 to-purple-50/80 dark:from-indigo-950/40 dark:to-purple-950/40 border border-indigo-100 dark:border-indigo-900/40 rounded-xl text-xs shadow-xs mb-4">
-                    <span className="text-indigo-900 dark:text-indigo-200 font-medium flex items-center gap-1.5 text-[11px] sm:text-xs">
-                      <span className="inline-block w-2 h-2 rounded-full bg-indigo-500 animate-pulse shrink-0" />
-                      {t("playground.voiceSection.findPreviousVoices")}
-                    </span>
-                    <button
-                      type="button"
-                      onClick={() => handleTabChange("history")}
-                      className="inline-flex items-center gap-1 font-semibold text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 transition-colors shrink-0 text-[11px] sm:text-xs group"
-                    >
-                      {t("playground.voiceSection.historyTab")}
-                      <span className="group-hover:translate-x-0.5 transition-transform">
-                        &rarr;
-                      </span>
-                    </button>
-                  </div>
-                ) : (
-                  <div className="w-full flex items-center justify-between px-3.5 py-2 bg-gradient-to-r from-indigo-50/80 to-purple-50/80 dark:from-indigo-950/40 dark:to-purple-950/40 border border-indigo-100 dark:border-indigo-900/40 rounded-xl text-xs shadow-xs shrink-0">
-                    <span className="text-indigo-900 dark:text-indigo-200 font-medium flex items-center gap-1.5 text-[11px] sm:text-xs">
-                      <span className="inline-block w-2 h-2 rounded-full bg-indigo-500 animate-pulse shrink-0" />
-                      {t("playground.voiceSection.preferSampleVoices")}
-                    </span>
-                    <button
-                      type="button"
-                      onClick={() => handleTabChange("sample")}
-                      className="inline-flex items-center gap-1 font-semibold text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 transition-colors shrink-0 text-[11px] sm:text-xs group"
-                    >
-                      {t("playground.voiceSection.sampleVoiceTab")}
-                      <span className="group-hover:translate-x-0.5 transition-transform">
-                        &rarr;
-                      </span>
-                    </button>
-                  </div>
-                )}
-                <VoiceRecorder
-                  isRecording={isRecording}
-                  recordingTime={recordingTime}
-                  recordedAudioBlob={recordedAudioBlob}
-                  uploadStatus={uploadStatus}
-                  uploadError={uploadError}
-                  onRetryUpload={onRetryUpload}
-                  anonymousVoiceId={anonymousVoiceId}
-                  historyVoices={historyVoices}
-                  playingHistoryVoiceId={playingHistoryVoiceId}
-                  isPlayingRecording={isRecPlaying}
-                  recAudioRef={recAudioRef}
-                  recordedDuration={recordedDuration}
-                  onStartRecording={onStartRecording}
-                  onStopRecording={onStopRecording}
-                  onResetRecording={onResetRecording}
-                  onSelectHistoryVoice={onSelectHistoryVoice}
-                  onPlayHistoryVoice={onPlayHistoryVoice}
-                  onToggleRecordingPlayback={onToggleRecordingPlayback}
-                  onDeleteHistoryVoice={onDeleteHistoryVoice}
-                  onSelectSampleVoiceTab={() => handleTabChange("sample")}
-                  onExpandHistoryTab={() => handleTabChange("history")}
-                />
-              </>
-            )}
-
-            {activeTab === "history" && (
-              <div className="h-full flex flex-col overflow-hidden gap-2">
-                {/* Quick Navigation Banner - Navigate to Sample Voices */}
-                <div className="w-full flex items-center justify-between px-3.5 py-2 bg-gradient-to-r from-indigo-50/80 to-purple-50/80 dark:from-indigo-950/40 dark:to-purple-950/40 border border-indigo-100 dark:border-indigo-900/40 rounded-xl text-xs shadow-xs shrink-0">
-                  <span className="text-indigo-900 dark:text-indigo-200 font-medium flex items-center gap-1.5 text-[11px] sm:text-xs">
-                    <span className="inline-block w-2 h-2 rounded-full bg-indigo-500 animate-pulse shrink-0" />
-                    {t("playground.voiceSection.preferSampleVoices")}
-                  </span>
-                  <button
-                    type="button"
-                    onClick={() => setActiveTab("sample")}
-                    className="inline-flex items-center gap-1 font-semibold text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 transition-colors shrink-0 text-[11px] sm:text-xs group"
-                  >
-                    {t("playground.voiceSection.sampleVoiceTab")}
-                    <span className="group-hover:translate-x-0.5 transition-transform">&rarr;</span>
-                  </button>
-                </div>
-
-                <div className="flex-1 overflow-y-auto">
-                  {historyVoices.length === 0 ? (
-                    <div className="text-center py-8">
-                      <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gray-100 dark:bg-zinc-800 flex items-center justify-center">
-                        <svg
-                          className="w-8 h-8 text-gray-400 dark:text-zinc-400"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
+                    return (
+                      <div
+                        key={voice.id}
+                        onClick={() => onVoiceSelectAndPlay(voice.id)}
+                        className={`group flex items-center gap-3 px-3 py-2.5 rounded-2xl cursor-pointer transition-all ${
+                          isSelected
+                            ? "bg-indigo-50 dark:bg-indigo-950/50 ring-1 ring-inset ring-indigo-400/60 dark:ring-indigo-600/60"
+                            : "hover:bg-gray-50 dark:hover:bg-zinc-800/70"
+                        }`}
+                      >
+                        {/* Avatar */}
+                        <div
+                          className={`w-9 h-9 rounded-full bg-gradient-to-br ${voice.color} flex items-center justify-center text-white font-bold text-sm shrink-0 overflow-hidden shadow-sm`}
                         >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
-                          />
-                        </svg>
+                          {voice.avatarUrl ? (
+                            <Image
+                              src={voice.avatarUrl}
+                              alt={displayName}
+                              width={36}
+                              height={36}
+                              className="w-full h-full object-cover rounded-full"
+                            />
+                          ) : (
+                            voice.avatar
+                          )}
+                        </div>
+
+                        {/* Name + creator */}
+                        <div className="flex-1 min-w-0">
+                          <p
+                            className={`text-sm font-semibold truncate leading-tight ${isSelected ? "text-indigo-700 dark:text-indigo-300" : "text-gray-900 dark:text-white"}`}
+                          >
+                            {displayName}
+                          </p>
+                          {voice.creatorUsername && (
+                            <p className="text-[11px] text-gray-400 dark:text-zinc-500 truncate leading-tight mt-0.5">
+                              @{voice.creatorUsername}
+                            </p>
+                          )}
+                        </div>
+
+                        {/* Preview button */}
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onVoiceSelectAndPlay(voice.id);
+                          }}
+                          className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 transition-all ${
+                            isPreviewing
+                              ? "bg-indigo-600 text-white shadow-sm shadow-indigo-500/30"
+                              : "bg-gray-100 dark:bg-zinc-700 text-gray-500 dark:text-zinc-400 hover:bg-indigo-100 dark:hover:bg-indigo-900/50 hover:text-indigo-600 dark:hover:text-indigo-400"
+                          }`}
+                          aria-label={
+                            isPreviewing
+                              ? t("playground.voiceSection.stopPreview")
+                              : t("playground.voiceSection.playPreview")
+                          }
+                        >
+                          {isPreviewing ? (
+                            <StopIcon className="w-3.5 h-3.5" />
+                          ) : (
+                            <PlayIcon className="w-3.5 h-3.5 ml-0.5" />
+                          )}
+                        </button>
+
+                        {/* Selected checkmark */}
+                        {isSelected && (
+                          <CheckIcon className="w-4 h-4 text-indigo-600 dark:text-indigo-400 shrink-0" />
+                        )}
                       </div>
-                      <p className="text-sm font-medium text-gray-700 dark:text-zinc-300 mb-1">
-                        {t("playground.voiceSection.noHistory")}
-                      </p>
-                      <p className="text-xs text-gray-500 dark:text-zinc-400 mb-4">
-                        {t("playground.voiceSection.recordFirstPrompt")}
-                      </p>
+                    );
+                  })}
+                </div>
+              )}
+            </section>
+
+            {/* Divider */}
+            <div className="border-t border-dashed border-gray-200 dark:border-zinc-800" />
+
+            {/* ── Section 2: Your Voice ─────────────────────── */}
+            <section>
+              <h3 className="text-[10px] font-bold uppercase tracking-widest text-gray-400 dark:text-zinc-500 mb-3 flex items-center gap-1.5">
+                <MicIcon className="w-3 h-3" />
+                Your Voice
+              </h3>
+
+              {/* Simplified recorder (no nav buttons / history) */}
+              <VoiceRecorder
+                isRecording={isRecording}
+                recordingTime={recordingTime}
+                recordedAudioBlob={recordedAudioBlob}
+                uploadStatus={uploadStatus}
+                uploadError={uploadError}
+                onRetryUpload={onRetryUpload}
+                anonymousVoiceId={anonymousVoiceId}
+                isPlayingRecording={isRecPlaying}
+                recAudioRef={recAudioRef}
+                recordedDuration={recordedDuration}
+                onStartRecording={onStartRecording}
+                onStopRecording={onStopRecording}
+                onResetRecording={onResetRecording}
+                onToggleRecordingPlayback={onToggleRecordingPlayback}
+              />
+
+              {/* ── Inline History List ─────────────────────── */}
+              {historyVoices.length > 0 && (
+                <div className="mt-5">
+                  <div className="flex items-center justify-between mb-2.5">
+                    <span className="text-[11px] font-semibold text-gray-400 dark:text-zinc-500 flex items-center gap-1.5">
+                      <span className="inline-block w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0" />
+                      Previously recorded · saved 24h
+                    </span>
+                    {historyVoices.length > 5 && (
                       <button
                         type="button"
-                        onClick={() => handleTabChange("record")}
-                        className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-lg transition-colors"
+                        onClick={() => setShowAllHistory((p) => !p)}
+                        className="text-[11px] font-semibold text-indigo-600 dark:text-indigo-400 hover:underline underline-offset-2 shrink-0"
                       >
-                        <svg
-                          className="w-4 h-4"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01.469-1.57m0 0a3 3 0 01-1.469-1.57m0 0L9 7m4.469 4.43a3 3 0 01.469 1.57m0 0a3 3 0 01-1.469 1.57m0 0l.469.43m0 0L15 17"
-                          />
-                        </svg>
-                        {t("playground.voiceSection.tabCustom")}
+                        {showAllHistory ? "Show less" : `Show all ${historyVoices.length}`}
                       </button>
-                    </div>
-                  ) : (
-                    <VoiceRecorder
-                      isRecording={false}
-                      recordingTime={0}
-                      recordedAudioBlob={null}
-                      uploadStatus="idle"
-                      uploadError={null}
-                      anonymousVoiceId={anonymousVoiceId}
-                      historyVoices={historyVoices}
-                      playingHistoryVoiceId={playingHistoryVoiceId}
-                      isPlayingRecording={isRecPlaying}
-                      recAudioRef={recAudioRef}
-                      onStartRecording={() => handleTabChange("record")}
-                      onStopRecording={() => {}}
-                      onResetRecording={() => {}}
-                      onSelectHistoryVoice={onSelectHistoryVoice}
-                      onPlayHistoryVoice={onPlayHistoryVoice}
-                      onToggleRecordingPlayback={onToggleRecordingPlayback}
-                      onDeleteHistoryVoice={onDeleteHistoryVoice}
-                      onSelectSampleVoiceTab={() => handleTabChange("sample")}
-                      onExpandHistoryTab={() => handleTabChange("history")}
-                      historyOnlyMode={true}
-                    />
-                  )}
+                    )}
+                  </div>
+
+                  <div className="space-y-1.5">
+                    {visibleHistory.map((hv) => {
+                      const isActive =
+                        anonymousVoiceId === hv.anonymous_voice_id && activeVoicePanel === "custom";
+                      const isPlayingThis = playingHistoryVoiceId === hv.anonymous_voice_id;
+                      const durationStr = hv.audio_duration
+                        ? formatTime(Math.round(hv.audio_duration))
+                        : "—";
+                      const relTime = hv.created_at ? formatRelativeTime(hv.created_at, t) : "";
+
+                      return (
+                        <div
+                          key={hv.anonymous_voice_id}
+                          onClick={() => {
+                            onPlayHistoryVoice(hv.anonymous_voice_id);
+                            onSelectHistoryVoice(hv);
+                          }}
+                          className={`flex items-center gap-3 px-3 py-2.5 rounded-2xl cursor-pointer transition-all ${
+                            isActive
+                              ? "bg-emerald-50 dark:bg-emerald-950/30 ring-1 ring-inset ring-emerald-400/60 dark:ring-emerald-600/60"
+                              : "hover:bg-gray-50 dark:hover:bg-zinc-800/70"
+                          }`}
+                        >
+                          {/* Play/stop */}
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              onPlayHistoryVoice(hv.anonymous_voice_id);
+                            }}
+                            className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 transition-all ${
+                              isPlayingThis
+                                ? "bg-indigo-600 text-white shadow-sm shadow-indigo-500/30"
+                                : "bg-gray-100 dark:bg-zinc-700 text-gray-500 dark:text-zinc-400 hover:bg-indigo-100 dark:hover:bg-indigo-900/50 hover:text-indigo-600 dark:hover:text-indigo-400"
+                            }`}
+                            aria-label={
+                              isPlayingThis
+                                ? t("playground.voiceSection.stopPreview")
+                                : t("playground.voiceSection.playPreview")
+                            }
+                          >
+                            {isPlayingThis ? (
+                              <StopIcon className="w-3.5 h-3.5" />
+                            ) : (
+                              <PlayIcon className="w-3.5 h-3.5 ml-0.5" />
+                            )}
+                          </button>
+
+                          {/* Label */}
+                          <div className="flex-1 min-w-0">
+                            <p
+                              className={`text-sm font-semibold leading-tight truncate ${isActive ? "text-emerald-700 dark:text-emerald-300" : "text-gray-900 dark:text-white"}`}
+                            >
+                              {t("playground.voicePromptLabel").replace(
+                                "{id}",
+                                String(hv.anonymous_voice_id)
+                              )}
+                            </p>
+                            <p className="text-[11px] text-gray-400 dark:text-zinc-500 mt-0.5">
+                              {durationStr}
+                              {relTime ? ` · ${relTime}` : ""}
+                            </p>
+                          </div>
+
+                          {/* Selected badge */}
+                          {isActive && (
+                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-600 text-white shrink-0">
+                              <CheckIcon className="w-3 h-3" />
+                              {t("playground.voiceSection.selected")}
+                            </span>
+                          )}
+
+                          {/* Delete */}
+                          {onDeleteHistoryVoice && (
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                if (
+                                  confirm(
+                                    t("playground.voiceSection.deleteConfirm").replace(
+                                      "{id}",
+                                      String(hv.anonymous_voice_id)
+                                    )
+                                  )
+                                ) {
+                                  onDeleteHistoryVoice(hv.anonymous_voice_id);
+                                }
+                              }}
+                              className="w-7 h-7 rounded-lg flex items-center justify-center text-gray-300 dark:text-zinc-600 hover:text-red-500 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors shrink-0"
+                              aria-label={t("playground.voiceSection.deleteRecording")}
+                            >
+                              <svg
+                                className="w-3.5 h-3.5"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                                />
+                              </svg>
+                            </button>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
+            </section>
           </div>
         </div>
 
-        {/* Footer with Speed Controls and Confirm Button */}
-        <div className="px-4 py-3 sm:px-6 sm:py-3.5 border-t border-gray-100 dark:border-zinc-800 bg-gray-50/70 dark:bg-zinc-900/80 shrink-0 flex flex-row items-center justify-between gap-3">
-          {/* Speed Selector */}
-          <div className="flex p-0.5 bg-gray-200/80 dark:bg-zinc-800 rounded-lg shrink-0">
-            <button
-              type="button"
-              className={`px-3 py-1 text-xs font-semibold rounded-md transition-all ${
-                speed === "slow"
-                  ? "bg-white dark:bg-zinc-700 text-indigo-600 dark:text-indigo-400 shadow-xs"
-                  : "text-gray-500 hover:text-gray-900 dark:text-zinc-400 dark:hover:text-zinc-200"
-              }`}
-              onClick={() => onSetSpeed("slow")}
-            >
-              0.7x
-            </button>
-            <button
-              type="button"
-              className={`px-3 py-1 text-xs font-semibold rounded-md transition-all ${
-                speed === "normal"
-                  ? "bg-white dark:bg-zinc-700 text-indigo-600 dark:text-indigo-400 shadow-xs"
-                  : "text-gray-500 hover:text-gray-900 dark:text-zinc-400 dark:hover:text-zinc-200"
-              }`}
-              onClick={() => onSetSpeed("normal")}
-            >
-              1.0x
-            </button>
-            <button
-              type="button"
-              className={`px-3 py-1 text-xs font-semibold rounded-md transition-all ${
-                speed === "fast"
-                  ? "bg-white dark:bg-zinc-700 text-indigo-600 dark:text-indigo-400 shadow-xs"
-                  : "text-gray-500 hover:text-gray-900 dark:text-zinc-400 dark:hover:text-zinc-200"
-              }`}
-              onClick={() => onSetSpeed("fast")}
-            >
-              1.3x
-            </button>
-          </div>
-
-          {/* Confirm Button - Only show when a voice is actually selected */}
-          {(() => {
-            // Sample voice selected in "sample" tab
-            const hasSampleVoice =
-              activeTab === "sample" && selectedVoice && activeVoicePanel === "stock";
-
-            // Custom voice: either uploaded with ID, or currently in "record" tab with recorded blob ready
-            const hasCustomVoice =
-              (activeTab === "record" && anonymousVoiceId && uploadStatus === "success") ||
-              (activeTab === "history" && anonymousVoiceId);
-
-            const isProcessing = isRecording || uploadStatus === "uploading";
-            const shouldShow = (hasSampleVoice || hasCustomVoice) && !isProcessing;
-
-            return shouldShow ? (
-              <button
-                onClick={onClose}
-                className="px-5 py-3 bg-indigo-600 hover:bg-indigo-700 text-white text-xs sm:text-sm font-semibold rounded-xl transition-colors shadow-sm shrink-0"
-              >
-                {t("playground.voiceSection.confirm")}
-              </button>
-            ) : null;
-          })()}
+        {/* ── Sticky Footer: Use This Voice CTA ─────────────────── */}
+        <div className="px-5 py-4 border-t border-gray-100 dark:border-zinc-800 bg-white/95 dark:bg-zinc-900/95 backdrop-blur-sm shrink-0">
+          <button
+            type="button"
+            onClick={onClose}
+            disabled={!canConfirm}
+            className={`w-full py-3.5 px-6 rounded-2xl font-bold text-sm transition-all duration-200 ${
+              canConfirm
+                ? "bg-zinc-900 hover:bg-black dark:bg-white dark:hover:bg-zinc-100 text-white dark:text-zinc-900 shadow-md active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-900 dark:focus-visible:ring-white"
+                : "bg-gray-100 dark:bg-zinc-800 text-gray-400 dark:text-zinc-500 cursor-not-allowed"
+            }`}
+          >
+            {isProcessing ? "Processing…" : "Use This Voice"}
+          </button>
         </div>
       </div>
     </div>
