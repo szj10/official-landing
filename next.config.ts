@@ -9,6 +9,14 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "images.unsplash.com",
       },
+      {
+        protocol: "https",
+        hostname: "s3.filebase.io",
+      },
+      {
+        protocol: "https",
+        hostname: "r2.cloudflarestorage.com",
+      },
     ],
   },
   allowedDevOrigins: ["192.168.50.111"],
