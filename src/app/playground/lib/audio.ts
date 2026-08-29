@@ -82,9 +82,9 @@ export function revokeIfBlobUrl(url: string | null | undefined) {
  */
 export function replaceMediaUrl(
   prev: string | null,
-  next: string,
+  next: string | null,
   opts?: { revokeAnyPrev?: boolean }
-): string {
+): string | null {
   if (opts?.revokeAnyPrev && prev) {
     URL.revokeObjectURL(prev);
   } else {

@@ -35,6 +35,7 @@ export default function PlaygroundContent() {
   const [stockVoices, setStockVoices] = useState<PlaygroundVoice[]>([]);
   const [stockVoicesLoading, setStockVoicesLoading] = useState(true);
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
+  const [isHistoryExpanded, setIsHistoryExpanded] = useState(false);
 
   const queueRef = useRef<HTMLDivElement>(null);
   const editorRef = useRef<PlaygroundEditorPanelRef>(null);
@@ -213,7 +214,7 @@ export default function PlaygroundContent() {
   return (
     <div
       className={`max-w-4xl mx-auto px-4 sm:px-6 py-6 sm:py-10 transition-all duration-300 ${
-        audio.isStickyPlayerVisible ? "pb-32 sm:pb-40" : "pb-16"
+        audio.isStickyPlayerVisible ? "pb-24 sm:pb-28" : "pb-16"
       }`}
     >
       {audio.recordedAudioUrl && (
@@ -318,7 +319,6 @@ export default function PlaygroundContent() {
             generationStatus={tts.generationStatus}
             rateLimitRetryAfter={tts.rateLimitRetryAfter}
             errorMessage={tts.errorMessage}
-            isGenerating={tts.isGenerating}
             onRetryConnection={tts.pollRetryJobId != null ? tts.retryPollConnection : null}
           />
         </div>
@@ -359,8 +359,8 @@ export default function PlaygroundContent() {
                     isPlaying={audio.isPlaying}
                     onPlayHistoryJob={audio.playHistoryJob}
                     onDeleteHistoryJob={deleteHistoryJob}
-                    show={true}
-                    onToggle={() => {}}
+                    show={isHistoryExpanded}
+                    onToggle={() => setIsHistoryExpanded((prev) => !prev)}
                     showHeader={false}
                     highlightFirst={false}
                   />
