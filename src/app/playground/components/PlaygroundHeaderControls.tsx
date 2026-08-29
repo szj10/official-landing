@@ -159,34 +159,36 @@ export function PlaygroundHeaderControls({
 
       {/* Voice Selector Pill */}
       <div className="relative" ref={voiceRef}>
-        <button
-          type="button"
-          onClick={() => {
-            setIsVoiceOpen(!isVoiceOpen);
-            setIsLangOpen(false);
-          }}
-          className="inline-flex items-center gap-2 pl-2 pr-3 py-1.5 rounded-full bg-white dark:bg-zinc-800/90 border border-gray-200/90 dark:border-zinc-700/80 text-xs font-semibold text-gray-800 dark:text-zinc-200 shadow-xs hover:bg-gray-50 dark:hover:bg-zinc-700/80 active:scale-95 transition-all min-w-0"
-          aria-expanded={isVoiceOpen}
-          aria-label="Select Voice"
-        >
-          {/* Avatar circle / gradient */}
-          <div
-            className={`w-5 h-5 rounded-full ${
-              isCustomActive
-                ? "bg-gradient-to-tr from-emerald-500 to-teal-600"
-                : `bg-gradient-to-tr ${currentStockVoice?.color || "from-amber-400 to-orange-500"}`
-            } flex items-center justify-center text-[10px] font-black text-white overflow-hidden shrink-0 shadow-xs`}
+        <div className="inline-flex items-center rounded-full bg-white dark:bg-zinc-800/90 border border-gray-200/90 dark:border-zinc-700/80 text-xs font-semibold text-gray-800 dark:text-zinc-200 shadow-xs hover:bg-gray-50 dark:hover:bg-zinc-700/80 transition-all min-w-0">
+          <button
+            type="button"
+            onClick={() => {
+              setIsVoiceOpen(!isVoiceOpen);
+              setIsLangOpen(false);
+            }}
+            className="inline-flex items-center gap-2 pl-2.5 pr-1.5 py-1.5 min-w-0 focus:outline-none"
+            aria-expanded={isVoiceOpen}
+            aria-label="Select Voice"
           >
-            {isCustomActive ? "🎙️" : currentStockVoice?.avatar || "V"}
-          </div>
+            {/* Avatar circle / gradient */}
+            <div
+              className={`w-5 h-5 rounded-full ${
+                isCustomActive
+                  ? "bg-gradient-to-tr from-emerald-500 to-teal-600"
+                  : `bg-gradient-to-tr ${currentStockVoice?.color || "from-amber-400 to-orange-500"}`
+              } flex items-center justify-center text-[10px] font-black text-white overflow-hidden shrink-0 shadow-xs`}
+            >
+              {isCustomActive ? "🎙️" : currentStockVoice?.avatar || "V"}
+            </div>
 
-          <span className="truncate max-w-[100px] sm:max-w-[150px]">{currentVoiceName}</span>
+            <span className="truncate max-w-[90px] sm:max-w-[140px]">{currentVoiceName}</span>
+          </button>
 
           {/* Inline mini preview play/pause icon */}
           <button
             type="button"
             onClick={handleCurrentVoicePreview}
-            className={`p-0.5 rounded-full hover:bg-gray-200/60 dark:hover:bg-zinc-700 transition-colors shrink-0 ${
+            className={`p-1 rounded-full hover:bg-gray-200/60 dark:hover:bg-zinc-700 transition-colors shrink-0 ${
               isCurrentVoicePreviewing
                 ? "text-indigo-600 dark:text-indigo-400 animate-pulse"
                 : "text-gray-400 hover:text-gray-700 dark:hover:text-zinc-200"
@@ -205,22 +207,32 @@ export function PlaygroundHeaderControls({
             )}
           </button>
 
-          <svg
-            className={`w-3 h-3 text-gray-400 dark:text-zinc-400 transition-transform duration-200 shrink-0 ${
-              isVoiceOpen ? "rotate-180" : ""
-            }`}
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            strokeWidth={2.5}
+          <button
+            type="button"
+            onClick={() => {
+              setIsVoiceOpen(!isVoiceOpen);
+              setIsLangOpen(false);
+            }}
+            className="p-1 mr-1.5 rounded-full hover:bg-gray-200/60 dark:hover:bg-zinc-700 text-gray-400 dark:text-zinc-400 transition-colors shrink-0 focus:outline-none"
+            aria-label="Toggle voice list"
           >
-            <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-          </svg>
-        </button>
+            <svg
+              className={`w-3 h-3 transition-transform duration-200 ${
+                isVoiceOpen ? "rotate-180" : ""
+              }`}
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2.5}
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+        </div>
 
         {/* Voice Dropdown Menu */}
         {isVoiceOpen && (
-          <div className="absolute left-0 sm:left-auto sm:right-0 mt-1.5 w-64 rounded-2xl bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 shadow-2xl p-2 z-50 animate-in fade-in zoom-in-95 duration-150 backdrop-blur-xl">
+          <div className="absolute right-0 sm:left-0 sm:right-auto mt-1.5 w-64 max-w-[calc(100vw-2.5rem)] rounded-2xl bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 shadow-2xl p-2 z-50 animate-in fade-in zoom-in-95 duration-150 backdrop-blur-xl">
             <div className="text-[10px] font-bold uppercase tracking-wider text-gray-400 dark:text-zinc-500 px-2.5 py-1">
               {t("playground.chooseVoice")}
             </div>
@@ -243,7 +255,6 @@ export function PlaygroundHeaderControls({
                         key={v.id}
                         onClick={() => {
                           onSelectVoice(v.id);
-                          onPreviewVoice(v.id);
                           setIsVoiceOpen(false);
                         }}
                         className={`flex items-center justify-between p-2 rounded-xl text-xs font-semibold cursor-pointer transition-colors ${
