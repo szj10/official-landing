@@ -14,7 +14,7 @@ import {
   type PlaygroundEditorPanelRef,
 } from "./components/PlaygroundEditorPanel";
 import { VoiceSelectionModal } from "./components/VoiceSelectionModal";
-import { StickyPlayerBar } from "./components/StickyPlayerBar";
+import { InlinePlayerBar } from "./components/InlinePlayerBar";
 import { QueueStatusCard } from "./components/QueueStatusCard";
 import { HistoryJobs } from "./components/HistoryJobs";
 import { AlertBanner } from "./components/AlertBanner";
@@ -217,11 +217,7 @@ export default function PlaygroundContent() {
   };
 
   return (
-    <div
-      className={`max-w-4xl mx-auto px-4 sm:px-6 py-6 sm:py-10 transition-all duration-300 ${
-        audio.isStickyPlayerVisible ? "pb-24 sm:pb-28" : "pb-16"
-      }`}
-    >
+    <div className="max-w-4xl mx-auto px-4 sm:px-6 py-6 sm:py-10 pb-16">
       {audio.recordedAudioUrl && (
         <audio ref={audio.recAudioRef} src={audio.recordedAudioUrl} className="hidden" />
       )}
@@ -310,6 +306,34 @@ export default function PlaygroundContent() {
               </span>
             </button>
           </div>
+
+          {/* Inline Audio Player — appears below generate button when audio is ready */}
+          <InlinePlayerBar
+            isVisible={audio.isStickyPlayerVisible}
+            title={
+              audio.activeStickyPlayer === "tts"
+                ? t("playground.synthesizedSpeech")
+                : t("playground.yourRecording")
+            }
+            subtitle={deriveStickySubtitle()}
+            isPlaying={audio.activeStickyPlayer === "tts" ? audio.isPlaying : audio.isRecPlaying}
+            progress={
+              audio.activeStickyPlayer === "tts" ? audio.audioProgress : audio.recAudioProgress
+            }
+            currentTime={
+              audio.activeStickyPlayer === "tts"
+                ? audio.audioCurrentTime
+                : audio.recAudioCurrentTime
+            }
+            duration={
+              audio.activeStickyPlayer === "tts" ? audio.audioDuration : audio.recAudioDuration
+            }
+            onTogglePlayback={
+              audio.activeStickyPlayer === "tts" ? audio.togglePlayback : audio.toggleRecPlayback
+            }
+            onSeek={audio.activeStickyPlayer === "tts" ? audio.handleSeek : audio.handleRecSeek}
+            onClose={audio.closeStickyPlayer}
+          />
 
           {/* Live Queue & Synthesis Status */}
           <QueueStatusCard
@@ -410,27 +434,6 @@ export default function PlaygroundContent() {
         onPlayHistoryVoice={audio.playHistoryVoice}
         onToggleRecordingPlayback={audio.toggleRecPlayback}
         onDeleteHistoryVoice={deleteHistoryVoice}
-      />
-
-      <StickyPlayerBar
-        isVisible={audio.isStickyPlayerVisible}
-        title={
-          audio.activeStickyPlayer === "tts"
-            ? t("playground.synthesizedSpeech")
-            : t("playground.yourRecording")
-        }
-        subtitle={deriveStickySubtitle()}
-        isPlaying={audio.activeStickyPlayer === "tts" ? audio.isPlaying : audio.isRecPlaying}
-        progress={audio.activeStickyPlayer === "tts" ? audio.audioProgress : audio.recAudioProgress}
-        currentTime={
-          audio.activeStickyPlayer === "tts" ? audio.audioCurrentTime : audio.recAudioCurrentTime
-        }
-        duration={audio.activeStickyPlayer === "tts" ? audio.audioDuration : audio.recAudioDuration}
-        onTogglePlayback={
-          audio.activeStickyPlayer === "tts" ? audio.togglePlayback : audio.toggleRecPlayback
-        }
-        onSeek={audio.activeStickyPlayer === "tts" ? audio.handleSeek : audio.handleRecSeek}
-        onClose={audio.closeStickyPlayer}
       />
     </div>
   );

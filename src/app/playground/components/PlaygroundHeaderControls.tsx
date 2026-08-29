@@ -263,7 +263,7 @@ export function PlaygroundHeaderControls({
                     </span>
                   </div>
                   <div className="space-y-1">
-                    {customVoicesList.slice(0, 4).map((hv) => {
+                    {customVoicesList.slice(0, 2).map((hv) => {
                       const isSelected =
                         activeVoicePanel === "custom" && anonymousVoiceId === hv.anonymous_voice_id;
                       const isPreviewing =
@@ -352,7 +352,7 @@ export function PlaygroundHeaderControls({
                           className="h-10 rounded-xl bg-gray-100 dark:bg-zinc-800 animate-pulse"
                         />
                       ))
-                    : stockVoices.map((v) => {
+                    : stockVoices.slice(0, 4).map((v) => {
                         const isSelected = activeVoicePanel === "stock" && selectedVoice === v.id;
                         const isPreviewing = playingVoicePreview === v.id;
                         const name = v.nameKey ? t(v.nameKey) : v.name;
