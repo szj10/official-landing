@@ -94,6 +94,8 @@
     "microphoneError": "Unable to access microphone. Please check permissions.",
     "generateError": "Failed to generate audio. Please try again.",
     "emptyTextWarning": "Please enter some text before generating audio.",
+    "outputPanelTitle": "Audio Output",
+    "emptyOutputHint": "Synthesized audio and playback controls will appear here.",
     "textTooLong": "Text exceeds character limit. Please shorten your text.",
     "historySection": {
       "recentTitle": "Recent Generations",

@@ -94,6 +94,8 @@
     "microphoneError": "无法访问麦克风，请检查权限设置。",
     "generateError": "音频生成失败，请重试。",
     "emptyTextWarning": "请先输入文字再生成音频。",
+    "outputPanelTitle": "音频输出",
+    "emptyOutputHint": "合成的音频和播放控制将在此处显示。",
     "textTooLong": "文本超出字符限制，请缩短文本。",
     "historySection": {
       "recentTitle": "最近合成",
