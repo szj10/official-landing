@@ -62,14 +62,14 @@ Path: `pricing.{tier}.features.{key}`
 
 ### Intentional surface-specific keys
 
-| Key area        | official-landing                               | studio-web                                           |
-| --------------- | ---------------------------------------------- | ---------------------------------------------------- |
-| Page subtitle   | `pricing.subtitle`                             | `pricing.description`                                |
-| Billing toggle  | `pricing.monthly` / `annual` / `save20`        | `pricing.billingToggle.*`                            |
-| Tier CTA        | `pricing.{tier}.cta`                           | `pricing.{tier}.button`                              |
-| Credits on card | —                                              | `rolloverAmount`, `creditsPerMonth`, `rolloverLabel` |
-| Landing-only    | `compare`, `customSolution`, `enterprise` tier | —                                                    |
-| Studio-only     | —                                              | `subscribeComingSoon`                                |
+| Key area        | official-landing                               | studio-web                                                                 |
+| --------------- | ---------------------------------------------- | -------------------------------------------------------------------------- |
+| Page subtitle   | `pricing.subtitle`                             | `pricing.description`                                                      |
+| Billing toggle  | `pricing.monthly` / `annual` / `save20`        | `pricing.billingToggle.*`                                                  |
+| Tier CTA        | `pricing.{tier}.cta`                           | `pricing.{tier}.button`                                                    |
+| Credits on card | —                                              | `rolloverAmount`, `creditsPerMonth`, `rolloverLabel`                       |
+| Landing-only    | `compare`, `customSolution`, `enterprise` tier | —                                                                          |
+| Studio-only     | —                                              | `subscribeComingSoon`, `currentPlan`, `checkoutError`, `free.buttonSignup` |
 
 ### Pricing PR checklist
 

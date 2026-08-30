@@ -56,6 +56,7 @@ export default function PricingPage() {
 
   const plans = [
     {
+      id: "free" as const,
       name: t("pricing.free.name"),
       description: t("pricing.free.description"),
       monthlyPrice: t("pricing.free.price.monthly"),
@@ -66,6 +67,7 @@ export default function PricingPage() {
       popular: false,
     },
     {
+      id: "pro" as const,
       name: t("pricing.pro.name"),
       description: t("pricing.pro.description"),
       monthlyPrice: t("pricing.pro.price.monthly"),
@@ -76,6 +78,7 @@ export default function PricingPage() {
       popular: true,
     },
     {
+      id: "premium" as const,
       name: t("pricing.premium.name"),
       description: t("pricing.premium.description"),
       monthlyPrice: t("pricing.premium.price.monthly"),
@@ -86,6 +89,7 @@ export default function PricingPage() {
       popular: false,
     },
     {
+      id: "enterprise" as const,
       name: t("pricing.enterprise.name"),
       description: t("pricing.enterprise.description"),
       isEnterprise: true,
@@ -153,94 +157,97 @@ export default function PricingPage() {
 
             {/* Plans List */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-              {plans.map((plan, i) => (
-                <div
-                  key={i}
-                  className={`glass-panel rounded-3xl p-8 flex flex-col justify-between transition-all duration-300 relative ${
-                    plan.popular
-                      ? "ring-2 ring-indigo-500 shadow-2xl shadow-indigo-500/10 dark:shadow-indigo-500/20 scale-102"
-                      : "shadow-sm hover:shadow-lg hover:-translate-y-1"
-                  }`}
-                >
-                  {/* Neon spotlight for popular plan */}
-                  {plan.popular && (
-                    <div className="absolute top-0 left-0 right-0 h-40 bg-gradient-to-b from-indigo-500/10 to-transparent blur-2xl -z-10 pointer-events-none" />
-                  )}
+              {plans.map((plan) => {
+                const ctaHref = plan.isEnterprise
+                  ? "/about#connect-with-us"
+                  : process.env.NEXT_PUBLIC_SIGNUP_URL || "/";
+                const isExternalCta = !plan.isEnterprise;
 
-                  {plan.popular && (
-                    <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
-                      <span className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white text-[10px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider shadow-md">
-                        {t("pricing.mostPopular")}
-                      </span>
-                    </div>
-                  )}
-
-                  <div>
-                    <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
-                      {plan.name}
-                    </h3>
-                    <p className="text-xs text-gray-500 dark:text-zinc-400 mb-6 min-h-8">
-                      {plan.description}
-                    </p>
-
-                    <div className="mb-6">
-                      {plan.isEnterprise ? (
-                        <span className="text-2xl font-extrabold text-gray-900 dark:text-white tracking-tight">
-                          {t("pricing.custom")}
-                        </span>
-                      ) : (
-                        <>
-                          <div className="flex items-baseline gap-2">
-                            <span className="text-4xl font-extrabold text-gray-900 dark:text-white tracking-tight">
-                              {billingCycle === "annual" ? plan.annualPrice : plan.monthlyPrice}
-                            </span>
-                            {billingCycle === "annual" && !plan.isFree && (
-                              <span className="text-xs text-gray-500 dark:text-zinc-500">
-                                {t("pricing.free.price.billedAnnually")}
-                              </span>
-                            )}
-                          </div>
-                          {billingCycle === "annual" && !plan.isFree && (
-                            <p className="text-xs text-gray-500 dark:text-zinc-500 line-through mt-1">
-                              {plan.monthlyPrice} {t("pricing.free.price.billedMonthly")}
-                            </p>
-                          )}
-                        </>
-                      )}
-                    </div>
-
-                    <div className="h-px bg-gray-200/50 dark:bg-zinc-800/80 mb-6" />
-
-                    <ul className="space-y-3.5 mb-8">
-                      {plan.features.map((feature, j) => (
-                        <li key={j} className="flex items-start">
-                          <CheckIcon className="w-4 h-4 text-indigo-500 dark:text-indigo-400 mr-2.5 flex-shrink-0 mt-0.5" />
-                          <span className="text-xs text-gray-600 dark:text-zinc-400 leading-tight">
-                            {feature}
-                          </span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-
-                  <Link
-                    href={
-                      plan.isEnterprise
-                        ? "/about#connect-with-us"
-                        : process.env.NEXT_PUBLIC_SIGNUP_URL || "/"
-                    }
-                    target={plan.isEnterprise ? undefined : "_blank"}
-                    rel={plan.isEnterprise ? undefined : "noopener noreferrer"}
-                    className={`block w-full text-center py-3 rounded-xl text-xs font-semibold transition-all duration-200 ${
+                return (
+                  <div
+                    key={plan.id}
+                    className={`glass-panel rounded-3xl p-8 flex flex-col justify-between transition-all duration-300 relative ${
                       plan.popular
-                        ? "bg-gradient-to-r from-indigo-600 to-purple-600 text-white hover:from-indigo-700 hover:to-purple-700 shadow-md shadow-indigo-500/20 active:scale-95"
-                        : "bg-gray-100 hover:bg-gray-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-gray-900 dark:text-white active:scale-95"
+                        ? "ring-2 ring-indigo-500 shadow-2xl shadow-indigo-500/10 dark:shadow-indigo-500/20 scale-102"
+                        : "shadow-sm hover:shadow-lg hover:-translate-y-1"
                     }`}
                   >
-                    {plan.cta}
-                  </Link>
-                </div>
-              ))}
+                    {/* Neon spotlight for popular plan */}
+                    {plan.popular && (
+                      <div className="absolute top-0 left-0 right-0 h-40 bg-gradient-to-b from-indigo-500/10 to-transparent blur-2xl -z-10 pointer-events-none" />
+                    )}
+
+                    {plan.popular && (
+                      <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
+                        <span className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white text-[10px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider shadow-md">
+                          {t("pricing.mostPopular")}
+                        </span>
+                      </div>
+                    )}
+
+                    <div>
+                      <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
+                        {plan.name}
+                      </h3>
+                      <p className="text-xs text-gray-500 dark:text-zinc-400 mb-6 min-h-8">
+                        {plan.description}
+                      </p>
+
+                      <div className="mb-6">
+                        {plan.isEnterprise ? (
+                          <span className="text-2xl font-extrabold text-gray-900 dark:text-white tracking-tight">
+                            {t("pricing.custom")}
+                          </span>
+                        ) : (
+                          <>
+                            <div className="flex items-baseline gap-2">
+                              <span className="text-4xl font-extrabold text-gray-900 dark:text-white tracking-tight">
+                                {billingCycle === "annual" ? plan.annualPrice : plan.monthlyPrice}
+                              </span>
+                              {billingCycle === "annual" && !plan.isFree && (
+                                <span className="text-xs text-gray-500 dark:text-zinc-500">
+                                  {t("pricing.free.price.billedAnnually")}
+                                </span>
+                              )}
+                            </div>
+                            {billingCycle === "annual" && !plan.isFree && (
+                              <p className="text-xs text-gray-500 dark:text-zinc-500 line-through mt-1">
+                                {plan.monthlyPrice} {t("pricing.free.price.billedMonthly")}
+                              </p>
+                            )}
+                          </>
+                        )}
+                      </div>
+
+                      <div className="h-px bg-gray-200/50 dark:bg-zinc-800/80 mb-6" />
+
+                      <ul className="space-y-3.5 mb-8">
+                        {plan.features.map((feature, j) => (
+                          <li key={j} className="flex items-start">
+                            <CheckIcon className="w-4 h-4 text-indigo-500 dark:text-indigo-400 mr-2.5 flex-shrink-0 mt-0.5" />
+                            <span className="text-xs text-gray-600 dark:text-zinc-400 leading-tight">
+                              {feature}
+                            </span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+
+                    <Link
+                      href={ctaHref}
+                      target={isExternalCta ? "_blank" : undefined}
+                      rel={isExternalCta ? "noopener noreferrer" : undefined}
+                      className={`block w-full text-center py-3 rounded-xl text-xs font-semibold transition-all duration-200 ${
+                        plan.popular
+                          ? "bg-gradient-to-r from-indigo-600 to-purple-600 text-white hover:from-indigo-700 hover:to-purple-700 shadow-md shadow-indigo-500/20 active:scale-95"
+                          : "bg-gray-100 hover:bg-gray-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-gray-900 dark:text-white active:scale-95"
+                      }`}
+                    >
+                      {plan.cta}
+                    </Link>
+                  </div>
+                );
+              })}
             </div>
           </div>
         </section>
