@@ -49,9 +49,8 @@ Related:
 ### Checkout wiring (P4)
 
 - **Landing** tier CTAs (Free / Pro / Premium) → `NEXT_PUBLIC_SIGNUP_URL`; Enterprise → `/about#connect-with-us`
-- **Studio** reads `tier` + `billing` query params (pre-selects toggle, highlights card)
 - **Studio** upgrade buttons call `POST /billing/checkout-session` when `NEXT_PUBLIC_BILLING_ENABLED=true`; otherwise shows an info toast
-- **Studio** unauthenticated upgrade → `/signup?returnTo=/pricing?...` (return path honored after onboarding)
+- **Studio** unauthenticated users → `/signup`
 
 ### Still blocked on backend
 

@@ -125,8 +125,7 @@ export default function PlaygroundContent() {
     async function loadVoices() {
       setStockVoicesLoading(true);
       try {
-        const apiBase = process.env.NEXT_PUBLIC_BACKEND_URL || "";
-        const url = `${apiBase}/api/v1/voices/community?language=${encodeURIComponent(locale)}&limit=10`;
+        const url = `/api/v1/voices/community?language=${encodeURIComponent(locale)}&limit=10`;
         const res = await fetch(url);
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data: BackendCommunityVoice[] = await res.json();
