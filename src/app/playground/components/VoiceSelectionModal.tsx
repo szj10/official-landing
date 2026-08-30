@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { useI18n } from "@/i18n";
 import { locales, localeNames, type Locale } from "@/i18n/config";
@@ -76,14 +76,20 @@ export function VoiceSelectionModal({
   const yourVoiceRef = useRef<HTMLDivElement>(null);
   const langRef = useRef<HTMLDivElement>(null);
 
+  const handleClose = useCallback(() => {
+    setIsCommunityCollapsed(false);
+    setIsLangOpen(false);
+    onClose();
+  }, [onClose]);
+
   // Escape key to close
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && isOpen) onClose();
+      if (e.key === "Escape" && isOpen) handleClose();
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isOpen, onClose]);
+  }, [isOpen, handleClose]);
 
   // Prevent background scroll while open
   useEffect(() => {
@@ -95,14 +101,6 @@ export function VoiceSelectionModal({
     return () => {
       document.body.style.overflow = "";
     };
-  }, [isOpen]);
-
-  // Reset states when modal opens
-  useEffect(() => {
-    if (isOpen) {
-      setIsCommunityCollapsed(false);
-      setIsLangOpen(false);
-    }
   }, [isOpen]);
 
   // Click outside to close language dropdown
@@ -157,7 +155,7 @@ export function VoiceSelectionModal({
       {/* Backdrop */}
       <div
         className="absolute inset-0 bg-black/50 backdrop-blur-sm"
-        onClick={onClose}
+        onClick={handleClose}
         aria-hidden="true"
       />
 
@@ -185,7 +183,7 @@ export function VoiceSelectionModal({
           </div>
           <button
             type="button"
-            onClick={onClose}
+            onClick={handleClose}
             className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 dark:bg-zinc-800 text-gray-500 dark:text-zinc-400 hover:bg-gray-200 dark:hover:bg-zinc-700 hover:text-gray-900 dark:hover:text-white transition-colors shrink-0"
             aria-label="Close"
           >
@@ -620,7 +618,7 @@ export function VoiceSelectionModal({
         <div className="px-5 py-4 border-t border-gray-100 dark:border-zinc-800 bg-white/95 dark:bg-zinc-900/95 backdrop-blur-sm shrink-0">
           <button
             type="button"
-            onClick={onClose}
+            onClick={handleClose}
             disabled={!canConfirm}
             className={`w-full py-3.5 px-6 rounded-2xl font-bold text-sm transition-all duration-200 ${
               canConfirm

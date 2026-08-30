@@ -43,14 +43,48 @@ export default function PlaygroundContent() {
 
   const history = usePlaygroundHistory();
 
-  const audio = usePlaygroundAudio({ currentJobAudioPathRef, stockVoices });
+  const {
+    audioRef,
+    recAudioRef,
+    recordedAudioUrl,
+    audioUrl,
+    playingVoicePreview,
+    playingHistoryVoiceId,
+    isRecPlaying,
+    handleVoicePreview,
+    playHistoryVoice,
+    isStickyPlayerVisible,
+    activeStickyPlayer,
+    isPlaying,
+    audioProgress,
+    recAudioProgress,
+    audioCurrentTime,
+    recAudioCurrentTime,
+    audioDuration,
+    recAudioDuration,
+    togglePlayback,
+    toggleRecPlayback,
+    handleSeek,
+    handleRecSeek,
+    closeStickyPlayer,
+    playingHistoryJobId,
+    playHistoryJob,
+    setRecordedBlob,
+    setRecordedUrl,
+    silenceAllAudio,
+    onTtsStart,
+    playGeneratedAudio,
+    stopRecordingPlayback,
+    handleHistoryVoiceDeleted,
+    handleHistoryJobDeleted,
+  } = usePlaygroundAudio({ currentJobAudioPathRef, stockVoices });
 
   const voice = usePlaygroundVoice({
     locale,
     t,
     onPrependHistoryVoice: history.prependHistoryVoice,
-    onRecordingStart: audio.silenceAllAudio,
-    onRecordingReady: (blob) => audio.setRecordedBlob(blob, { autoplay: true }),
+    onRecordingStart: silenceAllAudio,
+    onRecordingReady: (blob) => setRecordedBlob(blob, { autoplay: true }),
   });
 
   const tts = useTtsGeneration({
@@ -67,11 +101,11 @@ export default function PlaygroundContent() {
     prependHistoryJob: history.prependHistoryJob,
     onJobComplete: (job) => {
       if (job.audio_path) {
-        audio.playGeneratedAudio(job.audio_path, job.audio_duration);
+        playGeneratedAudio(job.audio_path, job.audio_duration);
       }
       setIsHistoryOpen(true);
     },
-    onJobStart: audio.onTtsStart,
+    onJobStart: onTtsStart,
     onResumePending: (pending) => {
       setTextInput(pending.text);
       voice.restorePendingVoiceState(pending);
@@ -123,7 +157,7 @@ export default function PlaygroundContent() {
 
   // Space toggles sticky play/pause when the bar is visible and focus is not in an editable field.
   useEffect(() => {
-    if (!audio.isStickyPlayerVisible) return;
+    if (!isStickyPlayerVisible) return;
 
     const isEditableTarget = (target: EventTarget | null) => {
       if (!(target instanceof HTMLElement)) return false;
@@ -139,21 +173,16 @@ export default function PlaygroundContent() {
       if (isEditableTarget(e.target)) return;
 
       e.preventDefault();
-      if (audio.activeStickyPlayer === "tts") {
-        audio.togglePlayback();
-      } else if (audio.activeStickyPlayer === "rec") {
-        audio.toggleRecPlayback();
+      if (activeStickyPlayer === "tts") {
+        togglePlayback();
+      } else if (activeStickyPlayer === "rec") {
+        toggleRecPlayback();
       }
     };
 
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [
-    audio.isStickyPlayerVisible,
-    audio.activeStickyPlayer,
-    audio.togglePlayback,
-    audio.toggleRecPlayback,
-  ]);
+  }, [isStickyPlayerVisible, activeStickyPlayer, togglePlayback, toggleRecPlayback]);
 
   const handleSampleTextSelect = (id: string) => {
     const sample = SAMPLE_TEXTS.find((s) => s.id === id);
@@ -167,31 +196,29 @@ export default function PlaygroundContent() {
 
   const handleVoiceSelectAndPlay = (voiceId: string) => {
     voice.selectStockVoice(voiceId);
-    audio.handleVoicePreview(voiceId);
+    handleVoicePreview(voiceId);
   };
 
   const handleSelectHistoryVoice = (item: HistoryVoice) => {
     voice.selectHistoryVoice(item);
-    audio.setRecordedUrl(historyVoicePromptUrl(item.anonymous_voice_id));
+    setRecordedUrl(historyVoicePromptUrl(item.anonymous_voice_id));
   };
 
   const deleteHistoryVoice = (voiceId: number) => {
-    audio.handleHistoryVoiceDeleted(voiceId);
+    handleHistoryVoiceDeleted(voiceId);
     voice.handleHistoryVoiceDeleted(voiceId);
     history.removeHistoryVoice(voiceId);
   };
 
   const deleteHistoryJob = (jobId: string | number) => {
-    audio.handleHistoryJobDeleted(jobId, tts.currentJob?.audio_path);
+    handleHistoryJobDeleted(jobId, tts.currentJob?.audio_path);
     history.removeHistoryJob(jobId);
   };
 
   const deriveStickySubtitle = () => {
-    if (audio.activeStickyPlayer === "tts") {
-      if (audio.playingHistoryJobId != null) {
-        const hj = history.historyJobs.find(
-          (j) => j.playground_job_id === audio.playingHistoryJobId
-        );
+    if (activeStickyPlayer === "tts") {
+      if (playingHistoryJobId != null) {
+        const hj = history.historyJobs.find((j) => j.playground_job_id === playingHistoryJobId);
         if (hj) return hj.voice_name;
       }
       const isStock = voice.activeVoicePanel === "stock";
@@ -204,11 +231,8 @@ export default function PlaygroundContent() {
           ? t("playground.voicePromptLabel").replace("{id}", String(voice.anonymousVoiceId))
           : t("playground.voiceSection.customVoice");
     } else {
-      if (audio.playingHistoryVoiceId != null) {
-        return t("playground.voicePromptLabel").replace(
-          "{id}",
-          String(audio.playingHistoryVoiceId)
-        );
+      if (playingHistoryVoiceId != null) {
+        return t("playground.voicePromptLabel").replace("{id}", String(playingHistoryVoiceId));
       }
       return voice.anonymousVoiceId
         ? t("playground.voicePromptLabel").replace("{id}", String(voice.anonymousVoiceId))
@@ -218,10 +242,8 @@ export default function PlaygroundContent() {
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 py-6 sm:py-10 pb-16">
-      {audio.recordedAudioUrl && (
-        <audio ref={audio.recAudioRef} src={audio.recordedAudioUrl} className="hidden" />
-      )}
-      {audio.audioUrl && <audio ref={audio.audioRef} src={audio.audioUrl} className="hidden" />}
+      {recordedAudioUrl && <audio ref={recAudioRef} src={recordedAudioUrl} className="hidden" />}
+      {audioUrl && <audio ref={audioRef} src={audioUrl} className="hidden" />}
 
       {/* Hero Header */}
       <div className="text-center mb-6 sm:mb-8">
@@ -247,13 +269,13 @@ export default function PlaygroundContent() {
               activeVoicePanel={voice.activeVoicePanel}
               anonymousVoiceId={voice.anonymousVoiceId}
               historyVoices={history.historyVoices}
-              playingVoicePreview={audio.playingVoicePreview}
-              playingHistoryVoiceId={audio.playingHistoryVoiceId}
-              isRecPlaying={audio.isRecPlaying}
+              playingVoicePreview={playingVoicePreview}
+              playingHistoryVoiceId={playingHistoryVoiceId}
+              isRecPlaying={isRecPlaying}
               onSelectVoice={handleVoiceSelectAndPlay}
               onSelectHistoryVoice={handleSelectHistoryVoice}
-              onPreviewVoice={audio.handleVoicePreview}
-              onPlayHistoryVoice={audio.playHistoryVoice}
+              onPreviewVoice={handleVoicePreview}
+              onPlayHistoryVoice={playHistoryVoice}
               onOpenVoiceModal={() => setIsVoiceModalOpen(true)}
             />
           </div>
@@ -309,30 +331,20 @@ export default function PlaygroundContent() {
 
           {/* Inline Audio Player — appears below generate button when audio is ready */}
           <InlinePlayerBar
-            isVisible={audio.isStickyPlayerVisible}
+            isVisible={isStickyPlayerVisible}
             title={
-              audio.activeStickyPlayer === "tts"
+              activeStickyPlayer === "tts"
                 ? t("playground.synthesizedSpeech")
                 : t("playground.yourRecording")
             }
             subtitle={deriveStickySubtitle()}
-            isPlaying={audio.activeStickyPlayer === "tts" ? audio.isPlaying : audio.isRecPlaying}
-            progress={
-              audio.activeStickyPlayer === "tts" ? audio.audioProgress : audio.recAudioProgress
-            }
-            currentTime={
-              audio.activeStickyPlayer === "tts"
-                ? audio.audioCurrentTime
-                : audio.recAudioCurrentTime
-            }
-            duration={
-              audio.activeStickyPlayer === "tts" ? audio.audioDuration : audio.recAudioDuration
-            }
-            onTogglePlayback={
-              audio.activeStickyPlayer === "tts" ? audio.togglePlayback : audio.toggleRecPlayback
-            }
-            onSeek={audio.activeStickyPlayer === "tts" ? audio.handleSeek : audio.handleRecSeek}
-            onClose={audio.closeStickyPlayer}
+            isPlaying={activeStickyPlayer === "tts" ? isPlaying : isRecPlaying}
+            progress={activeStickyPlayer === "tts" ? audioProgress : recAudioProgress}
+            currentTime={activeStickyPlayer === "tts" ? audioCurrentTime : recAudioCurrentTime}
+            duration={activeStickyPlayer === "tts" ? audioDuration : recAudioDuration}
+            onTogglePlayback={activeStickyPlayer === "tts" ? togglePlayback : toggleRecPlayback}
+            onSeek={activeStickyPlayer === "tts" ? handleSeek : handleRecSeek}
+            onClose={closeStickyPlayer}
           />
 
           {/* Live Queue & Synthesis Status */}
@@ -386,9 +398,9 @@ export default function PlaygroundContent() {
                 <div className="pt-2 animate-in fade-in duration-200">
                   <HistoryJobs
                     historyJobs={history.historyJobs}
-                    playingHistoryJobId={audio.playingHistoryJobId}
-                    isPlaying={audio.isPlaying}
-                    onPlayHistoryJob={audio.playHistoryJob}
+                    playingHistoryJobId={playingHistoryJobId}
+                    isPlaying={isPlaying}
+                    onPlayHistoryJob={playHistoryJob}
                     onDeleteHistoryJob={deleteHistoryJob}
                     show={isHistoryExpanded}
                     onToggle={() => setIsHistoryExpanded((prev) => !prev)}
@@ -408,7 +420,7 @@ export default function PlaygroundContent() {
         stockVoices={stockVoices}
         activeVoicePanel={voice.activeVoicePanel}
         selectedVoice={voice.selectedVoice}
-        playingVoicePreview={audio.playingVoicePreview}
+        playingVoicePreview={playingVoicePreview}
         isRecording={voice.isRecording}
         recordingTime={voice.recordingTime}
         recordedAudioBlob={voice.recordedAudioBlob}
@@ -419,20 +431,20 @@ export default function PlaygroundContent() {
         }
         anonymousVoiceId={voice.anonymousVoiceId}
         historyVoices={history.historyVoices}
-        playingHistoryVoiceId={audio.playingHistoryVoiceId}
-        isRecPlaying={audio.isRecPlaying}
-        recAudioRef={audio.recAudioRef}
+        playingHistoryVoiceId={playingHistoryVoiceId}
+        isRecPlaying={isRecPlaying}
+        recAudioRef={recAudioRef}
         recordedDuration={voice.recordingTime}
         onVoiceSelectAndPlay={handleVoiceSelectAndPlay}
         onStartRecording={voice.startRecording}
         onStopRecording={voice.stopRecording}
         onResetRecording={() => {
-          audio.stopRecordingPlayback();
+          stopRecordingPlayback();
           voice.resetRecording(stockVoices[0]?.id ?? null);
         }}
         onSelectHistoryVoice={handleSelectHistoryVoice}
-        onPlayHistoryVoice={audio.playHistoryVoice}
-        onToggleRecordingPlayback={audio.toggleRecPlayback}
+        onPlayHistoryVoice={playHistoryVoice}
+        onToggleRecordingPlayback={toggleRecPlayback}
         onDeleteHistoryVoice={deleteHistoryVoice}
       />
     </div>
