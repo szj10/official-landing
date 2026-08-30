@@ -18,6 +18,38 @@ function CheckIcon({ className = "w-5 h-5 text-indigo-500" }: { className?: stri
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
+const TIER_FEATURE_KEYS = {
+  free: ["credits", "rollover", "voices", "video", "quality", "storage"],
+  pro: ["credits", "rollover", "voices", "video", "priority", "analytics", "export", "api"],
+  premium: [
+    "credits",
+    "rollover",
+    "voices",
+    "quality",
+    "support",
+    "ai",
+    "team",
+    "whiteLabel",
+    "api",
+  ],
+  enterprise: [
+    "unlimited",
+    "unlimitedVoices",
+    "customModels",
+    "voiceCloning",
+    "whiteLabel",
+    "accountManager",
+    "onPremise",
+    "customIntegrations",
+    "volumeDiscounts",
+    "customSla",
+  ],
+} as const;
+
+function tierFeatures(tier: keyof typeof TIER_FEATURE_KEYS, t: (key: string) => string) {
+  return TIER_FEATURE_KEYS[tier].map((key) => t(`pricing.${tier}.features.${key}`));
+}
+
 export default function PricingPage() {
   const { t } = useI18n();
   const [billingCycle, setBillingCycle] = useState<"monthly" | "annual">("monthly");
@@ -29,14 +61,7 @@ export default function PricingPage() {
       monthlyPrice: t("pricing.free.price.monthly"),
       annualPrice: t("pricing.free.price.annual"),
       isFree: true,
-      features: [
-        t("pricing.free.features.f1"),
-        t("pricing.free.features.f2"),
-        t("pricing.free.features.f3"),
-        t("pricing.free.features.f4"),
-        t("pricing.free.features.f5"),
-        t("pricing.free.features.f6"),
-      ],
+      features: tierFeatures("free", t),
       cta: t("pricing.free.cta"),
       popular: false,
     },
@@ -46,16 +71,7 @@ export default function PricingPage() {
       monthlyPrice: t("pricing.pro.price.monthly"),
       annualPrice: t("pricing.pro.price.annual"),
       isFree: false,
-      features: [
-        t("pricing.pro.features.f1"),
-        t("pricing.pro.features.f2"),
-        t("pricing.pro.features.f3"),
-        t("pricing.pro.features.f4"),
-        t("pricing.pro.features.f5"),
-        t("pricing.pro.features.f6"),
-        t("pricing.pro.features.f7"),
-        t("pricing.pro.features.f8"),
-      ],
+      features: tierFeatures("pro", t),
       cta: t("pricing.pro.cta"),
       popular: true,
     },
@@ -65,17 +81,7 @@ export default function PricingPage() {
       monthlyPrice: t("pricing.premium.price.monthly"),
       annualPrice: t("pricing.premium.price.annual"),
       isFree: false,
-      features: [
-        t("pricing.premium.features.f1"),
-        t("pricing.premium.features.f2"),
-        t("pricing.premium.features.f3"),
-        t("pricing.premium.features.f4"),
-        t("pricing.premium.features.f5"),
-        t("pricing.premium.features.f6"),
-        t("pricing.premium.features.f7"),
-        t("pricing.premium.features.f8"),
-        t("pricing.premium.features.f9"),
-      ],
+      features: tierFeatures("premium", t),
       cta: t("pricing.premium.cta"),
       popular: false,
     },
@@ -83,18 +89,7 @@ export default function PricingPage() {
       name: t("pricing.enterprise.name"),
       description: t("pricing.enterprise.description"),
       isEnterprise: true,
-      features: [
-        t("pricing.enterprise.features.f1"),
-        t("pricing.enterprise.features.f2"),
-        t("pricing.enterprise.features.f3"),
-        t("pricing.enterprise.features.f4"),
-        t("pricing.enterprise.features.f5"),
-        t("pricing.enterprise.features.f6"),
-        t("pricing.enterprise.features.f7"),
-        t("pricing.enterprise.features.f8"),
-        t("pricing.enterprise.features.f9"),
-        t("pricing.enterprise.features.f10"),
-      ],
+      features: tierFeatures("enterprise", t),
       cta: t("pricing.enterprise.cta"),
       popular: false,
     },
@@ -412,37 +407,39 @@ export default function PricingPage() {
             </div>
 
             <div className="max-w-3xl mx-auto space-y-4">
-              {[1, 2, 3, 4, 5, 6].map((n) => ({
-                q: t(`pricing.faq.q${n}.q`),
-                a: t(`pricing.faq.q${n}.a`),
-              })).map((faq, i) => (
-                <details
-                  key={i}
-                  className="glass-panel rounded-2xl p-6 group transition-all duration-200 hover:border-indigo-500/25"
-                >
-                  <summary className="cursor-pointer list-none flex justify-between items-center font-semibold text-gray-900 dark:text-white text-sm">
-                    {faq.q}
-                    <span className="flex-shrink-0 ml-4 w-5 h-5 rounded-full bg-gray-100 dark:bg-zinc-800 flex items-center justify-center group-open:bg-indigo-500/10 group-open:text-indigo-500 transition-colors">
-                      <svg
-                        className="w-3.5 h-3.5 text-gray-500 dark:text-zinc-400 group-open:rotate-180 group-open:text-indigo-500 transition-transform duration-200"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M19 9l-7 7-7-7"
-                        />
-                      </svg>
-                    </span>
-                  </summary>
-                  <p className="mt-4 text-xs text-gray-600 dark:text-zinc-400 leading-relaxed border-t border-gray-100 dark:border-zinc-800 pt-4">
-                    {faq.a}
-                  </p>
-                </details>
-              ))}
+              {[1, 2, 3, 4, 5, 6]
+                .map((n) => ({
+                  q: t(`pricing.faq.q${n}.q`),
+                  a: t(`pricing.faq.q${n}.a`),
+                }))
+                .map((faq, i) => (
+                  <details
+                    key={i}
+                    className="glass-panel rounded-2xl p-6 group transition-all duration-200 hover:border-indigo-500/25"
+                  >
+                    <summary className="cursor-pointer list-none flex justify-between items-center font-semibold text-gray-900 dark:text-white text-sm">
+                      {faq.q}
+                      <span className="flex-shrink-0 ml-4 w-5 h-5 rounded-full bg-gray-100 dark:bg-zinc-800 flex items-center justify-center group-open:bg-indigo-500/10 group-open:text-indigo-500 transition-colors">
+                        <svg
+                          className="w-3.5 h-3.5 text-gray-500 dark:text-zinc-400 group-open:rotate-180 group-open:text-indigo-500 transition-transform duration-200"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M19 9l-7 7-7-7"
+                          />
+                        </svg>
+                      </span>
+                    </summary>
+                    <p className="mt-4 text-xs text-gray-600 dark:text-zinc-400 leading-relaxed border-t border-gray-100 dark:border-zinc-800 pt-4">
+                      {faq.a}
+                    </p>
+                  </details>
+                ))}
             </div>
           </div>
         </section>

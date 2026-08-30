@@ -60,30 +60,32 @@ Pick one register per locale (你 vs 您, formal Japanese, etc.) and keep it con
 
 Agree terms **once per locale**, then reuse across `header`, `home`, `pricing`, `playground`, and `footer`.
 
-| English concept                  | Meaning on this site         | `zh-CN` (reference)      | Notes                                  |
-| -------------------------------- | ---------------------------- | ------------------------ | -------------------------------------- |
-| **Playground** (nav)             | TTS demo entry in header     | 体验                     | Page title can be longer: TTS 体验中心 |
-| **Playground** (page)            | Interactive TTS demo         | TTS 体验中心             | Not 操场                               |
-| **Voices / Community Voices**    | Cloneable TTS voice profiles | 音色 / 社区音色          | Not 语音 (speech)                      |
-| **Your Voice**                   | User’s selected/custom voice | 您的音色                 |                                        |
-| **Voice synthesis / TTS**        | Spoken audio generation      | 语音合成                 | Feature copy on home page              |
-| **Recording** (custom voice)     | User-recorded voice sample   | 录音                     | Distinct from 音色 (profile)           |
-| **Generate Audio**               | TTS synthesis action         | 生成音频                 |                                        |
-| **Job / queue** (playground)     | Async synthesis task         | 任务 / 排队              | Not employment “工作”                  |
-| **Pricing** (nav)                | Plans page                   | 价格                     | Body may use 定价                      |
-| **News**                         | Blog listing                 | 资讯                     |                                        |
-| **Get Started**                  | Primary CTA                  | 开始使用                 |                                        |
-| **Start Free Trial**             | Trial CTA                    | 开始免费试用             |                                        |
-| **Free / Pro / Premium** (plans) | Tier names                   | 免费版 / 专业版 / 高级版 | Keep **Enterprise** as 企业版          |
+| English concept                  | Meaning on this site         | `zh-CN` (reference)      | Notes                                                          |
+| -------------------------------- | ---------------------------- | ------------------------ | -------------------------------------------------------------- |
+| **Playground** (nav)             | TTS demo entry in header     | 体验                     | Page title can be longer: TTS 体验中心                         |
+| **Playground** (page)            | Interactive TTS demo         | TTS 体验中心             | Not 操场                                                       |
+| **Voices / Community Voices**    | Cloneable TTS voice profiles | 音色 / 社区音色          | Not 语音 (speech)                                              |
+| **Your Voice**                   | User’s selected/custom voice | 您的音色                 |                                                                |
+| **Voice synthesis / TTS**        | Spoken audio generation      | 语音合成                 | Feature copy on home page                                      |
+| **Recording** (custom voice)     | User-recorded voice sample   | 录音                     | Distinct from 音色 (profile)                                   |
+| **Generate Audio**               | TTS synthesis action         | 生成音频                 |                                                                |
+| **Job / queue** (playground)     | Async synthesis task         | 任务 / 排队              | Not employment “工作”                                          |
+| **Pricing** (nav)                | Plans page                   | 价格                     | Body may use 定价                                              |
+| **News**                         | Blog listing                 | 资讯                     |                                                                |
+| **Get Started**                  | Primary CTA                  | 开始使用                 | Pricing paid-tier CTA (no free trial)                          |
+| **Free / Pro / Premium** (plans) | Tier names                   | 免费版 / 专业版 / 高级版 | Keep **Enterprise** as 企业版; tier names in JSON stay English |
+| **Credits**                      | Generation balance           | 额度                     | zh-TW: **點數** — one term per locale                          |
+| **Rollover**                     | Unused credits carried over  | 结转                     | zh-TW: **結轉**; caps: 10 / 50 / unlimited                     |
 
 ### Cross-product alignment (Huavoi Studio)
 
-| Concept                  | Landing (`zh-CN`)   | Studio app (`zh-CN`) |
-| ------------------------ | ------------------- | -------------------- |
-| Voices                   | 音色                | 音色                 |
-| TTS / synthesis          | 语音合成            | 语音合成             |
-| Playground               | 体验 / TTS 体验中心 | 试用场               |
-| Credits (if added later) | —                   | 额度                 |
+| Concept            | Landing (`zh-CN`)   | Studio app (`zh-CN`) |
+| ------------------ | ------------------- | -------------------- |
+| Voices             | 音色                | 音色                 |
+| TTS / synthesis    | 语音合成            | 语音合成             |
+| Playground         | 体验 / TTS 体验中心 | 试用场               |
+| Credits            | 额度                | 额度                 |
+| Rollover (pricing) | 结转                | 结转                 |
 
 Studio uses workflow-oriented labels; the landing site uses shorter nav/marketing labels — but **core nouns must not contradict**.
 
@@ -101,7 +103,7 @@ Studio uses workflow-oriented labels; the landing site uses shorter nav/marketin
 - **Headline**: benefit or category.
 - **Subtitle**: one supporting sentence; don’t repeat the headline.
 - Feature bullets: parallel structure within a section.
-- Keep plan feature lists (`f1`–`f10`) grammatically parallel in each locale.
+- Keep plan feature lists (`pricing.{tier}.features.*`) grammatically parallel in each locale. Use semantic keys (`credits`, `rollover`, `voices`, …) — see `SHARED_I18N_CHECKLIST.md`.
 
 ### Playground copy
 

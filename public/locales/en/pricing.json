@@ -18,12 +18,12 @@
         "billedMonthly": "when billed monthly"
       },
       "features": {
-        "f1": "5 credits per month",
-        "f2": "Rollover up to 10 credits",
-        "f3": "2 custom voices",
-        "f4": "Basic video generation",
-        "f5": "720p video quality",
-        "f6": "Standard project storage"
+        "credits": "5 credits per month",
+        "rollover": "Rollover up to 10 credits",
+        "voices": "2 custom voices",
+        "video": "Basic video generation",
+        "quality": "720p video quality",
+        "storage": "Standard project storage"
       },
       "cta": "Get Started"
     },
@@ -35,14 +35,14 @@
         "annual": "$39/mo"
       },
       "features": {
-        "f1": "25 credits per month",
-        "f2": "Rollover up to 50 credits",
-        "f3": "5 custom voices",
-        "f4": "HD video generation (1080p)",
-        "f5": "Priority processing",
-        "f6": "Advanced analytics",
-        "f7": "Export customization",
-        "f8": "API access"
+        "credits": "25 credits per month",
+        "rollover": "Rollover up to 50 credits",
+        "voices": "5 custom voices",
+        "video": "HD video generation (1080p)",
+        "priority": "Priority processing",
+        "analytics": "Advanced analytics",
+        "export": "Export customization",
+        "api": "API access"
       },
       "cta": "Get Started"
     },
@@ -54,15 +54,15 @@
         "annual": "$159/mo"
       },
       "features": {
-        "f1": "100 credits per month",
-        "f2": "Unlimited rollover",
-        "f3": "10 custom voices",
-        "f4": "4K video quality",
-        "f5": "Priority support",
-        "f6": "Advanced AI features",
-        "f7": "Team collaboration",
-        "f8": "White-label exports",
-        "f9": "API access"
+        "credits": "100 credits per month",
+        "rollover": "Unlimited rollover",
+        "voices": "10 custom voices",
+        "quality": "4K video quality",
+        "support": "Priority support",
+        "ai": "Advanced AI features",
+        "team": "Team collaboration",
+        "whiteLabel": "White-label exports",
+        "api": "API access"
       },
       "cta": "Get Started"
     },
@@ -70,16 +70,16 @@
       "name": "Enterprise",
       "description": "Custom solutions for large organizations",
       "features": {
-        "f1": "Unlimited everything",
-        "f2": "Unlimited custom voice creations",
-        "f3": "Custom AI models",
-        "f4": "Voice cloning",
-        "f5": "White-label solution",
-        "f6": "Dedicated account manager",
-        "f7": "On-premise deployment",
-        "f8": "Custom integrations",
-        "f9": "Volume discounts",
-        "f10": "Custom SLA"
+        "unlimited": "Unlimited everything",
+        "unlimitedVoices": "Unlimited custom voice creations",
+        "customModels": "Custom AI models",
+        "voiceCloning": "Voice cloning",
+        "whiteLabel": "White-label solution",
+        "accountManager": "Dedicated account manager",
+        "onPremise": "On-premise deployment",
+        "customIntegrations": "Custom integrations",
+        "volumeDiscounts": "Volume discounts",
+        "customSla": "Custom SLA"
       },
       "cta": "Contact Sales"
     },

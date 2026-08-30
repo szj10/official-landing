@@ -18,12 +18,12 @@
         "billedMonthly": "con facturación mensual"
       },
       "features": {
-        "f1": "5 créditos al mes",
-        "f2": "Acumulación hasta 10 créditos",
-        "f3": "2 voces personalizadas",
-        "f4": "Generación de vídeo básica",
-        "f5": "Calidad de vídeo 720p",
-        "f6": "Almacenamiento de proyectos estándar"
+        "credits": "5 créditos al mes",
+        "rollover": "Acumulación hasta 10 créditos",
+        "voices": "2 voces personalizadas",
+        "video": "Generación de vídeo básica",
+        "quality": "Calidad de vídeo 720p",
+        "storage": "Almacenamiento de proyectos estándar"
       },
       "cta": "Empezar"
     },
@@ -35,14 +35,14 @@
         "annual": "$39/mes"
       },
       "features": {
-        "f1": "25 créditos al mes",
-        "f2": "Acumulación hasta 50 créditos",
-        "f3": "5 voces personalizadas",
-        "f4": "Generación de vídeo HD (1080p)",
-        "f5": "Procesamiento prioritario",
-        "f6": "Analíticas avanzadas",
-        "f7": "Personalización de exportación",
-        "f8": "Acceso a la API"
+        "credits": "25 créditos al mes",
+        "rollover": "Acumulación hasta 50 créditos",
+        "voices": "5 voces personalizadas",
+        "video": "Generación de vídeo HD (1080p)",
+        "priority": "Procesamiento prioritario",
+        "analytics": "Analíticas avanzadas",
+        "export": "Personalización de exportación",
+        "api": "Acceso a la API"
       },
       "cta": "Empezar"
     },
@@ -54,15 +54,15 @@
         "annual": "$159/mes"
       },
       "features": {
-        "f1": "100 créditos al mes",
-        "f2": "Acumulación ilimitada",
-        "f3": "10 voces personalizadas",
-        "f4": "Calidad de vídeo 4K",
-        "f5": "Soporte prioritario",
-        "f6": "Funciones de IA avanzadas",
-        "f7": "Colaboración en equipo",
-        "f8": "Exportaciones de marca blanca",
-        "f9": "Acceso a la API"
+        "credits": "100 créditos al mes",
+        "rollover": "Acumulación ilimitada",
+        "voices": "10 voces personalizadas",
+        "quality": "Calidad de vídeo 4K",
+        "support": "Soporte prioritario",
+        "ai": "Funciones de IA avanzadas",
+        "team": "Colaboración en equipo",
+        "whiteLabel": "Exportaciones de marca blanca",
+        "api": "Acceso a la API"
       },
       "cta": "Empezar"
     },
@@ -70,16 +70,16 @@
       "name": "Enterprise",
       "description": "Soluciones personalizadas para grandes organizaciones",
       "features": {
-        "f1": "Todo ilimitado",
-        "f2": "Creaciones de voz personalizadas ilimitadas",
-        "f3": "Modelos de IA personalizados",
-        "f4": "Clonación de voz",
-        "f5": "Solución de marca blanca",
-        "f6": "Gestor de cuenta dedicado",
-        "f7": "Implementación on-premise",
-        "f8": "Integraciones personalizadas",
-        "f9": "Descuentos por volumen",
-        "f10": "SLA personalizado"
+        "unlimited": "Todo ilimitado",
+        "unlimitedVoices": "Creaciones de voz personalizadas ilimitadas",
+        "customModels": "Modelos de IA personalizados",
+        "voiceCloning": "Clonación de voz",
+        "whiteLabel": "Solución de marca blanca",
+        "accountManager": "Gestor de cuenta dedicado",
+        "onPremise": "Implementación on-premise",
+        "customIntegrations": "Integraciones personalizadas",
+        "volumeDiscounts": "Descuentos por volumen",
+        "customSla": "SLA personalizado"
       },
       "cta": "Contactar ventas"
     },

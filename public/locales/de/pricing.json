@@ -18,12 +18,12 @@
         "billedMonthly": "bei monatlicher Abrechnung"
       },
       "features": {
-        "f1": "5 Credits pro Monat",
-        "f2": "Übertrag bis zu 10 Credits",
-        "f3": "2 eigene Stimmen",
-        "f4": "Grundlegende Videogenerierung",
-        "f5": "720p-Videoqualität",
-        "f6": "Standard-Projektspeicher"
+        "credits": "5 Credits pro Monat",
+        "rollover": "Übertrag bis zu 10 Credits",
+        "voices": "2 eigene Stimmen",
+        "video": "Grundlegende Videogenerierung",
+        "quality": "720p-Videoqualität",
+        "storage": "Standard-Projektspeicher"
       },
       "cta": "Loslegen"
     },
@@ -35,14 +35,14 @@
         "annual": "$39/Mo."
       },
       "features": {
-        "f1": "25 Credits pro Monat",
-        "f2": "Übertrag bis zu 50 Credits",
-        "f3": "5 eigene Stimmen",
-        "f4": "HD-Videogenerierung (1080p)",
-        "f5": "Priorisierte Verarbeitung",
-        "f6": "Erweiterte Analysen",
-        "f7": "Export-Anpassung",
-        "f8": "API-Zugang"
+        "credits": "25 Credits pro Monat",
+        "rollover": "Übertrag bis zu 50 Credits",
+        "voices": "5 eigene Stimmen",
+        "video": "HD-Videogenerierung (1080p)",
+        "priority": "Priorisierte Verarbeitung",
+        "analytics": "Erweiterte Analysen",
+        "export": "Export-Anpassung",
+        "api": "API-Zugang"
       },
       "cta": "Loslegen"
     },
@@ -54,15 +54,15 @@
         "annual": "$159/Mo."
       },
       "features": {
-        "f1": "100 Credits pro Monat",
-        "f2": "Unbegrenzter Übertrag",
-        "f3": "10 eigene Stimmen",
-        "f4": "4K-Videoqualität",
-        "f5": "Prioritäts-Support",
-        "f6": "Erweiterte KI-Funktionen",
-        "f7": "Team-Zusammenarbeit",
-        "f8": "White-Label-Exporte",
-        "f9": "API-Zugang"
+        "credits": "100 Credits pro Monat",
+        "rollover": "Unbegrenzter Übertrag",
+        "voices": "10 eigene Stimmen",
+        "quality": "4K-Videoqualität",
+        "support": "Prioritäts-Support",
+        "ai": "Erweiterte KI-Funktionen",
+        "team": "Team-Zusammenarbeit",
+        "whiteLabel": "White-Label-Exporte",
+        "api": "API-Zugang"
       },
       "cta": "Loslegen"
     },
@@ -70,16 +70,16 @@
       "name": "Enterprise",
       "description": "Individuelle Lösungen für große Organisationen",
       "features": {
-        "f1": "Alles unbegrenzt",
-        "f2": "Unbegrenzte eigene Stimmenerstellung",
-        "f3": "Eigene KI-Modelle",
-        "f4": "Stimmklonen",
-        "f5": "White-Label-Lösung",
-        "f6": "Dedizierter Account Manager",
-        "f7": "On-Premise-Bereitstellung",
-        "f8": "Individuelle Integrationen",
-        "f9": "Mengenrabatte",
-        "f10": "Individuelles SLA"
+        "unlimited": "Alles unbegrenzt",
+        "unlimitedVoices": "Unbegrenzte eigene Stimmenerstellung",
+        "customModels": "Eigene KI-Modelle",
+        "voiceCloning": "Stimmklonen",
+        "whiteLabel": "White-Label-Lösung",
+        "accountManager": "Dedizierter Account Manager",
+        "onPremise": "On-Premise-Bereitstellung",
+        "customIntegrations": "Individuelle Integrationen",
+        "volumeDiscounts": "Mengenrabatte",
+        "customSla": "Individuelles SLA"
       },
       "cta": "Vertrieb kontaktieren"
     },
