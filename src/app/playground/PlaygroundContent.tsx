@@ -257,8 +257,21 @@ export default function PlaygroundContent() {
     t,
   ]);
 
+  const hasActiveOutput =
+    isStickyPlayerVisible ||
+    tts.isGenerating ||
+    tts.showCompletionCard ||
+    Boolean(tts.generationStatus) ||
+    Boolean(tts.errorMessage || tts.emptyTextWarning || tts.rateLimitRetryAfter);
+
+  const hasOutput = hasActiveOutput || history.historyJobs.length > 0;
+
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10 pb-16">
+    <div
+      className={`mx-auto px-4 sm:px-6 py-6 sm:py-10 pb-16 transition-all duration-300 ${
+        hasOutput ? "max-w-6xl lg:px-8" : "max-w-xl"
+      }`}
+    >
       {recordedAudioUrl && <audio ref={recAudioRef} src={recordedAudioUrl} className="hidden" />}
       {audioUrl && <audio ref={audioRef} src={audioUrl} className="hidden" />}
 
@@ -274,10 +287,16 @@ export default function PlaygroundContent() {
         </h1>
       </div>
 
-      {/* Responsive Workbench Grid: 1 col on mobile, 2 cols on lg+ */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
-        {/* LEFT COLUMN: Input & Voice Controls (7 cols on lg) */}
-        <div className="lg:col-span-7 flex flex-col gap-4 sm:gap-6">
+      {/* Responsive Workbench: Centered when no active audio output, 2-column grid when output is active */}
+      <div
+        className={
+          hasActiveOutput
+            ? "grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start animate-in fade-in duration-300"
+            : "max-w-xl mx-auto space-y-6"
+        }
+      >
+        {/* LEFT / MAIN COLUMN: Input & Voice Controls */}
+        <div className={hasActiveOutput ? "lg:col-span-7 flex flex-col gap-4 sm:gap-6" : "w-full"}>
           <div className="bg-white dark:bg-zinc-900 border border-gray-200/90 dark:border-zinc-800 rounded-3xl sm:rounded-[32px] p-5 sm:p-7 shadow-xl shadow-gray-200/60 dark:shadow-none space-y-4 sm:space-y-5 transition-all">
             {/* Top Bar: Language Pill + Voice Pill */}
             <div className="flex items-center pb-3 border-b border-gray-100 dark:border-zinc-800/80">
@@ -354,65 +373,103 @@ export default function PlaygroundContent() {
           </div>
         </div>
 
-        {/* RIGHT COLUMN: Output, Player & History (5 cols on lg) */}
-        <div className="lg:col-span-5 flex flex-col gap-4 sm:gap-6 lg:sticky lg:top-24">
-          {/* Active Audio Player, Queue & Alert Status Card */}
-          <div className="bg-white dark:bg-zinc-900 border border-gray-200/90 dark:border-zinc-800 rounded-3xl sm:rounded-[32px] p-5 sm:p-6 shadow-xl shadow-gray-200/60 dark:shadow-none space-y-4 transition-all">
-            <h2 className="text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-zinc-400">
-              {t("playground.outputPanelTitle") || "Audio Output"}
-            </h2>
+        {/* RIGHT / SECONDARY COLUMN: Output, Player & History */}
+        {hasActiveOutput ? (
+          <div className="lg:col-span-5 flex flex-col gap-4 sm:gap-6 lg:sticky lg:top-24 animate-in fade-in duration-300">
+            {/* Active Audio Player, Queue & Alert Status Card */}
+            <div className="bg-white dark:bg-zinc-900 border border-gray-200/90 dark:border-zinc-800 rounded-3xl sm:rounded-[32px] p-5 sm:p-6 shadow-xl shadow-gray-200/60 dark:shadow-none space-y-4 transition-all">
+              <h2 className="text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-zinc-400">
+                {t("playground.outputPanelTitle") || "Audio Output"}
+              </h2>
 
-            {/* Inline Audio Player */}
-            <InlinePlayerBar
-              isVisible={isStickyPlayerVisible}
-              title={
-                activeStickyPlayer === "tts"
-                  ? t("playground.synthesizedSpeech")
-                  : t("playground.yourRecording")
-              }
-              subtitle={stickySubtitle}
-              isPlaying={activeStickyPlayer === "tts" ? isPlaying : isRecPlaying}
-              progress={activeStickyPlayer === "tts" ? audioProgress : recAudioProgress}
-              currentTime={activeStickyPlayer === "tts" ? audioCurrentTime : recAudioCurrentTime}
-              duration={activeStickyPlayer === "tts" ? audioDuration : recAudioDuration}
-              onTogglePlayback={activeStickyPlayer === "tts" ? togglePlayback : toggleRecPlayback}
-              onSeek={activeStickyPlayer === "tts" ? handleSeek : handleRecSeek}
-              onClose={closeStickyPlayer}
-            />
+              {/* Inline Audio Player */}
+              <InlinePlayerBar
+                isVisible={isStickyPlayerVisible}
+                title={
+                  activeStickyPlayer === "tts"
+                    ? t("playground.synthesizedSpeech")
+                    : t("playground.yourRecording")
+                }
+                subtitle={stickySubtitle}
+                isPlaying={activeStickyPlayer === "tts" ? isPlaying : isRecPlaying}
+                progress={activeStickyPlayer === "tts" ? audioProgress : recAudioProgress}
+                currentTime={activeStickyPlayer === "tts" ? audioCurrentTime : recAudioCurrentTime}
+                duration={activeStickyPlayer === "tts" ? audioDuration : recAudioDuration}
+                onTogglePlayback={activeStickyPlayer === "tts" ? togglePlayback : toggleRecPlayback}
+                onSeek={activeStickyPlayer === "tts" ? handleSeek : handleRecSeek}
+                onClose={closeStickyPlayer}
+              />
 
-            {/* Idle state when player is not visible and not generating */}
-            {!isStickyPlayerVisible && !tts.isGenerating && (
-              <div className="py-6 px-4 text-center border-2 border-dashed border-gray-100 dark:border-zinc-800/80 rounded-2xl">
-                <SpeakerIcon className="w-7 h-7 mx-auto mb-2 text-gray-300 dark:text-zinc-600" />
-                <p className="text-xs font-medium text-gray-400 dark:text-zinc-500">
-                  {t("playground.emptyOutputHint") ||
-                    "Synthesized audio and playback controls will appear here."}
-                </p>
+              {/* Live Queue & Synthesis Status */}
+              <QueueStatusCard
+                lastQueueMetrics={tts.lastQueueMetrics}
+                generationStatus={tts.generationStatus}
+                isGenerating={tts.isGenerating}
+                isCompleted={tts.showCompletionCard}
+                onDismissCompleted={() => tts.setShowCompletionCard(false)}
+              />
+
+              <AlertBanner
+                emptyTextWarning={tts.emptyTextWarning}
+                onDismissEmptyTextWarning={() => tts.setEmptyTextWarning(false)}
+                generationStatus={tts.generationStatus}
+                rateLimitRetryAfter={tts.rateLimitRetryAfter}
+                errorMessage={tts.errorMessage}
+                onRetryConnection={tts.pollRetryJobId != null ? tts.retryPollConnection : null}
+              />
+            </div>
+
+            {/* Generation History (inside sidebar when 2-column) */}
+            {history.historyJobs.length > 0 && (
+              <div ref={queueRef}>
+                <div className="bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xl border border-gray-200/90 dark:border-zinc-800/90 rounded-3xl p-5 sm:p-6 shadow-sm space-y-4">
+                  <div className="flex items-center justify-between">
+                    <button
+                      type="button"
+                      onClick={() => setIsHistoryOpen(!isHistoryOpen)}
+                      className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-zinc-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
+                    >
+                      <span>{t("playground.historySection.recentTitle")}</span>
+                      <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-indigo-100 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400">
+                        {history.historyJobs.length}
+                      </span>
+                      <svg
+                        className={`w-3.5 h-3.5 transition-transform duration-200 ${
+                          isHistoryOpen ? "rotate-180" : ""
+                        }`}
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={2.5}
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </button>
+                  </div>
+
+                  {isHistoryOpen && (
+                    <div className="pt-2 animate-in fade-in duration-200">
+                      <HistoryJobs
+                        historyJobs={history.historyJobs}
+                        playingHistoryJobId={playingHistoryJobId}
+                        isPlaying={isPlaying}
+                        onPlayHistoryJob={playHistoryJob}
+                        onDeleteHistoryJob={deleteHistoryJob}
+                        show={isHistoryExpanded}
+                        onToggle={() => setIsHistoryExpanded((prev) => !prev)}
+                        showHeader={false}
+                        highlightFirst={false}
+                      />
+                    </div>
+                  )}
+                </div>
               </div>
             )}
-
-            {/* Live Queue & Synthesis Status */}
-            <QueueStatusCard
-              lastQueueMetrics={tts.lastQueueMetrics}
-              generationStatus={tts.generationStatus}
-              isGenerating={tts.isGenerating}
-              isCompleted={tts.showCompletionCard}
-              onDismissCompleted={() => tts.setShowCompletionCard(false)}
-            />
-
-            <AlertBanner
-              emptyTextWarning={tts.emptyTextWarning}
-              onDismissEmptyTextWarning={() => tts.setEmptyTextWarning(false)}
-              generationStatus={tts.generationStatus}
-              rateLimitRetryAfter={tts.rateLimitRetryAfter}
-              errorMessage={tts.errorMessage}
-              onRetryConnection={tts.pollRetryJobId != null ? tts.retryPollConnection : null}
-            />
           </div>
-
-          {/* Secondary Panel: Generation History */}
-          {history.historyJobs.length > 0 && (
-            <div ref={queueRef}>
+        ) : (
+          /* Centered Generation History (when no active output, placed below centered input) */
+          history.historyJobs.length > 0 && (
+            <div ref={queueRef} className="w-full animate-in fade-in duration-300">
               <div className="bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xl border border-gray-200/90 dark:border-zinc-800/90 rounded-3xl p-5 sm:p-6 shadow-sm space-y-4">
                 <div className="flex items-center justify-between">
                   <button
@@ -455,8 +512,8 @@ export default function PlaygroundContent() {
                 )}
               </div>
             </div>
-          )}
-        </div>
+          )
+        )}
       </div>
 
       <VoiceSelectionModal
