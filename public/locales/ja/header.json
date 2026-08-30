@@ -10,8 +10,8 @@
     "light": "ライト",
     "dark": "ダーク",
     "theme": "テーマ",
-    "closeMenu": "[TRANSLATE: Close menu]",
-    "openMenu": "[TRANSLATE: Open menu]",
-    "navigationMenu": "[TRANSLATE: Navigation menu]"
+    "closeMenu": "メニューを閉じる",
+    "openMenu": "メニューを開く",
+    "navigationMenu": "ナビゲーションメニュー"
   }
 }

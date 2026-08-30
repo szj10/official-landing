@@ -1,77 +1,85 @@
 {
   "hero": {
-    "title": "[TRANSLATE: AI-Powered Video Creation]",
-    "titleHighlight": "[TRANSLATE: From Script to Screen]",
-    "subtitle": "[TRANSLATE: Transform your ideas into professional videos in minutes. Our end-to-end AI solution handles scriptwriting, voice synthesis, and video generation—all in one seamless platform.]"
+    "title": "KI-gestützte Videoproduktion",
+    "titleHighlight": "Vom Skript bis zum Bildschirm",
+    "subtitle": "Verwandeln Sie Ihre Ideen in wenigen Minuten in professionelle Videos. Unsere End-to-End-KI-Lösung übernimmt Skripterstellung, Sprachsynthese und Videogenerierung – alles auf einer nahtlosen Plattform.",
+    "badge": "Huavoi 2.0 ist da",
+    "dashboardAlt": "Huavoi-Dashboard-Vorschau"
   },
   "trust": {
-    "title": "[TRANSLATE: Trusted by 300+ leading companies worldwide]"
+    "title": "Bereits über 10.000 Videos erstellt",
+    "company1": "MrBeast",
+    "company2": "Marques Brownlee",
+    "company3": "Linus Tech Tips",
+    "company4": "Veritasium",
+    "company5": "Kurzgesagt",
+    "company6": "Fireship"
   },
   "solutions": {
-    "title": "[TRANSLATE: Complete Video Production Suite]",
-    "subtitle": "[TRANSLATE: Everything you need to create stunning videos, powered by cutting-edge AI]",
+    "title": "Komplette Videoproduktions-Suite",
+    "subtitle": "Alles, was Sie für beeindruckende Videos brauchen – angetrieben von modernster KI",
     "script": {
-      "title": "[TRANSLATE: AI Script Writer]",
-      "description": "[TRANSLATE: Generate compelling scripts tailored to your brand voice and target audience. Our AI understands context, tone, and storytelling to create engaging narratives.]"
+      "title": "KI-Skriptautor",
+      "description": "Erstellen Sie überzeugende Skripte, die auf Ihre Markenstimme und Zielgruppe zugeschnitten sind. Unsere KI versteht Kontext, Ton und Storytelling für fesselnde Narrative."
     },
     "voice": {
-      "title": "[TRANSLATE: Voice Synthesis]",
-      "description": "[TRANSLATE: Choose from 200+ natural-sounding voices in 40+ languages. Professional-grade TTS engine with emotion, pacing, and emphasis control for perfect narration.]"
+      "title": "Sprachsynthese",
+      "description": "Wählen Sie aus über 200 natürlich klingenden Stimmen in mehr als 40 Sprachen. Professionelle TTS-Engine mit Emotion, Tempo und Betonung für perfekte Narration."
     },
     "video": {
-      "title": "[TRANSLATE: Video Generation]",
-      "description": "[TRANSLATE: Transform scripts and audio into polished videos automatically. AI-powered visuals, transitions, and effects that match your content perfectly.]"
+      "title": "Videogenerierung",
+      "description": "Verwandeln Sie Skripte und Audio automatisch in fertige Videos. KI-gestützte Visuals, Übergänge und Effekte, die perfekt zu Ihrem Inhalt passen."
     }
   },
   "features": {
-    "title": "[TRANSLATE: Why Choose Huavoi]",
-    "subtitle": "[TRANSLATE: Professional video creation made simple, fast, and affordable]",
+    "title": "Warum Huavoi",
+    "subtitle": "Professionelle Videoproduktion – einfach, schnell und erschwinglich",
     "endToEnd": {
-      "title": "[TRANSLATE: End-to-End Solution]",
-      "description": "[TRANSLATE: From concept to final video—no need for multiple tools or vendors. One platform handles everything seamlessly.]"
+      "title": "End-to-End-Lösung",
+      "description": "Vom Konzept bis zum fertigen Video – ohne mehrere Tools oder Anbieter. Eine Plattform erledigt alles nahtlos."
     },
     "speed": {
-      "title": "[TRANSLATE: 10x Faster]",
-      "description": "[TRANSLATE: Create professional videos in minutes instead of days. What once required a full production team now takes just a few clicks.]"
+      "title": "10x schneller",
+      "description": "Erstellen Sie professionelle Videos in Minuten statt Tagen. Was früher ein ganzes Produktionsteam erforderte, erledigen Sie jetzt mit wenigen Klicks."
     },
     "quality": {
-      "title": "[TRANSLATE: Studio Quality]",
-      "description": "[TRANSLATE: Broadcast-quality output with professional voices, smooth transitions, and polished visuals that rival traditional production.]"
+      "title": "Studioqualität",
+      "description": "Sendefähige Qualität mit professionellen Stimmen, flüssigen Übergängen und polierten Visuals, die traditioneller Produktion ebenbürtig sind."
     },
     "affordable": {
-      "title": "[TRANSLATE: Cost Effective]",
-      "description": "[TRANSLATE: Fraction of the cost of traditional video production. No expensive equipment, studios, or production teams required.]"
+      "title": "Kosteneffizient",
+      "description": "Ein Bruchteil der Kosten traditioneller Videoproduktion. Keine teure Ausrüstung, Studios oder Produktionsteams erforderlich."
     },
     "customizable": {
-      "title": "[TRANSLATE: Fully Customizable]",
-      "description": "[TRANSLATE: Fine-tune every aspect—voice, pacing, visuals, branding. Maintain complete creative control while AI handles the heavy lifting.]"
+      "title": "Vollständig anpassbar",
+      "description": "Feinabstimmung jeder Facette – Stimme, Tempo, Visuals, Branding. Behalten Sie die kreative Kontrolle, während die KI die schwere Arbeit übernimmt."
     },
     "scalable": {
-      "title": "[TRANSLATE: Scale Instantly]",
-      "description": "[TRANSLATE: Produce one video or thousands with consistent quality. Perfect for content teams, marketing agencies, and enterprises.]"
+      "title": "Sofort skalierbar",
+      "description": "Produzieren Sie ein Video oder Tausende mit gleichbleibender Qualität. Perfekt für Content-Teams, Marketingagenturen und Unternehmen."
     }
   },
   "cta": {
-    "title": "[TRANSLATE: Ready to Create Amazing Videos?]",
-    "subtitle": "[TRANSLATE: Join thousands of creators and businesses producing professional videos faster than ever before]"
+    "title": "Bereit, beeindruckende Videos zu erstellen?",
+    "subtitle": "Schließen Sie sich Tausenden von Creators und Unternehmen an, die professionelle Videos schneller als je zuvor produzieren"
   },
   "faq": {
-    "title": "[TRANSLATE: Frequently Asked Questions]",
+    "title": "Häufig gestellte Fragen",
     "q1": {
-      "question": "[TRANSLATE: What does the video creation process include?]",
-      "answer": "[TRANSLATE: Our platform provides a complete end-to-end solution: AI-powered script generation, professional voice synthesis with 200+ voices, and automated video production with matching visuals. You can use all three together or each component independently.]"
+      "question": "Was umfasst der Videoproduktionsprozess?",
+      "answer": "Unsere Plattform bietet eine komplette End-to-End-Lösung: KI-gestützte Skripterstellung, professionelle Sprachsynthese mit über 200 Stimmen und automatisierte Videoproduktion mit passenden Visuals. Sie können alle drei zusammen oder jede Komponente einzeln nutzen."
     },
     "q2": {
-      "question": "[TRANSLATE: How long does it take to create a video?]",
-      "answer": "[TRANSLATE: A typical 2-3 minute video can be created in under 10 minutes. The AI handles scriptwriting, voice generation, and video assembly automatically, dramatically reducing production time compared to traditional methods.]"
+      "question": "Wie lange dauert die Erstellung eines Videos?",
+      "answer": "Ein typisches 2–3-minütiges Video kann in unter 10 Minuten erstellt werden. Die KI übernimmt Skripterstellung, Sprachgenerierung und Videomontage automatisch und verkürzt die Produktionszeit drastisch."
     },
     "q3": {
-      "question": "[TRANSLATE: Can I customize the AI-generated content?]",
-      "answer": "[TRANSLATE: Absolutely. You have full control at every step—edit scripts, choose voices, adjust pacing and tone, customize visuals, and add your branding. The AI accelerates the process while you maintain creative control.]"
+      "question": "Kann ich die KI-generierten Inhalte anpassen?",
+      "answer": "Absolut. Sie haben in jedem Schritt volle Kontrolle – Skripte bearbeiten, Stimmen wählen, Tempo und Ton anpassen, Visuals anpassen und Ihr Branding hinzufügen. Die KI beschleunigt den Prozess, während Sie die kreative Kontrolle behalten."
     },
     "q4": {
-      "question": "[TRANSLATE: What types of videos can I create?]",
-      "answer": "[TRANSLATE: Marketing videos, product demos, training content, social media posts, explainer videos, corporate communications, and more. Our AI adapts to your needs and style requirements.]"
+      "question": "Welche Arten von Videos kann ich erstellen?",
+      "answer": "Marketingvideos, Produktdemos, Schulungsinhalte, Social-Media-Posts, Erklärvideos, Unternehmenskommunikation und mehr. Unsere KI passt sich Ihren Anforderungen und Stilvorlieben an."
     }
   }
 }

@@ -2,10 +2,18 @@
   "hero": {
     "title": "AI 기반 비디오 제작",
     "titleHighlight": "대본부터 스크린까지",
-    "subtitle": "아이디어를 단 몇 분 만에 전문적인 비디오로 변환하세요. 당사의 통합 AI 솔루션이 대본 작성, 음성 합성 및 비디오 생성까지 하나의 원활한 플랫폼에서 모두 처리합니다."
+    "subtitle": "아이디어를 단 몇 분 만에 전문적인 비디오로 변환하세요. 당사의 통합 AI 솔루션이 대본 작성, 음성 합성 및 비디오 생성까지 하나의 원활한 플랫폼에서 모두 처리합니다.",
+    "badge": "Huavoi 2.0 출시",
+    "dashboardAlt": "Huavoi 대시보드 미리보기"
   },
   "trust": {
-    "title": "전 세계 300개 이상의 선도적인 기업들이 신뢰하고 있습니다"
+    "title": "오늘까지 10,000개 이상의 영상 제작",
+    "company1": "MrBeast",
+    "company2": "Marques Brownlee",
+    "company3": "Linus Tech Tips",
+    "company4": "Veritasium",
+    "company5": "Kurzgesagt",
+    "company6": "Fireship"
   },
   "solutions": {
     "title": "완벽한 비디오 제작 제품군",

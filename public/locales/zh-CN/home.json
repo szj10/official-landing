@@ -3,17 +3,17 @@
     "title": "AI 驱动视频制作",
     "titleHighlight": "从脚本到屏幕",
     "subtitle": "在几分钟内将您的想法转化为专业视频。我们的一站式 AI 解决方案涵盖脚本编写、语音合成和视频生成，全部在一个无缝平台上完成。",
-    "badge": "[TRANSLATE: Introducing Huavoi 2.0]",
-    "dashboardAlt": "[TRANSLATE: Huavoi Dashboard Mockup]"
+    "badge": "Huavoi 2.0 发布",
+    "dashboardAlt": "Huavoi 仪表盘界面预览"
   },
   "trust": {
-    "title": "[TRANSLATE: Made 10,000+ videos as of today]",
-    "company1": "[TRANSLATE: MrBeast]",
-    "company2": "[TRANSLATE: Marques Brownlee]",
-    "company3": "[TRANSLATE: Linus Tech Tips]",
-    "company4": "[TRANSLATE: Veritasium]",
-    "company5": "[TRANSLATE: Kurzgesagt]",
-    "company6": "[TRANSLATE: Fireship]"
+    "title": "至今已制作 10,000+ 部视频",
+    "company1": "MrBeast",
+    "company2": "Marques Brownlee",
+    "company3": "Linus Tech Tips",
+    "company4": "Veritasium",
+    "company5": "Kurzgesagt",
+    "company6": "Fireship"
   },
   "solutions": {
     "title": "完整的视频制作套件",

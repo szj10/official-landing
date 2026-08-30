@@ -6,12 +6,12 @@
     "news": "資訊",
     "about": "關於",
     "language": "語言",
-    "languages": "[TRANSLATE: languages]",
+    "languages": "語言",
     "light": "淺色",
     "dark": "深色",
     "theme": "主題",
-    "closeMenu": "[TRANSLATE: Close menu]",
-    "openMenu": "[TRANSLATE: Open menu]",
-    "navigationMenu": "[TRANSLATE: Navigation menu]"
+    "closeMenu": "關閉選單",
+    "openMenu": "開啟選單",
+    "navigationMenu": "導覽選單"
   }
 }

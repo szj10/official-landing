@@ -37,6 +37,8 @@
       "getStartedFree": "무료로 시작하기",
       "previousPost": "← 이전 글",
       "nextPost": "다음 글 →"
-    }
+    },
+    "trending": "🔥 인기",
+    "hot": "⚡ 핫"
   }
 }

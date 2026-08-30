@@ -1,77 +1,85 @@
 {
   "hero": {
-    "title": "[TRANSLATE: AI-Powered Video Creation]",
-    "titleHighlight": "[TRANSLATE: From Script to Screen]",
-    "subtitle": "[TRANSLATE: Transform your ideas into professional videos in minutes. Our end-to-end AI solution handles scriptwriting, voice synthesis, and video generation—all in one seamless platform.]"
+    "title": "Création vidéo propulsée par l'IA",
+    "titleHighlight": "Du script à l'écran",
+    "subtitle": "Transformez vos idées en vidéos professionnelles en quelques minutes. Notre solution IA de bout en bout gère l'écriture de scripts, la synthèse vocale et la génération vidéo sur une plateforme fluide.",
+    "badge": "Découvrez Huavoi 2.0",
+    "dashboardAlt": "Aperçu du tableau de bord Huavoi"
   },
   "trust": {
-    "title": "[TRANSLATE: Trusted by 300+ leading companies worldwide]"
+    "title": "Plus de 10 000 vidéos créées à ce jour",
+    "company1": "MrBeast",
+    "company2": "Marques Brownlee",
+    "company3": "Linus Tech Tips",
+    "company4": "Veritasium",
+    "company5": "Kurzgesagt",
+    "company6": "Fireship"
   },
   "solutions": {
-    "title": "[TRANSLATE: Complete Video Production Suite]",
-    "subtitle": "[TRANSLATE: Everything you need to create stunning videos, powered by cutting-edge AI]",
+    "title": "Suite complète de production vidéo",
+    "subtitle": "Tout ce dont vous avez besoin pour créer des vidéos époustouflantes, propulsé par une IA de pointe",
     "script": {
-      "title": "[TRANSLATE: AI Script Writer]",
-      "description": "[TRANSLATE: Generate compelling scripts tailored to your brand voice and target audience. Our AI understands context, tone, and storytelling to create engaging narratives.]"
+      "title": "Rédacteur de scripts IA",
+      "description": "Générez des scripts convaincants adaptés à la voix de votre marque et à votre audience. Notre IA comprend le contexte, le ton et la narration pour créer des récits engageants."
     },
     "voice": {
-      "title": "[TRANSLATE: Voice Synthesis]",
-      "description": "[TRANSLATE: Choose from 200+ natural-sounding voices in 40+ languages. Professional-grade TTS engine with emotion, pacing, and emphasis control for perfect narration.]"
+      "title": "Synthèse vocale",
+      "description": "Choisissez parmi plus de 200 voix naturelles dans plus de 40 langues. Moteur TTS professionnel avec contrôle de l'émotion, du rythme et de l'emphase pour une narration parfaite."
     },
     "video": {
-      "title": "[TRANSLATE: Video Generation]",
-      "description": "[TRANSLATE: Transform scripts and audio into polished videos automatically. AI-powered visuals, transitions, and effects that match your content perfectly.]"
+      "title": "Génération vidéo",
+      "description": "Transformez automatiquement scripts et audio en vidéos abouties. Visuels, transitions et effets propulsés par l'IA, parfaitement adaptés à votre contenu."
     }
   },
   "features": {
-    "title": "[TRANSLATE: Why Choose Huavoi]",
-    "subtitle": "[TRANSLATE: Professional video creation made simple, fast, and affordable]",
+    "title": "Pourquoi choisir Huavoi",
+    "subtitle": "La création vidéo professionnelle, simple, rapide et abordable",
     "endToEnd": {
-      "title": "[TRANSLATE: End-to-End Solution]",
-      "description": "[TRANSLATE: From concept to final video—no need for multiple tools or vendors. One platform handles everything seamlessly.]"
+      "title": "Solution de bout en bout",
+      "description": "Du concept à la vidéo finale — sans multiples outils ni fournisseurs. Une seule plateforme gère tout de manière fluide."
     },
     "speed": {
-      "title": "[TRANSLATE: 10x Faster]",
-      "description": "[TRANSLATE: Create professional videos in minutes instead of days. What once required a full production team now takes just a few clicks.]"
+      "title": "10x plus rapide",
+      "description": "Créez des vidéos professionnelles en minutes au lieu de jours. Ce qui nécessitait une équipe de production complète ne prend plus que quelques clics."
     },
     "quality": {
-      "title": "[TRANSLATE: Studio Quality]",
-      "description": "[TRANSLATE: Broadcast-quality output with professional voices, smooth transitions, and polished visuals that rival traditional production.]"
+      "title": "Qualité studio",
+      "description": "Un rendu de qualité broadcast avec des voix professionnelles, des transitions fluides et des visuels soignés rivalisant avec la production traditionnelle."
     },
     "affordable": {
-      "title": "[TRANSLATE: Cost Effective]",
-      "description": "[TRANSLATE: Fraction of the cost of traditional video production. No expensive equipment, studios, or production teams required.]"
+      "title": "Économique",
+      "description": "Une fraction du coût de la production vidéo traditionnelle. Pas d'équipement, de studio ni d'équipe de production coûteux."
     },
     "customizable": {
-      "title": "[TRANSLATE: Fully Customizable]",
-      "description": "[TRANSLATE: Fine-tune every aspect—voice, pacing, visuals, branding. Maintain complete creative control while AI handles the heavy lifting.]"
+      "title": "Entièrement personnalisable",
+      "description": "Affinez chaque aspect — voix, rythme, visuels, image de marque. Gardez le contrôle créatif pendant que l'IA fait le gros du travail."
     },
     "scalable": {
-      "title": "[TRANSLATE: Scale Instantly]",
-      "description": "[TRANSLATE: Produce one video or thousands with consistent quality. Perfect for content teams, marketing agencies, and enterprises.]"
+      "title": "Évolutivité instantanée",
+      "description": "Produisez une vidéo ou des milliers avec une qualité constante. Idéal pour les équipes contenu, agences marketing et entreprises."
     }
   },
   "cta": {
-    "title": "[TRANSLATE: Ready to Create Amazing Videos?]",
-    "subtitle": "[TRANSLATE: Join thousands of creators and businesses producing professional videos faster than ever before]"
+    "title": "Prêt à créer des vidéos incroyables ?",
+    "subtitle": "Rejoignez des milliers de créateurs et d'entreprises qui produisent des vidéos professionnelles plus vite que jamais"
   },
   "faq": {
-    "title": "[TRANSLATE: Frequently Asked Questions]",
+    "title": "Questions fréquentes",
     "q1": {
-      "question": "[TRANSLATE: What does the video creation process include?]",
-      "answer": "[TRANSLATE: Our platform provides a complete end-to-end solution: AI-powered script generation, professional voice synthesis with 200+ voices, and automated video production with matching visuals. You can use all three together or each component independently.]"
+      "question": "Que comprend le processus de création vidéo ?",
+      "answer": "Notre plateforme offre une solution complète de bout en bout : génération de scripts par IA, synthèse vocale professionnelle avec plus de 200 voix et production vidéo automatisée avec visuels assortis. Utilisez les trois ensemble ou chaque composant indépendamment."
     },
     "q2": {
-      "question": "[TRANSLATE: How long does it take to create a video?]",
-      "answer": "[TRANSLATE: A typical 2-3 minute video can be created in under 10 minutes. The AI handles scriptwriting, voice generation, and video assembly automatically, dramatically reducing production time compared to traditional methods.]"
+      "question": "Combien de temps faut-il pour créer une vidéo ?",
+      "answer": "Une vidéo typique de 2 à 3 minutes peut être créée en moins de 10 minutes. L'IA gère automatiquement l'écriture du script, la génération vocale et le montage vidéo, réduisant considérablement le temps de production."
     },
     "q3": {
-      "question": "[TRANSLATE: Can I customize the AI-generated content?]",
-      "answer": "[TRANSLATE: Absolutely. You have full control at every step—edit scripts, choose voices, adjust pacing and tone, customize visuals, and add your branding. The AI accelerates the process while you maintain creative control.]"
+      "question": "Puis-je personnaliser le contenu généré par l'IA ?",
+      "answer": "Absolument. Vous avez un contrôle total à chaque étape — éditer les scripts, choisir les voix, ajuster le rythme et le ton, personnaliser les visuels et ajouter votre marque. L'IA accélère le processus tout en vous laissant le contrôle créatif."
     },
     "q4": {
-      "question": "[TRANSLATE: What types of videos can I create?]",
-      "answer": "[TRANSLATE: Marketing videos, product demos, training content, social media posts, explainer videos, corporate communications, and more. Our AI adapts to your needs and style requirements.]"
+      "question": "Quels types de vidéos puis-je créer ?",
+      "answer": "Vidéos marketing, démos produit, contenus de formation, publications sur les réseaux sociaux, vidéos explicatives, communications d'entreprise et plus encore. Notre IA s'adapte à vos besoins et exigences stylistiques."
     }
   }
 }

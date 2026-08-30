@@ -6,12 +6,12 @@
     "news": "Neuigkeiten",
     "about": "Über uns",
     "language": "Sprache",
-    "languages": "[TRANSLATE: languages]",
+    "languages": "Sprachen",
     "light": "Helles Design",
     "dark": "Dunkles Design",
     "theme": "Design",
-    "closeMenu": "[TRANSLATE: Close menu]",
-    "openMenu": "[TRANSLATE: Open menu]",
-    "navigationMenu": "[TRANSLATE: Navigation menu]"
+    "closeMenu": "Menü schließen",
+    "openMenu": "Menü öffnen",
+    "navigationMenu": "Navigationsmenü"
   }
 }

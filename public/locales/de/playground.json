@@ -12,7 +12,7 @@
       "replaceConfirm": "Text ersetzen"
     },
     "voiceSection": {
-      "sampleVoices": "Beispielstimmen",
+      "sampleVoices": "Community-Stimmen",
       "tabCustom": "Aufnehmen",
       "promptGuideTitle": "Leseanleitung (4–10 Sek.)",
       "promptGuideText": "Die Sonne geht über den Bergen auf und taucht den Himmel in goldenes Licht.",
@@ -28,9 +28,6 @@
       "customVoice": "Eigene Aufnahme",
       "noHistory": "Noch keine gespeicherten Aufnahmen",
       "recordFirstPrompt": "Erstellen Sie Ihre erste Aufnahme, um zu beginnen",
-      "switchToSampleVoices": "Beispielstimmen",
-      "viewSavedPrompts": "Gespeicherte Aufnahmen",
-      "samples": "Beispiele",
       "history": "Verlauf",
       "recordingCaptured": "Aufnahme erfasst",
       "activeVoiceId": "Aktive Aufnahme-ID:",
@@ -39,16 +36,19 @@
       "selected": "Ausgewählt",
       "deleteConfirm": "Möchten Sie Aufnahme #{id} wirklich löschen?",
       "recordingListItem": "Aufnahme {duration}",
-      "preferRecordedVoices": "Lieber Ihre Aufnahmen verwenden?",
-      "recordingTab": "Aufnahme-Tab",
-      "findPreviousVoices": "Frühere Aufnahmen finden?",
-      "historyTab": "Verlauf-Tab",
-      "preferSampleVoices": "Lieber Beispielstimmen verwenden?",
-      "sampleVoiceTab": "Beispielstimmen-Tab",
       "confirm": "Bestätigen",
       "playPreview": "Vorschau abspielen",
       "stopPreview": "Vorschau stoppen",
-      "deleteRecording": "Aufnahme löschen"
+      "deleteRecording": "Aufnahme löschen",
+      "communityVoices": "Community-Stimmen",
+      "yourVoice": "Ihre Stimme",
+      "previouslyRecorded": "Zuvor aufgenommen",
+      "last24h": "24 Std. gespeichert",
+      "useThisVoice": "Diese Stimme verwenden",
+      "processing": "Wird verarbeitet…",
+      "showAll": "Alle {n} anzeigen",
+      "showLess": "Weniger anzeigen",
+      "noVoicesAvailable": "Stimmen werden geladen…"
     },
     "speedSection": {
       "slow": "Langsam",
@@ -102,7 +102,9 @@
       "deleteConfirm": "Möchten Sie dieses generierte Audio wirklich löschen?\n\n\"{text}\"",
       "deleteAria": "Generiertes Audio löschen",
       "play": "Abspielen",
-      "pause": "Pause"
+      "pause": "Pause",
+      "showAll": "Alle anzeigen",
+      "showLess": "Weniger anzeigen"
     },
     "player": {
       "close": "Player schließen",

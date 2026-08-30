@@ -6,12 +6,12 @@
     "news": "资讯",
     "about": "关于",
     "language": "语言",
-    "languages": "[TRANSLATE: languages]",
+    "languages": "语言",
     "light": "浅色",
     "dark": "深色",
     "theme": "主题",
-    "closeMenu": "[TRANSLATE: Close menu]",
-    "openMenu": "[TRANSLATE: Open menu]",
-    "navigationMenu": "[TRANSLATE: Navigation menu]"
+    "closeMenu": "关闭菜单",
+    "openMenu": "打开菜单",
+    "navigationMenu": "导航菜单"
   }
 }

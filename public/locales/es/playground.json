@@ -12,7 +12,7 @@
       "replaceConfirm": "Reemplazar texto"
     },
     "voiceSection": {
-      "sampleVoices": "Voces de ejemplo",
+      "sampleVoices": "Voces de la comunidad",
       "tabCustom": "Grabar",
       "promptGuideTitle": "Guía de lectura (4–10 s)",
       "promptGuideText": "El sol nace sobre las montañas, iluminando el cielo.",
@@ -28,9 +28,6 @@
       "customVoice": "Grabación personalizada",
       "noHistory": "Aún no hay grabaciones guardadas",
       "recordFirstPrompt": "Haz tu primera grabación para empezar",
-      "switchToSampleVoices": "Voces de ejemplo",
-      "viewSavedPrompts": "Grabaciones guardadas",
-      "samples": "Ejemplos",
       "history": "Historial",
       "recordingCaptured": "Grabación capturada",
       "activeVoiceId": "ID de grabación activa:",
@@ -39,16 +36,19 @@
       "selected": "Seleccionada",
       "deleteConfirm": "¿Seguro que quieres eliminar la Grabación #{id}?",
       "recordingListItem": "Grabación {duration}",
-      "preferRecordedVoices": "¿Prefieres tus grabaciones?",
-      "recordingTab": "Pestaña Grabar",
-      "findPreviousVoices": "¿Buscar grabaciones anteriores?",
-      "historyTab": "Pestaña Historial",
-      "preferSampleVoices": "¿Prefieres voces de ejemplo?",
-      "sampleVoiceTab": "Pestaña Voces de ejemplo",
       "confirm": "Confirmar",
       "playPreview": "Reproducir vista previa",
       "stopPreview": "Detener vista previa",
-      "deleteRecording": "Eliminar grabación"
+      "deleteRecording": "Eliminar grabación",
+      "communityVoices": "Voces de la comunidad",
+      "yourVoice": "Tu voz",
+      "previouslyRecorded": "Grabado anteriormente",
+      "last24h": "guardado 24 h",
+      "useThisVoice": "Usar esta voz",
+      "processing": "Procesando…",
+      "showAll": "Mostrar todo ({n})",
+      "showLess": "Mostrar menos",
+      "noVoicesAvailable": "Cargando voces…"
     },
     "speedSection": {
       "slow": "Lento",
@@ -102,7 +102,9 @@
       "deleteConfirm": "¿Seguro que quieres eliminar este audio generado?\n\n\"{text}\"",
       "deleteAria": "Eliminar audio generado",
       "play": "Reproducir",
-      "pause": "Pausar"
+      "pause": "Pausar",
+      "showAll": "Mostrar todo",
+      "showLess": "Mostrar menos"
     },
     "player": {
       "close": "Cerrar reproductor",

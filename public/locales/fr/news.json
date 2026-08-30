@@ -37,6 +37,8 @@
       "getStartedFree": "Commencer gratuitement",
       "previousPost": "← Article précédent",
       "nextPost": "Article suivant →"
-    }
+    },
+    "trending": "🔥 TENDANCE",
+    "hot": "⚡ POPULAIRE"
   }
 }

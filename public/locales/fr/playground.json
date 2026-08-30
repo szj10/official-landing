@@ -12,7 +12,7 @@
       "replaceConfirm": "Remplacer le texte"
     },
     "voiceSection": {
-      "sampleVoices": "Exemples de voix",
+      "sampleVoices": "Voix de la communauté",
       "tabCustom": "Enregistrer",
       "promptGuideTitle": "Guide de lecture (4–10 s)",
       "promptGuideText": "Le soleil se lève sur l'océan, illuminant le ciel.",
@@ -28,9 +28,6 @@
       "customVoice": "Enregistrement personnalisé",
       "noHistory": "Aucun enregistrement sauvegardé pour le moment",
       "recordFirstPrompt": "Faites votre premier enregistrement pour commencer",
-      "switchToSampleVoices": "Exemples de voix",
-      "viewSavedPrompts": "Enregistrements sauvegardés",
-      "samples": "Exemples",
       "history": "Historique",
       "recordingCaptured": "Enregistrement capturé",
       "activeVoiceId": "ID d'enregistrement actif :",
@@ -39,16 +36,19 @@
       "selected": "Sélectionné",
       "deleteConfirm": "Voulez-vous vraiment supprimer l'enregistrement #{id} ?",
       "recordingListItem": "Enregistrement {duration}",
-      "preferRecordedVoices": "Vous préférez vos enregistrements ?",
-      "recordingTab": "Onglet Enregistrement",
-      "findPreviousVoices": "Retrouver des enregistrements précédents ?",
-      "historyTab": "Onglet Historique",
-      "preferSampleVoices": "Vous préférez les exemples de voix ?",
-      "sampleVoiceTab": "Onglet Exemples de voix",
       "confirm": "Confirmer",
       "playPreview": "Lire l'aperçu",
       "stopPreview": "Arrêter l'aperçu",
-      "deleteRecording": "Supprimer l'enregistrement"
+      "deleteRecording": "Supprimer l'enregistrement",
+      "communityVoices": "Voix de la communauté",
+      "yourVoice": "Votre voix",
+      "previouslyRecorded": "Enregistré précédemment",
+      "last24h": "enregistré 24 h",
+      "useThisVoice": "Utiliser cette voix",
+      "processing": "Traitement…",
+      "showAll": "Tout afficher ({n})",
+      "showLess": "Afficher moins",
+      "noVoicesAvailable": "Chargement des voix…"
     },
     "speedSection": {
       "slow": "Lent",
@@ -102,7 +102,9 @@
       "deleteConfirm": "Voulez-vous vraiment supprimer cet audio généré ?\n\n\"{text}\"",
       "deleteAria": "Supprimer l'audio généré",
       "play": "Lecture",
-      "pause": "Pause"
+      "pause": "Pause",
+      "showAll": "Tout afficher",
+      "showLess": "Afficher moins"
     },
     "player": {
       "close": "Fermer le lecteur",

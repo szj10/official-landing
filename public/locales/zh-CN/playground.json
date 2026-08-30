@@ -12,7 +12,7 @@
       "replaceConfirm": "替换文本"
     },
     "voiceSection": {
-      "sampleVoices": "示例音色",
+      "sampleVoices": "社区音色",
       "tabCustom": "录音",
       "promptGuideTitle": "朗读导引（4–10秒）",
       "promptGuideText": "清晨的阳光洒在大地上，清风拂过树梢。",
@@ -28,9 +28,6 @@
       "customVoice": "自定义录音",
       "noHistory": "暂无已保存的录音",
       "recordFirstPrompt": "录制您的第一段录音以开始使用",
-      "switchToSampleVoices": "示例音色",
-      "viewSavedPrompts": "已保存的录音",
-      "samples": "示例",
       "history": "历史",
       "recordingCaptured": "录音已完成",
       "activeVoiceId": "当前录音 ID：",
@@ -39,16 +36,19 @@
       "selected": "已选择",
       "deleteConfirm": "确定要删除录音 #{id} 吗？",
       "recordingListItem": "{duration} 录音",
-      "preferRecordedVoices": "想使用您的录音？",
-      "recordingTab": "录音页",
-      "findPreviousVoices": "查找之前的录音？",
-      "historyTab": "历史页",
-      "preferSampleVoices": "想使用示例音色？",
-      "sampleVoiceTab": "示例音色页",
       "confirm": "确认",
       "playPreview": "播放预览",
       "stopPreview": "停止预览",
-      "deleteRecording": "删除录音"
+      "deleteRecording": "删除录音",
+      "communityVoices": "社区音色",
+      "yourVoice": "您的音色",
+      "previouslyRecorded": "此前录制",
+      "last24h": "24小时内保存",
+      "useThisVoice": "使用此音色",
+      "processing": "处理中…",
+      "showAll": "显示全部 {n}",
+      "showLess": "收起",
+      "noVoicesAvailable": "正在加载音色…"
     },
     "speedSection": {
       "slow": "慢速",
@@ -102,7 +102,9 @@
       "deleteConfirm": "确定要删除这条合成音频吗？\n\n\"{text}\"",
       "deleteAria": "删除合成音频",
       "play": "播放",
-      "pause": "暂停"
+      "pause": "暂停",
+      "showAll": "显示全部",
+      "showLess": "收起"
     },
     "player": {
       "close": "关闭播放器",

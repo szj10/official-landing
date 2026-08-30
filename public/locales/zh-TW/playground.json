@@ -12,7 +12,7 @@
       "replaceConfirm": "取代文字"
     },
     "voiceSection": {
-      "sampleVoices": "範例音色",
+      "sampleVoices": "社群音色",
       "tabCustom": "錄音",
       "promptGuideTitle": "朗讀導引（4–10秒）",
       "promptGuideText": "清晨的陽光灑在大地上，微風拂過樹梢。",
@@ -28,9 +28,6 @@
       "customVoice": "自訂錄音",
       "noHistory": "尚無已儲存的錄音",
       "recordFirstPrompt": "錄製您的第一段錄音以開始使用",
-      "switchToSampleVoices": "範例音色",
-      "viewSavedPrompts": "已儲存的錄音",
-      "samples": "範例",
       "history": "歷史",
       "recordingCaptured": "錄音已完成",
       "activeVoiceId": "目前錄音 ID：",
@@ -39,16 +36,19 @@
       "selected": "已選取",
       "deleteConfirm": "確定要刪除錄音 #{id} 嗎？",
       "recordingListItem": "{duration} 錄音",
-      "preferRecordedVoices": "想使用您的錄音？",
-      "recordingTab": "錄音頁",
-      "findPreviousVoices": "尋找先前的錄音？",
-      "historyTab": "歷史頁",
-      "preferSampleVoices": "想使用範例音色？",
-      "sampleVoiceTab": "範例音色頁",
       "confirm": "確認",
       "playPreview": "播放預覽",
       "stopPreview": "停止預覽",
-      "deleteRecording": "刪除錄音"
+      "deleteRecording": "刪除錄音",
+      "communityVoices": "社群音色",
+      "yourVoice": "您的音色",
+      "previouslyRecorded": "先前錄製",
+      "last24h": "24 小時內儲存",
+      "useThisVoice": "使用此音色",
+      "processing": "處理中…",
+      "showAll": "顯示全部 {n}",
+      "showLess": "收起",
+      "noVoicesAvailable": "正在載入音色…"
     },
     "speedSection": {
       "slow": "慢速",
@@ -102,7 +102,9 @@
       "deleteConfirm": "確定要刪除這筆合成音訊嗎？\n\n\"{text}\"",
       "deleteAria": "刪除合成音訊",
       "play": "播放",
-      "pause": "暫停"
+      "pause": "暫停",
+      "showAll": "顯示全部",
+      "showLess": "收起"
     },
     "player": {
       "close": "關閉播放器",

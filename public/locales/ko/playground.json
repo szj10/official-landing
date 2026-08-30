@@ -12,7 +12,7 @@
       "replaceConfirm": "텍스트 바꾸기"
     },
     "voiceSection": {
-      "sampleVoices": "샘플 음성",
+      "sampleVoices": "커뮤니티 보이스",
       "tabCustom": "녹음",
       "promptGuideTitle": "낭독 안내 (4–10초)",
       "promptGuideText": "아침 햇살이 포근하게 세상을 비추고, 시원한 바람이 나뭇잎을 간지럽힙니다. 새로운 하루가 활기차게 시작됩니다.",
@@ -28,9 +28,6 @@
       "customVoice": "내 녹음",
       "noHistory": "저장된 녹음이 아직 없습니다",
       "recordFirstPrompt": "첫 녹음을 만들어 시작해 보세요",
-      "switchToSampleVoices": "샘플 음성",
-      "viewSavedPrompts": "저장된 녹음",
-      "samples": "샘플",
       "history": "기록",
       "recordingCaptured": "녹음 완료",
       "activeVoiceId": "활성 녹음 ID:",
@@ -39,16 +36,19 @@
       "selected": "선택됨",
       "deleteConfirm": "녹음 #{id}을(를) 삭제할까요?",
       "recordingListItem": "{duration} 녹음",
-      "preferRecordedVoices": "내 녹음을 사용할까요?",
-      "recordingTab": "녹음 탭",
-      "findPreviousVoices": "이전 녹음을 찾을까요?",
-      "historyTab": "기록 탭",
-      "preferSampleVoices": "샘플 음성을 사용할까요?",
-      "sampleVoiceTab": "샘플 음성 탭",
       "confirm": "확인",
       "playPreview": "미리듣기 재생",
       "stopPreview": "미리듣기 중지",
-      "deleteRecording": "녹음 삭제"
+      "deleteRecording": "녹음 삭제",
+      "communityVoices": "커뮤니티 보이스",
+      "yourVoice": "내 목소리",
+      "previouslyRecorded": "이전 녹음",
+      "last24h": "24시간 저장",
+      "useThisVoice": "이 목소리 사용",
+      "processing": "처리 중…",
+      "showAll": "전체 {n}개 보기",
+      "showLess": "접기",
+      "noVoicesAvailable": "보이스 불러오는 중…"
     },
     "speedSection": {
       "slow": "느리게",
@@ -102,7 +102,9 @@
       "deleteConfirm": "이 생성 오디오를 삭제할까요?\n\n\"{text}\"",
       "deleteAria": "생성 오디오 삭제",
       "play": "재생",
-      "pause": "일시정지"
+      "pause": "일시정지",
+      "showAll": "전체 보기",
+      "showLess": "접기"
     },
     "player": {
       "close": "플레이어 닫기",

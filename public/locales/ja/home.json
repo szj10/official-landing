@@ -1,77 +1,85 @@
 {
   "hero": {
-    "title": "[TRANSLATE: AI-Powered Video Creation]",
-    "titleHighlight": "[TRANSLATE: From Script to Screen]",
-    "subtitle": "[TRANSLATE: Transform your ideas into professional videos in minutes. Our end-to-end AI solution handles scriptwriting, voice synthesis, and video generation—all in one seamless platform.]"
+    "title": "AI による動画制作",
+    "titleHighlight": "脚本からスクリーンまで",
+    "subtitle": "アイデアを数分でプロ品質の動画に。脚本作成、音声合成、動画生成まで、シームレスなプラットフォームで一気通貫の AI ソリューションを提供します。",
+    "badge": "Huavoi 2.0 をご紹介",
+    "dashboardAlt": "Huavoi ダッシュボードのプレビュー"
   },
   "trust": {
-    "title": "[TRANSLATE: Trusted by 300+ leading companies worldwide]"
+    "title": "これまでに 10,000 本以上の動画を制作",
+    "company1": "MrBeast",
+    "company2": "Marques Brownlee",
+    "company3": "Linus Tech Tips",
+    "company4": "Veritasium",
+    "company5": "Kurzgesagt",
+    "company6": "Fireship"
   },
   "solutions": {
-    "title": "[TRANSLATE: Complete Video Production Suite]",
-    "subtitle": "[TRANSLATE: Everything you need to create stunning videos, powered by cutting-edge AI]",
+    "title": "完全な動画制作スイート",
+    "subtitle": "最先端 AI で、魅力的な動画制作に必要なすべてを提供",
     "script": {
-      "title": "[TRANSLATE: AI Script Writer]",
-      "description": "[TRANSLATE: Generate compelling scripts tailored to your brand voice and target audience. Our AI understands context, tone, and storytelling to create engaging narratives.]"
+      "title": "AI 脚本ライター",
+      "description": "ブランドの声とターゲット層に合わせた説得力のある脚本を生成。文脈、トーン、ストーリーテリングを理解し、魅力的なナラティブを作成します。"
     },
     "voice": {
-      "title": "[TRANSLATE: Voice Synthesis]",
-      "description": "[TRANSLATE: Choose from 200+ natural-sounding voices in 40+ languages. Professional-grade TTS engine with emotion, pacing, and emphasis control for perfect narration.]"
+      "title": "音声合成",
+      "description": "40 以上の言語で 200 以上の自然な声から選択。感情、ペース、強調を制御できるプロ品質の TTS エンジンで完璧なナレーションを実現。"
     },
     "video": {
-      "title": "[TRANSLATE: Video Generation]",
-      "description": "[TRANSLATE: Transform scripts and audio into polished videos automatically. AI-powered visuals, transitions, and effects that match your content perfectly.]"
+      "title": "動画生成",
+      "description": "脚本と音声を自動で仕上がった動画に変換。コンテンツにぴったり合う AI によるビジュアル、トランジション、エフェクト。"
     }
   },
   "features": {
-    "title": "[TRANSLATE: Why Choose Huavoi]",
-    "subtitle": "[TRANSLATE: Professional video creation made simple, fast, and affordable]",
+    "title": "Huavoi を選ぶ理由",
+    "subtitle": "プロ品質の動画制作を、シンプルに、速く、手頃に",
     "endToEnd": {
-      "title": "[TRANSLATE: End-to-End Solution]",
-      "description": "[TRANSLATE: From concept to final video—no need for multiple tools or vendors. One platform handles everything seamlessly.]"
+      "title": "エンドツーエンドソリューション",
+      "description": "コンセプトから完成動画まで、複数のツールやベンダーは不要。ひとつのプラットフォームでシームレスにすべてを処理。"
     },
     "speed": {
-      "title": "[TRANSLATE: 10x Faster]",
-      "description": "[TRANSLATE: Create professional videos in minutes instead of days. What once required a full production team now takes just a few clicks.]"
+      "title": "10 倍のスピード",
+      "description": "数日かかっていたプロ品質の動画を数分で制作。かつて制作チーム全体が必要だった作業が、数クリックで完了します。"
     },
     "quality": {
-      "title": "[TRANSLATE: Studio Quality]",
-      "description": "[TRANSLATE: Broadcast-quality output with professional voices, smooth transitions, and polished visuals that rival traditional production.]"
+      "title": "スタジオ品質",
+      "description": "プロの声、滑らかなトランジション、洗練されたビジュアルによる放送品質の出力。従来の制作に匹敵します。"
     },
     "affordable": {
-      "title": "[TRANSLATE: Cost Effective]",
-      "description": "[TRANSLATE: Fraction of the cost of traditional video production. No expensive equipment, studios, or production teams required.]"
+      "title": "コスト効率",
+      "description": "従来の動画制作のごく一部のコスト。高価な機材、スタジオ、制作チームは不要です。"
     },
     "customizable": {
-      "title": "[TRANSLATE: Fully Customizable]",
-      "description": "[TRANSLATE: Fine-tune every aspect—voice, pacing, visuals, branding. Maintain complete creative control while AI handles the heavy lifting.]"
+      "title": "完全カスタマイズ",
+      "description": "声、ペース、ビジュアル、ブランディングなど、あらゆる要素を微調整。AI が重い作業を担い、クリエイティブな主導権はあなたが保持。"
     },
     "scalable": {
-      "title": "[TRANSLATE: Scale Instantly]",
-      "description": "[TRANSLATE: Produce one video or thousands with consistent quality. Perfect for content teams, marketing agencies, and enterprises.]"
+      "title": "即座にスケール",
+      "description": "1 本でも数千本でも、一貫した品質で制作。コンテンツチーム、マーケティング代理店、企業に最適です。"
     }
   },
   "cta": {
-    "title": "[TRANSLATE: Ready to Create Amazing Videos?]",
-    "subtitle": "[TRANSLATE: Join thousands of creators and businesses producing professional videos faster than ever before]"
+    "title": "素晴らしい動画を作る準備はできましたか？",
+    "subtitle": "これまで以上に速くプロ品質の動画を制作する、数千人のクリエイターと企業に参加しましょう"
   },
   "faq": {
-    "title": "[TRANSLATE: Frequently Asked Questions]",
+    "title": "よくある質問",
     "q1": {
-      "question": "[TRANSLATE: What does the video creation process include?]",
-      "answer": "[TRANSLATE: Our platform provides a complete end-to-end solution: AI-powered script generation, professional voice synthesis with 200+ voices, and automated video production with matching visuals. You can use all three together or each component independently.]"
+      "question": "動画制作プロセスには何が含まれますか？",
+      "answer": "当プラットフォームは完全なエンドツーエンドソリューションを提供します：AI による脚本生成、200 以上の声を備えたプロ品質の音声合成、マッチするビジュアルを含む自動動画制作。3 つをまとめて使うことも、各コンポーネントを個別に使うこともできます。"
     },
     "q2": {
-      "question": "[TRANSLATE: How long does it take to create a video?]",
-      "answer": "[TRANSLATE: A typical 2-3 minute video can be created in under 10 minutes. The AI handles scriptwriting, voice generation, and video assembly automatically, dramatically reducing production time compared to traditional methods.]"
+      "question": "動画を 1 本作るのにどのくらいかかりますか？",
+      "answer": "典型的な 2〜3 分の動画は 10 分以内に作成できます。AI が脚本作成、音声生成、動画組み立てを自動で処理し、従来の方法と比べて制作時間を大幅に短縮します。"
     },
     "q3": {
-      "question": "[TRANSLATE: Can I customize the AI-generated content?]",
-      "answer": "[TRANSLATE: Absolutely. You have full control at every step—edit scripts, choose voices, adjust pacing and tone, customize visuals, and add your branding. The AI accelerates the process while you maintain creative control.]"
+      "question": "AI が生成したコンテンツをカスタマイズできますか？",
+      "answer": "もちろんです。脚本の編集、声の選択、ペースとトーンの調整、ビジュアルのカスタマイズ、ブランディングの追加など、すべてのステップで完全なコントロールが可能です。クリエイティブな主導権を保ちながら、AI がプロセスを加速します。"
     },
     "q4": {
-      "question": "[TRANSLATE: What types of videos can I create?]",
-      "answer": "[TRANSLATE: Marketing videos, product demos, training content, social media posts, explainer videos, corporate communications, and more. Our AI adapts to your needs and style requirements.]"
+      "question": "どのような種類の動画を作れますか？",
+      "answer": "マーケティング動画、製品デモ、トレーニングコンテンツ、SNS 投稿、説明動画、企業コミュニケーションなど。当社の AI はニーズとスタイル要件に合わせて適応します。"
     }
   }
 }
