@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useI18n } from "@/i18n";
 import {
   type BackendCommunityVoice,
@@ -74,7 +74,8 @@ export default function PlaygroundContent() {
     silenceAllAudio,
     onTtsStart,
     playGeneratedAudio,
-    stopRecordingPlayback,
+    clearRecordedAudio,
+    clearVoicePreview,
     handleHistoryVoiceDeleted,
     handleHistoryJobDeleted,
   } = usePlaygroundAudio({ currentJobAudioPathRef, stockVoices });
@@ -87,6 +88,8 @@ export default function PlaygroundContent() {
     onRecordingReady: (blob) => setRecordedBlob(blob, { autoplay: true }),
   });
 
+  const { setSelectedVoice } = voice;
+
   const tts = useTtsGeneration({
     t,
     locale,
@@ -98,12 +101,16 @@ export default function PlaygroundContent() {
     anonymousVoiceId: voice.anonymousVoiceId,
     canGenerate: voice.canGenerate,
     historyHydrated: history.hydrated,
+    stockVoicesReady: !stockVoicesLoading,
     prependHistoryJob: history.prependHistoryJob,
     onJobComplete: (job) => {
       if (job.audio_path) {
         playGeneratedAudio(job.audio_path, job.audio_duration);
       }
       setIsHistoryOpen(true);
+      requestAnimationFrame(() => {
+        queueRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      });
     },
     onJobStart: onTtsStart,
     onResumePending: (pending) => {
@@ -127,14 +134,13 @@ export default function PlaygroundContent() {
         const mapped = data.map((v, i) => mapCommunityVoiceToPlaygroundVoice(v, i));
         setStockVoices(mapped);
 
-        // Auto-select first voice if none selected or current is invalid
+        // Auto-select first voice if none selected or current is invalid (preserve custom panel)
         if (mapped.length > 0) {
-          voice.setSelectedVoice((prev) => {
+          setSelectedVoice((prev) => {
             const firstId = mapped[0]?.id ?? null;
             if (!prev || !mapped.find((v) => v.id === prev)) return firstId;
             return prev;
           });
-          voice.setActiveVoicePanel("stock");
         }
       } catch (err) {
         console.warn("Failed to fetch community voices:", err);
@@ -149,7 +155,7 @@ export default function PlaygroundContent() {
     return () => {
       ignore = true;
     };
-  }, [locale]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [locale, setSelectedVoice]);
 
   useEffect(() => {
     currentJobAudioPathRef.current = tts.currentJob?.audio_path;
@@ -200,6 +206,7 @@ export default function PlaygroundContent() {
   };
 
   const handleSelectHistoryVoice = (item: HistoryVoice) => {
+    clearVoicePreview();
     voice.selectHistoryVoice(item);
     setRecordedUrl(historyVoicePromptUrl(item.anonymous_voice_id));
   };
@@ -215,7 +222,7 @@ export default function PlaygroundContent() {
     history.removeHistoryJob(jobId);
   };
 
-  const deriveStickySubtitle = () => {
+  const stickySubtitle = useMemo(() => {
     if (activeStickyPlayer === "tts") {
       if (playingHistoryJobId != null) {
         const hj = history.historyJobs.find((j) => j.playground_job_id === playingHistoryJobId);
@@ -230,15 +237,25 @@ export default function PlaygroundContent() {
         : voice.anonymousVoiceId
           ? t("playground.voicePromptLabel").replace("{id}", String(voice.anonymousVoiceId))
           : t("playground.voiceSection.customVoice");
-    } else {
-      if (playingHistoryVoiceId != null) {
-        return t("playground.voicePromptLabel").replace("{id}", String(playingHistoryVoiceId));
-      }
-      return voice.anonymousVoiceId
-        ? t("playground.voicePromptLabel").replace("{id}", String(voice.anonymousVoiceId))
-        : t("playground.unsavedRecording");
     }
-  };
+
+    if (playingHistoryVoiceId != null) {
+      return t("playground.voicePromptLabel").replace("{id}", String(playingHistoryVoiceId));
+    }
+    return voice.anonymousVoiceId
+      ? t("playground.voicePromptLabel").replace("{id}", String(voice.anonymousVoiceId))
+      : t("playground.unsavedRecording");
+  }, [
+    activeStickyPlayer,
+    playingHistoryJobId,
+    playingHistoryVoiceId,
+    history.historyJobs,
+    voice.activeVoicePanel,
+    voice.selectedVoice,
+    voice.anonymousVoiceId,
+    stockVoices,
+    t,
+  ]);
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 py-6 sm:py-10 pb-16">
@@ -324,7 +341,7 @@ export default function PlaygroundContent() {
                   ? t("playground.preview.synthesizing")
                   : voice.uploadStatus === "uploading"
                     ? t("playground.voiceSection.uploading")
-                    : "Generate & play"}
+                    : t("playground.preview.generate")}
               </span>
             </button>
           </div>
@@ -337,7 +354,7 @@ export default function PlaygroundContent() {
                 ? t("playground.synthesizedSpeech")
                 : t("playground.yourRecording")
             }
-            subtitle={deriveStickySubtitle()}
+            subtitle={stickySubtitle}
             isPlaying={activeStickyPlayer === "tts" ? isPlaying : isRecPlaying}
             progress={activeStickyPlayer === "tts" ? audioProgress : recAudioProgress}
             currentTime={activeStickyPlayer === "tts" ? audioCurrentTime : recAudioCurrentTime}
@@ -439,7 +456,7 @@ export default function PlaygroundContent() {
         onStartRecording={voice.startRecording}
         onStopRecording={voice.stopRecording}
         onResetRecording={() => {
-          stopRecordingPlayback();
+          clearRecordedAudio();
           voice.resetRecording(stockVoices[0]?.id ?? null);
         }}
         onSelectHistoryVoice={handleSelectHistoryVoice}

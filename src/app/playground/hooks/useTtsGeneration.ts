@@ -42,6 +42,8 @@ type UseTtsGenerationOptions = {
   anonymousVoiceId: number | null;
   canGenerate: boolean;
   historyHydrated: boolean;
+  /** When false, pending-job resume waits so stock voice names resolve correctly. */
+  stockVoicesReady: boolean;
   prependHistoryJob: (job: HistoryTTSJob) => void;
   onJobComplete: (job: TTSJobResponse, contextOverride?: JobContext) => void;
   onJobStart: () => void;
@@ -62,6 +64,7 @@ export function useTtsGeneration({
   anonymousVoiceId,
   canGenerate,
   historyHydrated,
+  stockVoicesReady,
   prependHistoryJob,
   onJobComplete,
   onJobStart,
@@ -80,6 +83,7 @@ export function useTtsGeneration({
 
   const pollingIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const pollFailureCountRef = useRef(0);
+  const resumeAttemptedRef = useRef(false);
 
   useEffect(() => {
     return () => {
@@ -92,7 +96,8 @@ export function useTtsGeneration({
   // setHistoryJobs overwriting a saveCompletedJob prepend from resume.
   // ---------------------------------------------------------------------------
   useEffect(() => {
-    if (!historyHydrated) return;
+    if (!historyHydrated || !stockVoicesReady || resumeAttemptedRef.current) return;
+    resumeAttemptedRef.current = true;
 
     const resumePending = async () => {
       const pending = readPendingJob();
@@ -157,8 +162,8 @@ export function useTtsGeneration({
     };
 
     void resumePending();
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- run once after history hydrate
-  }, [historyHydrated]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- run once after hydrate + stock voices
+  }, [historyHydrated, stockVoicesReady]);
 
   function resetGenerationState() {
     setIsGenerating(true);
@@ -276,6 +281,7 @@ export function useTtsGeneration({
     if (job.status === "completed" && job.audio_path) {
       onJobComplete(job);
       setIsGenerating(false);
+      setShowCompletionCard(true);
       saveCompletedJob(job);
 
       // Clear pending job status

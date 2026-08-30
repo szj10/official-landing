@@ -405,6 +405,7 @@ export function usePlaygroundAudio({
     audioRef.current?.pause();
     setIsPlaying(false);
     setAudioProgress(0);
+    setPlayingHistoryJobId(null);
   };
 
   const closeStickyPlayer = () => {
@@ -424,6 +425,7 @@ export function usePlaygroundAudio({
     (activeStickyPlayer === "rec" && !!recordedAudioUrl);
 
   const playGeneratedAudio = (audioPath: string, duration: number | null) => {
+    setPlayingHistoryJobId(null);
     pendingTtsAutoplayRef.current = true;
     setAudioUrl(resolvePlaygroundAudioUrl(audioPath));
     setAudioDuration(duration);
