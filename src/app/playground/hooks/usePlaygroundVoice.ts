@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { HistoryVoice } from "../components/types";
+import { formatRetryAfter } from "../components/types";
 import { type Locale } from "@/i18n/config";
 
 export type UploadStatus = "idle" | "uploading" | "success" | "error";

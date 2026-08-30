@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { PlaygroundVoice } from "../voices.config";
 import type { HistoryTTSJob, TTSJobResponse, TTSJobStatus } from "../components/types";
+import { clearPendingJob, readPendingJob, writePendingJob } from "../lib/historyStorage";
 import { resolveTtsLanguage, type Locale } from "@/i18n/config";
 
 const MAX_TTS_TEXT_LENGTH = parseInt(process.env.NEXT_PUBLIC_MAX_TTS_TEXT_LENGTH || "600", 10);
