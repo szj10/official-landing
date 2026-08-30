@@ -26,9 +26,9 @@ export default function PricingPage() {
     {
       name: t("pricing.free.name"),
       description: t("pricing.free.description"),
-      price: Number(
-        t(billingCycle === "monthly" ? "pricing.free.price.monthly" : "pricing.free.price.annual")
-      ),
+      monthlyPrice: t("pricing.free.price.monthly"),
+      annualPrice: t("pricing.free.price.annual"),
+      isFree: true,
       features: [
         t("pricing.free.features.f1"),
         t("pricing.free.features.f2"),
@@ -43,9 +43,9 @@ export default function PricingPage() {
     {
       name: t("pricing.pro.name"),
       description: t("pricing.pro.description"),
-      price: Number(
-        t(billingCycle === "monthly" ? "pricing.pro.price.monthly" : "pricing.pro.price.annual")
-      ),
+      monthlyPrice: t("pricing.pro.price.monthly"),
+      annualPrice: t("pricing.pro.price.annual"),
+      isFree: false,
       features: [
         t("pricing.pro.features.f1"),
         t("pricing.pro.features.f2"),
@@ -62,13 +62,9 @@ export default function PricingPage() {
     {
       name: t("pricing.premium.name"),
       description: t("pricing.premium.description"),
-      price: Number(
-        t(
-          billingCycle === "monthly"
-            ? "pricing.premium.price.monthly"
-            : "pricing.premium.price.annual"
-        )
-      ),
+      monthlyPrice: t("pricing.premium.price.monthly"),
+      annualPrice: t("pricing.premium.price.annual"),
+      isFree: false,
       features: [
         t("pricing.premium.features.f1"),
         t("pricing.premium.features.f2"),
@@ -86,7 +82,7 @@ export default function PricingPage() {
     {
       name: t("pricing.enterprise.name"),
       description: t("pricing.enterprise.description"),
-      price: null,
+      isEnterprise: true,
       features: [
         t("pricing.enterprise.features.f1"),
         t("pricing.enterprise.features.f2"),
@@ -101,7 +97,6 @@ export default function PricingPage() {
       ],
       cta: t("pricing.enterprise.cta"),
       popular: false,
-      isEnterprise: true,
     },
   ];
 
@@ -193,20 +188,29 @@ export default function PricingPage() {
                       {plan.description}
                     </p>
 
-                    <div className="mb-6 flex items-baseline">
-                      {plan.price !== null ? (
-                        <>
-                          <span className="text-4xl font-extrabold text-gray-900 dark:text-white tracking-tight">
-                            ${plan.price}
-                          </span>
-                          <span className="text-xs text-gray-500 dark:text-zinc-500 ml-1">
-                            {t("pricing.perMonth")}
-                          </span>
-                        </>
-                      ) : (
+                    <div className="mb-6">
+                      {plan.isEnterprise ? (
                         <span className="text-2xl font-extrabold text-gray-900 dark:text-white tracking-tight">
                           {t("pricing.custom")}
                         </span>
+                      ) : (
+                        <>
+                          <div className="flex items-baseline gap-2">
+                            <span className="text-4xl font-extrabold text-gray-900 dark:text-white tracking-tight">
+                              {billingCycle === "annual" ? plan.annualPrice : plan.monthlyPrice}
+                            </span>
+                            {billingCycle === "annual" && !plan.isFree && (
+                              <span className="text-xs text-gray-500 dark:text-zinc-500">
+                                {t("pricing.free.price.billedAnnually")}
+                              </span>
+                            )}
+                          </div>
+                          {billingCycle === "annual" && !plan.isFree && (
+                            <p className="text-xs text-gray-500 dark:text-zinc-500 line-through mt-1">
+                              {plan.monthlyPrice} {t("pricing.free.price.billedMonthly")}
+                            </p>
+                          )}
+                        </>
                       )}
                     </div>
 
@@ -376,45 +380,24 @@ export default function PricingPage() {
           </div>
         </section>
 
-        {/* ─── Bottom Layout CTA grids ───────────────────────────────────── */}
+        {/* ─── Custom Solution CTA ─────────────────────────────────────── */}
         <section className="py-20">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div className="glass-panel rounded-3xl p-8 shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow">
-                <div>
-                  <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">
-                    {t("pricing.customSolution.title")}
-                  </h3>
-                  <p className="text-xs text-gray-600 dark:text-zinc-400 mb-6 leading-relaxed">
-                    {t("pricing.customSolution.description")}
-                  </p>
-                </div>
-                <Link
-                  href="/about#connect-with-us"
-                  className="w-full sm:w-auto inline-block bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white text-xs font-semibold px-6 py-3 rounded-xl transition-all shadow-md active:scale-95 text-center"
-                >
-                  {t("pricing.customSolution.cta")}
-                </Link>
+          <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="glass-panel rounded-3xl p-8 shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow">
+              <div>
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">
+                  {t("pricing.customSolution.title")}
+                </h3>
+                <p className="text-xs text-gray-600 dark:text-zinc-400 mb-6 leading-relaxed">
+                  {t("pricing.customSolution.description")}
+                </p>
               </div>
-
-              <div className="glass-panel rounded-3xl p-8 shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow">
-                <div>
-                  <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">
-                    {t("pricing.freeTrial.title")}
-                  </h3>
-                  <p className="text-xs text-gray-600 dark:text-zinc-400 mb-6 leading-relaxed">
-                    {t("pricing.freeTrial.description")}
-                  </p>
-                </div>
-                <Link
-                  href={process.env.NEXT_PUBLIC_SIGNUP_URL || "/"}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-full sm:w-auto inline-block bg-gray-900 dark:bg-zinc-800 hover:bg-gray-800 dark:hover:bg-zinc-700 text-white text-xs font-semibold px-6 py-3 rounded-xl transition-all active:scale-95 text-center"
-                >
-                  {t("pricing.freeTrial.cta")}
-                </Link>
-              </div>
+              <Link
+                href="/about#connect-with-us"
+                className="w-full sm:w-auto inline-block bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white text-xs font-semibold px-6 py-3 rounded-xl transition-all shadow-md active:scale-95 text-center"
+              >
+                {t("pricing.customSolution.cta")}
+              </Link>
             </div>
           </div>
         </section>
@@ -429,28 +412,10 @@ export default function PricingPage() {
             </div>
 
             <div className="max-w-3xl mx-auto space-y-4">
-              {[
-                {
-                  q: t("pricing.faq.q1.q"),
-                  a: t("pricing.faq.q1.a"),
-                },
-                {
-                  q: t("pricing.faq.q2.q"),
-                  a: t("pricing.faq.q2.a"),
-                },
-                {
-                  q: t("pricing.faq.q3.q"),
-                  a: t("pricing.faq.q3.a"),
-                },
-                {
-                  q: t("pricing.faq.q4.q"),
-                  a: t("pricing.faq.q4.a"),
-                },
-                {
-                  q: t("pricing.faq.q5.q"),
-                  a: t("pricing.faq.q5.a"),
-                },
-              ].map((faq, i) => (
+              {[1, 2, 3, 4, 5, 6].map((n) => ({
+                q: t(`pricing.faq.q${n}.q`),
+                a: t(`pricing.faq.q${n}.a`),
+              })).map((faq, i) => (
                 <details
                   key={i}
                   className="glass-panel rounded-2xl p-6 group transition-all duration-200 hover:border-indigo-500/25"

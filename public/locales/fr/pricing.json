@@ -2,19 +2,20 @@
   "pricing": {
     "badge": "Forfaits tarifaires flexibles",
     "title": "Tarifs simples et transparents",
-    "subtitle": "1 crédit = 1 génération vidéo. Choisis le forfait adapté à tes besoins. Tous les forfaits payants incluent un essai gratuit de 14 jours.",
+    "subtitle": "1 crédit = 1 génération vidéo. Choisis le forfait qui te convient.",
     "monthly": "Mensuel",
     "annual": "Annuel",
     "save20": "Économisez 20 %",
-    "perMonth": "/mois",
     "custom": "Sur mesure",
     "mostPopular": "Le plus populaire",
     "free": {
       "name": "Free",
       "description": "Commence avec la génération vidéo de base",
       "price": {
-        "monthly": "0",
-        "annual": "0"
+        "monthly": "$0",
+        "annual": "$0",
+        "billedAnnually": "facturation annuelle",
+        "billedMonthly": "en facturation mensuelle"
       },
       "features": {
         "f1": "5 crédits par mois",
@@ -30,8 +31,8 @@
       "name": "Pro",
       "description": "Pour les créateurs qui ont besoin de plus de capacité",
       "price": {
-        "monthly": "49",
-        "annual": "39"
+        "monthly": "49 $/mois",
+        "annual": "39 $/mois"
       },
       "features": {
         "f1": "25 crédits par mois",
@@ -43,14 +44,14 @@
         "f7": "Personnalisation de l'export",
         "f8": "Accès API"
       },
-      "cta": "Commencer l'essai gratuit"
+      "cta": "Commencer"
     },
     "premium": {
       "name": "Premium",
       "description": "Capacité maximale pour les professionnels",
       "price": {
-        "monthly": "199",
-        "annual": "159"
+        "monthly": "199 $/mois",
+        "annual": "159 $/mois"
       },
       "features": {
         "f1": "100 crédits par mois",
@@ -63,7 +64,7 @@
         "f8": "Exports en marque blanche",
         "f9": "Accès API"
       },
-      "cta": "Commencer l'essai gratuit"
+      "cta": "Commencer"
     },
     "enterprise": {
       "name": "Enterprise",
@@ -104,32 +105,31 @@
       "description": "Notre équipe entreprise peut créer une solution vidéo adaptée à ton flux de travail, incluant modèles IA personnalisés, clonage vocal, options marque blanche et support dédié.",
       "cta": "Contacter les ventes"
     },
-    "freeTrial": {
-      "title": "Essai gratuit de 14 jours",
-      "description": "Crée ta première vidéo IA en quelques minutes. Aucune carte bancaire requise. Découvre toute la puissance de la création vidéo script-à-écran.",
-      "cta": "Commencer l'essai gratuit"
-    },
     "faq": {
       "title": "Questions fréquentes",
       "q1": {
-        "q": "Que comprend l'essai gratuit ?",
-        "a": "Accès complet à toutes les fonctionnalités pendant 14 jours. Crée jusqu'à 5 vidéos avec rédaction de scripts IA, synthèse vocale et génération vidéo. Aucune carte bancaire requise."
+        "q": "Qu'est-ce qu'un crédit et comment est-il utilisé ?",
+        "a": "Un crédit sert à générer une vidéo. Chaque génération consomme 1 crédit, quelle que soit la durée ou la complexité. Les générations échouées sont automatiquement remboursées."
       },
       "q2": {
-        "q": "Puis-je changer de forfait à tout moment ?",
-        "a": "Oui, tu peux upgrader ou downgrader à tout moment. Lors d'un upgrade, la différence au prorata est facturée. Lors d'un downgrade, tu reçois un crédit pour la partie non utilisée."
+        "q": "Comment fonctionne le report de crédits ?",
+        "a": "Les crédits non utilisés sont reportés au mois suivant, jusqu'à la limite de ton niveau (Free : 10, Pro : 50, Premium : illimité). Les crédits expirent après 6 mois d'inactivité."
       },
       "q3": {
+        "q": "Puis-je changer ou annuler mon forfait ?",
+        "a": "Oui, tu peux upgrader, downgrader ou annuler à tout moment. Lors d'un upgrade, la différence au prorata est facturée. En cas de downgrade, tu gardes les fonctionnalités de ton forfait actuel jusqu'à la fin du cycle de facturation."
+      },
+      "q4": {
+        "q": "Proposez-vous des forfaits équipe ?",
+        "a": "Les forfaits équipe avec crédits partagés et collaboration sont disponibles pour les abonnés Premium. Contacte-nous pour un tarif personnalisé."
+      },
+      "q5": {
         "q": "Quels formats et qualités vidéo sont pris en charge ?",
         "a": "Nous prenons en charge les formats MP4, MOV et WebM. La qualité va de 720p (Free) à 1080p HD (Pro) et 4K Ultra HD (Premium et Enterprise)."
       },
-      "q4": {
+      "q6": {
         "q": "Puis-je utiliser mes propres scripts ou voix ?",
-        "a": "Absolument. Bien que notre IA puisse générer scripts et voix, tu peux aussi téléverser tes scripts, enregistrer de l'audio personnalisé ou utiliser le clonage vocal (Enterprise)."
-      },
-      "q5": {
-        "q": "Proposez-vous des remboursements ?",
-        "a": "Oui, nous offrons une garantie satisfait ou remboursé de 30 jours pour tous les forfaits payants. Contacte notre équipe support si tu n'es pas satisfait."
+        "a": "Absolument. En plus des scripts et voix générés par l'IA, tu peux importer tes scripts, enregistrer de l'audio personnalisé ou utiliser le clonage vocal (Enterprise) pour reproduire des voix spécifiques."
       }
     }
   }

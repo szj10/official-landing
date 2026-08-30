@@ -2,19 +2,20 @@
   "pricing": {
     "badge": "Planes de precios flexibles",
     "title": "Precios simples y transparentes",
-    "subtitle": "1 crédito = 1 generación de vídeo. Elige el plan que se adapte a ti. Todos los planes de pago incluyen una prueba gratuita de 14 días.",
+    "subtitle": "1 crédito = 1 generación de vídeo. Elige el plan que se adapte a tus necesidades.",
     "monthly": "Mensual",
     "annual": "Anual",
     "save20": "Ahorra un 20 %",
-    "perMonth": "/mes",
     "custom": "Personalizado",
     "mostPopular": "Más popular",
     "free": {
       "name": "Free",
       "description": "Empieza con generación de vídeo básica",
       "price": {
-        "monthly": "0",
-        "annual": "0"
+        "monthly": "$0",
+        "annual": "$0",
+        "billedAnnually": "facturación anual",
+        "billedMonthly": "con facturación mensual"
       },
       "features": {
         "f1": "5 créditos al mes",
@@ -30,8 +31,8 @@
       "name": "Pro",
       "description": "Para creadores que necesitan más capacidad",
       "price": {
-        "monthly": "49",
-        "annual": "39"
+        "monthly": "$49/mes",
+        "annual": "$39/mes"
       },
       "features": {
         "f1": "25 créditos al mes",
@@ -43,14 +44,14 @@
         "f7": "Personalización de exportación",
         "f8": "Acceso a la API"
       },
-      "cta": "Iniciar prueba gratuita"
+      "cta": "Empezar"
     },
     "premium": {
       "name": "Premium",
       "description": "Capacidad máxima para profesionales",
       "price": {
-        "monthly": "199",
-        "annual": "159"
+        "monthly": "$199/mes",
+        "annual": "$159/mes"
       },
       "features": {
         "f1": "100 créditos al mes",
@@ -63,7 +64,7 @@
         "f8": "Exportaciones de marca blanca",
         "f9": "Acceso a la API"
       },
-      "cta": "Iniciar prueba gratuita"
+      "cta": "Empezar"
     },
     "enterprise": {
       "name": "Enterprise",
@@ -104,32 +105,31 @@
       "description": "Nuestro equipo enterprise puede crear una solución de vídeo adaptada a tu flujo de trabajo, incluyendo modelos de IA personalizados, clonación de voz, opciones de marca blanca y soporte dedicado.",
       "cta": "Contactar ventas"
     },
-    "freeTrial": {
-      "title": "Pruébalo gratis durante 14 días",
-      "description": "Crea tu primer vídeo con IA en minutos. Sin tarjeta de crédito. Experimenta todo el poder de la creación de vídeo de guion a pantalla.",
-      "cta": "Iniciar prueba gratuita"
-    },
     "faq": {
       "title": "Preguntas frecuentes",
       "q1": {
-        "q": "¿Qué incluye la prueba gratuita?",
-        "a": "Acceso completo a todas las funciones durante 14 días. Crea hasta 5 vídeos con redacción de guiones con IA, síntesis de voz y generación de vídeo. Sin tarjeta de crédito."
+        "q": "¿Qué es un crédito y cómo se usa?",
+        "a": "Un crédito se usa para generar un vídeo. Cada generación consume 1 crédito, sin importar la duración o la complejidad. Las generaciones fallidas se reembolsan automáticamente."
       },
       "q2": {
-        "q": "¿Puedo cambiar de plan en cualquier momento?",
-        "a": "Sí, puedes mejorar o reducir tu plan en cualquier momento. Al mejorar, se cobra la diferencia prorrateada. Al reducir, recibes crédito por la parte no utilizada."
+        "q": "¿Cómo funciona la acumulación de créditos?",
+        "a": "Los créditos no usados se acumulan al mes siguiente, hasta el máximo de tu nivel (Free: 10, Pro: 50, Premium: ilimitado). Los créditos caducan tras 6 meses de inactividad."
       },
       "q3": {
-        "q": "¿Qué formatos y calidades de vídeo admitís?",
-        "a": "Admitimos formatos MP4, MOV y WebM. La calidad va desde 720p (Free) hasta 1080p HD (Pro) y 4K Ultra HD (Premium y Enterprise)."
+        "q": "¿Puedo cambiar o cancelar mi plan?",
+        "a": "Sí, puedes mejorar, reducir o cancelar tu plan en cualquier momento. Al mejorar, se cobra la diferencia prorrateada. Al reducir, mantienes las funciones de tu plan actual hasta el final del ciclo de facturación."
       },
       "q4": {
-        "q": "¿Puedo usar mis propios guiones o voces?",
-        "a": "Por supuesto. Aunque nuestra IA puede generar guiones y voces, también puedes subir tus guiones, grabar audio personalizado o usar clonación de voz (Enterprise)."
+        "q": "¿Ofrecéis planes de equipo?",
+        "a": "Los planes de equipo con créditos compartidos y colaboración están disponibles para suscriptores Premium. Contáctanos para precios personalizados."
       },
       "q5": {
-        "q": "¿Ofrecéis reembolsos?",
-        "a": "Sí, ofrecemos garantía de devolución de 30 días para todos los planes de pago. Si no estás satisfecho, contacta con nuestro equipo de soporte."
+        "q": "¿Qué formatos y calidades de vídeo admitís?",
+        "a": "Admitimos los formatos MP4, MOV y WebM. La calidad va desde 720p (Free) hasta 1080p HD (Pro) y 4K Ultra HD (Premium y Enterprise)."
+      },
+      "q6": {
+        "q": "¿Puedo usar mis propios guiones o voces?",
+        "a": "Por supuesto. Además de guiones y voces generados por IA, puedes subir tus guiones, grabar audio personalizado o usar clonación de voz (Enterprise) para replicar voces específicas."
       }
     }
   }
