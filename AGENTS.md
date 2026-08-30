@@ -8,7 +8,7 @@ This project is a Next.js (App Router) landing page, pricing application, and in
 - **Framework**: Next.js 16 (App Router)
 - **Language**: TypeScript
 - **Styling**: Tailwind CSS (v4)
-- **Internationalization**: `next-intl`
+- **Internationalization**: Custom `I18nProvider` in `src/i18n/` (BCP-47 locale codes, client-side JSON namespaces)
 - **Theme**: Automatic dark mode support via `next-themes`.
 - **Package Manager**: pnpm (primary), npm compatible
 
