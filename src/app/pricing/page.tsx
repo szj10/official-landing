@@ -22,15 +22,13 @@ export default function PricingPage() {
   const { t } = useI18n();
   const [billingCycle, setBillingCycle] = useState<"monthly" | "annual">("monthly");
 
-  const handleContactSales = () => {
-    window.location.href = "mailto:abc@example.com";
-  };
-
   const plans = [
     {
-      name: "Free",
+      name: t("pricing.free.name"),
       description: t("pricing.free.description"),
-      price: billingCycle === "monthly" ? 0 : 0,
+      price: Number(
+        t(billingCycle === "monthly" ? "pricing.free.price.monthly" : "pricing.free.price.annual")
+      ),
       features: [
         t("pricing.free.features.f1"),
         t("pricing.free.features.f2"),
@@ -38,15 +36,16 @@ export default function PricingPage() {
         t("pricing.free.features.f4"),
         t("pricing.free.features.f5"),
         t("pricing.free.features.f6"),
-        t("pricing.free.features.f7"),
       ],
       cta: t("pricing.free.cta"),
       popular: false,
     },
     {
-      name: "Pro",
+      name: t("pricing.pro.name"),
       description: t("pricing.pro.description"),
-      price: billingCycle === "monthly" ? 49 : 39,
+      price: Number(
+        t(billingCycle === "monthly" ? "pricing.pro.price.monthly" : "pricing.pro.price.annual")
+      ),
       features: [
         t("pricing.pro.features.f1"),
         t("pricing.pro.features.f2"),
@@ -56,15 +55,20 @@ export default function PricingPage() {
         t("pricing.pro.features.f6"),
         t("pricing.pro.features.f7"),
         t("pricing.pro.features.f8"),
-        t("pricing.pro.features.f9"),
       ],
       cta: t("pricing.pro.cta"),
       popular: true,
     },
     {
-      name: "Premium",
+      name: t("pricing.premium.name"),
       description: t("pricing.premium.description"),
-      price: billingCycle === "monthly" ? 199 : 159,
+      price: Number(
+        t(
+          billingCycle === "monthly"
+            ? "pricing.premium.price.monthly"
+            : "pricing.premium.price.annual"
+        )
+      ),
       features: [
         t("pricing.premium.features.f1"),
         t("pricing.premium.features.f2"),
@@ -75,13 +79,12 @@ export default function PricingPage() {
         t("pricing.premium.features.f7"),
         t("pricing.premium.features.f8"),
         t("pricing.premium.features.f9"),
-        t("pricing.premium.features.f10"),
       ],
       cta: t("pricing.premium.cta"),
       popular: false,
     },
     {
-      name: "Enterprise",
+      name: t("pricing.enterprise.name"),
       description: t("pricing.enterprise.description"),
       price: null,
       features: [
@@ -222,15 +225,13 @@ export default function PricingPage() {
                   </div>
 
                   <Link
-                    href={process.env.NEXT_PUBLIC_SIGNUP_URL || "/"}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    onClick={(e) => {
-                      if (plan.isEnterprise) {
-                        e.preventDefault();
-                        handleContactSales();
-                      }
-                    }}
+                    href={
+                      plan.isEnterprise
+                        ? "/about#connect-with-us"
+                        : process.env.NEXT_PUBLIC_SIGNUP_URL || "/"
+                    }
+                    target={plan.isEnterprise ? undefined : "_blank"}
+                    rel={plan.isEnterprise ? undefined : "noopener noreferrer"}
                     className={`block w-full text-center py-3 rounded-xl text-xs font-semibold transition-all duration-200 ${
                       plan.popular
                         ? "bg-gradient-to-r from-indigo-600 to-purple-600 text-white hover:from-indigo-700 hover:to-purple-700 shadow-md shadow-indigo-500/20 active:scale-95"
@@ -262,13 +263,13 @@ export default function PricingPage() {
                       {t("pricing.compare.feature")}
                     </th>
                     <th className="py-5 px-6 text-center text-xs font-bold text-gray-900 dark:text-white uppercase tracking-wider">
-                      {t("pricing.starter.name")}
+                      {t("pricing.free.name")}
                     </th>
                     <th className="py-5 px-6 text-center text-xs font-bold text-gray-900 dark:text-white uppercase tracking-wider">
-                      {t("pricing.professional.name")}
+                      {t("pricing.pro.name")}
                     </th>
                     <th className="py-5 px-6 text-center text-xs font-bold text-gray-900 dark:text-white uppercase tracking-wider">
-                      {t("pricing.business.name")}
+                      {t("pricing.premium.name")}
                     </th>
                     <th className="py-5 px-6 text-center text-xs font-bold text-gray-900 dark:text-white uppercase tracking-wider">
                       {t("pricing.enterprise.name")}
@@ -278,66 +279,73 @@ export default function PricingPage() {
                 <tbody>
                   {[
                     {
-                      feature: t("pricing.compare.videosPerMonth"),
-                      starter: "10",
-                      pro: "100",
-                      business: t("pricing.compare.unlimited"),
+                      feature: t("pricing.compare.creditsPerMonth"),
+                      free: "5",
+                      pro: "25",
+                      premium: "100",
+                      enterprise: t("pricing.custom"),
+                    },
+                    {
+                      feature: t("pricing.compare.creditRollover"),
+                      free: "10",
+                      pro: "50",
+                      premium: t("pricing.compare.unlimited"),
+                      enterprise: t("pricing.compare.unlimited"),
+                    },
+                    {
+                      feature: t("pricing.compare.voiceCreations"),
+                      free: "2",
+                      pro: "5",
+                      premium: "10",
                       enterprise: t("pricing.compare.unlimited"),
                     },
                     {
                       feature: t("pricing.compare.aiScriptWriter"),
-                      starter: "✓",
+                      free: "✓",
                       pro: "✓",
-                      business: "✓",
+                      premium: "✓",
                       enterprise: "✓",
                     },
                     {
-                      feature: t("pricing.compare.voiceSelection"),
-                      starter: t("pricing.compare.basic"),
-                      pro: "200+",
-                      business: "200+",
-                      enterprise: t("pricing.custom"),
-                    },
-                    {
                       feature: t("pricing.compare.videoQuality"),
-                      starter: "720p",
+                      free: "720p",
                       pro: "1080p",
-                      business: "4K",
+                      premium: "4K",
                       enterprise: "4K+",
                     },
                     {
                       feature: t("pricing.compare.customBranding"),
-                      starter: "—",
-                      pro: "✓",
-                      business: "✓",
+                      free: "—",
+                      pro: "—",
+                      premium: "✓",
                       enterprise: "✓",
                     },
                     {
                       feature: t("pricing.compare.teamCollaboration"),
-                      starter: "—",
+                      free: "—",
                       pro: "—",
-                      business: "✓",
+                      premium: "✓",
                       enterprise: "✓",
                     },
                     {
                       feature: t("pricing.compare.apiAccess"),
-                      starter: "—",
+                      free: "—",
                       pro: "✓",
-                      business: "✓",
+                      premium: "✓",
                       enterprise: "✓",
                     },
                     {
                       feature: t("pricing.compare.voiceCloning"),
-                      starter: "—",
+                      free: "—",
                       pro: "—",
-                      business: "—",
+                      premium: "—",
                       enterprise: "✓",
                     },
                     {
                       feature: t("pricing.compare.whiteLabel"),
-                      starter: "—",
+                      free: "—",
                       pro: "—",
-                      business: "—",
+                      premium: "✓",
                       enterprise: "✓",
                     },
                   ].map((row, i) => (
@@ -349,13 +357,13 @@ export default function PricingPage() {
                         {row.feature}
                       </td>
                       <td className="py-4.5 px-6 text-center text-xs text-gray-600 dark:text-zinc-400">
-                        {row.starter}
+                        {row.free}
                       </td>
                       <td className="py-4.5 px-6 text-center text-xs text-gray-600 dark:text-zinc-400 font-semibold">
                         {row.pro}
                       </td>
                       <td className="py-4.5 px-6 text-center text-xs text-gray-600 dark:text-zinc-400">
-                        {row.business}
+                        {row.premium}
                       </td>
                       <td className="py-4.5 px-6 text-center text-xs text-gray-600 dark:text-zinc-400">
                         {row.enterprise}

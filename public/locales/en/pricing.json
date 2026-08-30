@@ -2,7 +2,7 @@
   "pricing": {
     "badge": "Flexible pricing plans",
     "title": "Simple, Transparent Pricing",
-    "subtitle": "Choose the perfect plan for your video creation needs. All plans include a 14-day free trial with full access.",
+    "subtitle": "1 credit = 1 video generation. Choose the plan that fits your needs. All paid plans include a 14-day free trial.",
     "monthly": "Monthly",
     "annual": "Annual",
     "save20": "Save 20%",
@@ -11,48 +11,57 @@
     "mostPopular": "Most Popular",
     "free": {
       "name": "Free",
-      "description": "Perfect for individuals and small projects",
+      "description": "Get started with basic video generation",
+      "price": {
+        "monthly": "0",
+        "annual": "0"
+      },
       "features": {
-        "f1": "10 videos/month",
-        "f2": "2 custom voice creations",
-        "f3": "AI script generation",
-        "f4": "Basic voice selection",
-        "f5": "Standard video templates",
-        "f6": "Email support",
-        "f7": "720p output quality"
+        "f1": "5 credits per month",
+        "f2": "Rollover up to 10 credits",
+        "f3": "2 custom voices",
+        "f4": "Basic video generation",
+        "f5": "720p video quality",
+        "f6": "Standard project storage"
       },
       "cta": "Get Started"
     },
     "pro": {
       "name": "Pro",
-      "description": "For growing teams and content creators",
+      "description": "For creators who need more capacity",
+      "price": {
+        "monthly": "49",
+        "annual": "39"
+      },
       "features": {
-        "f1": "100 videos/month",
-        "f2": "5 custom voice creations",
-        "f3": "Advanced AI scripts",
-        "f4": "200+ premium voices",
-        "f5": "Custom video templates",
-        "f6": "Priority support",
-        "f7": "1080p HD quality",
-        "f8": "Brand customization",
-        "f9": "API access"
+        "f1": "25 credits per month",
+        "f2": "Rollover up to 50 credits",
+        "f3": "5 custom voices",
+        "f4": "HD video generation (1080p)",
+        "f5": "Priority processing",
+        "f6": "Advanced analytics",
+        "f7": "Export customization",
+        "f8": "API access"
       },
       "cta": "Start Free Trial"
     },
     "premium": {
       "name": "Premium",
-      "description": "For marketing teams and agencies",
+      "description": "For professionals who need maximum capacity",
+      "price": {
+        "monthly": "199",
+        "annual": "159"
+      },
       "features": {
-        "f1": "Unlimited videos",
-        "f2": "10 custom voice creations",
-        "f3": "Advanced AI scripts",
-        "f4": "All premium voices",
-        "f5": "Custom templates & branding",
-        "f6": "24/7 dedicated support",
-        "f7": "4K Ultra HD quality",
-        "f8": "Team collaboration",
-        "f9": "Advanced analytics",
-        "f10": "SSO & SAML"
+        "f1": "100 credits per month",
+        "f2": "Unlimited rollover",
+        "f3": "10 custom voices",
+        "f4": "4K video quality",
+        "f5": "Priority support",
+        "f6": "Advanced AI features",
+        "f7": "Team collaboration",
+        "f8": "White-label exports",
+        "f9": "API access"
       },
       "cta": "Start Free Trial"
     },
@@ -76,8 +85,9 @@
     "comparePlans": "Compare Plans",
     "compare": {
       "feature": "Feature",
-      "videosPerMonth": "Videos per Month",
-      "voiceCreations": "Custom Voice Creations",
+      "creditsPerMonth": "Credits per Month",
+      "creditRollover": "Credit Rollover Cap",
+      "voiceCreations": "Custom Voices",
       "aiScriptWriter": "AI Script Writer",
       "voiceSelection": "Voice Selection",
       "videoQuality": "Video Quality",
@@ -111,7 +121,7 @@
       },
       "q3": {
         "q": "What video formats and quality do you support?",
-        "a": "We support MP4, MOV, and WebM formats. Quality ranges from 720p (Starter) to 1080p HD (Professional) to 4K Ultra HD (Business and Enterprise)."
+        "a": "We support MP4, MOV, and WebM formats. Quality ranges from 720p (Free) to 1080p HD (Pro) to 4K Ultra HD (Premium and Enterprise)."
       },
       "q4": {
         "q": "Can I use my own scripts or voices?",

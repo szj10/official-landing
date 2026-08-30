@@ -1,70 +1,79 @@
 {
   "pricing": {
-    "badge": "Plans tarifaires flexibles",
-    "title": "Tarification simple et transparente",
-    "subtitle": "Choisissez le plan parfait pour vos besoins de création vidéo. Tous les plans incluent un essai gratuit de 14 jours avec un accès complet.",
+    "badge": "Forfaits tarifaires flexibles",
+    "title": "Tarifs simples et transparents",
+    "subtitle": "1 crédit = 1 génération vidéo. Choisis le forfait adapté à tes besoins. Tous les forfaits payants incluent un essai gratuit de 14 jours.",
     "monthly": "Mensuel",
     "annual": "Annuel",
-    "save20": "Économisez 20%",
+    "save20": "Économisez 20 %",
     "perMonth": "/mois",
     "custom": "Sur mesure",
     "mostPopular": "Le plus populaire",
     "free": {
-      "name": "Gratuit",
-      "description": "Parfait pour les particuliers et les petits projets",
+      "name": "Free",
+      "description": "Commence avec la génération vidéo de base",
+      "price": {
+        "monthly": "0",
+        "annual": "0"
+      },
       "features": {
-        "f1": "10 vidéos/mois",
-        "f2": "2 voix personnalisées",
-        "f3": "Génération de scripts IA",
-        "f4": "Sélection vocale basique",
-        "f5": "Modèles vidéo standards",
-        "f6": "Support par email",
-        "f7": "Qualité de sortie 720p"
+        "f1": "5 crédits par mois",
+        "f2": "Report jusqu'à 10 crédits",
+        "f3": "2 voix personnalisées",
+        "f4": "Génération vidéo de base",
+        "f5": "Qualité vidéo 720p",
+        "f6": "Stockage de projets standard"
       },
       "cta": "Commencer"
     },
     "pro": {
-      "name": "Professionnel",
-      "description": "Pour les équipes en croissance et les créateurs de contenu",
-      "features": {
-        "f1": "100 vidéos/mois",
-        "f2": "5 voix personnalisées",
-        "f3": "Scripts IA avancés",
-        "f4": "200+ voix premium",
-        "f5": "Modèles vidéo personnalisés",
-        "f6": "Support prioritaire",
-        "f7": "Qualité HD 1080p",
-        "f8": "Personnalisation de marque",
-        "f9": "Accès API"
+      "name": "Pro",
+      "description": "Pour les créateurs qui ont besoin de plus de capacité",
+      "price": {
+        "monthly": "49",
+        "annual": "39"
       },
-      "cta": "Essai gratuit"
+      "features": {
+        "f1": "25 crédits par mois",
+        "f2": "Report jusqu'à 50 crédits",
+        "f3": "5 voix personnalisées",
+        "f4": "Génération vidéo HD (1080p)",
+        "f5": "Traitement prioritaire",
+        "f6": "Analyses avancées",
+        "f7": "Personnalisation de l'export",
+        "f8": "Accès API"
+      },
+      "cta": "Commencer l'essai gratuit"
     },
     "premium": {
       "name": "Premium",
-      "description": "Pour les équipes marketing et les agences",
-      "features": {
-        "f1": "Vidéos illimitées",
-        "f2": "5 voix personnalisées",
-        "f3": "Scripts IA avancés",
-        "f4": "Toutes les voix premium",
-        "f5": "Modèles et marque personnalisés",
-        "f6": "Support dédié 24/7",
-        "f7": "Qualité Ultra HD 4K",
-        "f8": "Collaboration d'équipe",
-        "f9": "Analyses avancées",
-        "f10": "SSO et SAML"
+      "description": "Capacité maximale pour les professionnels",
+      "price": {
+        "monthly": "199",
+        "annual": "159"
       },
-      "cta": "Essai gratuit"
+      "features": {
+        "f1": "100 crédits par mois",
+        "f2": "Report illimité",
+        "f3": "10 voix personnalisées",
+        "f4": "Qualité vidéo 4K",
+        "f5": "Support prioritaire",
+        "f6": "Fonctionnalités IA avancées",
+        "f7": "Collaboration d'équipe",
+        "f8": "Exports en marque blanche",
+        "f9": "Accès API"
+      },
+      "cta": "Commencer l'essai gratuit"
     },
     "enterprise": {
-      "name": "Entreprise",
+      "name": "Enterprise",
       "description": "Solutions sur mesure pour les grandes organisations",
       "features": {
         "f1": "Tout illimité",
-        "f2": "Voix personnalisées illimitées",
+        "f2": "Créations de voix personnalisées illimitées",
         "f3": "Modèles IA personnalisés",
         "f4": "Clonage vocal",
-        "f5": "Solution marque blanche",
+        "f5": "Solution en marque blanche",
         "f6": "Gestionnaire de compte dédié",
         "f7": "Déploiement sur site",
         "f8": "Intégrations personnalisées",
@@ -73,15 +82,16 @@
       },
       "cta": "Contacter les ventes"
     },
-    "comparePlans": "Comparer les plans",
+    "comparePlans": "Comparer les forfaits",
     "compare": {
       "feature": "Fonctionnalité",
-      "videosPerMonth": "Vidéos par mois",
+      "creditsPerMonth": "Crédits par mois",
+      "creditRollover": "Plafond de report de crédits",
       "voiceCreations": "Voix personnalisées",
       "aiScriptWriter": "Rédacteur de scripts IA",
-      "voiceSelection": "Sélection vocale",
+      "voiceSelection": "Sélection de voix",
       "videoQuality": "Qualité vidéo",
-      "customBranding": "Marque personnalisée",
+      "customBranding": "Image de marque personnalisée",
       "teamCollaboration": "Collaboration d'équipe",
       "apiAccess": "Accès API",
       "voiceCloning": "Clonage vocal",
@@ -91,35 +101,35 @@
     },
     "customSolution": {
       "title": "Besoin d'une solution sur mesure ?",
-      "description": "Notre équipe entreprise peut créer une solution vidéo personnalisée adaptée à votre flux de travail, incluant des modèles IA personnalisés, le clonage vocal, les options de marque blanche et un support dédié.",
+      "description": "Notre équipe entreprise peut créer une solution vidéo adaptée à ton flux de travail, incluant modèles IA personnalisés, clonage vocal, options marque blanche et support dédié.",
       "cta": "Contacter les ventes"
     },
     "freeTrial": {
-      "title": "Essayez gratuitement pendant 14 jours",
-      "description": "Créez votre première vidéo IA en quelques minutes. Sans carte de crédit. Découvrez toute la puissance de la création vidéo du script à l'écran.",
-      "cta": "Essai gratuit"
+      "title": "Essai gratuit de 14 jours",
+      "description": "Crée ta première vidéo IA en quelques minutes. Aucune carte bancaire requise. Découvre toute la puissance de la création vidéo script-à-écran.",
+      "cta": "Commencer l'essai gratuit"
     },
     "faq": {
       "title": "Questions fréquentes",
       "q1": {
         "q": "Que comprend l'essai gratuit ?",
-        "a": "Accès complet à toutes les fonctionnalités pendant 14 jours. Créez jusqu'à 5 vidéos avec l'écriture de scripts IA, la synthèse vocale et la génération vidéo. Sans carte de crédit."
+        "a": "Accès complet à toutes les fonctionnalités pendant 14 jours. Crée jusqu'à 5 vidéos avec rédaction de scripts IA, synthèse vocale et génération vidéo. Aucune carte bancaire requise."
       },
       "q2": {
-        "q": "Puis-je changer de plan à tout moment ?",
-        "a": "Oui, vous pouvez mettre à niveau ou rétrograder votre plan à tout moment. Lors d'une mise à niveau, la différence au prorata vous sera facturée. Lors d'une rétrogradation, vous recevrez un crédit pour la partie inutilisée."
+        "q": "Puis-je changer de forfait à tout moment ?",
+        "a": "Oui, tu peux upgrader ou downgrader à tout moment. Lors d'un upgrade, la différence au prorata est facturée. Lors d'un downgrade, tu reçois un crédit pour la partie non utilisée."
       },
       "q3": {
-        "q": "Quels formats et qualités vidéo prenez-vous en charge ?",
-        "a": "Nous prenons en charge les formats MP4, MOV et WebM. La qualité va de 720p (Débutant) à 1080p HD (Professionnel) jusqu'à 4K Ultra HD (Business et Entreprise)."
+        "q": "Quels formats et qualités vidéo sont pris en charge ?",
+        "a": "Nous prenons en charge les formats MP4, MOV et WebM. La qualité va de 720p (Free) à 1080p HD (Pro) et 4K Ultra HD (Premium et Enterprise)."
       },
       "q4": {
         "q": "Puis-je utiliser mes propres scripts ou voix ?",
-        "a": "Absolument. Bien que notre IA puisse générer des scripts et des voix, vous pouvez importer vos propres scripts, enregistrer de l'audio personnalisé ou utiliser notre fonctionnalité de clonage vocal (Entreprise) pour reproduire des voix spécifiques."
+        "a": "Absolument. Bien que notre IA puisse générer scripts et voix, tu peux aussi téléverser tes scripts, enregistrer de l'audio personnalisé ou utiliser le clonage vocal (Enterprise)."
       },
       "q5": {
         "q": "Proposez-vous des remboursements ?",
-        "a": "Oui, nous offrons une garantie de remboursement de 30 jours pour tous les plans payants. Si vous n'êtes pas satisfait de la qualité vidéo ou des fonctionnalités, contactez notre équipe de support pour un remboursement complet."
+        "a": "Oui, nous offrons une garantie satisfait ou remboursé de 30 jours pour tous les forfaits payants. Contacte notre équipe support si tu n'es pas satisfait."
       }
     }
   }
