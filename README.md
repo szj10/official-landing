@@ -117,11 +117,11 @@ The application automatically adapts to your system's appearance preference (lig
 
 ## Language Support
 
-Full i18n support via `next-intl` with translations for:
+Full i18n support with BCP-47 locale codes:
 
 - 🇺🇸 English (en)
-- 🇨🇳 简体中文 (chs)
-- 🇹🇼 繁體中文 (cht)
+- 🇨🇳 简体中文 (zh-CN)
+- 🇹🇼 繁體中文 (zh-TW)
 - 🇪🇸 Español (es)
 - 🇫🇷 Français (fr)
 - 🇩🇪 Deutsch (de)

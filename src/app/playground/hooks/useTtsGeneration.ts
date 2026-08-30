@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { PlaygroundVoice } from "../voices.config";
 import type { HistoryTTSJob, TTSJobResponse, TTSJobStatus } from "../components/types";
-import { clearPendingJob, readPendingJob, writePendingJob } from "../lib/historyStorage";
+import { resolveTtsLanguage, type Locale } from "@/i18n/config";
 
 const MAX_TTS_TEXT_LENGTH = parseInt(process.env.NEXT_PUBLIC_MAX_TTS_TEXT_LENGTH || "600", 10);
 /** Stop polling and surface a retry banner after this many consecutive network/HTTP failures. */
@@ -32,7 +32,7 @@ export type PendingResumeData = {
 
 type UseTtsGenerationOptions = {
   t: (key: string) => string;
-  locale: string;
+  locale: Locale;
   stockVoices?: PlaygroundVoice[];
   textInput: string;
   speed: "slow" | "normal" | "fast";
@@ -432,7 +432,7 @@ export function useTtsGeneration({
     const isStock = activeVoicePanel === "stock";
     const voice = isStock ? stockVoices.find((v) => v.id === selectedVoice) : null;
     if (isStock && !voice) return;
-    const language = isStock && voice ? voice.language : locale;
+    const language = resolveTtsLanguage(isStock && voice ? voice.language : null, locale);
 
     const rateMap = { slow: 0.3, normal: 0.5, fast: 0.8 };
     const rate = rateMap[speed];

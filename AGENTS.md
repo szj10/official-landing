@@ -27,7 +27,7 @@ This project is a Next.js (App Router) landing page, pricing application, and in
 - **Styling**: Use Tailwind CSS utility classes.
 - **Type Safety**: Use TypeScript. Avoid explicit `any`.
 - **Formatting**: The project uses Prettier and `lint-staged`. Ensure files are formatted before committing.
-- **Internationalization**: Content is managed via `next-intl`. Translations are located in `public/locales/` organized by language code (en, chs, cht, es, fr, de, ja, ko) with namespace files (common.json, header.json, home.json, pricing.json, etc.).
+- **Internationalization**: Custom `I18nProvider` with BCP-47 locale codes. Translations are in `public/locales/` organized by language code (en, zh-CN, zh-TW, es, fr, de, ja, ko) with namespace files (common.json, header.json, home.json, pricing.json, etc.).
 - **Components**: UI components reside in `src/components/`. Pages are in `src/app/`.
 
 ## Key Files
@@ -35,7 +35,7 @@ This project is a Next.js (App Router) landing page, pricing application, and in
 - `src/app/`: Next.js App Router pages (Landing, Pricing, Playground, Legal pages).
 - `src/app/playground/`: Interactive TTS playground with voice selection, recording, and synthesis.
 - `src/components/`: Reusable UI components (Header, Footer, etc.).
-- `public/locales/`: Translation files organized by language (en, chs, cht, es, fr, de, ja, ko) with namespace files for different sections.
+- `public/locales/`: Translation files organized by language (en, zh-CN, zh-TW, es, fr, de, ja, ko) with namespace files for different sections.
 - `content/legal/`: Legal pages (Privacy Policy, Terms of Service) in multiple languages.
 - `content/posts/`: Blog posts for the news section.
 - `next.config.ts`: Next.js configuration.

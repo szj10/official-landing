@@ -43,3 +43,4 @@ public/audio_prompts/
 
 # CodeGraph local indexes
 .codegraph/
+.pnpm-store/

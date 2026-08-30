@@ -17,8 +17,8 @@ public/locales/
 │   ├── pricing.json
 │   ├── sample-texts.json
 │   └── sample-voices.json
-├── chs/                         # Simplified Chinese (简体中文)
-├── cht/                         # Traditional Chinese (繁體中文)
+├── zh-CN/                       # Simplified Chinese (简体中文)
+├── zh-TW/                       # Traditional Chinese (繁體中文)
 ├── es/                          # Spanish (Español)
 ├── fr/                          # French (Français)
 ├── de/                          # German (Deutsch)
@@ -32,7 +32,7 @@ Each language folder contains the same namespace files as the English folder.
 
 ### For i18n Team Members
 
-1. **Navigate to the target language folder** (e.g., `public/locales/chs/` for Simplified Chinese)
+1. **Navigate to the target language folder** (e.g., `public/locales/zh-CN/` for Simplified Chinese)
 
 2. **Open the namespace file** (e.g., `header.json`, `home.json`, etc.)
 
@@ -96,7 +96,7 @@ Translations are organized by functional areas:
 - Encoding: UTF-8
 - Nesting: Supported (use dot notation in code: `t('namespace:key.nested')`)
 - Missing translations: Falls back to the English version from the `en/` folder
-- i18n Library: `next-intl` (configured for Next.js App Router)
+- i18n: Custom `I18nProvider` in `src/i18n/` (BCP-47 locale codes)
 
 ## 📞 Need Help?
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
-import { Locale, defaultLocale, locales } from "./config";
+import { Locale, defaultLocale, resolveStoredLocale } from "./config";
 
 type TranslationValue = string | { [key: string]: TranslationValue };
 type Translations = { [key: string]: TranslationValue };
@@ -97,8 +97,11 @@ export function I18nProvider({ children }: { children: ReactNode }) {
   const [translations, setTranslations] = useState<Translations>({});
 
   useEffect(() => {
-    const savedLocale = localStorage.getItem("locale") as Locale;
-    if (savedLocale && locales.includes(savedLocale)) {
+    const savedLocale = resolveStoredLocale(localStorage.getItem("locale"));
+    if (savedLocale) {
+      if (savedLocale !== localStorage.getItem("locale")) {
+        localStorage.setItem("locale", savedLocale);
+      }
       setTimeout(() => {
         setLocaleState(savedLocale);
       }, 0);

@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { HistoryVoice } from "../components/types";
-import { formatRetryAfter } from "../components/types";
+import { type Locale } from "@/i18n/config";
 
 export type UploadStatus = "idle" | "uploading" | "success" | "error";
 
@@ -13,7 +13,7 @@ export type RestoreVoiceState = {
 };
 
 type UsePlaygroundVoiceOptions = {
-  locale: string;
+  locale: Locale;
   t: (key: string) => string;
   onPrependHistoryVoice: (voice: HistoryVoice) => void;
   onRecordingStart?: () => void;

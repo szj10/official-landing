@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useTheme } from "next-themes";
-import { useI18n, localeNames, type Locale } from "@/i18n";
+import { useI18n, localeNames, isChineseLocale, type Locale } from "@/i18n";
 
 // ─── Icons ───────────────────────────────────────────────────────────────────
 
@@ -177,7 +177,7 @@ export default function Header() {
                     className="flex items-center space-x-1.5 px-3 py-1.5 rounded-full hover:bg-gray-100/80 dark:hover:bg-gray-800/40 transition-all duration-200 text-gray-600 dark:text-gray-300 active:scale-95 text-xs font-medium"
                   >
                     <span
-                      className={`leading-none ${locale === "chs" || locale === "cht" ? "text-sm" : "text-base"}`}
+                      className={`leading-none ${isChineseLocale(locale) ? "text-sm" : "text-base"}`}
                     >
                       {currentLang.flag}
                     </span>
@@ -223,7 +223,7 @@ export default function Header() {
                           }`}
                         >
                           <span
-                            className={`leading-none ${code === "chs" || code === "cht" ? "text-sm" : "text-base"}`}
+                            className={`leading-none ${isChineseLocale(code as Locale) ? "text-sm" : "text-base"}`}
                           >
                             {lang.flag}
                           </span>
@@ -380,7 +380,7 @@ export default function Header() {
               >
                 <div className="flex items-center gap-2.5">
                   <span
-                    className={`leading-none ${locale === "chs" || locale === "cht" ? "text-base" : "text-lg"}`}
+                    className={`leading-none ${isChineseLocale(locale) ? "text-base" : "text-lg"}`}
                   >
                     {currentLang.flag}
                   </span>
@@ -430,7 +430,7 @@ export default function Header() {
                         }`}
                       >
                         <span
-                          className={`leading-none ${code === "chs" || code === "cht" ? "text-sm" : "text-base"}`}
+                          className={`leading-none ${isChineseLocale(code as Locale) ? "text-sm" : "text-base"}`}
                         >
                           {lang.flag}
                         </span>
